@@ -6,6 +6,6 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
     public class RepositoryUser : RepositoryReadOnly<DatabaseUser>, IRepositoryUser
     {
-        public RepositoryUser(DatabaseContext context) : base(context) { }
+        public RepositoryUser(EducationSystemDatabaseContext context) : base(context) { }
     }
 }

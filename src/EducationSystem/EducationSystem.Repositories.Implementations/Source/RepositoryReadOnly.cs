@@ -9,9 +9,9 @@ namespace EducationSystem.Repositories.Implementations.Source
     public class RepositoryReadOnly<TModel> : IRepositoryReadOnly<TModel>
         where TModel : DatabaseModel
     {
-        protected DatabaseContext Context { get; }
+        protected EducationSystemDatabaseContext Context { get; }
 
-        public RepositoryReadOnly(DatabaseContext context)
+        public RepositoryReadOnly(EducationSystemDatabaseContext context)
         {
             Context = context;
         }

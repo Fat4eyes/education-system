@@ -10,7 +10,7 @@ namespace EducationSystem.Repositories.Implementations.Source
     public class Repository<TModel> : RepositoryReadOnly<TModel>, IRepository<TModel>
         where TModel : DatabaseModel
     {
-        public Repository(DatabaseContext context)
+        public Repository(EducationSystemDatabaseContext context)
             : base(context) { }
 
         public TModel Add(TModel model)

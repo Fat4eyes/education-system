@@ -20,7 +20,7 @@ namespace EducationSystem.Database.Source
             sb.Append($"user id = {database.GetSection("UserName").Value};");
             sb.Append($"password = {database.GetSection("UserPassword").Value};");
 
-            services.AddDbContext<DatabaseContext>(x => x.UseMySQL(sb.ToString()));
+            services.AddDbContext<EducationSystemDatabaseContext>(x => x.UseMySQL(sb.ToString()));
         }
     }
 }
