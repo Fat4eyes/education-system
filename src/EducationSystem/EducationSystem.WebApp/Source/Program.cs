@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace EducationSystem.WebApp
+namespace EducationSystem.WebApp.Source
 {
     public class Program
     {
@@ -11,6 +11,6 @@ namespace EducationSystem.WebApp
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
+            WebHost.CreateDefaultBuilder(args).UseStartup<Configurator>();
     }
 }
