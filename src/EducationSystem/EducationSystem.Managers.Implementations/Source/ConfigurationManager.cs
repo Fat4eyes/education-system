@@ -16,14 +16,14 @@ namespace EducationSystem.Managers.Implementations.Source
         {
             return Configuration
                .GetSection("Cors")
-               .GetSection("Policy").Value ?? string.Empty;
+               .GetSection("Policy").Value;
         }
 
         public string GetCorsOrigin()
         {
             return Configuration
                .GetSection("Cors")
-               .GetSection("Origin").Value ?? string.Empty;
+               .GetSection("Origin").Value;
         }
     }
 }
