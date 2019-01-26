@@ -2,5 +2,12 @@
   "Cors": {
     "Policy": "Policy",
     "Origin": "Origin"
+  },
+  "Database": {
+    "Name": "pussy",
+    "Host": "127.0.0.1",
+    "Port": "3306",
+    "UserName": "victor",
+    "UserPassword": "qwerty123"
   }
 }

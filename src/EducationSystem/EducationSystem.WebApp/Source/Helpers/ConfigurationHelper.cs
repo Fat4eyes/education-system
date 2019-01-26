@@ -1,5 +1,7 @@
 ﻿using EducationSystem.Managers.Implementations.Source;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Serialization;
 
 namespace EducationSystem.WebApp.Source.Helpers
 {
@@ -10,6 +12,11 @@ namespace EducationSystem.WebApp.Source.Helpers
         public ConfigurationHelper(ConfigurationManager configurationManager)
         {
             ConfigurationManager = configurationManager;
+        }
+
+        public static void ConfigureJson(MvcJsonOptions options)
+        {
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver();
         }
 
         public void ConfigureCors(CorsOptions options)

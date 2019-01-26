@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Database\EducationSystem.Database.csproj" />
+    <ProjectReference Include="..\EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -5,11 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj" />
+    <ProjectReference Include="..\EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

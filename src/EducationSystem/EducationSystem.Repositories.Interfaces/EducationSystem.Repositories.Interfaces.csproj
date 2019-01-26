@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
   </ItemGroup>
 
 </Project>

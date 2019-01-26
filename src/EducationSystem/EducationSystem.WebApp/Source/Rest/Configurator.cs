@@ -1,12 +1,14 @@
-﻿using EducationSystem.Dependencies.Source;
+﻿using AutoMapper;
+using EducationSystem.Dependencies.Source;
 using EducationSystem.Managers.Implementations.Source;
+using EducationSystem.Mapping.Source;
+using EducationSystem.WebApp.Source.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using EducationSystem.WebApp.Source.Helpers;
 
-namespace EducationSystem.WebApp.Source
+namespace EducationSystem.WebApp.Source.Rest
 {
     public class Configurator
     {
@@ -27,10 +29,13 @@ namespace EducationSystem.WebApp.Source
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
             services.AddOptions();
-
+            services.AddAutoMapper(MappingConfigurator.Configure);
             services.AddCors(ConfigurationHelper.ConfigureCors);
+
+            services
+                .AddMvc()
+                .AddJsonOptions(ConfigurationHelper.ConfigureJson);
 
             DependencyRecorder.Register(services, Configuration);
         }
