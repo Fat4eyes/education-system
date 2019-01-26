@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Mapping", "EducationSystem.Mapping\EducationSystem.Mapping.csproj", "{30A11D06-1330-436B-A30B-B4DA5068E4D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Exceptions", "EducationSystem.Exceptions\EducationSystem.Exceptions.csproj", "{72009AA8-808F-414A-886A-3E0683766884}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72009AA8-808F-414A-886A-3E0683766884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72009AA8-808F-414A-886A-3E0683766884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72009AA8-808F-414A-886A-3E0683766884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72009AA8-808F-414A-886A-3E0683766884}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +99,7 @@ Global
 		{F5330623-7180-42B4-9054-9C734E19667D} = {41D2952A-96F0-4697-94B0-B59FE773A0A4}
 		{93A50376-8288-4BE0-ACCC-F776B038279A} = {41D2952A-96F0-4697-94B0-B59FE773A0A4}
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
+		{72009AA8-808F-414A-886A-3E0683766884} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {495FA56A-EC9C-42AE-BF5E-9C1FE88AFF91}
