@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+using EducationSystem.Managers.Interfaces.Source.Examples;
 
-namespace EducationSystem.WebApp.Source.Controllers
+namespace EducationSystem.Managers.Implementations.Source.Examples
 {
-    [Route("data")]
-    public class DataController : Controller
+    public class ExampleManager : IExampleManager
     {
         protected static Random Random { get; } = new Random();
 
-        [HttpGet]
-        [Route("numbers")]
-        public IEnumerable<int> GetRandomNumbers()
+        public List<int> GetRandomNumbers()
         {
             return Enumerable.Range(0, 10)
                 .Select(x => Random.Next(100))
