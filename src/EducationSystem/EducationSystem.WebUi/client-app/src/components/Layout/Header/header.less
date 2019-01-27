@@ -6,59 +6,120 @@
   src: url('../../../fonts/Roboto-Regular.ttf');
 }
 
-.header{
-  background: white;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-  -webkit-box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-  -moz-box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-  a{
-    font-family: 'Roboto Regular' !important;
-    text-decoration: none;
-    border: none;
-    font-size: 18px;
-    line-height: 60px;
-    padding: 18px 15px;
-    color: @missnorris;
-    font-weight: 600;
-    margin: 0;
-    &:first-child{
-      margin-left: 0;
-    }
-    &.user{
-      margin-right: 0;
-      float: right;
-      padding: 0 15px;
-      line-height: 57px;
-      &:hover{
-        padding-bottom: 0;
-      }
-    }
-    &:hover, &.current{
-      color: @patronus;
-      padding-bottom: 15px;
-      border-bottom: 3px solid @patronus;
-      text-decoration: none !important;
-    }
+.dropdown-menu {
+  z-index: 1000;
+  display: none;
+  position: absolute;
+  background: #fff;
+  padding: 0 2px;
+  border-radius: 0 0px 0px 3px;
+  text-align: center;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  filter: progid:DXImageTransform.Microsoft.dropshadow(offX=5, offY=5, color=#000000);
+
+  a {
+    display: block;
+    line-height: 25px;
+    margin-right: 0;
   }
-  a.user:hover + .menu-dd{display: block}
-  .menu-dd{
-    z-index: 1000;
-    display: none;
-    position: absolute;
-    background: #fff;
-    right: 0;
-    padding: 0 2px;
-    border-radius: 0 0px 0px 3px;
-    text-align: center;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-    -moz-box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-    filter: progid:DXImageTransform.Microsoft.dropshadow(offX=5, offY=5, color=#000000);
-    a{
-      display: block;
-      line-height: 25px;
-      margin-right: 0;
-    }
-    &:hover{display:block;}
+
+  &:hover {
+    display: block;
   }
 }
+
+.header {
+  background: white;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+}
+
+a {
+  font-family: 'Roboto Regular' !important;
+  text-decoration: none;
+  border: none;
+  font-size: 15px;
+  line-height: 60px;
+  padding: 18px 15px;
+  color: @missnorris;
+  font-weight: 600;
+  margin: 0;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &.user-name {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 0;
+    padding: 0 15px;
+    line-height: 57px;
+
+    &:hover {
+      padding-bottom: 0;
+    }
+  }
+
+  &:hover, &.current {
+    color: @patronus;
+    padding-bottom: 17px;
+    border-bottom: 3px solid @patronus;
+    text-decoration: none !important;
+  }
+
+  &.user-name, &.links-menu{
+    &:hover{
+      border-bottom: none;
+    }
+  }
+}
+
+a.user-name:hover + .user-menu {
+  display: block
+}
+
+.user-menu {
+  .dropdown-menu;
+  right: 0;
+}
+
+@media screen and (max-width: 1200px) {
+  .links {
+    .dropdown-menu;
+    left: 0;
+    
+    a {
+      text-align: left;
+    }
+  }
+
+  a.links-menu:hover + .links {
+    display: block
+  }
+}
+
+@media screen and (min-width: 1201px) {
+  .links {
+    display: block;
+  }
+
+  .links-menu {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1366px) {
+  a {
+    font-size: 18px;
+
+    &:hover, &.current {
+      padding-bottom: 15px;
+    }
+  }
+}
+
