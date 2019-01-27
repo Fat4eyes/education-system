@@ -58,7 +58,7 @@ namespace EducationSystem.Tests.Source
                 .Setup(x => x.GetById(It.IsAny<int>()))
                 .Returns((DatabaseUser) null);
 
-            Assert.Throws<EducationSystemException>(() => ManagerUser.GetById(9));
+            Assert.Throws<EducationSystemNotFoundException>(() => ManagerUser.GetById(9));
         }
     }
 }

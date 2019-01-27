@@ -7,6 +7,9 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
+    /// <summary>
+    /// Менеджер по работе с пользователями.
+    /// </summary>
     public class ManagerUser : Manager, IManagerUser
     {
         protected IRepositoryUser RepositoryUser { get; }

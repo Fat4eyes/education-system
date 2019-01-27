@@ -5,24 +5,29 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EducationSystem.Database.Source
 {
+    /// <summary>
+    /// Регистратор зависимостей базы данных.
+    /// </summary>
     public static class DatabaseRecorder
     {
+        /// <summary>
+        /// Регистрирует зависимости базы данных.
+        /// </summary>
         public static void Register(IServiceCollection services, IConfiguration configuration)
         {
             var database = configuration
                 .GetSection(nameof(Database))
                 .Get<Database>();
 
-            var sb = new StringBuilder();
+            var builder = new StringBuilder();
 
-            sb.Append($"database = {database.Name};");
-            sb.Append($"server = {database.Host};");
-            sb.Append($"port = {database.Port};");
+            builder.Append($" database    = {database.Name}; ");
+            builder.Append($" server      = {database.Host}; ");
+            builder.Append($" port        = {database.Port}; ");
+            builder.Append($" user id     = {database.UserName}; ");
+            builder.Append($" password    = {database.UserPassword}; ");
 
-            sb.Append($"user id = {database.UserName};");
-            sb.Append($"password = {database.UserPassword};");
-
-            services.AddDbContext<EducationSystemDatabaseContext>(x => x.UseMySQL(sb.ToString()));
+            services.AddDbContext<EducationSystemDatabaseContext>(x => x.UseMySQL(builder.ToString()));
         }
     }
 }

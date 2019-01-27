@@ -6,6 +6,9 @@ using EducationSystem.Repositories.Interfaces.Source;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
+    /// <summary>
+    /// Репозиторий (только для получения данных).
+    /// </summary>
     public class RepositoryReadOnly<TModel> : IRepositoryReadOnly<TModel>
         where TModel : DatabaseModel
     {
@@ -16,8 +19,10 @@ namespace EducationSystem.Repositories.Implementations.Source
             Context = context;
         }
 
+        /// <inheritdoc />
         public IQueryable<TModel> AsQueryable() => Context.Set<TModel>();
 
+        /// <inheritdoc />
         public IEnumerable<TModel> GetAll()
         {
             return Context
@@ -25,6 +30,7 @@ namespace EducationSystem.Repositories.Implementations.Source
                 .AsEnumerable();
         }
 
+        /// <inheritdoc />
         public TModel GetById(int id)
         {
             return Context
