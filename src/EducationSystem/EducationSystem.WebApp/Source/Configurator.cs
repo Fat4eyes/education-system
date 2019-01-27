@@ -51,7 +51,7 @@ namespace EducationSystem.WebApp.Source
             if (environment.IsDevelopment())
                 builder.UseDeveloperExceptionPage();
 
-            loggerFactory.AddFile(Configuration.GetSection("Logging"));
+            loggerFactory.AddFile(ConfigurationManager.GetLoggingSection());
 
             builder.UseMiddleware(typeof(ErrorHandler));
 
