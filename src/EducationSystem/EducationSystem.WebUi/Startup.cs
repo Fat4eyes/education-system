@@ -30,7 +30,8 @@ namespace EducationSystem.WebUi
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                // TODO Добавить страницу Error
+                //app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
 
