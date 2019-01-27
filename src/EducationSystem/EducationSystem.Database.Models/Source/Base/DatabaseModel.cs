@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EducationSystem.Database.Models.Source
+namespace EducationSystem.Database.Models.Source.Base
 {
     public class DatabaseModel
     {

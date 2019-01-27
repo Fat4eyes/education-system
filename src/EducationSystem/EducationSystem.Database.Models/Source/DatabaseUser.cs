@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Database.Models.Source
 {

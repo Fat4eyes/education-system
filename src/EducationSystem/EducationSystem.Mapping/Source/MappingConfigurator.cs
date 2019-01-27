@@ -21,6 +21,8 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.IsFullTime, o => o.MapFrom(s => s.IsFullTime == 1));
 
             expression.CreateMap<DatabaseStudyPlan, StudyPlan>();
+            expression.CreateMap<DatabaseStudyProfile, StudyProfile>();
+            expression.CreateMap<DatabaseInstitute, Institute>();
         }
     }
 }

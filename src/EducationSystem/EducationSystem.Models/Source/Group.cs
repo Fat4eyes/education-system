@@ -1,15 +1,12 @@
-﻿namespace EducationSystem.Models.Source
+﻿using EducationSystem.Models.Source.Base;
+
+namespace EducationSystem.Models.Source
 {
     /// <summary>
     /// Группа.
     /// </summary>
-    public class Group
+    public class Group : Model
     {
-        /// <summary>
-        /// Идентификатор.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// Учебный план.
         /// </summary>

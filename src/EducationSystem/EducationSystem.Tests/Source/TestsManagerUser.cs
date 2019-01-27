@@ -40,7 +40,7 @@ namespace EducationSystem.Tests.Source
         }
 
         [Fact]
-        public void GetById_User_Exists()
+        public void GetById_UserExists()
         {
             MockRepositoryUser
                 .Setup(x => x.GetById(It.IsAny<int>()))
@@ -52,7 +52,7 @@ namespace EducationSystem.Tests.Source
         }
 
         [Fact]
-        public void GetById_User_Not_Exists()
+        public void GetById_UserNotExists()
         {
             MockRepositoryUser
                 .Setup(x => x.GetById(It.IsAny<int>()))

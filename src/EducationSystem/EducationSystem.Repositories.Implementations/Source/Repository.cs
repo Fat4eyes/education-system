@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Database.Models.Source;
+using EducationSystem.Database.Models.Source.Base;
 using EducationSystem.Database.Source;
 using EducationSystem.Repositories.Interfaces.Source;
 using Microsoft.EntityFrameworkCore;

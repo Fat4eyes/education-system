@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Database.Models.Source
 {
@@ -12,7 +13,13 @@ namespace EducationSystem.Database.Models.Source
         /// Идентификатор профиля.
         /// </summary>
         [Column("profile_id")]
-        public virtual int ProfileId { get; set; }
+        public virtual int StudyProfileId { get; set; }
+
+        /// <summary>
+        /// Профиль обучения.
+        /// </summary>
+        [ForeignKey(nameof(StudyProfileId))]
+        public virtual DatabaseStudyProfile StudyProfile { get; set; }
 
         /// <summary>
         /// Название (наименование).
@@ -24,6 +31,6 @@ namespace EducationSystem.Database.Models.Source
         /// Год.
         /// </summary>
         [Column("year")]
-        public int? Year { get; set; }
+        public virtual int? Year { get; set; }
     }
 }

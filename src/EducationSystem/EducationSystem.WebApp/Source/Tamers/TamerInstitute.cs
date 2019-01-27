@@ -3,28 +3,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers
 {
-    [Route("api/Groups")]
-    public class TamerGroup : Controller
+    [Route("api/Institutes")]
+    public class TamerInstitute : Controller
     {
-        protected IManagerGroup ManagerGroup { get; }
+        protected IManagerInstitute ManagerInstitute { get; }
 
-        public TamerGroup(IManagerGroup managerGroup)
+        public TamerInstitute(IManagerInstitute managerInstitute)
         {
-            ManagerGroup = managerGroup;
+            ManagerInstitute = managerInstitute;
         }
 
         [HttpGet]
         [Route("all")]
         public IActionResult GetAll()
         {
-            return Json(ManagerGroup.GetAll());
+            return Json(ManagerInstitute.GetAll());
         }
 
         [HttpGet]
         [Route("{id}")]
         public IActionResult GetById(int id)
         {
-            return Json(ManagerGroup.GetById(id));
+            return Json(ManagerInstitute.GetById(id));
         }
     }
 }

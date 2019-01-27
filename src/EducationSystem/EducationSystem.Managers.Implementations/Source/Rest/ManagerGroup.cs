@@ -34,7 +34,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Group GetById(int id)
         {
             var group = RepositoryGroup.GetById(id) ??
-                throw new EducationSystemNotFoundException($"Группа не найдена. Идентификатор группы: {id}.");
+                throw new EducationSystemNotFoundException($"Группа не найдена. Идентификатор: {id}.");
 
             return Mapper.Map<Group>(group);
         }

@@ -1,19 +1,16 @@
-﻿namespace EducationSystem.Models.Source
+﻿using EducationSystem.Models.Source.Base;
+
+namespace EducationSystem.Models.Source
 {
     /// <summary>
     /// Учебный план.
     /// </summary>
-    public class StudyPlan
+    public class StudyPlan : Model
     {
         /// <summary>
-        /// Идентификатор.
+        /// Профиль обучения.
         /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Идентификатор профиля.
-        /// </summary>
-        public int ProfileId { get; set; }
+        public StudyProfile StudyProfile { get; set; }
 
         /// <summary>
         /// Название (наименование).

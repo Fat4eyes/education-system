@@ -20,6 +20,16 @@ namespace EducationSystem.Database.Source
         /// </summary>
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
 
+        /// <summary>
+        /// Профили обучения.
+        /// </summary>
+        public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
+
+        /// <summary>
+        /// Институты.
+        /// </summary>
+        public DbSet<DatabaseInstitute> Institutes { get; set; }
+
         public EducationSystemDatabaseContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();

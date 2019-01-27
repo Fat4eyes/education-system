@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers
 {
-    [Route("api/users")]
+    [Route("api/Users")]
     public class TamerUser : Controller
     {
         protected IManagerUser ManagerUser { get; }

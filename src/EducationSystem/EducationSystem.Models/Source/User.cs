@@ -1,15 +1,12 @@
-﻿namespace EducationSystem.Models.Source
+﻿using EducationSystem.Models.Source.Base;
+
+namespace EducationSystem.Models.Source
 {
     /// <summary>
     /// Пользователь.
     /// </summary>
-    public class User
+    public class User : Model
     {
-        /// <summary>
-        /// Идентификатор.
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// Имя.
         /// </summary>
