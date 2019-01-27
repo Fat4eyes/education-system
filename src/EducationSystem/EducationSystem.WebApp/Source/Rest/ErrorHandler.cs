@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using EducationSystem.Exceptions.Source;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace EducationSystem.WebApp.Source.Rest
 {
@@ -33,7 +32,7 @@ namespace EducationSystem.WebApp.Source.Rest
             switch (exception)
             {
                 case EducationSystemException _:
-                    return CreateResponse(context,HttpStatusCode.InternalServerError, exception.Message);
+                    return CreateResponse(context, HttpStatusCode.InternalServerError, exception.Message);
                 case EducationSystemNotFoundException _:
                     return CreateResponse(context, HttpStatusCode.NotFound, exception.Message);
                 case EducationSystemUnauthorizedException _:

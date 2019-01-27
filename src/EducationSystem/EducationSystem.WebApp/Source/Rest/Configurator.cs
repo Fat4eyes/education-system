@@ -1,8 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using EducationSystem.Dependencies.Source;
 using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.Mapping.Source;
 using EducationSystem.WebApp.Source.Helpers;
+using EducationSystem.WebApp.Source.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +50,13 @@ namespace EducationSystem.WebApp.Source.Rest
 
             builder.UseMiddleware(typeof(ErrorHandler));
 
-            builder.UseCors(ConfigurationManager.GetCorsPolicy());
+            var items = ConfigurationManager
+                .GetCorsSection()
+                .Get<List<Cors>>()
+                .Select(x => x.Origin)
+                .ToArray();
+
+            builder.UseCors(x => x.WithOrigins(items));
             builder.UseMvc();
         }
     }

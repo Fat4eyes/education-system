@@ -12,18 +12,9 @@ namespace EducationSystem.Managers.Implementations.Source
             Configuration = configuration;
         }
 
-        public string GetCorsPolicy()
+        public IConfigurationSection GetCorsSection()
         {
-            return Configuration
-               .GetSection("Cors")
-               .GetSection("Policy").Value;
-        }
-
-        public string GetCorsOrigin()
-        {
-            return Configuration
-               .GetSection("Cors")
-               .GetSection("Origin").Value;
+            return Configuration.GetSection("Cors");
         }
     }
 }
