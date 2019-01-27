@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using EducationSystem.Dependencies.Source;
 using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.Mapping.Source;
@@ -50,13 +48,11 @@ namespace EducationSystem.WebApp.Source.Rest
 
             builder.UseMiddleware(typeof(ErrorHandler));
 
-            var items = ConfigurationManager
+            var cors = ConfigurationManager
                 .GetCorsSection()
-                .Get<List<Cors>>()
-                .Select(x => x.Origin)
-                .ToArray();
+                .Get<Cors>();
 
-            builder.UseCors(x => x.WithOrigins(items));
+            builder.UseCors(x => x.WithOrigins(cors.Origins.ToArray()));
             builder.UseMvc();
         }
     }

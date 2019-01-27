@@ -1,14 +1,12 @@
 ﻿{
-  "Cors": [
-    {
-      "Policy": "Policy",
-      "Origin": "Origin"
-    },
-    {
-      "Policy": "Policy",
-      "Origin": "Origin"
-    }
-  ],
+  "Cors": {
+    "Policy": "Policy",
+    "Origins": [
+      "Origin 1",
+      "Origin 2",
+      "Origin 3"
+    ]
+  },
   "Database": {
     "Name": "pussy",
     "Host": "127.0.0.1",

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using EducationSystem.Managers.Implementations.Source;
+﻿using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.WebApp.Source.Models;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -24,17 +23,17 @@ namespace EducationSystem.WebApp.Source.Helpers
 
         public void ConfigureCors(CorsOptions options)
         {
-            var items = ConfigurationManager
+            var cors = ConfigurationManager
                 .GetCorsSection()
-                .Get<List<Cors>>();
+                .Get<Cors>();
 
-            items.ForEach(x => options.AddPolicy(x.Policy, y => ConfigureCorsPolicy(x, y)));
+            options.AddPolicy(cors.Policy, y => ConfigureCorsPolicy(cors, y));
         }
 
         private static void ConfigureCorsPolicy(Cors cors, CorsPolicyBuilder builder)
         {
             builder
-                .WithOrigins(cors.Origin)
+                .WithOrigins(cors.Origins.ToArray())
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         }
