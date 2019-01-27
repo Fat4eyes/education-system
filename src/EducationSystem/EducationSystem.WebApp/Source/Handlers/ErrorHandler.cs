@@ -4,8 +4,11 @@ using System.Threading.Tasks;
 using EducationSystem.Exceptions.Source;
 using Microsoft.AspNetCore.Http;
 
-namespace EducationSystem.WebApp.Source.Rest
+namespace EducationSystem.WebApp.Source.Handlers
 {
+    /// <summary>
+    /// Обработчик ошибок (промежуточный слой).
+    /// </summary>
     public class ErrorHandler
     {
         protected RequestDelegate Next { get; }
@@ -37,9 +40,9 @@ namespace EducationSystem.WebApp.Source.Rest
                     return CreateResponse(context, HttpStatusCode.NotFound, exception.Message);
                 case EducationSystemUnauthorizedException _:
                     return CreateResponse(context, HttpStatusCode.Unauthorized, exception.Message);
-                default:
-                    return CreateResponse(context, HttpStatusCode.InternalServerError, exception.Message);
             }
+
+            return CreateResponse(context, HttpStatusCode.InternalServerError, exception.Message);
         }
 
         private static Task CreateResponse(HttpContext context, HttpStatusCode statusCode, string text)

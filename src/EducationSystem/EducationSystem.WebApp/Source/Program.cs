@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace EducationSystem.WebApp.Source.Rest
+namespace EducationSystem.WebApp.Source
 {
     public class Program
     {

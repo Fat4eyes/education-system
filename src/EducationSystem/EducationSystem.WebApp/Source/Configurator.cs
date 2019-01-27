@@ -2,6 +2,7 @@
 using EducationSystem.Dependencies.Source;
 using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.Mapping.Source;
+using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
 using EducationSystem.WebApp.Source.Models;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EducationSystem.WebApp.Source.Rest
+namespace EducationSystem.WebApp.Source
 {
     public class Configurator
     {
