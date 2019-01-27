@@ -10,17 +10,20 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Tests.Source
 {
-    public class TestsManagerGroup : TestsManager
+    public class TestsManagerGroup : TestsManager<ManagerGroup>
     {
         protected IManagerGroup ManagerGroup { get; }
 
-        protected Mock<IRepositoryGroup> MockRepositoryGroup { get; set; }
+        protected Mock<IRepositoryGroup> MockRepositoryGroup { get; }
 
         public TestsManagerGroup()
         {
             MockRepositoryGroup = new Mock<IRepositoryGroup>();
 
-            ManagerGroup = new ManagerGroup(Mapper, MockRepositoryGroup.Object);
+            ManagerGroup = new ManagerGroup(
+                Mapper,
+                LoggerMock.Object,
+                MockRepositoryGroup.Object);
         }
 
         [Fact]

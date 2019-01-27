@@ -10,17 +10,20 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Tests.Source
 {
-    public class TestsManagerStudyPlan : TestsManager
+    public class TestsManagerStudyPlan : TestsManager<ManagerStudyPlan>
     {
         protected IManagerStudyPlan ManagerStudyPlan { get; }
 
-        protected Mock<IRepositoryStudyPlan> MockRepositoryStudyPlan { get; set; }
+        protected Mock<IRepositoryStudyPlan> MockRepositoryStudyPlan { get; }
 
         public TestsManagerStudyPlan()
         {
             MockRepositoryStudyPlan = new Mock<IRepositoryStudyPlan>();
 
-            ManagerStudyPlan = new ManagerStudyPlan(Mapper, MockRepositoryStudyPlan.Object);
+            ManagerStudyPlan = new ManagerStudyPlan(
+                Mapper,
+                LoggerMock.Object,
+                MockRepositoryStudyPlan.Object);
         }
 
         [Fact]

@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using EducationSystem.Exceptions.Source;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.WebApp.Source.Handlers
 {
@@ -18,7 +19,7 @@ namespace EducationSystem.WebApp.Source.Handlers
             Next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ILogger<ErrorHandler> logger)
         {
             try
             {
@@ -26,12 +27,14 @@ namespace EducationSystem.WebApp.Source.Handlers
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(logger, context, ex);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionAsync(ILogger logger, HttpContext context, Exception exception)
         {
+            logger.LogError(exception, exception.Message);
+
             switch (exception)
             {
                 case EducationSystemException _:

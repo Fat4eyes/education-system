@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.WebApp.Source
 {
@@ -42,10 +43,15 @@ namespace EducationSystem.WebApp.Source
             DependencyRecorder.Register(services, Configuration);
         }
 
-        public void Configure(IApplicationBuilder builder, IHostingEnvironment environment)
+        public void Configure(
+            IApplicationBuilder builder,
+            IHostingEnvironment environment,
+            ILoggerFactory loggerFactory)
         {
             if (environment.IsDevelopment())
                 builder.UseDeveloperExceptionPage();
+
+            loggerFactory.AddFile(Configuration.GetSection("Logging"));
 
             builder.UseMiddleware(typeof(ErrorHandler));
 
