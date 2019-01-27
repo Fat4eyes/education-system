@@ -25,18 +25,18 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         /// <inheritdoc />
         public List<Group> GetAll()
         {
-            var users = RepositoryGroup.GetAll();
+            var groups = RepositoryGroup.GetAll();
 
-            return Mapper.Map<List<Group>>(users);
+            return Mapper.Map<List<Group>>(groups);
         }
 
         /// <inheritdoc />
         public Group GetById(int id)
         {
-            var user = RepositoryGroup.GetById(id) ??
+            var group = RepositoryGroup.GetById(id) ??
                 throw new EducationSystemNotFoundException($"Группа не найдена. Идентификатор группы: {id}.");
 
-            return Mapper.Map<Group>(user);
+            return Mapper.Map<Group>(group);
         }
     }
 }

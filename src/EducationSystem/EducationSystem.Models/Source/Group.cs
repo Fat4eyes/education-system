@@ -6,9 +6,14 @@
     public class Group
     {
         /// <summary>
-        /// Идентификатор учебного плана.
+        /// Идентификатор.
         /// </summary>
-        public int StudyPlanId { get; set; }
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Учебный план.
+        /// </summary>
+        public StudyPlan StudyPlan { get; set; }
 
         /// <summary>
         /// Префикс.
@@ -38,6 +43,6 @@
         /// <summary>
         /// Год, с которого группа существует.
         /// </summary>
-        public int Year { get; set; }
+        public int? Year { get; set; }
     }
 }

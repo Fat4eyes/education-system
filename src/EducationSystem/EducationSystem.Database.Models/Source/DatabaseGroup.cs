@@ -15,6 +15,12 @@ namespace EducationSystem.Database.Models.Source
         public virtual int StudyPlanId { get; set; }
 
         /// <summary>
+        /// Учебный план.
+        /// </summary>
+        [ForeignKey(nameof(StudyPlanId))]
+        public virtual DatabaseStudyPlan StudyPlan { get; set; }
+
+        /// <summary>
         /// Префикс.
         /// </summary>
         [Column("prefix")]
@@ -48,6 +54,6 @@ namespace EducationSystem.Database.Models.Source
         /// Год, с которого группа существует.
         /// </summary>
         [Column("year")]
-        public virtual int Year { get; set; }
+        public virtual int? Year { get; set; }
     }
 }

@@ -27,7 +27,9 @@ namespace EducationSystem.Database.Source
             builder.Append($" user id     = {database.UserName}; ");
             builder.Append($" password    = {database.UserPassword}; ");
 
-            services.AddDbContext<EducationSystemDatabaseContext>(x => x.UseMySQL(builder.ToString()));
+            services.AddDbContext<EducationSystemDatabaseContext>(x => x
+                .UseLazyLoadingProxies()
+                .UseMySQL(builder.ToString()));
         }
     }
 }

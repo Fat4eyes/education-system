@@ -15,6 +15,11 @@ namespace EducationSystem.Database.Source
         /// </summary>
         public DbSet<DatabaseGroup> Groups { get; set; }
 
+        /// <summary>
+        /// Учебные планы.
+        /// </summary>
+        public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
+
         public EducationSystemDatabaseContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
