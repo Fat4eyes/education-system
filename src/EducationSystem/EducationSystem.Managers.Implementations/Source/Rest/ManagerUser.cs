@@ -20,7 +20,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         }
 
         /// <inheritdoc />
-        public List<User> GetAllUsers()
+        public List<User> GetAll()
         {
             var users = RepositoryUser.GetAll();
 

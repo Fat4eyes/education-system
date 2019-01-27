@@ -12,7 +12,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         /// Возвращает список всех пользователей.
         /// </summary>
         /// <returns>Список всех пользователей.</returns>
-        List<User> GetAllUsers();
+        List<User> GetAll();
 
         /// <summary>
         /// Возвращает пользователя по указанному идентификатору.

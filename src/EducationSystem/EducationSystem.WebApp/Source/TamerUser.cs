@@ -15,14 +15,14 @@ namespace EducationSystem.WebApp.Source
 
         [HttpGet]
         [Route("all")]
-        public IActionResult GetAllUsers()
+        public IActionResult GetAll()
         {
-            return Json(ManagerUser.GetAllUsers());
+            return Json(ManagerUser.GetAll());
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult GetAllUsers(int id)
+        public IActionResult GetById(int id)
         {
             return Json(ManagerUser.GetById(id));
         }
