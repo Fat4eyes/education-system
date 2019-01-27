@@ -7,37 +7,37 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.WebApp", "E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Apps", "Web Apps", "{E106792D-1AFF-4913-A1B6-64EF92305368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Managers.Interfaces", "EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj", "{E9A2D913-96BD-4222-AA58-5EA5D3F8FE0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Managers.Interfaces", "EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj", "{E9A2D913-96BD-4222-AA58-5EA5D3F8FE0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Managers.Implementations", "EducationSystem.Managers.Implementations\EducationSystem.Managers.Implementations.csproj", "{9FDD392F-0370-4910-BA49-E8E8E0DDF453}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Managers.Implementations", "EducationSystem.Managers.Implementations\EducationSystem.Managers.Implementations.csproj", "{9FDD392F-0370-4910-BA49-E8E8E0DDF453}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Managers", "Managers", "{54E2C926-AD1C-4653-B75A-86072C6EDAAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Models", "EducationSystem.Models\EducationSystem.Models.csproj", "{84AB0EE5-64D3-4B70-AF0C-61B0BCD89890}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Models", "EducationSystem.Models\EducationSystem.Models.csproj", "{84AB0EE5-64D3-4B70-AF0C-61B0BCD89890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Dependencies", "EducationSystem.Dependencies\EducationSystem.Dependencies.csproj", "{CB502E79-D922-4F4B-9BCF-47775BD8D90E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Dependencies", "EducationSystem.Dependencies\EducationSystem.Dependencies.csproj", "{CB502E79-D922-4F4B-9BCF-47775BD8D90E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Database", "EducationSystem.Database\EducationSystem.Database.csproj", "{A9E5518B-2267-42FC-B63D-BEA3792C7534}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Database", "EducationSystem.Database\EducationSystem.Database.csproj", "{A9E5518B-2267-42FC-B63D-BEA3792C7534}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{F5272692-EF30-47A1-8A82-7EC43B407CE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Database.Models", "EducationSystem.Database.Models\EducationSystem.Database.Models.csproj", "{97C4C0A2-9E54-4F41-82E6-975CC486FAA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Database.Models", "EducationSystem.Database.Models\EducationSystem.Database.Models.csproj", "{97C4C0A2-9E54-4F41-82E6-975CC486FAA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Repositories.Interfaces", "EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj", "{F5330623-7180-42B4-9054-9C734E19667D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Repositories.Interfaces", "EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj", "{F5330623-7180-42B4-9054-9C734E19667D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Repositories.Implementations", "EducationSystem.Repositories.Implementations\EducationSystem.Repositories.Implementations.csproj", "{93A50376-8288-4BE0-ACCC-F776B038279A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Repositories.Implementations", "EducationSystem.Repositories.Implementations\EducationSystem.Repositories.Implementations.csproj", "{93A50376-8288-4BE0-ACCC-F776B038279A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repositories", "Repositories", "{41D2952A-96F0-4697-94B0-B59FE773A0A4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Mapping", "EducationSystem.Mapping\EducationSystem.Mapping.csproj", "{30A11D06-1330-436B-A30B-B4DA5068E4D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Mapping", "EducationSystem.Mapping\EducationSystem.Mapping.csproj", "{30A11D06-1330-436B-A30B-B4DA5068E4D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Exceptions", "EducationSystem.Exceptions\EducationSystem.Exceptions.csproj", "{72009AA8-808F-414A-886A-3E0683766884}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Exceptions", "EducationSystem.Exceptions\EducationSystem.Exceptions.csproj", "{72009AA8-808F-414A-886A-3E0683766884}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Tests", "EducationSystem.Tests\EducationSystem.Tests.csproj", "{51A5C8EC-2722-4D3F-9643-2695DD44C571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Tests", "EducationSystem.Tests\EducationSystem.Tests.csproj", "{51A5C8EC-2722-4D3F-9643-2695DD44C571}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.WebUi", "EducationSystem.WebUi\EducationSystem.WebUi.csproj", "{7FF2A746-D51B-4426-AA01-3C64D00DE481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.WebUi", "EducationSystem.WebUi\EducationSystem.WebUi.csproj", "{7FF2A746-D51B-4426-AA01-3C64D00DE481}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,7 +94,6 @@ Global
 		{51A5C8EC-2722-4D3F-9643-2695DD44C571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51A5C8EC-2722-4D3F-9643-2695DD44C571}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7FF2A746-D51B-4426-AA01-3C64D00DE481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7FF2A746-D51B-4426-AA01-3C64D00DE481}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FF2A746-D51B-4426-AA01-3C64D00DE481}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FF2A746-D51B-4426-AA01-3C64D00DE481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

@@ -1,7 +1,7 @@
 ﻿using EducationSystem.Managers.Interfaces.Source.Rest;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EducationSystem.WebApp.Source
+namespace EducationSystem.WebApp.Source.Tamers
 {
     [Route("users")]
     public class TamerUser : Controller

@@ -45,6 +45,8 @@ namespace EducationSystem.WebApp.Source.Rest
             if (environment.IsDevelopment())
                 builder.UseDeveloperExceptionPage();
 
+            builder.UseMiddleware(typeof(ErrorHandler));
+
             builder.UseCors(ConfigurationManager.GetCorsPolicy());
             builder.UseMvc();
         }
