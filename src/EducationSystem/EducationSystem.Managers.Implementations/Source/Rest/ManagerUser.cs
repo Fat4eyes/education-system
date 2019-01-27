@@ -4,20 +4,22 @@ using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
+using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     /// <summary>
     /// Менеджер по работе с пользователями.
     /// </summary>
-    public class ManagerUser : Manager, IManagerUser
+    public class ManagerUser : Manager<ManagerUser>, IManagerUser
     {
         protected IRepositoryUser RepositoryUser { get; }
 
         public ManagerUser(
             IMapper mapper,
+            ILogger<ManagerUser> logger,
             IRepositoryUser repositoryUser)
-            : base(mapper)
+            : base(mapper, logger)
         {
             RepositoryUser = repositoryUser;
         }

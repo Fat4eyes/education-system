@@ -4,20 +4,22 @@ using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
+using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     /// <summary>
     /// Менеджер по работе с группами.
     /// </summary>
-    public class ManagerGroup : Manager, IManagerGroup
+    public class ManagerGroup : Manager<ManagerGroup>, IManagerGroup
     {
         protected IRepositoryGroup RepositoryGroup { get; }
 
         public ManagerGroup(
             IMapper mapper,
+            ILogger<ManagerGroup> logger,
             IRepositoryGroup repositoryGroup)
-            : base(mapper)
+            : base(mapper, logger)
         {
             RepositoryGroup = repositoryGroup;
         }

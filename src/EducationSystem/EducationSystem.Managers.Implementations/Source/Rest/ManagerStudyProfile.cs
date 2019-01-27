@@ -4,20 +4,22 @@ using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
+using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     /// <summary>
     /// Менеджер по работе с профилями обучения.
     /// </summary>
-    public class ManagerStudyProfile : Manager, IManagerStudyProfile
+    public class ManagerStudyProfile : Manager<ManagerStudyProfile>, IManagerStudyProfile
     {
         protected IRepositoryStudyProfile RepositoryStudyProfile { get; }
 
         public ManagerStudyProfile(
             IMapper mapper,
+            ILogger<ManagerStudyProfile> logger,
             IRepositoryStudyProfile repositoryStudyProfile)
-            : base(mapper)
+            : base(mapper, logger)
         {
             RepositoryStudyProfile = repositoryStudyProfile;
         }

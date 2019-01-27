@@ -4,20 +4,22 @@ using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
+using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     /// <summary>
     /// Менеджер по работе с институтами.
     /// </summary>
-    public class ManagerInstitute : Manager, IManagerInstitute
+    public class ManagerInstitute : Manager<ManagerInstitute>, IManagerInstitute
     {
         protected IRepositoryInstitute RepositoryInstitute { get; }
 
         public ManagerInstitute(
             IMapper mapper,
+            ILogger<ManagerInstitute> logger,
             IRepositoryInstitute repositoryInstitute)
-            : base(mapper)
+            : base(mapper, logger)
         {
             RepositoryInstitute = repositoryInstitute;
         }

@@ -10,17 +10,20 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Tests.Source
 {
-    public class TestsManagerInstitute : TestsManager
+    public class TestsManagerInstitute : TestsManager<ManagerInstitute>
     {
         protected IManagerInstitute ManagerInstitute { get; }
 
-        protected Mock<IRepositoryInstitute> MockRepositoryInstitute { get; set; }
+        protected Mock<IRepositoryInstitute> MockRepositoryInstitute { get; }
 
         public TestsManagerInstitute()
         {
             MockRepositoryInstitute = new Mock<IRepositoryInstitute>();
 
-            ManagerInstitute = new ManagerInstitute(Mapper, MockRepositoryInstitute.Object);
+            ManagerInstitute = new ManagerInstitute(
+                Mapper,
+                LoggerMock.Object,
+                MockRepositoryInstitute.Object);
         }
 
         [Fact]

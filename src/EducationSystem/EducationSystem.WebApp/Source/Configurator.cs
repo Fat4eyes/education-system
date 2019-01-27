@@ -2,14 +2,16 @@
 using EducationSystem.Dependencies.Source;
 using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.Mapping.Source;
+using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
 using EducationSystem.WebApp.Source.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.WebApp.Source.Rest
+namespace EducationSystem.WebApp.Source
 {
     public class Configurator
     {
@@ -41,10 +43,15 @@ namespace EducationSystem.WebApp.Source.Rest
             DependencyRecorder.Register(services, Configuration);
         }
 
-        public void Configure(IApplicationBuilder builder, IHostingEnvironment environment)
+        public void Configure(
+            IApplicationBuilder builder,
+            IHostingEnvironment environment,
+            ILoggerFactory loggerFactory)
         {
             if (environment.IsDevelopment())
                 builder.UseDeveloperExceptionPage();
+
+            loggerFactory.AddFile(Configuration.GetSection("Logging"));
 
             builder.UseMiddleware(typeof(ErrorHandler));
 

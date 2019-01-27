@@ -13,5 +13,11 @@
     "Port": "3306",
     "UserName": "victor",
     "UserPassword": "qwerty123"
+  },
+  "Logging": {
+    "PathFormat": "Logs/Log-{Date}.log",
+    "LogLevel": {
+      "Default": "Debug"
+    }
   }
 }
