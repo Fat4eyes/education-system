@@ -13,6 +13,7 @@ namespace EducationSystem.WebApp.Source
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args).UseStartup<Configurator>();
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Configurator>();
     }
 }

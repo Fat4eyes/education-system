@@ -21,7 +21,7 @@ namespace EducationSystem.WebApp.Source.Tamers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public IActionResult GetById(int id)
         {
             return Json(ManagerGroup.GetById(id));

@@ -1,5 +1,4 @@
-﻿using EducationSystem.Managers.Implementations.Source;
-using EducationSystem.WebApp.Source.Models;
+﻿using EducationSystem.WebApp.Source.Models;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,31 +8,37 @@ namespace EducationSystem.WebApp.Source.Helpers
 {
     public class ConfigurationHelper
     {
-        protected ConfigurationManager ConfigurationManager { get; }
+        protected IConfiguration Configuration { get; }
 
-        public ConfigurationHelper(ConfigurationManager configurationManager)
+        public ConfigurationHelper(IConfiguration configuration)
         {
-            ConfigurationManager = configurationManager;
+            Configuration = configuration;
         }
 
-        public static void ConfigureJson(MvcJsonOptions options)
-        {
-            options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-        }
-
-        public void ConfigureCors(CorsOptions options)
-        {
-            var cors = ConfigurationManager
-                .GetCorsSection()
+        public Cors GetCors() =>
+            Configuration
+                .GetSection("Cors")
                 .Get<Cors>();
 
-            options.AddPolicy(cors.Policy, y => ConfigureCorsPolicy(cors, y));
-        }
+        public string[] GetOrigins() =>
+            GetCors().Origins.ToArray();
 
-        private static void ConfigureCorsPolicy(Cors cors, CorsPolicyBuilder builder)
+        public string GetPolicy() =>
+            GetCors().Policy;
+
+        public IConfigurationSection GetLoggingSection() =>
+            Configuration.GetSection("Logging");
+
+        public static void ConfigureJson(MvcJsonOptions options) =>
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+
+        public void ConfigureCors(CorsOptions options) =>
+            options.AddPolicy(GetPolicy(), ConfigureCorsPolicy);
+
+        private void ConfigureCorsPolicy(CorsPolicyBuilder builder)
         {
             builder
-                .WithOrigins(cors.Origins.ToArray())
+                .WithOrigins(GetOrigins())
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         }

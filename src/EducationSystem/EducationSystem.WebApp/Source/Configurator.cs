@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using EducationSystem.Dependencies.Source;
-using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.Mapping.Source;
 using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
-using EducationSystem.WebApp.Source.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +14,6 @@ namespace EducationSystem.WebApp.Source
     public class Configurator
     {
         protected IConfiguration Configuration { get; }
-        protected ConfigurationManager ConfigurationManager { get; }
         protected ConfigurationHelper ConfigurationHelper { get; }
 
         public Configurator(IHostingEnvironment environment)
@@ -26,8 +23,7 @@ namespace EducationSystem.WebApp.Source
                 .AddJsonFile("app.json")
                 .Build();
 
-            ConfigurationManager = new ConfigurationManager(Configuration);
-            ConfigurationHelper = new ConfigurationHelper(ConfigurationManager);
+            ConfigurationHelper = new ConfigurationHelper(Configuration);
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -51,15 +47,11 @@ namespace EducationSystem.WebApp.Source
             if (environment.IsDevelopment())
                 builder.UseDeveloperExceptionPage();
 
-            loggerFactory.AddFile(ConfigurationManager.GetLoggingSection());
+            loggerFactory.AddFile(ConfigurationHelper.GetLoggingSection());
 
             builder.UseMiddleware(typeof(ErrorHandler));
 
-            var cors = ConfigurationManager
-                .GetCorsSection()
-                .Get<Cors>();
-
-            builder.UseCors(x => x.WithOrigins(cors.Origins.ToArray()));
+            builder.UseCors(x => x.WithOrigins(ConfigurationHelper.GetOrigins()));
             builder.UseMvc();
         }
     }

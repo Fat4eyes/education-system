@@ -11,15 +11,5 @@ namespace EducationSystem.Managers.Implementations.Source
         {
             Configuration = configuration;
         }
-
-        public IConfigurationSection GetCorsSection()
-        {
-            return Configuration.GetSection("Cors");
-        }
-
-        public IConfigurationSection GetLoggingSection()
-        {
-            return Configuration.GetSection("Logging");
-        }
     }
 }
