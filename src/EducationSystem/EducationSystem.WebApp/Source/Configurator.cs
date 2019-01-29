@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using EducationSystem.Dependencies.Source;
-using EducationSystem.Mapping.Source;
 using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +14,6 @@ namespace EducationSystem.WebApp.Source
     public class Configurator
     {
         protected IConfiguration Configuration { get; }
-        protected ConfigurationHelper ConfigurationHelper { get; }
 
         public Configurator(IHostingEnvironment environment)
         {
@@ -23,16 +21,12 @@ namespace EducationSystem.WebApp.Source
                 .SetBasePath(environment.ContentRootPath)
                 .AddJsonFile("app.json")
                 .Build();
-
-            ConfigurationHelper = new ConfigurationHelper(Configuration);
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.AddAutoMapper(MappingConfigurator.Configure);
-            services.AddCors(ConfigurationHelper.ConfigureCors);
-
+            services.AddAutoMapper(ConfigurationHelper.ConfigureMapper);
             services.AddSpaStaticFiles(ConfigurationHelper.ConfigureSpaStaticFiles);
 
             services
@@ -42,22 +36,23 @@ namespace EducationSystem.WebApp.Source
             DependencyRecorder.Register(services, Configuration);
         }
 
-        public void Configure(
-            IApplicationBuilder builder,
-            IHostingEnvironment environment,
-            ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder builder, IHostingEnvironment environment, ILoggerFactory loggerFactory)
         {
-            if (environment.IsDevelopment())
-                builder.UseDeveloperExceptionPage();
+            loggerFactory.AddFile(Configuration.GetSection("Logging"));
 
-            loggerFactory.AddFile(ConfigurationHelper.GetLoggingSection());
+            if (environment.IsDevelopment())
+            {
+                builder.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                builder.UseHsts();
+            }
 
             builder.UseStaticFiles();
             builder.UseSpaStaticFiles();
-           
             builder.UseMiddleware(typeof(ErrorHandler));
-
-            builder.UseCors(x => x.WithOrigins(ConfigurationHelper.GetOrigins()));
+            builder.UseHttpsRedirection();
             builder.UseMvc();
 
             builder.UseSpa(spa =>
