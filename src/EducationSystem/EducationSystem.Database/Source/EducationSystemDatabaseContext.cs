@@ -30,9 +30,27 @@ namespace EducationSystem.Database.Source
         /// </summary>
         public DbSet<DatabaseInstitute> Institutes { get; set; }
 
+        /// <summary>
+        /// Роли пользователей.
+        /// </summary>
+        public DbSet<DatabaseRole> UserRoles { get; set; }
+
         public EducationSystemDatabaseContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseUserRole>()
+                .HasKey(x => new { x.RoleId, x.UserId });
+
+            builder
+                .Entity<DatabaseUserRole>()
+                .HasOne(x => x.User)
+                .WithMany(s => s.Roles)
+                .HasForeignKey(sc => sc.UserId);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Database.Models.Source
@@ -44,5 +45,10 @@ namespace EducationSystem.Database.Models.Source
         /// </summary>
         [Column("active")]
         public virtual int Active { get; set; }
+
+        /// <summary>
+        /// Роли.
+        /// </summary>
+        public virtual List<DatabaseUserRole> Roles { get; set; }
     }
 }

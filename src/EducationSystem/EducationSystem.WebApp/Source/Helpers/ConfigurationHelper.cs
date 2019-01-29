@@ -11,8 +11,11 @@ namespace EducationSystem.WebApp.Source.Helpers
         public static void ConfigureMapper(IMapperConfigurationExpression expression)
             => MappingConfigurator.Configure(expression);
 
-        public static void ConfigureJson(MvcJsonOptions options) =>
+        public static void ConfigureJson(MvcJsonOptions options)
+        {
+            options.SerializerSettings.MaxDepth = 1;
             options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+        }
 
         public static void ConfigureSpaStaticFiles(SpaStaticFilesOptions options) =>
             options.RootPath = "App/build";

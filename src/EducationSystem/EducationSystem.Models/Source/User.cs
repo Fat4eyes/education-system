@@ -1,4 +1,5 @@
-﻿using EducationSystem.Models.Source.Base;
+﻿using System.Collections.Generic;
+using EducationSystem.Models.Source.Base;
 
 namespace EducationSystem.Models.Source
 {
@@ -28,13 +29,13 @@ namespace EducationSystem.Models.Source
         public string Email { get; set; }
 
         /// <summary>
-        /// Пароль.
-        /// </summary>
-        public string Password { get; set; }
-
-        /// <summary>
         /// Признак того, что пользователь активный (подтвержден).
         /// </summary>
         public bool Active { get; set; }
+
+        /// <summary>
+        /// Роли.
+        /// </summary>
+        public List<UserRole> Roles { get; set; }
     }
 }
