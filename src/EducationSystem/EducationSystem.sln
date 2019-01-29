@@ -37,8 +37,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Exceptions"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Tests", "EducationSystem.Tests\EducationSystem.Tests.csproj", "{51A5C8EC-2722-4D3F-9643-2695DD44C571}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.WebUi", "EducationSystem.WebUi\EducationSystem.WebUi.csproj", "{7FF2A746-D51B-4426-AA01-3C64D00DE481}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,9 +91,6 @@ Global
 		{51A5C8EC-2722-4D3F-9643-2695DD44C571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51A5C8EC-2722-4D3F-9643-2695DD44C571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51A5C8EC-2722-4D3F-9643-2695DD44C571}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7FF2A746-D51B-4426-AA01-3C64D00DE481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7FF2A746-D51B-4426-AA01-3C64D00DE481}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7FF2A746-D51B-4426-AA01-3C64D00DE481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,7 +108,6 @@ Global
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 		{72009AA8-808F-414A-886A-3E0683766884} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 		{51A5C8EC-2722-4D3F-9643-2695DD44C571} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
-		{7FF2A746-D51B-4426-AA01-3C64D00DE481} = {E106792D-1AFF-4913-A1B6-64EF92305368}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {495FA56A-EC9C-42AE-BF5E-9C1FE88AFF91}

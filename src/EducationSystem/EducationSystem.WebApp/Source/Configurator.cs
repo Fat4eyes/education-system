@@ -5,6 +5,7 @@ using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,6 +33,8 @@ namespace EducationSystem.WebApp.Source
             services.AddAutoMapper(MappingConfigurator.Configure);
             services.AddCors(ConfigurationHelper.ConfigureCors);
 
+            services.AddSpaStaticFiles(ConfigurationHelper.ConfigureSpaStaticFiles);
+
             services
                 .AddMvc()
                 .AddJsonOptions(ConfigurationHelper.ConfigureJson);
@@ -49,10 +52,21 @@ namespace EducationSystem.WebApp.Source
 
             loggerFactory.AddFile(ConfigurationHelper.GetLoggingSection());
 
+            builder.UseStaticFiles();
+            builder.UseSpaStaticFiles();
+           
             builder.UseMiddleware(typeof(ErrorHandler));
 
             builder.UseCors(x => x.WithOrigins(ConfigurationHelper.GetOrigins()));
             builder.UseMvc();
+
+            builder.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "App";
+
+                if (environment.IsDevelopment())
+                    spa.UseReactDevelopmentServer("start");
+            });
         }
     }
 }
