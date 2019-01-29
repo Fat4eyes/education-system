@@ -33,7 +33,12 @@ namespace EducationSystem.Database.Source
         /// <summary>
         /// Роли пользователей.
         /// </summary>
-        public DbSet<DatabaseRole> UserRoles { get; set; }
+        public DbSet<DatabaseRole> Roles { get; set; }
+
+        /// <summary>
+        /// Роли пользователей (Пользователь - Роль).
+        /// </summary>
+        public DbSet<DatabaseUserRole> UserRoles { get; set; }
 
         public EducationSystemDatabaseContext(DbContextOptions options) : base(options)
         {

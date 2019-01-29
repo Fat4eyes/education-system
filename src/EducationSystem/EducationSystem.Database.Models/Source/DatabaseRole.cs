@@ -4,7 +4,7 @@ using EducationSystem.Database.Models.Source.Base;
 namespace EducationSystem.Database.Models.Source
 {
     /// <summary>
-    /// Доменная модель: Роль (пользователя).
+    /// Доменная модель: Роль пользователя.
     /// </summary>
     [Table("roles")]
     public class DatabaseRole : DatabaseModel
