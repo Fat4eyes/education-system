@@ -11,7 +11,7 @@ const Layout = () => <>
       <Header/>
     </Router>
   </div>
-  <Footer/>
+  {/*<Footer/>*/}
 </>;
 
 export default Layout

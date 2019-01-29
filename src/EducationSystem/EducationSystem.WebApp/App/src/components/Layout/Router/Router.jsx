@@ -12,7 +12,7 @@ class Router extends Component {
         {this.props.children}
         <div className='content'>
           <Switch>
-            <Route exact path='/learning' component={Home}/>
+            <Route exact path='/' component={Home}/>
           </Switch>
         </div>
       </>
