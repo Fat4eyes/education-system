@@ -1,4 +1,4 @@
-async function fetchHandler(url, options, errorHandler) {
+async function handleFetch(url, options, errorHandler) {
   try {
     console.log(url);
     return fetch(url, options);
@@ -11,4 +11,4 @@ async function fetchHandler(url, options, errorHandler) {
   }
 }
 
-export default fetchHandler
+export default handleFetch
