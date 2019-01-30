@@ -21,33 +21,8 @@
         public const string Lecturer = nameof(Lecturer);
 
         /// <summary>
-        /// Cотрудник.
+        /// Cотрудник кафедры.
         /// </summary>
         public const string Employee = nameof(Employee);
-
-        /// <summary>
-        /// Администратор и Преподаватель.
-        /// </summary>
-        public const string AdminAndLecturer = Admin + "," + Lecturer;
-
-        /// <summary>
-        /// Администратор и Cотрудник.
-        /// </summary>
-        public const string AdminAndEmployee = Admin + "," + Employee;
-
-        /// <summary>
-        /// Преподаватель и Cотрудник.
-        /// </summary>
-        public const string LecturerAndEmployee = Lecturer + "," + Employee;
-
-        /// <summary>
-        /// Администратор и Преподаватель и Cотрудник.
-        /// </summary>
-        public const string AdminAndLecturerAndEmployee = Admin + "," + Lecturer + "," + Employee;
-
-        /// <summary>
-        /// Все.
-        /// </summary>
-        public const string All = Student + "," + Admin + "," + Lecturer + "," + Employee;
     }
 }

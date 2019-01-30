@@ -4,9 +4,9 @@ namespace EducationSystem.Constants.Source
 {
     public static class TokenParameters
     {
-        public const string Publisher = "Education-System-Publisher";
+        public const string Issuer = "Education-System-Issuer";
 
-        public const string Consumer = "Education-System-Consumer";
+        public const string Audience = "Education-System-Audience";
 
         public const string SecretKey = "Education-System-Secret-Key";
 

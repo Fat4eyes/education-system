@@ -72,8 +72,8 @@ namespace EducationSystem.Managers.Implementations.Source
                 SecurityAlgorithms.HmacSha256);
 
             return new JwtSecurityToken(
-                TokenParameters.Publisher,
-                TokenParameters.Consumer,
+                TokenParameters.Issuer,
+                TokenParameters.Audience,
                 identity.Claims, now, expires, signingCredentials);
         }
     }

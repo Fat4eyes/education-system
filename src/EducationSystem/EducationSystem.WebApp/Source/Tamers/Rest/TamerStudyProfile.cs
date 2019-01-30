@@ -1,6 +1,6 @@
 ﻿using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
-using Microsoft.AspNetCore.Authorization;
+using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers.Rest
@@ -17,7 +17,10 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet]
         [Route("all")]
-        [Authorize(Roles = UserRoles.AdminAndLecturerAndEmployee)]
+        [Roles(
+            UserRoles.Admin,
+            UserRoles.Lecturer,
+            UserRoles.Employee)]
         public IActionResult GetAll()
         {
             return Json(ManagerStudyProfile.GetAll());
@@ -25,7 +28,10 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet]
         [Route("{id:int}")]
-        [Authorize(Roles = UserRoles.AdminAndLecturerAndEmployee)]
+        [Roles(
+            UserRoles.Admin,
+            UserRoles.Lecturer,
+            UserRoles.Employee)]
         public IActionResult GetById(int id)
         {
             return Json(ManagerStudyProfile.GetById(id));

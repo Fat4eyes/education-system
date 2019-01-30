@@ -27,13 +27,14 @@ namespace EducationSystem.WebApp.Source.Helpers
         {
             options.RequireHttpsMetadata = false;
 
-            options.TokenValidationParameters = new TokenValidationParameters {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = TokenParameters.Publisher,
-                ValidAudience = TokenParameters.Consumer,
+                ValidIssuer = TokenParameters.Issuer,
+                ValidAudience = TokenParameters.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(TokenParameters.SecretKeyInBytes)
             };
         }
