@@ -1,19 +1,10 @@
-﻿using EducationSystem.Models.Source.Base;
-
-namespace EducationSystem.Models.Source.Rest
+﻿namespace EducationSystem.Models.Source.Rest
 {
     /// <summary>
-    /// Роль (пользователя).
+    /// Роль пользователя.
     /// </summary>
-    public class UserRole : Model
+    public class UserRole : UserRoleShort
     {
-        /// <summary>
-        /// Название.
-        /// </summary>
-        public string Name { get; set; }
-
-        public string Slug { get; set; }
-
         /// <summary>
         /// Описание.
         /// </summary>

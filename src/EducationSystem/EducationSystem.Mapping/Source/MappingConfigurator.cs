@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using AutoMapper;
 using EducationSystem.Database.Models.Source;
-using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Rest;
 
 namespace EducationSystem.Mapping.Source
@@ -27,6 +26,8 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<DatabaseStudyProfile, StudyProfile>();
             expression.CreateMap<DatabaseInstitute, Institute>();
             expression.CreateMap<DatabaseRole, UserRole>();
+
+            expression.CreateMap<UserRole, UserRoleShort>();
 
             expression.ForAllMaps(Configure);
         }

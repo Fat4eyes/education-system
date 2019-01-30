@@ -41,8 +41,6 @@ namespace EducationSystem.WebApp.Source.Handlers
                     return CreateResponse(context, HttpStatusCode.InternalServerError, exception.Message);
                 case EducationSystemNotFoundException _:
                     return CreateResponse(context, HttpStatusCode.NotFound, exception.Message);
-                case EducationSystemUnauthorizedException _:
-                    return CreateResponse(context, HttpStatusCode.Unauthorized, exception.Message);
             }
 
             return CreateResponse(context, HttpStatusCode.InternalServerError, exception.Message);

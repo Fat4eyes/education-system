@@ -10,6 +10,7 @@ using EducationSystem.Managers.Implementations.Source.Base;
 using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
+using EducationSystem.Models.Source.Rest;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
@@ -40,11 +41,8 @@ namespace EducationSystem.Managers.Implementations.Source
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
             };
 
-            var roles = user.Roles
-                .Select(x => x.Name)
-                .ToList();
-
-            claims.AddRange(roles.Select(x => new Claim(ClaimsIdentity.DefaultRoleClaimType, x)));
+            claims.AddRange(user.Roles.Select(x =>
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, x.Name)));
 
             var identity = new ClaimsIdentity(claims, "Token",
                 ClaimsIdentity.DefaultNameClaimType,
@@ -53,9 +51,9 @@ namespace EducationSystem.Managers.Implementations.Source
             var token = CreateToken(model, identity);
 
             return new SignInResponse {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Email = identity.Name,
-                Roles = roles
+                Roles = Mapper.Map<List<UserRoleShort>>(user.Roles),
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
 
