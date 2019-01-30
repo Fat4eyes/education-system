@@ -2,6 +2,7 @@
 using EducationSystem.Dependencies.Source;
 using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -30,6 +31,10 @@ namespace EducationSystem.WebApp.Source
             services.AddSpaStaticFiles(ConfigurationHelper.ConfigureSpaStaticFiles);
 
             services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(ConfigurationHelper.ConfigureJwtBearer);
+
+            services
                 .AddMvc()
                 .AddJsonOptions(ConfigurationHelper.ConfigureJson);
 
@@ -53,6 +58,7 @@ namespace EducationSystem.WebApp.Source
             builder.UseSpaStaticFiles();
             builder.UseMiddleware(typeof(ErrorHandler));
             builder.UseHttpsRedirection();
+            builder.UseAuthentication();
             builder.UseMvc();
 
             builder.UseSpa(spa =>

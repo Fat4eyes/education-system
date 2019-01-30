@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using System.Collections.Generic;
 using EducationSystem.Exceptions.Source;
+using EducationSystem.Managers.Implementations.Source.Base;
 using EducationSystem.Managers.Interfaces.Source.Rest;
-using EducationSystem.Models.Source;
+using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.Extensions.Logging;
 
@@ -37,6 +39,20 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var user = RepositoryUser.GetById(id) ??
                 throw new EducationSystemNotFoundException($"Пользователь не найден. Идентификатор: {id}.");
+
+            return Mapper.Map<User>(user);
+        }
+
+        public User GetByEmailAndPassword(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentException(nameof(email));
+
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException(nameof(password));
+
+            var user = RepositoryUser.GetByEmailAndPassword(email, password) ??
+                throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {email}.");
 
             return Mapper.Map<User>(user);
         }

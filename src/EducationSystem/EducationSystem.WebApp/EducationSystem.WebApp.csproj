@@ -9,12 +9,12 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
     <ProjectReference Include="..\EducationSystem.Dependencies\EducationSystem.Dependencies.csproj" />
     <ProjectReference Include="..\EducationSystem.Managers.Implementations\EducationSystem.Managers.Implementations.csproj" />
     <ProjectReference Include="..\EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj" />

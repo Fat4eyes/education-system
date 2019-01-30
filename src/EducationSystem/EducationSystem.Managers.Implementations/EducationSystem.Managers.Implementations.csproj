@@ -8,9 +8,11 @@
     <PackageReference Include="AutoMapper" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
     <ProjectReference Include="..\EducationSystem.Exceptions\EducationSystem.Exceptions.csproj" />
     <ProjectReference Include="..\EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj" />

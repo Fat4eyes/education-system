@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Models.Source;
+using EducationSystem.Models.Source.Rest;
 
 namespace EducationSystem.Managers.Interfaces.Source.Rest
 {
@@ -19,5 +20,13 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         /// </summary>
         /// <returns>Пользователь.</returns>
         User GetById(int id);
+
+        /// <summary>
+        /// Возвращает пользователя по электронной почте и паролю.
+        /// </summary>
+        /// <param name="email">E-mail (электронная почта).</param>
+        /// <param name="password">Пароль.</param>
+        /// <returns>Пользователь.</returns>
+        User GetByEmailAndPassword(string email, string password);
     }
 }

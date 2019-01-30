@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.Managers.Implementations.Source.Rest
+namespace EducationSystem.Managers.Implementations.Source.Base
 {
     /// <summary>
     /// Базовый менеджер.

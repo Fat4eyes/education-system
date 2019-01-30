@@ -1,7 +1,9 @@
-﻿using EducationSystem.Managers.Interfaces.Source.Rest;
+﻿using EducationSystem.Constants.Source;
+using EducationSystem.Managers.Interfaces.Source.Rest;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EducationSystem.WebApp.Source.Tamers
+namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/Groups")]
     public class TamerGroup : Controller
@@ -15,6 +17,7 @@ namespace EducationSystem.WebApp.Source.Tamers
 
         [HttpGet]
         [Route("all")]
+        [Authorize(Roles = UserRoles.AdminAndLecturerAndEmployee)]
         public IActionResult GetAll()
         {
             return Json(ManagerGroup.GetAll());
@@ -22,6 +25,7 @@ namespace EducationSystem.WebApp.Source.Tamers
 
         [HttpGet]
         [Route("{id:int}")]
+        [Authorize(Roles = UserRoles.AdminAndLecturerAndEmployee)]
         public IActionResult GetById(int id)
         {
             return Json(ManagerGroup.GetById(id));

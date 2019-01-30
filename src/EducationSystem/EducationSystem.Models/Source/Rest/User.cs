@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Models.Source.Base;
 
-namespace EducationSystem.Models.Source
+namespace EducationSystem.Models.Source.Rest
 {
     /// <summary>
     /// Пользователь.

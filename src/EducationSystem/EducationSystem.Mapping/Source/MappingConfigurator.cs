@@ -2,6 +2,7 @@
 using AutoMapper;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Models.Source;
+using EducationSystem.Models.Source.Rest;
 
 namespace EducationSystem.Mapping.Source
 {
