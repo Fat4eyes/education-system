@@ -33,7 +33,7 @@ class SingIn extends Component {
       Password: this.state.password,
       Remember: this.state.remember
     });
-    this.props.handleClose();
+    if (result) this.props.handleClose();
   };
 
   render() {

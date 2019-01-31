@@ -9,6 +9,8 @@ const defaultState = {
   Email: null
 };
 
+const {Provider, Consumer} = AuthContext;
+
 class AuthProvider extends Component {
   constructor(props) {
     super(props);
@@ -34,9 +36,14 @@ class AuthProvider extends Component {
       ValidateAuthModel(authModel);
 
       const authData = await fetch.post('/api/auth/signin', JSON.stringify(authModel));
-
-      setAuthData(authData);
-      this.setState(authData)
+      
+      if (authData) {
+        setAuthData(authData);
+        this.setState(authData);
+        return true;
+      }
+      
+      return false;
     },
     signOut: () => {
       clearAuthData();
@@ -54,41 +61,16 @@ class AuthProvider extends Component {
     }
   };
 
-  render() {
-    return <AuthContext.Provider value={{...this.state, ...this.actions}}>
-      {this.props.children}
-    </AuthContext.Provider>
-  }
+  render = () => <Provider value={{...this.state, ...this.actions}}>
+    {this.props.children}
+  </Provider>
 }
 
-const withAuthenticated = Component =>
-  props =>
-    <AuthContext.Consumer>
-      {values => <Component {...props} auth={{...values}}/>}
-    </AuthContext.Consumer>;
-
-@withAuthenticated
-class Authenticated extends Component {
-  render() {
-    const {children, auth: {isAuthenticated}, inRole: role} = this.props;
-
-    return !!role
-      ? isAuthenticated(role) && children
-      : isAuthenticated() && children;
-  }
-}
-
-@withAuthenticated
-class UnAuthenticated extends Component {
-  render() {
-    return !this.props.auth.isAuthenticated() && this.props.children
-  }
-}
+const withAuthenticated = Component => props => 
+  <Consumer>
+    {values => <Component {...props} auth={{...values}}/>}
+  </Consumer>;
 
 export default AuthProvider
 
-export {
-  withAuthenticated,
-  Authenticated,
-  UnAuthenticated
-}
+export {withAuthenticated}
