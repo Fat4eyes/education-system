@@ -5,9 +5,9 @@ import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
 import env from '../../helpers/env';
 import {tealTheme} from '../../helpers/themes';
 import {Router} from 'react-router-dom';
-import {AuthenticateProvider} from '../../services/authService'
 import history from '../../helpers/history'
-
+import {SnackbarProvider} from 'notistack';
+import AuthProvider from '../../providers/AuthProvider/AuthProvider';
 
 class App extends Component {
   state = {
@@ -17,13 +17,15 @@ class App extends Component {
   handleTheme = theme => this.setState({theme: createMuiTheme(theme)});
 
   render() {
-    return <Router history={history}>
-      <MuiThemeProvider theme={this.state.theme}>
-        <AuthenticateProvider>
-          {env.SetOldDesign === 'true' ? <OldLayout/> : <NewLayout handleTheme={this.handleTheme}/>}
-        </AuthenticateProvider>
-      </MuiThemeProvider>
-    </Router>;
+    return <SnackbarProvider maxSnack={3}>
+      <Router history={history}>
+        <MuiThemeProvider theme={this.state.theme}>
+          <AuthProvider>
+            {env.SetOldDesign === 'true' ? <OldLayout/> : <NewLayout handleTheme={this.handleTheme}/>}
+          </AuthProvider>
+        </MuiThemeProvider>
+      </Router>
+    </SnackbarProvider>;
   }
 }
 

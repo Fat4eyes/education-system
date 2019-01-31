@@ -63,7 +63,9 @@
     "@material-ui/icons": "^3.0.2",
     "classnames": "latest",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
-    "history": "latest"
+    "history": "latest",
+    "notistack": "^0.4.1",
+    "js-cookie": "^2.2.0"
   },
   "scripts": {
     "start": "node scripts/start.js",

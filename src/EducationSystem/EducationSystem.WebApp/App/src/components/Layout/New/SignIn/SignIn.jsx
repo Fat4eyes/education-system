@@ -13,8 +13,9 @@ import {
 } from '@material-ui/core';
 import styles from './styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {AuthenticateConsumer} from '../../../../services/authService'
+import {withAuthenticated} from '../../../../providers/AuthProvider/AuthProvider'
 
+@withAuthenticated
 @withStyles(styles)
 class SingIn extends Component {
   state = {
@@ -27,13 +28,16 @@ class SingIn extends Component {
   handleCheckbox = ({target: {checked}}) => this.setState({remember: checked});
 
   handleSubmit = (signInHandler) => async () => {
-    let result = await signInHandler({});
-    console.log("auth");
+    let result = await signInHandler({
+      Email: this.state.email,
+      Password: this.state.password,
+      Remember: this.state.remember
+    });
     this.props.handleClose();
   };
 
   render() {
-    const {classes, handleClose, open} = this.props;
+    const {classes, handleClose, open, auth: {signIn}} = this.props;
     let {handleReject} = this.props;
     handleReject = handleReject || handleClose;
 
@@ -58,9 +62,7 @@ class SingIn extends Component {
                    onChange={this.handleInput}/>
           </FormControl>
           <FormControlLabel control={<Checkbox onClick={this.handleCheckbox} color='primary'/>} label='Remember me'/>
-          <AuthenticateConsumer>
-            {({signIn}) => <SubmitButton classes={classes} signInHandler={signIn}/>}
-          </AuthenticateConsumer>
+          <SubmitButton classes={classes} signInHandler={signIn}/>  
         </div>
       </div>
     </Modal>;

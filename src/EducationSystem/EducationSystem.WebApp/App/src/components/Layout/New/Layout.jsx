@@ -20,8 +20,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
 import SignIn from './SignIn/SignIn';
 import {Link} from 'react-router-dom';
-import {AuthenticateConsumer} from '../../../services/authService'
+import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider';
 
+@withAuthenticated
 @withStyles(styles)
 class Layout extends Component {
   state = {
@@ -33,7 +34,8 @@ class Layout extends Component {
   handleSingInModal = value => () => this.setState({singInModalOpen: value});
 
   render() {
-    const {classes} = this.props;
+    const {classes, auth: {isAuthenticated, signOut}} = this.props;
+    const isSignIn = isAuthenticated();
 
     return <div className={classes.root}>
       <AppBar className={classNames(classes.appBar, this.state.open && classes.appBarShift)}>
@@ -45,12 +47,9 @@ class Layout extends Component {
           <Typography variant='h6' color='inherit' noWrap className={classes.title}>
             Система обучения
           </Typography>
-          <AuthenticateConsumer>
-            {({isAuthenticated, signOut}) => <>
-              {isAuthenticated() || <Button color='inherit' size='large' onClick={this.handleSingInModal(true)}>Войти</Button>}
-              {isAuthenticated() && <Button color='inherit' size='large' onClick={signOut}>Выйти</Button>}
-            </>}
-          </AuthenticateConsumer>
+          <Button color='inherit' size='large' onClick={isSignIn ? signOut : this.handleSingInModal(true)}>
+            {isSignIn ? 'Выйти' : 'Войти'}
+          </Button>
         </Toolbar>
       </AppBar>
       <SwipeableDrawer

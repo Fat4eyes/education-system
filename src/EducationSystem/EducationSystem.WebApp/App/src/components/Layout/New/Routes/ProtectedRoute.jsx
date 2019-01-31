@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {Route} from 'react-router-dom'
-import {AuthenticateConsumer} from '../../../../services/authService'
+import {withAuthenticated} from '../../../../providers/AuthProvider/AuthProvider'
 import SignIn from '../SignIn/SignIn';
 import history from '../../../../helpers/history'
 
+@withAuthenticated
 class ProtectedRoute extends Component {
   state = {
     singInModalOpen: true
@@ -14,18 +15,13 @@ class ProtectedRoute extends Component {
   };
 
   render() {
-    let {component: Component, ...rest} = this.props;
+    let {component: Component, auth: {isAuthenticated}, ...rest} = this.props;
 
-    const handlePrivateRender = props => <AuthenticateConsumer>
-      {({isAuthenticated}) => isAuthenticated()
-        ? <Component {...props} />
-        : <SignIn open={true} handleClose={this.handleSingInModal} handleReject={() => history.push('/')}/>}
-    </AuthenticateConsumer>;
+    const handlePrivateRender = props => isAuthenticated()
+      ? <Component {...props} />
+      : <SignIn open={true} handleClose={this.handleSingInModal} handleReject={() => history.push('/')}/>;
 
-    return <Route
-      {...rest}
-      render={handlePrivateRender}
-    />
+    return <Route {...rest} render={handlePrivateRender}/>
   }
 }
 
