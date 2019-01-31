@@ -74,9 +74,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
                 throw new EducationSystemException(message);
             }
-            catch
+            catch (Exception ex)
             {
-                throw new EducationSystemException("Неверная электронная почта или пароль.");
+                throw new EducationSystemException("Неверная электронная почта или пароль.", ex);
             }
         }
     }
