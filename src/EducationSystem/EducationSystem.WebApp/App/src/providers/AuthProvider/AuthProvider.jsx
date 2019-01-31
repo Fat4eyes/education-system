@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import AuthContext from './AuthContext'
-import {baseFetch as fetch, protectedFetch} from '../../helpers/fetch';
+import Fetch from '../../helpers/Fetch';
 import {checkAuthData, clearAuthData, getAuthData, setAuthData, ValidateAuthModel} from './common';
+import ProtectedFetch from '../../helpers/ProtectedFetch';
 
 const defaultState = {
   Token: null,
@@ -14,7 +15,7 @@ const {Provider, Consumer} = AuthContext;
 class AuthProvider extends Component {
   constructor(props) {
     super(props);
-
+    
     const authData = getAuthData();
 
     if (checkAuthData(authData)) {
@@ -27,7 +28,7 @@ class AuthProvider extends Component {
 
   async componentDidMount() {
     if (!!this.state.Token) {
-      await protectedFetch.check(this.actions.signOut)
+      await ProtectedFetch.check(this.actions.signOut)
     }
   }
 
@@ -35,7 +36,7 @@ class AuthProvider extends Component {
     signIn: async authModel => {
       ValidateAuthModel(authModel);
 
-      const authData = await fetch.post('/api/auth/signin', JSON.stringify(authModel));
+      const authData = await Fetch.post('/api/auth/signin', JSON.stringify(authModel));
       
       if (authData) {
         setAuthData(authData);
