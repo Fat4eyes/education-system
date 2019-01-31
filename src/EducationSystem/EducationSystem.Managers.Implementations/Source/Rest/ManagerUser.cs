@@ -58,7 +58,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             if (!Crypt.Verify(password, user.Password))
                 throw new EducationSystemException(
                     $"Пользователь найден, но пароль указан неверно. " +
-                    $"Электронная почта: {email}.");
+                    $"Электронная почта: {user.Email}.");
 
             return Mapper.Map<User>(user);
         }
