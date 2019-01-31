@@ -63,5 +63,48 @@ namespace EducationSystem.Tests.Source
 
             Assert.Throws<EducationSystemNotFoundException>(() => ManagerUser.GetById(9));
         }
+
+        [Fact]
+        public void GetByEmailAndPassword_UserExists_PasswordValid()
+        {
+            MockRepositoryUser
+                .Setup(x => x.GetByEmail(It.IsAny<string>()))
+                .Returns(new DatabaseUser {
+                    FirstName = "Виктор",
+                    Email = "email@gmail.com",
+                    Password = "$2y$10$MbINClu9lHiaxS.TNNNHPeDJGdNJws2LwNrYqu06HNgy9a9hQ9fau"
+                });
+
+            var user = ManagerUser.GetByEmailAndPassword("EMAIL@gmail.com", "qwerty");
+
+            Assert.Equal("Виктор", user.FirstName);
+            Assert.Equal("email@gmail.com", user.Email);
+        }
+
+        [Fact]
+        public void GetByEmailAndPassword_UserNotExists()
+        {
+            MockRepositoryUser
+                .Setup(x => x.GetByEmail(It.IsAny<string>()))
+                .Returns((DatabaseUser) null);
+
+            Assert.Throws<EducationSystemNotFoundException>(() =>
+                ManagerUser.GetByEmailAndPassword("email@gmail.com", "qwerty"));
+        }
+
+        [Fact]
+        public void GetByEmailAndPassword_UserExists_PasswordInvalid()
+        {
+            MockRepositoryUser
+                .Setup(x => x.GetByEmail(It.IsAny<string>()))
+                .Returns(new DatabaseUser {
+                    FirstName = "Виктор",
+                    Email = "email@gmail.com",
+                    Password = "$2y$10$zLMh5ShFAL8n2UcUo0HfPOzbyvybnQ4.ow6JxBABrIuEau/KpJSt6"
+                });
+
+            Assert.Throws<EducationSystemException>(() =>
+                ManagerUser.GetByEmailAndPassword("email@gmail.com", "qwerty-m"));
+        }
     }
 }

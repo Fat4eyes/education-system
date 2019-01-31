@@ -33,7 +33,6 @@ namespace EducationSystem.Dependencies.Source
         /// </summary>
         private static void RegisterManagers(IServiceCollection services)
         {
-            services.AddTransient<IConfigurationManager, ConfigurationManager>();
             services.AddTransient<IAuthManager, AuthManager>();
 
             services.AddTransient<IManagerUser, ManagerUser>();

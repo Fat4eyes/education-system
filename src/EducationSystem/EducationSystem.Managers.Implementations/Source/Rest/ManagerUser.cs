@@ -55,12 +55,29 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             var user = RepositoryUser.GetByEmail(email) ??
                 throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {email}.");
 
-            if (!Crypt.Verify(password, user.Password))
-                throw new EducationSystemException(
-                    $"Пользователь найден, но пароль указан неверно. " +
-                    $"Электронная почта: {user.Email}.");
+            ValidatePassword(user.Email, password, user.Password);
 
             return Mapper.Map<User>(user);
+        }
+
+        private void ValidatePassword(string email, string password, string hash)
+        {
+            try
+            {
+                if (Crypt.Verify(password, hash))
+                    return;
+
+                var message = $"Пользователь найден, но пароль указан неверно. " +
+                              $"Электронная почта: {email}.";
+
+                Logger.LogError(message);
+
+                throw new EducationSystemException(message);
+            }
+            catch
+            {
+                throw new EducationSystemException("Неверная электронная почта или пароль.");
+            }
         }
     }
 }
