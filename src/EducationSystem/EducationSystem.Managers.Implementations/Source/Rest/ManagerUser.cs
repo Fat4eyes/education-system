@@ -56,7 +56,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {email}.");
 
             if (!Crypt.Verify(password, user.Password))
-                throw new EducationSystemNotFoundException(
+                throw new EducationSystemException(
                     $"Пользователь найден, но пароль указан неверно. " +
                     $"Электронная почта: {email}.");
 
