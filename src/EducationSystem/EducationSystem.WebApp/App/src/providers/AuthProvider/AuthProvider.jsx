@@ -3,6 +3,7 @@ import AuthContext from './AuthContext'
 import Fetch from '../../helpers/Fetch';
 import {checkAuthData, clearAuthData, getAuthData, setAuthData, ValidateAuthModel} from './common';
 import ProtectedFetch from '../../helpers/ProtectedFetch';
+import {withSnackbar} from "notistack";
 
 const defaultState = {
   Token: null,
@@ -12,10 +13,11 @@ const defaultState = {
 
 const {Provider, Consumer} = AuthContext;
 
+@withSnackbar
 class AuthProvider extends Component {
   constructor(props) {
     super(props);
-    
+
     const authData = getAuthData();
 
     if (checkAuthData(authData)) {
@@ -34,16 +36,29 @@ class AuthProvider extends Component {
 
   actions = {
     signIn: async authModel => {
-      ValidateAuthModel(authModel);
+      const handleError = e =>
+        this.props.enqueueSnackbar(e, {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'right',
+          },
+        });
 
-      const authData = await Fetch.post('/api/auth/signin', JSON.stringify(authModel));
-      
+      try {
+        ValidateAuthModel(authModel)
+      } catch (e) {
+        handleError(e)
+      }
+
+      const authData = await Fetch.post('/api/auth/signin', JSON.stringify(authModel), handleError);
+
       if (authData) {
         setAuthData(authData);
         this.setState(authData);
         return true;
       }
-      
+
       return false;
     },
     signOut: () => {
@@ -67,7 +82,7 @@ class AuthProvider extends Component {
   </Provider>
 }
 
-const withAuthenticated = Component => props => 
+const withAuthenticated = Component => props =>
   <Consumer>
     {values => <Component {...props} auth={{...values}}/>}
   </Consumer>;

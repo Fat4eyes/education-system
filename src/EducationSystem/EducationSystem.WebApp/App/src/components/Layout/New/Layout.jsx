@@ -21,6 +21,8 @@ import HomeIcon from '@material-ui/icons/Home';
 import SignIn from './SignIn/SignIn';
 import {Link} from 'react-router-dom';
 import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider';
+import Try from "../../Try";
+import SimpleLink from "../../SimpleLink";
 
 @withAuthenticated
 @withStyles(styles)
@@ -57,17 +59,17 @@ class Layout extends Component {
         open={this.state.open} onClose={this.handleDrawer(false)} onOpen={this.handleDrawer(true)}>
         <div tabIndex={0} role='button' onClick={this.handleDrawer(false)} onKeyDown={this.handleDrawer(false)}>
           <List>
-            <ListItem component={Link} to='/' button>
+            <ListItem component={SimpleLink} to='/' button>
               <ListItemIcon>
                 <HomeIcon/>
               </ListItemIcon>
               <ListItemText primary='Главная'/>
             </ListItem>
-            <ListItem component={Link} to='/private' button>
+            <ListItem component={SimpleLink} to='/private' button>
               <ListItemIcon>
                 <HomeIcon/>
               </ListItemIcon>
-              <ListItemText primary='private'/>
+              <ListItemText primary='Приватная'/>
             </ListItem>
           </List>
         </div>
@@ -77,7 +79,8 @@ class Layout extends Component {
           <Routes loginHandler={this.handleSingInModal(true)}/>
         </Paper>
       </main>
-      <SignIn open={this.state.singInModalOpen} handleClose={this.handleSingInModal(false)}/>
+      <Try><SignIn open={this.state.singInModalOpen} handleClose={this.handleSingInModal(false)}/></Try>
+      
     </div>;
   }
 }
