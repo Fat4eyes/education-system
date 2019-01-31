@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database.Models.Source;
+﻿using System.Collections.Generic;
+using EducationSystem.Database.Models.Source;
 
 namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
@@ -8,11 +9,10 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
     public interface IRepositoryUser : IRepositoryReadOnly<DatabaseUser>
     {
         /// <summary>
-        /// Возвращает пользователя по электронной почте и паролю.
+        /// Возвращает пользователя по электронной почте.
         /// </summary>
         /// <param name="email">E-mail (электронная почта).</param>
-        /// <param name="password">Пароль.</param>
         /// <returns>Пользователь.</returns>
-        DatabaseUser GetByEmailAndPassword(string email, string password);
+        DatabaseUser GetByEmail(string email);
     }
 }

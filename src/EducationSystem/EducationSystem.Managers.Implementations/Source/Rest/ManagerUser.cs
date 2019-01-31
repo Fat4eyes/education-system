@@ -7,6 +7,7 @@ using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.Extensions.Logging;
+using Crypt = BCrypt.Net.BCrypt;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
@@ -51,8 +52,13 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException(nameof(password));
 
-            var user = RepositoryUser.GetByEmailAndPassword(email, password) ??
+            var user = RepositoryUser.GetByEmail(email) ??
                 throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {email}.");
+
+            if (!Crypt.Verify(password, user.Password))
+                throw new EducationSystemNotFoundException(
+                    $"Пользователь найден, но пароль указан неверно. " +
+                    $"Электронная почта: {email}.");
 
             return Mapper.Map<User>(user);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EducationSystem.Database.Source;
 using EducationSystem.Database.Models.Source;
@@ -15,11 +16,11 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             : base(context) { }
 
         /// <inheritdoc />
-        public DatabaseUser GetByEmailAndPassword(string email, string password)
+        public DatabaseUser GetByEmail(string email)
         {
             return AsQueryable()
-                .FirstOrDefault(x => x.Password == password
-                    && string.Equals(x.Email, email, StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefault(x => string.Equals(x.Email, email,
+                    StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }
