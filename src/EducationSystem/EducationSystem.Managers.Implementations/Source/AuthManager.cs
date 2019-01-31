@@ -29,6 +29,7 @@ namespace EducationSystem.Managers.Implementations.Source
             ManagerUser = managerUser;
         }
 
+        /// <inheritdoc />
         public SignInResponse SignIn(SignInRequest model)
         {
             if (model == null)
@@ -52,7 +53,7 @@ namespace EducationSystem.Managers.Implementations.Source
 
             return new SignInResponse {
                 Email = identity.Name,
-                Roles = Mapper.Map<List<UserRoleShort>>(user.Roles),
+                User = Mapper.Map<UserShort>(user),
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }

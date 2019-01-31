@@ -44,13 +44,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return Mapper.Map<User>(user);
         }
 
+        /// <inheritdoc />
         public User GetByEmailAndPassword(string email, string password)
         {
-            if (string.IsNullOrEmpty(email))
-                throw new ArgumentException(nameof(email));
+            if (string.IsNullOrWhiteSpace(email))
+                throw new EducationSystemException("Не указана элеткронная почта.");
 
-            if (string.IsNullOrEmpty(password))
-                throw new ArgumentException(nameof(password));
+            if (string.IsNullOrWhiteSpace(password))
+                throw new EducationSystemException("Не указан пароль.");
 
             var user = RepositoryUser.GetByEmail(email) ??
                 throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {email}.");

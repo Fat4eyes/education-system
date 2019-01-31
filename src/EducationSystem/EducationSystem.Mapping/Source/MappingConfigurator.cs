@@ -27,6 +27,7 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<DatabaseInstitute, Institute>();
             expression.CreateMap<DatabaseRole, UserRole>();
 
+            expression.CreateMap<User, UserShort>();
             expression.CreateMap<UserRole, UserRoleShort>();
 
             expression.ForAllMaps(Configure);

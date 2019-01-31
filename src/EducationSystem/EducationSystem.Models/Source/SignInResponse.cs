@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using EducationSystem.Models.Source.Rest;
+﻿using EducationSystem.Models.Source.Rest;
 
 namespace EducationSystem.Models.Source
 {
@@ -16,8 +15,8 @@ namespace EducationSystem.Models.Source
         public string Email { get; set; }
 
         /// <summary>
-        /// Список ролей.
+        /// Пользователь.
         /// </summary>
-        public List<UserRoleShort> Roles { get; set; }
+        public UserShort User { get; set; }
     }
 }
