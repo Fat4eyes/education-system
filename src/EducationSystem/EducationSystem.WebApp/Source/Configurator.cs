@@ -34,9 +34,7 @@ namespace EducationSystem.WebApp.Source
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(ConfigurationHelper.ConfigureJwtBearer);
 
-            services
-                .AddMvc()
-                .AddJsonOptions(ConfigurationHelper.ConfigureJson);
+            services.AddMvc();
 
             DependencyRecorder.Register(services, Configuration);
         }

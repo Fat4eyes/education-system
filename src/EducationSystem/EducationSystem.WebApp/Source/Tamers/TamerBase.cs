@@ -15,6 +15,6 @@ namespace EducationSystem.WebApp.Source.Tamers
             => base.Json(CreateResponse(null));
 
         private static SuccessResponse CreateResponse(object @object)
-            => new SuccessResponse(@object); 
+            => new SuccessResponse(@object);
     }
 }

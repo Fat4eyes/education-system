@@ -36,7 +36,9 @@ namespace EducationSystem.Managers.Implementations.Source
                 throw new ArgumentNullException(nameof(model));
 
             var user = ManagerUser.GetByEmailAndPassword(model.Email, model.Password) ??
-                throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {model.Email}.");
+                throw new EducationSystemNotFoundException(
+                    $"Пользователь не найден. Электронная почта: {model.Email}.",
+                    new EducationSystemPublicException("Неверная электронная почта или пароль."));
 
             var claims = new List<Claim> {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
@@ -49,16 +51,6 @@ namespace EducationSystem.Managers.Implementations.Source
                 ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);
 
-            var token = CreateToken(model, identity);
-
-            return new SignInResponse {
-                User = Mapper.Map<UserShort>(user),
-                Token = new JwtSecurityTokenHandler().WriteToken(token)
-            };
-        }
-
-        private static JwtSecurityToken CreateToken(SignInRequest model, ClaimsIdentity identity)
-        {
             var now = DateTime.UtcNow;
 
             var expires = model.Remember
@@ -69,10 +61,15 @@ namespace EducationSystem.Managers.Implementations.Source
                 new SymmetricSecurityKey(TokenParameters.SecretKeyInBytes),
                 SecurityAlgorithms.HmacSha256);
 
-            return new JwtSecurityToken(
+            var token = new JwtSecurityToken(
                 TokenParameters.Issuer,
                 TokenParameters.Audience,
                 identity.Claims, now, expires, signingCredentials);
+
+            return new SignInResponse {
+                User = Mapper.Map<UserShort>(user),
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
         }
     }
 }
