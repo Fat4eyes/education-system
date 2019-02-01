@@ -6,9 +6,8 @@ import ProtectedFetch from '../../helpers/ProtectedFetch';
 import {withSnackbar} from "notistack";
 
 const defaultState = {
-  Token: null,
-  User: {},
-  Email: null
+  token: null,
+  user: {}
 };
 
 const {Provider, Consumer} = AuthContext;
@@ -29,7 +28,7 @@ class AuthProvider extends Component {
   }
 
   async componentDidMount() {
-    if (!!this.state.Token) {
+    if (!!this.state.token) {
       await ProtectedFetch.check(this.actions.signOut)
     }
   }
@@ -70,7 +69,7 @@ class AuthProvider extends Component {
       const isAuthenticated = checkAuthData(authData);
 
       if (!!role) {
-        return isAuthenticated && authData.User.Roles.find(r => r.Name === role)
+        return isAuthenticated && authData.user.roles.find(r => r.name === role)
       }
 
       return isAuthenticated;

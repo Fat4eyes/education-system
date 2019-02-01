@@ -43,6 +43,7 @@ class SingIn extends Component {
       ValidateAuthModel(authModel);
       this.setState({isLoading: true});
       let result = await signInHandler(authModel);
+      this.setState({isLoading: false});
       if (result) this.props.handleClose();
     } catch (e) {
       this.props.enqueueSnackbar(e, {
@@ -52,13 +53,11 @@ class SingIn extends Component {
           horizontal: 'right',
         },
       });
-    } finally {
       this.setState({isLoading: false});
     }
   };
 
   render() {
-    console.log('render', this.state);
     const {classes, handleClose, open, auth: {signIn}} = this.props;
     let {handleReject} = this.props;
     handleReject = handleReject || handleClose;

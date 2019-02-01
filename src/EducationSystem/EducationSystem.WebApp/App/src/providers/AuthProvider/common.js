@@ -1,4 +1,4 @@
-import {EMAIL, TOKEN, USER} from "./constants";
+import {TOKEN, USER} from "./constants";
 import Cookies from 'js-cookie'
 
 const emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -12,26 +12,23 @@ const ValidateAuthModel = ({Email, Password, Remember}) => {
     throw 'Запомнить не заданно';
 };
 
-const setAuthData = ({Token, User, Email}) => {
-  Cookies.set(TOKEN, Token);
-  Cookies.set(USER, JSON.stringify(User));
-  Cookies.set(EMAIL, Email);
+const setAuthData = ({token, user}) => {
+  Cookies.set(TOKEN, token);
+  Cookies.set(USER, JSON.stringify(user));
 };
 
 const clearAuthData = () => {
   Cookies.remove(TOKEN);
   Cookies.remove(USER);
-  Cookies.remove(EMAIL);
 };
 
 const getAuthData = () => ({
-  Token: Cookies.get(TOKEN),
-  User: Cookies.getJSON(USER),
-  Email: Cookies.get(EMAIL)
+  token: Cookies.get(TOKEN),
+  user: Cookies.getJSON(USER)
 });
 
-const checkAuthData = ({Token, User, Email}) =>
-  !!Token && !!User && !!Email;
+const checkAuthData = ({token, user}) =>
+  !!token && !!user;
 
 export {
   ValidateAuthModel,

@@ -2,17 +2,42 @@ class Fetch {
   static async handleFetch(url, options, onError) {
     try {
       let response = await fetch(url, options);
-      console.log(response);
-      if (!response.ok) {
+      
+      if (!response.ok) 
         throw response;
-      }
-      return (await response.json());
+      
+      const {success, data, error} = await response.json();
+      
+      if (success === true) 
+        return data;
+
+      throw error
+      
     } catch (error) {
-      const message = error.text ? await error.text() : error;
-      if (onError) {
-        onError(message);
-      } else {
-        console.log(message);
+      const handleError = e => onError ? onError(e) : console.log(e);
+
+      if (error === undefined || error === null)
+        return handleError('Упс, просто бэк не дали.');
+      
+      switch (typeof error) {
+        case 'object':
+          switch (error.status) {
+            case 401:
+              handleError('Вы не авторизованны');
+              break;
+            case 403:
+              handleError('Не лезь, она тебя сожрет.(Недостаточно прав)');
+              break;
+            case 500:
+              handleError(await error.text());
+              break;
+            default:
+              console.log(error)
+          }
+          break;
+        case 'string':
+        default:
+          handleError(error);
       }
     }
   }
