@@ -56,7 +56,7 @@ namespace EducationSystem.WebApp.Source
 
             builder.UseStaticFiles();
             builder.UseSpaStaticFiles();
-            builder.UseMiddleware(typeof(ErrorHandler));
+            builder.UseMiddleware(typeof(ExceptionHandler));
             builder.UseHttpsRedirection();
             builder.UseAuthentication();
             builder.UseMvc();

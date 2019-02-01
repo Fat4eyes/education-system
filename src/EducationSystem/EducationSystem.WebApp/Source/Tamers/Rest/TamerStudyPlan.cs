@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/StudyPlans")]
-    public class TamerStudyPlan : Controller
+    public class TamerStudyPlan : TamerBase
     {
         protected IManagerStudyPlan ManagerStudyPlan { get; }
 

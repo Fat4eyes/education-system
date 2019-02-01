@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using System.Collections.Generic;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Implementations.Source.Base;
@@ -48,13 +47,15 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public User GetByEmailAndPassword(string email, string password)
         {
             if (string.IsNullOrWhiteSpace(email))
-                throw new EducationSystemException("Не указана элеткронная почта.");
+                throw new EducationSystemPublicException("Не указана элеткронная почта.");
 
             if (string.IsNullOrWhiteSpace(password))
-                throw new EducationSystemException("Не указан пароль.");
+                throw new EducationSystemPublicException("Не указан пароль.");
 
             var user = RepositoryUser.GetByEmail(email) ??
-                throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {email}.");
+                throw new EducationSystemNotFoundException(
+                    $"Пользователь не найден. Электронная почта: {email}.",
+                    new EducationSystemPublicException("Неверная электронная почта или пароль."));
 
             ValidatePassword(user.Email, password, user.Password);
 
@@ -63,22 +64,15 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         private void ValidatePassword(string email, string password, string hash)
         {
-            try
-            {
-                if (Crypt.Verify(password, hash))
-                    return;
+            if (Crypt.Verify(password, hash))
+                return;
 
-                var message = $"Пользователь найден, но пароль указан неверно. " +
-                              $"Электронная почта: {email}.";
+            var message = $"Пользователь найден, но пароль указан неверно. " +
+                          $"Электронная почта: {email}.";
 
-                Logger.LogError(message);
+            Logger.LogError(message);
 
-                throw new EducationSystemException(message);
-            }
-            catch (Exception ex)
-            {
-                throw new EducationSystemException("Неверная электронная почта или пароль.", ex);
-            }
+            throw new EducationSystemPublicException("Неверная электронная почта или пароль.");
         }
     }
 }

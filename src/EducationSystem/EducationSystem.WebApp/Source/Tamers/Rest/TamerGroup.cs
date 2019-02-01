@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/Groups")]
-    public class TamerGroup : Controller
+    public class TamerGroup : TamerBase
     {
         protected IManagerGroup ManagerGroup { get; }
 

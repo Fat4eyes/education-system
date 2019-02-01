@@ -52,7 +52,6 @@ namespace EducationSystem.Managers.Implementations.Source
             var token = CreateToken(model, identity);
 
             return new SignInResponse {
-                Email = identity.Name,
                 User = Mapper.Map<UserShort>(user),
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };

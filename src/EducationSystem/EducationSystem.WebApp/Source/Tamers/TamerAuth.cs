@@ -1,12 +1,13 @@
 ﻿using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Models.Source;
+using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers
 {
     [Route("api/Auth")]
-    public class TamerAuth : Controller
+    public class TamerAuth : TamerBase
     {
         protected IAuthManager AuthManager { get; }
 
@@ -18,11 +19,11 @@ namespace EducationSystem.WebApp.Source.Tamers
         [HttpPost("signin")]
         public IActionResult SignIn([FromBody] SignInRequest model)
         {
-            return Ok(AuthManager.SignIn(model));
+            return Json(AuthManager.SignIn(model));
         }
 
-        [HttpPost("check")]
         [Authorize]
+        [HttpPost("check")]
         public IActionResult Check()
         {
             return Ok();

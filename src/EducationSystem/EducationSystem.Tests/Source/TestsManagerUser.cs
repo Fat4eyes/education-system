@@ -103,7 +103,7 @@ namespace EducationSystem.Tests.Source
                     Password = "$2y$10$zLMh5ShFAL8n2UcUo0HfPOzbyvybnQ4.ow6JxBABrIuEau/KpJSt6"
                 });
 
-            Assert.Throws<EducationSystemException>(() =>
+            Assert.Throws<EducationSystemPublicException>(() =>
                 ManagerUser.GetByEmailAndPassword("email@gmail.com", "qwerty-m"));
         }
     }
