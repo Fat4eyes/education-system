@@ -3,13 +3,13 @@ import {
   Avatar,
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   Input,
   InputLabel,
   Modal,
   Typography,
-  CircularProgress,
   withStyles
 } from '@material-ui/core';
 import styles from './styles'
@@ -26,7 +26,7 @@ class SingIn extends Component {
     email: '',
     password: '',
     remember: false,
-    isLoading: false 
+    isLoading: false
   };
 
   handleInput = ({target: {name, value}}) => this.setState({[name]: value});
@@ -70,18 +70,20 @@ class SingIn extends Component {
         </div>
         <div className={classes.form}>
           {this.state.isLoading
-            ? <CircularProgress className={classes.progress} size={50} thickness={5} />
+            ? <CircularProgress className={classes.progress} size={50} thickness={5}/>
             : <>
-                <FormControl margin='normal' required fullWidth>
-                  <InputLabel htmlFor='email'>Имя ящика</InputLabel>
-                  <Input name='email' autoFocus onChange={this.handleInput} value={this.state.email}/>
-                </FormControl>
-                <FormControl margin='normal' required fullWidth>
-                  <InputLabel htmlFor='password'>Пароль</InputLabel>
-                  <Input name='password' type='password' onChange={this.handleInput} value={this.state.password}/>
-                </FormControl>
-                <FormControlLabel control={<Checkbox onClick={this.handleCheckbox} checked={this.state.remember} color='primary'/>} label='Запомнить'/>
-              </>
+              <FormControl margin='normal' required fullWidth>
+                <InputLabel htmlFor='email'>Имя ящика</InputLabel>
+                <Input name='email' autoFocus onChange={this.handleInput} value={this.state.email}/>
+              </FormControl>
+              <FormControl margin='normal' required fullWidth>
+                <InputLabel htmlFor='password'>Пароль</InputLabel>
+                <Input name='password' type='password' onChange={this.handleInput} value={this.state.password}/>
+              </FormControl>
+              <FormControlLabel
+                control={<Checkbox onClick={this.handleCheckbox} checked={this.state.remember} color='primary'/>}
+                label='Запомнить'/>
+            </>
           }
           <Button onClick={this.handleSubmit(handleClose, signIn)}
                   type='submit'

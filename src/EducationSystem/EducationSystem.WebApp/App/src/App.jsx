@@ -1,25 +1,25 @@
-import React, {Component} from 'react'
-import NewLayout from './components/Layout/New/Layout'
-import OldLayout from './components/Layout/Old/Layout'
+import React, {Component, Suspense} from 'react'
+import {Router} from 'react-router-dom';
+import {SnackbarProvider} from 'notistack';
 import {createMuiTheme, MuiThemeProvider} from '@material-ui/core/styles';
 import env from './helpers/env';
 import {tealTheme} from './helpers/themes';
-import {Router} from 'react-router-dom';
 import history from './helpers/history'
-import {SnackbarProvider} from 'notistack';
 import AuthProvider from './providers/AuthProvider/AuthProvider';
+import Loading from './Loading';
+
+const NewLayout = React.lazy(() => import('./components/Layout/New/Layout'));
+const OldLayout = React.lazy(() => import('./components/Layout/Old/Layout'));
 
 class App extends Component {
-  state = {theme: createMuiTheme(tealTheme)};
-
-  handleTheme = theme => this.setState({theme: createMuiTheme(theme)});
-
   render() {
     return <Router history={history}>
-      <MuiThemeProvider theme={this.state.theme}>
+      <MuiThemeProvider theme={createMuiTheme(tealTheme)}>
         <SnackbarProvider maxSnack={3}>
           <AuthProvider>
-            {env.SetOldDesign === 'true' ? <OldLayout/> : <NewLayout handleTheme={this.handleTheme}/>}
+            <Suspense fallback={<Loading/>}>
+              {env.SetOldDesign === 'true' ? <OldLayout/> : <NewLayout handleTheme={this.handleTheme}/>}
+            </Suspense>
           </AuthProvider>
         </SnackbarProvider>
       </MuiThemeProvider>
