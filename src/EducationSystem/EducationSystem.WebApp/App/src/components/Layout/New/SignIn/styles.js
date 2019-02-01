@@ -14,17 +14,21 @@ const styles = theme => ({
     alignItems: 'center',
     display: 'flex',
   },
+  header: {
+    marginBottom: theme.spacing.unit * 3,
+  },
   avatar: {
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
+    display: 'contents',
     width: '100%',
     marginTop: theme.spacing.unit,
   },
   submit: {
     marginTop: theme.spacing.unit * 3,
-  },
+  }
 });
 
 export default styles

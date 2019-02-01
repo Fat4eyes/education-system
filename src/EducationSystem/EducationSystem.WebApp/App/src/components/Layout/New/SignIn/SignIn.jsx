@@ -9,6 +9,7 @@ import {
   InputLabel,
   Modal,
   Typography,
+  CircularProgress,
   withStyles
 } from '@material-ui/core';
 import styles from './styles'
@@ -24,7 +25,8 @@ class SingIn extends Component {
   state = {
     email: '',
     password: '',
-    remember: false
+    remember: false,
+    isLoading: false 
   };
 
   handleInput = ({target: {name, value}}) => this.setState({[name]: value});
@@ -39,6 +41,7 @@ class SingIn extends Component {
 
     try {
       ValidateAuthModel(authModel);
+      this.setState({isLoading: true});
       let result = await signInHandler(authModel);
       if (result) this.props.handleClose();
     } catch (e) {
@@ -49,36 +52,47 @@ class SingIn extends Component {
           horizontal: 'right',
         },
       });
+    } finally {
+      this.setState({isLoading: false});
     }
   };
 
   render() {
+    console.log('render', this.state);
     const {classes, handleClose, open, auth: {signIn}} = this.props;
     let {handleReject} = this.props;
     handleReject = handleReject || handleClose;
 
-    const SubmitButton = ({signInHandler}) =>
-      <Button onClick={this.handleSubmit(signInHandler)} type='submit' fullWidth
-              variant='contained' color='primary' className={classes.submit}>
-        Войти
-      </Button>;
-
     return <Modal open={open} onClose={handleReject}>
       <div className={classes.root}>
-        <Avatar className={classes.avatar}><LockOutlinedIcon/></Avatar>
-        <Typography component='h1' variant='h5'>Вход</Typography>
+        <div className={classes.header}>
+          <Avatar className={classes.avatar}><LockOutlinedIcon/></Avatar>
+          <Typography component='h1' variant='h5'>Вход</Typography>
+        </div>
         <div className={classes.form}>
-          <FormControl margin='normal' required fullWidth>
-            <InputLabel htmlFor='email'>Имя ящика</InputLabel>
-            <Input id='email' name='email' autoComplete='email' autoFocus onChange={this.handleInput}/>
-          </FormControl>
-          <FormControl margin='normal' required fullWidth>
-            <InputLabel htmlFor='password'>Пароль</InputLabel>
-            <Input name='password' type='password' id='password' autoComplete='current-password'
-                   onChange={this.handleInput}/>
-          </FormControl>
-          <FormControlLabel control={<Checkbox onClick={this.handleCheckbox} color='primary'/>} label='Запомнить'/>
-          <SubmitButton classes={classes} signInHandler={signIn}/>
+          {this.state.isLoading
+            ? <CircularProgress className={classes.progress} size={50} thickness={5} />
+            : <>
+                <FormControl margin='normal' required fullWidth>
+                  <InputLabel htmlFor='email'>Имя ящика</InputLabel>
+                  <Input name='email' autoFocus onChange={this.handleInput} value={this.state.email}/>
+                </FormControl>
+                <FormControl margin='normal' required fullWidth>
+                  <InputLabel htmlFor='password'>Пароль</InputLabel>
+                  <Input name='password' type='password' onChange={this.handleInput} value={this.state.password}/>
+                </FormControl>
+                <FormControlLabel control={<Checkbox onClick={this.handleCheckbox} checked={this.state.remember} color='primary'/>} label='Запомнить'/>
+              </>
+          }
+          <Button onClick={this.handleSubmit(signIn)}
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  color='primary'
+                  disabled={this.state.isLoading}
+                  className={classes.submit}>
+            Войти
+          </Button>
         </div>
       </div>
     </Modal>;
