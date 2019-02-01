@@ -18,9 +18,9 @@ import {withAuthenticated} from '../../../../providers/AuthProvider/AuthProvider
 import {ValidateAuthModel} from '../../../../providers/AuthProvider/common'
 import {withSnackbar} from "notistack";
 
+@withSnackbar
 @withAuthenticated
 @withStyles(styles)
-@withSnackbar
 class SingIn extends Component {
   state = {
     email: '',
@@ -32,7 +32,7 @@ class SingIn extends Component {
   handleInput = ({target: {name, value}}) => this.setState({[name]: value});
   handleCheckbox = ({target: {checked}}) => this.setState({remember: checked});
 
-  handleSubmit = (signInHandler) => async () => {
+  handleSubmit = (handleClose, signInHandler) => async () => {
     const authModel = {
       Email: this.state.email,
       Password: this.state.password,
@@ -44,7 +44,7 @@ class SingIn extends Component {
       this.setState({isLoading: true});
       let result = await signInHandler(authModel);
       this.setState({isLoading: false});
-      if (result) this.props.handleClose();
+      if (result && typeof handleClose === 'function') handleClose();
     } catch (e) {
       this.props.enqueueSnackbar(e, {
         variant: 'error',
@@ -83,7 +83,7 @@ class SingIn extends Component {
                 <FormControlLabel control={<Checkbox onClick={this.handleCheckbox} checked={this.state.remember} color='primary'/>} label='Запомнить'/>
               </>
           }
-          <Button onClick={this.handleSubmit(signIn)}
+          <Button onClick={this.handleSubmit(handleClose, signIn)}
                   type='submit'
                   fullWidth
                   variant='contained'

@@ -14,7 +14,13 @@ class Fetch {
       throw error
       
     } catch (error) {
-      const handleError = e => onError ? onError(e) : console.log(e);
+      const handleError = e => {
+        e = e.trim();
+        if (e[e.length() - 1] === '.') {
+          e = e.slice(0, -1)
+        } 
+        onError ? onError(e) : console.log(e)
+      };
       
       switch (typeof error) {
         case 'object':

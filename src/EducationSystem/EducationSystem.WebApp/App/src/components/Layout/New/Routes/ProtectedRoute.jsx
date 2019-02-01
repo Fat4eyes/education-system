@@ -6,20 +6,15 @@ import history from '../../../../helpers/history'
 
 @withAuthenticated
 class ProtectedRoute extends Component {
-  state = {
-    singInModalOpen: true
-  };
-
-  handleSingInModal = () => {
-    this.setState({singInModalOpen: false});
-  };
-
   render() {
-    let {component: Component, auth: {isAuthenticated}, ...rest} = this.props;
+    let {component: Component, auth: {isAuthenticated: checkAuth }, ...rest} = this.props;
+    let isAuthenticated = checkAuth();
 
-    const handlePrivateRender = props => isAuthenticated()
-      ? <Component {...props} />
-      : <SignIn open={true} handleClose={this.handleSingInModal} handleReject={() => history.push('/')}/>;
+    const handlePrivateRender = props => <>
+      {isAuthenticated && <Component {...props} />}
+      <SignIn open={!isAuthenticated}
+              handleReject={() => history.push('/')}/>
+    </>;
 
     return <Route {...rest} render={handlePrivateRender}/>
   }
