@@ -36,7 +36,10 @@ class ProtectedFetch extends Fetch {
   static async check(onError) {
     const token = ProtectedFetch.handleToken();
     try {
-      let response = await fetch('/api/auth/check', {headers: {'Authorization': `Bearer ${token}`}});
+      let response = await fetch('/api/auth/check', {
+        headers: {'Authorization': `Bearer ${token}`},
+        method: 'POST'
+      });
       if (!response.ok) {
         throw response;
       }

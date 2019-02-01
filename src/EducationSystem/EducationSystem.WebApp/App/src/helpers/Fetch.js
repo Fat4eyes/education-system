@@ -15,29 +15,24 @@ class Fetch {
       
     } catch (error) {
       const handleError = e => onError ? onError(e) : console.log(e);
-
-      if (error === undefined || error === null)
-        return handleError('Упс, просто бэк не дали.');
       
       switch (typeof error) {
         case 'object':
           switch (error.status) {
             case 401:
-              handleError('Вы не авторизованны');
-              break;
+              return handleError('Вы не авторизованны');
             case 403:
-              handleError('Не лезь, она тебя сожрет.(Недостаточно прав)');
-              break;
+              return handleError('Не лезь, она тебя сожрет.(Недостаточно прав)');
             case 500:
-              handleError(await error.text());
-              break;
+              return handleError(await error.text());
             default:
-              console.log(error)
+              return console.log(error)
           }
-          break;
         case 'string':
         default:
-          handleError(error);
+          if (error === undefined || error === null)
+            return handleError('Упс, просто бэк не дали.');
+          return handleError(error);
       }
     }
   }
