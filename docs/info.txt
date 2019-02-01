@@ -21,7 +21,7 @@
     Ответ без ошибки и без данных:
     {
         "Data": null,
-        "Sucess": true
+        "Success": true
     }
 
     Ответ без ошибки и с данными:
@@ -30,11 +30,11 @@
             "Id": 5934593,
             "Name": "Виктор"
         },
-        "Sucess": true
+        "Success": true
     }
 
     Ответ с ошибкой:
     {
         "Error": "Неверный логи или пароль",
-        "Sucess": false
+        "Success": false
     }
