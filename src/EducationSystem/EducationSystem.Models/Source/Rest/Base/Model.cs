@@ -1,10 +1,7 @@
-﻿namespace EducationSystem.Models.Source.Base
+﻿namespace EducationSystem.Models.Source.Rest.Base
 {
     public class Model
     {
-        /// <summary>
-        /// Идентификатор.
-        /// </summary>
         public int Id { get; set; }
     }
 }

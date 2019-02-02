@@ -10,9 +10,6 @@ using Crypt = BCrypt.Net.BCrypt;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    /// <summary>
-    /// Менеджер по работе с пользователями.
-    /// </summary>
     public class UserManager : Manager<UserManager>, IUserManager
     {
         protected IUserRepository UserRepository { get; }
@@ -26,7 +23,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             UserRepository = userRepository;
         }
 
-        /// <inheritdoc />
         public List<User> GetAll()
         {
             var users = UserRepository.GetAll();
@@ -34,7 +30,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return Mapper.Map<List<User>>(users);
         }
 
-        /// <inheritdoc />
         public User GetById(int id)
         {
             var user = UserRepository.GetById(id) ??
@@ -43,7 +38,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return Mapper.Map<User>(user);
         }
 
-        /// <inheritdoc />
         public User GetByEmailAndPassword(string email, string password)
         {
             if (string.IsNullOrWhiteSpace(email))

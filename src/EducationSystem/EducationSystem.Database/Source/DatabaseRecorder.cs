@@ -5,14 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EducationSystem.Database.Source
 {
-    /// <summary>
-    /// Регистратор зависимостей базы данных.
-    /// </summary>
     public static class DatabaseRecorder
     {
-        /// <summary>
-        /// Регистрирует зависимости базы данных.
-        /// </summary>
         public static void Register(IServiceCollection services, IConfiguration configuration)
         {
             var database = configuration

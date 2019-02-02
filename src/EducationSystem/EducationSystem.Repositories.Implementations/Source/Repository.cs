@@ -7,16 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
-    /// <summary>
-    /// Репозиторий.
-    /// </summary>
     public class Repository<TModel> : ReadOnlyRepository<TModel>, IRepository<TModel>
         where TModel : DatabaseModel
     {
         public Repository(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        /// <inheritdoc />
         public TModel Add(TModel model)
         {
             Context
@@ -26,7 +22,6 @@ namespace EducationSystem.Repositories.Implementations.Source
             return model;
         }
 
-        /// <inheritdoc />
         public async Task<TModel> AddAsync(TModel model)
         {
             await Context
@@ -36,7 +31,6 @@ namespace EducationSystem.Repositories.Implementations.Source
             return model;
         }
 
-        /// <inheritdoc />
         public TModel Update(TModel model)
         {
             Context
@@ -50,7 +44,6 @@ namespace EducationSystem.Repositories.Implementations.Source
             return model;
         }
 
-        /// <inheritdoc />
         public void Delete(int id)
         {
             var model = AsQueryable()
@@ -64,7 +57,6 @@ namespace EducationSystem.Repositories.Implementations.Source
             }
         }
 
-        /// <inheritdoc />
         public void Delete(TModel model)
         {
             var existing = Context
@@ -79,13 +71,11 @@ namespace EducationSystem.Repositories.Implementations.Source
             }
         }
 
-        /// <inheritdoc />
         public void SaveChanges()
         {
             Context.SaveChanges();
         }
 
-        /// <inheritdoc />
         public async Task SaveChangesAsync()
         {
             await Context.SaveChangesAsync();

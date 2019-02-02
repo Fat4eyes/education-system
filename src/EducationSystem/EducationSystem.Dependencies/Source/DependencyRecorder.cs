@@ -10,14 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EducationSystem.Dependencies.Source
 {
-    /// <summary>
-    /// Регистратор зависимостей приложения.
-    /// </summary>
     public static class DependencyRecorder
     {
-        /// <summary>
-        /// Регистрирует зависимости приложения.
-        /// </summary>
         public static void Register(IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient(x => configuration);
@@ -28,27 +22,17 @@ namespace EducationSystem.Dependencies.Source
             RegisterRepositories(services);
         }
 
-        /// <summary>
-        /// Регистрирует менеджеры.
-        /// </summary>
         private static void RegisterManagers(IServiceCollection services)
         {
             services.AddTransient<IAuthManager, AuthManager>();
-
             services.AddTransient<IUserManager, UserManager>();
         }
 
-        /// <summary>
-        /// Регистрирует репозитории.
-        /// </summary>
         private static void RegisterRepositories(IServiceCollection services)
         {
             services.AddTransient<IUserRepository, UserRepository>();
         }
 
-        /// <summary>
-        /// Регистрирует базу данных.
-        /// </summary>
         private static void RegisterDatabase(IServiceCollection services, IConfiguration configuration)
         {
             DatabaseRecorder.Register(services, configuration);

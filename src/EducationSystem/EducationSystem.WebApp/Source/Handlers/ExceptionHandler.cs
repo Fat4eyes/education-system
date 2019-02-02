@@ -10,9 +10,6 @@ using Newtonsoft.Json.Serialization;
 
 namespace EducationSystem.WebApp.Source.Handlers
 {
-    /// <summary>
-    /// Обработчик ошибок (промежуточный слой).
-    /// </summary>
     public class ExceptionHandler
     {
         protected RequestDelegate Next { get; }

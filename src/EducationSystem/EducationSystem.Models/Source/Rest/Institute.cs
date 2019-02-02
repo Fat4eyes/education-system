@@ -1,20 +1,11 @@
-﻿using EducationSystem.Models.Source.Base;
+﻿using EducationSystem.Models.Source.Rest.Base;
 
 namespace EducationSystem.Models.Source.Rest
 {
-    /// <summary>
-    /// Доменная модель: Институт.
-    /// </summary>
     public class Institute : Model
     {
-        /// <summary>
-        /// Название (наименование).
-        /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Описание.
-        /// </summary>
         public string Description { get; set; }
     }
 }

@@ -5,44 +5,13 @@ namespace EducationSystem.Database.Source
 {
     public sealed class EducationSystemDatabaseContext : DbContext
     {
-        /// <summary>
-        /// Пользователи.
-        /// </summary>
         public DbSet<DatabaseUser> Users { get; set; }
-
-        /// <summary>
-        /// Группы.
-        /// </summary>
         public DbSet<DatabaseGroup> Groups { get; set; }
-
-        /// <summary>
-        /// Учебные планы.
-        /// </summary>
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
-
-        /// <summary>
-        /// Профили обучения.
-        /// </summary>
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
-
-        /// <summary>
-        /// Институты.
-        /// </summary>
         public DbSet<DatabaseInstitute> Institutes { get; set; }
-
-        /// <summary>
-        /// Роли пользователей.
-        /// </summary>
         public DbSet<DatabaseRole> Roles { get; set; }
-
-        /// <summary>
-        /// Дисциплины.
-        /// </summary>
         public DbSet<DatabaseDiscipline> Disciplines { get; set; }
-
-        /// <summary>
-        /// Роли пользователей (Пользователь - Роль).
-        /// </summary>
         public DbSet<DatabaseUserRole> UserRoles { get; set; }
 
         public EducationSystemDatabaseContext(DbContextOptions options) : base(options)

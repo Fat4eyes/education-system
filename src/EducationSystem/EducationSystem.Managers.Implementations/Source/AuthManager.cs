@@ -29,7 +29,6 @@ namespace EducationSystem.Managers.Implementations.Source
             UserManager = userManager;
         }
 
-        /// <inheritdoc />
         public SignInResponse SignIn(SignInRequest model)
         {
             if (model == null)

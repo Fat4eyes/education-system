@@ -3,9 +3,6 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Base
 {
-    /// <summary>
-    /// Базовый менеджер.
-    /// </summary>
     public abstract class Manager<TManager> where TManager : class
     {
         protected IMapper Mapper { get; }

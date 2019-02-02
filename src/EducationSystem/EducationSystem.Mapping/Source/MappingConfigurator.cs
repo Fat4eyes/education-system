@@ -5,14 +5,8 @@ using EducationSystem.Models.Source.Rest;
 
 namespace EducationSystem.Mapping.Source
 {
-    /// <summary>
-    /// Конфигуратор преобразования типов.
-    /// </summary>
     public static class MappingConfigurator
     {
-        /// <summary>
-        /// Конфигурирует правила преобразования типов.
-        /// </summary>
         public static void Configure(IMapperConfigurationExpression expression)
         {
             expression.CreateMap<DatabaseUser, User>()
