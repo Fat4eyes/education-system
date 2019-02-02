@@ -1,7 +1,7 @@
 import React from 'react'
 import {CircularProgress, withStyles} from "@material-ui/core";
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     position: 'absolute',
     top: `50%`,
