@@ -1,7 +1,7 @@
 ﻿using EducationSystem.Models.Source.Responses;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EducationSystem.WebApp.Source.Controllers
+namespace EducationSystem.WebApp.Source.Controllers.Base
 {
     public class BaseController : Controller
     {

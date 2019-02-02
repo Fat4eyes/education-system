@@ -36,11 +36,6 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IAuthManager, AuthManager>();
 
             services.AddTransient<IUserManager, UserManager>();
-            services.AddTransient<IGroupManager, GroupManager>();
-            services.AddTransient<IStudyPlanManager, StudyPlanManager>();
-            services.AddTransient<IStudyProfileManager, StudyProfileManager>();
-            services.AddTransient<IInstituteManager, InstituteManager>();
-            services.AddTransient<IRoleManager, RoleManager>();
         }
 
         /// <summary>
@@ -49,11 +44,6 @@ namespace EducationSystem.Dependencies.Source
         private static void RegisterRepositories(IServiceCollection services)
         {
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IGroupRepository, GroupRepository>();
-            services.AddTransient<IStudyPlanRepository, StudyPlanRepository>();
-            services.AddTransient<IStudyProfileRepository, StudyProfileRepository>();
-            services.AddTransient<IInstituteRepository, InstituteRepository>();
-            services.AddTransient<IRoleRepository, RoleRepository>();
         }
 
         /// <summary>
