@@ -70,6 +70,10 @@ const styles = theme => ({
 
     minHeight: `calc(100% - ${toolbarHeight + theme.spacing.unit * 8}px)`,
     margin: `${toolbarHeight + theme.spacing.unit * 2}px 5% ${theme.spacing.unit * 2}px`
+  },
+  fullName: {
+    fontSize: 18,
+    marginRight: theme.spacing.unit
   }
 });
 

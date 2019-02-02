@@ -30,10 +30,28 @@ const getAuthData = () => ({
 const checkAuthData = ({token, user}) =>
   !!token && !!user;
 
+const capitalize = str => {
+  str = str || '';
+  return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase()
+};
+
+const getInitials = str => !!str.length
+  ? `${str.slice(0, 1)}.`
+  : str;
+
+const getFullName = ({lastName, firstName, middleName}) => {
+  lastName = capitalize(lastName || '');
+  firstName = capitalize(firstName || '');
+  middleName = capitalize(middleName || '');
+  
+  return `${lastName} ${getInitials(firstName)} ${getInitials(middleName)}`.trim()
+};
+
 export {
   ValidateAuthModel,
   setAuthData,
   clearAuthData,
   getAuthData,
-  checkAuthData
+  checkAuthData,
+  getFullName
 }

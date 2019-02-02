@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import AuthContext from './AuthContext'
 import Fetch from '../../helpers/Fetch';
-import {checkAuthData, clearAuthData, getAuthData, setAuthData, ValidateAuthModel} from './common';
+import {checkAuthData, clearAuthData, getAuthData, setAuthData, ValidateAuthModel, getFullName} from './common';
 import ProtectedFetch from '../../helpers/ProtectedFetch';
 import {withSnackbar} from "notistack";
 
@@ -73,7 +73,8 @@ class AuthProvider extends Component {
       }
 
       return isAuthenticated;
-    }
+    },
+    getFullName: () => getFullName(this.state.user)
   };
 
   render = () => <Provider value={{...this.state, ...this.actions}}>

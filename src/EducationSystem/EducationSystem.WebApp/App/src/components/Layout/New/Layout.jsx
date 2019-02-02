@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {
   AppBar,
-  Button,
   IconButton,
   List,
   ListItem,
@@ -17,11 +16,12 @@ import classNames from 'classnames';
 import styles from './styles'
 import Routes from './Routes/Routes';
 import MenuIcon from '@material-ui/icons/Menu';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Face from '@material-ui/icons/Face';
 import HomeIcon from '@material-ui/icons/Home';
 import SignIn from './SignIn/SignIn';
-import {Link} from 'react-router-dom';
 import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider';
-import Try from "../../Try";
+import Authenticated from '../../../providers/AuthProvider/Authenticated';
 import SimpleLink from "../../SimpleLink";
 
 @withAuthenticated
@@ -36,21 +36,29 @@ class Layout extends Component {
   handleSingInModal = value => () => this.setState({singInModalOpen: value});
 
   render() {
-    const {classes, auth: {isAuthenticated: checkAuth, signOut}} = this.props;
+    const {classes, auth: {isAuthenticated: checkAuth, signOut, getFullName}} = this.props;
     const isAuthenticated = checkAuth();
 
     return <div className={classes.root}>
       <AppBar className={classNames(classes.appBar, this.state.open && classes.appBarShift)}>
         <Toolbar variant='dense' disableGutters={!this.state.open} className={classes.toolbar}>
-          <IconButton color='inherit' onClick={this.handleDrawer(true)} className={classNames(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
+          <IconButton color='inherit' onClick={this.handleDrawer(true)}
+                      className={classNames(classes.menuButton, this.state.open && classes.menuButtonHidden)}>
             <MenuIcon/>
           </IconButton>
           <Typography variant='h6' color='inherit' noWrap className={classes.title}>
             Система обучения
           </Typography>
-          <Button color='inherit' size='large' onClick={isAuthenticated ? signOut : this.handleSingInModal(true)}>
-            {isAuthenticated ? 'Выйти' : 'Войти'}
-          </Button>
+          <Authenticated>
+            <div>
+              <Typography component="p" color='inherit' noWrap className={classes.fullName}>
+                {getFullName()}
+              </Typography>
+            </div>
+          </Authenticated>
+          <IconButton color='inherit' size='large' onClick={isAuthenticated ? signOut : this.handleSingInModal(true)}>
+            {isAuthenticated ? <ExitToAppIcon/> : <Face/>}
+          </IconButton>
         </Toolbar>
       </AppBar>
       <SwipeableDrawer

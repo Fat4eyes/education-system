@@ -9,7 +9,14 @@ import AuthProvider from './providers/AuthProvider/AuthProvider';
 import Loading from './components/Loading';
 import Try from './components/Try';
 
-const NewLayout = React.lazy(() => import('./components/Layout/New/Layout'));
+// const NewLayout = React.lazy(() => import('./components/Layout/New/Layout'));
+
+const NewLayout = React.lazy(() => {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(import('./components/Layout/New/Layout')), 1000)
+  });
+});
+
 const OldLayout = React.lazy(() => import('./components/Layout/Old/Layout'));
 
 class App extends Component {

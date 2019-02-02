@@ -30,10 +30,10 @@ class Try extends Component {
     if (this.state.hasError) {
       return Catch || <div className={classes.root}>
         <Typography variant="h5" component="h3">
-          Упс, что-то пошло не так...
+          Упс, что-то пошло не так.
         </Typography>
         <Typography variant="h5" component="h3">
-          {this.state.error.toString()}
+          Обратитесь к администратору.
         </Typography>
       </div>;
     }
