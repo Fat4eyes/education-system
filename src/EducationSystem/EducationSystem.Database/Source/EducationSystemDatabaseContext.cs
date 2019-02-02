@@ -36,6 +36,11 @@ namespace EducationSystem.Database.Source
         public DbSet<DatabaseRole> Roles { get; set; }
 
         /// <summary>
+        /// Дисциплины.
+        /// </summary>
+        public DbSet<DatabaseDiscipline> Disciplines { get; set; }
+
+        /// <summary>
         /// Роли пользователей (Пользователь - Роль).
         /// </summary>
         public DbSet<DatabaseUserRole> UserRoles { get; set; }

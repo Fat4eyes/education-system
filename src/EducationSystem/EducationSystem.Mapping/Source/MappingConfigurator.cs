@@ -25,10 +25,10 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<DatabaseStudyPlan, StudyPlan>();
             expression.CreateMap<DatabaseStudyProfile, StudyProfile>();
             expression.CreateMap<DatabaseInstitute, Institute>();
-            expression.CreateMap<DatabaseRole, UserRole>();
+            expression.CreateMap<DatabaseRole, Role>();
 
             expression.CreateMap<User, UserShort>();
-            expression.CreateMap<UserRole, UserRoleShort>();
+            expression.CreateMap<Role, RoleShort>();
 
             expression.ForAllMaps(Configure);
         }

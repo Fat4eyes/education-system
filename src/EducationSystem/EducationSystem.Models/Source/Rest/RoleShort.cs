@@ -5,7 +5,7 @@ namespace EducationSystem.Models.Source.Rest
     /// <summary>
     /// Роль пользователя.
     /// </summary>
-    public class UserRoleShort : Model
+    public class RoleShort : Model
     {
         /// <summary>
         /// Название.

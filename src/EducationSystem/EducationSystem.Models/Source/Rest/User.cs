@@ -36,6 +36,6 @@ namespace EducationSystem.Models.Source.Rest
         /// <summary>
         /// Роли.
         /// </summary>
-        public List<UserRole> Roles { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }

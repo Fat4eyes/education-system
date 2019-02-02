@@ -3,7 +3,7 @@
     /// <summary>
     /// Роль пользователя.
     /// </summary>
-    public class UserRole : UserRoleShort
+    public class Role : RoleShort
     {
         /// <summary>
         /// Описание.

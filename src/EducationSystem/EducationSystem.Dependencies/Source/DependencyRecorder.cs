@@ -40,6 +40,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
             services.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
             services.AddTransient<IManagerInstitute, ManagerInstitute>();
+            services.AddTransient<IManagerRole, ManagerRole>();
         }
 
         /// <summary>
@@ -52,6 +53,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
             services.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
             services.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
+            services.AddTransient<IRepositoryRole, RepositoryRole>();
         }
 
         /// <summary>
