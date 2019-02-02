@@ -16,7 +16,7 @@ class Fetch {
     } catch (error) {
       const handleError = e => {
         e = e.trim();
-        if (e[e.length() - 1] === '.') {
+        if (e[e.length - 1] === '.') {
           e = e.slice(0, -1)
         } 
         onError ? onError(e) : console.log(e)

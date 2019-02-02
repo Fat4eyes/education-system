@@ -20,7 +20,7 @@ class App extends Component {
           <AuthProvider>
             <Try>
               <Suspense fallback={<Loading/>}>
-                {env.SetOldDesign === 'true' ? <OldLayout/> : <NewLayout handleTheme={this.handleTheme}/>}
+                {env.SetOldDesign === 'true' ? <OldLayout/> : <NewLayout/>}
               </Suspense>
             </Try>
           </AuthProvider>
