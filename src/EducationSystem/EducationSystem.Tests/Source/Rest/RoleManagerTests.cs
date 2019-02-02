@@ -37,10 +37,10 @@ namespace EducationSystem.Tests.Source.Rest
                     new DatabaseRole { Id = 5, Name = "Администратор" }
                 });
 
-            var groups = RoleManager.GetAll();
+            var roles = RoleManager.GetAll();
 
-            Assert.Equal("Администратор", groups.Last().Name);
-            Assert.Equal("Студент", groups.First().Name);
+            Assert.Equal("Администратор", roles.Last().Name);
+            Assert.Equal("Студент", roles.First().Name);
         }
 
         [Fact]
