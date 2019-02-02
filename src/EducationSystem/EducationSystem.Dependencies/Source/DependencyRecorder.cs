@@ -35,12 +35,12 @@ namespace EducationSystem.Dependencies.Source
         {
             services.AddTransient<IAuthManager, AuthManager>();
 
-            services.AddTransient<IManagerUser, ManagerUser>();
-            services.AddTransient<IManagerGroup, ManagerGroup>();
-            services.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
-            services.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
-            services.AddTransient<IManagerInstitute, ManagerInstitute>();
-            services.AddTransient<IManagerRole, ManagerRole>();
+            services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IGroupManager, GroupManager>();
+            services.AddTransient<IStudyPlanManager, StudyPlanManager>();
+            services.AddTransient<IStudyProfileManager, StudyProfileManager>();
+            services.AddTransient<IInstituteManager, InstituteManager>();
+            services.AddTransient<IRoleManager, RoleManager>();
         }
 
         /// <summary>
@@ -48,12 +48,12 @@ namespace EducationSystem.Dependencies.Source
         /// </summary>
         private static void RegisterRepositories(IServiceCollection services)
         {
-            services.AddTransient<IRepositoryUser, RepositoryUser>();
-            services.AddTransient<IRepositoryGroup, RepositoryGroup>();
-            services.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
-            services.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
-            services.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
-            services.AddTransient<IRepositoryRole, RepositoryRole>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IGroupRepository, GroupRepository>();
+            services.AddTransient<IStudyPlanRepository, StudyPlanRepository>();
+            services.AddTransient<IStudyProfileRepository, StudyProfileRepository>();
+            services.AddTransient<IInstituteRepository, InstituteRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
         }
 
         /// <summary>

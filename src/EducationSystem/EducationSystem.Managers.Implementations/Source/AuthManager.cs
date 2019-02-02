@@ -18,15 +18,15 @@ namespace EducationSystem.Managers.Implementations.Source
 {
     public class AuthManager : Manager<AuthManager>, IAuthManager
     {
-        protected IManagerUser ManagerUser { get; }
+        protected IUserManager UserManager { get; }
 
         public AuthManager(
             IMapper mapper,
             ILogger<AuthManager> logger,
-            IManagerUser managerUser)
+            IUserManager userManager)
             : base(mapper, logger)
         {
-            ManagerUser = managerUser;
+            UserManager = userManager;
         }
 
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace EducationSystem.Managers.Implementations.Source
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var user = ManagerUser.GetByEmailAndPassword(model.Email, model.Password) ??
+            var user = UserManager.GetByEmailAndPassword(model.Email, model.Password) ??
                 throw new EducationSystemNotFoundException(
                     $"Пользователь не найден. Электронная почта: {model.Email}.",
                     new EducationSystemPublicException("Неверная электронная почта или пароль."));

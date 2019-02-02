@@ -10,7 +10,7 @@ namespace EducationSystem.Repositories.Implementations.Source
     /// <summary>
     /// Репозиторий.
     /// </summary>
-    public class Repository<TModel> : RepositoryReadOnly<TModel>, IRepository<TModel>
+    public class Repository<TModel> : ReadOnlyRepository<TModel>, IRepository<TModel>
         where TModel : DatabaseModel
     {
         public Repository(EducationSystemDatabaseContext context)

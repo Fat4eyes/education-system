@@ -6,7 +6,7 @@ namespace EducationSystem.Repositories.Interfaces.Source
     /// <summary>
     /// Интерфейс репозитория.
     /// </summary>
-    public interface IRepository<TModel> : IRepositoryReadOnly<TModel> where TModel : DatabaseModel
+    public interface IRepository<TModel> : IReadOnlyRepository<TModel> where TModel : DatabaseModel
     {
         /// <summary>
         /// Добавляет новую запись (модель).
