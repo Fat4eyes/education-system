@@ -19,24 +19,27 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Face from '@material-ui/icons/Face';
 import HomeIcon from '@material-ui/icons/Home';
-import SignIn from './SignIn/SignIn';
 import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider';
 import Authenticated from '../../../providers/AuthProvider/Authenticated';
-import SimpleLink from "../../SimpleLink";
+import SimpleLink from '../../SimpleLink';
 
 @withAuthenticated
 @withStyles(styles)
 class Layout extends Component {
-  state = {
-    open: false,
-    singInModalOpen: false
-  };
+  state = {open: false};
 
   handleDrawer = value => () => this.setState({open: value});
-  handleSingInModal = value => () => this.setState({singInModalOpen: value});
 
   render() {
-    const {classes, auth: {isAuthenticated: checkAuth, signOut, getFullName}} = this.props;
+    const {
+      classes,
+      auth: {
+        checkAuth,
+        signOut,
+        getFullName,
+        openAuthModal
+      }
+    } = this.props;
     const isAuthenticated = checkAuth();
 
     return <div className={classes.root}>
@@ -51,12 +54,12 @@ class Layout extends Component {
           </Typography>
           <Authenticated>
             <div>
-              <Typography component="p" color='inherit' noWrap className={classes.fullName}>
+              <Typography component='p' color='inherit' noWrap className={classes.fullName}>
                 {getFullName()}
               </Typography>
             </div>
           </Authenticated>
-          <IconButton color='inherit' size='large' onClick={isAuthenticated ? signOut : this.handleSingInModal(true)}>
+          <IconButton color='inherit' size='large' onClick={isAuthenticated ? signOut : openAuthModal}>
             {isAuthenticated ? <ExitToAppIcon/> : <Face/>}
           </IconButton>
         </Toolbar>
@@ -83,10 +86,9 @@ class Layout extends Component {
       </SwipeableDrawer>
       <main className={classes.content}>
         <Paper elevation={0} square={true} className={classes.page}>
-          <Routes loginHandler={this.handleSingInModal(true)}/>
+          <Routes/>
         </Paper>
       </main>
-      <SignIn open={this.state.singInModalOpen} handleClose={this.handleSingInModal(false)}/>
     </div>;
   }
 }

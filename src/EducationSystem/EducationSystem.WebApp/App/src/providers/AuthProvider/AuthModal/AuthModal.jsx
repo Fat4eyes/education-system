@@ -14,14 +14,13 @@ import {
 } from '@material-ui/core';
 import styles from './styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {withAuthenticated} from '../../../../providers/AuthProvider/AuthProvider'
-import {ValidateAuthModel} from '../../../../providers/AuthProvider/common'
 import {withSnackbar} from "notistack";
+import {ValidateAuthModel} from "../common";
+import history from "../../../helpers/history";
 
 @withSnackbar
-@withAuthenticated
 @withStyles(styles)
-class SingIn extends Component {
+class AuthModal extends Component {
   state = {
     email: '',
     password: '',
@@ -58,8 +57,13 @@ class SingIn extends Component {
   };
 
   render() {
-    const {classes, handleClose, open, auth: {signIn}} = this.props;
-    let {handleReject} = this.props;
+    let {
+      classes, 
+      handleClose,
+      handleReject,
+      open,
+      signIn
+    } = this.props;
     handleReject = handleReject || handleClose;
 
     return <Modal open={open} onClose={handleReject}>
@@ -100,4 +104,4 @@ class SingIn extends Component {
   }
 }
 
-export default SingIn
+export default AuthModal

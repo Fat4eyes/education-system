@@ -4,10 +4,23 @@ import Fetch from '../../helpers/Fetch';
 import {checkAuthData, clearAuthData, getAuthData, setAuthData, ValidateAuthModel, getFullName} from './common';
 import ProtectedFetch from '../../helpers/ProtectedFetch';
 import {withSnackbar} from "notistack";
+import {
+  Avatar, Button, Checkbox,
+  CircularProgress,
+  FormControl,
+  FormControlLabel,
+  Input,
+  InputLabel,
+  Modal,
+  Typography
+} from "@material-ui/core";
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import AuthModal from "./AuthModal/AuthModal";
 
 const defaultState = {
   token: null,
-  user: {}
+  user: {},
+  isAuthModalOpen: false
 };
 
 const {Provider, Consumer} = AuthContext;
@@ -20,7 +33,10 @@ class AuthProvider extends Component {
     const authData = getAuthData();
 
     if (checkAuthData(authData)) {
-      this.state = {...authData}
+      this.state = {
+        ...defaultState,
+        ...authData
+      }
     } else {
       clearAuthData();
       this.state = {...defaultState}
@@ -33,6 +49,8 @@ class AuthProvider extends Component {
     }
   }
 
+  handleAuthModal = value => () => this.setState({isAuthModalOpen: value});
+  
   actions = {
     signIn: async authModel => {
       const handleError = e =>
@@ -54,7 +72,7 @@ class AuthProvider extends Component {
 
       if (authData) {
         setAuthData(authData);
-        this.setState(authData);
+        this.setState({...authData});
         return true;
       }
 
@@ -64,7 +82,7 @@ class AuthProvider extends Component {
       clearAuthData();
       this.setState({...defaultState})
     },
-    isAuthenticated: (role) => {
+    checkAuth: (role) => {
       const authData = getAuthData();
       const isAuthenticated = checkAuthData(authData);
 
@@ -74,12 +92,20 @@ class AuthProvider extends Component {
 
       return isAuthenticated;
     },
-    getFullName: () => getFullName(this.state.user)
+    getFullName: () => getFullName(this.state.user),
+    openAuthModal: this.handleAuthModal(true)
   };
 
-  render = () => <Provider value={{...this.state, ...this.actions}}>
-    {this.props.children}
-  </Provider>
+  render() {
+    return <Provider value={{...this.state, ...this.actions}}>
+      {this.props.children}
+      <AuthModal 
+        open={this.state.isAuthModalOpen}
+        handleClose={this.handleAuthModal(false)}
+        {...this.state} 
+        {...this.actions}/>
+    </Provider>;
+  }
 }
 
 const withAuthenticated = Component => props =>

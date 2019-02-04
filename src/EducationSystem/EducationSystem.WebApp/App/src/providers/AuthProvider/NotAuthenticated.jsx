@@ -4,7 +4,7 @@ import {withAuthenticated} from "./AuthProvider";
 @withAuthenticated
 class NotAuthenticated extends Component {
   render() {
-    return !this.props.auth.isAuthenticated() && this.props.children
+    return !this.props.auth.checkAuth() && this.props.children
   }
 }
 
