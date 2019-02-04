@@ -1,4 +1,4 @@
-﻿namespace EducationSystem.Models
+﻿namespace EducationSystem.Models.Source
 {
     public class TokenResponse
     {
