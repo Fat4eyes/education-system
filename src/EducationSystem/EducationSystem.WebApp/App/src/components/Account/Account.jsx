@@ -47,7 +47,7 @@ class Account extends Component {
           <Paper className={classes.paper} elevation={1}>
             <GridRowWithIcon Icon={AccountIcon} text={getFullName()} children={
               user.active && <Grid item>
-                <Tooltip title='Ваш профиль подтвержден администратором'>
+                <Tooltip title='Учетная запись подтверждена'>
                   <CheckIcon/>
                 </Tooltip>
               </Grid>

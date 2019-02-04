@@ -10,6 +10,7 @@ import {
   SwipeableDrawer,
   Toolbar,
   Typography,
+  ButtonBase,
   withStyles
 } from '@material-ui/core';
 import classNames from 'classnames';
@@ -53,11 +54,11 @@ class Layout extends Component {
             Система обучения
           </Typography>
           <Authenticated>
-            <div>
+            <ButtonBase component={SimpleLink} to='/account' className={classes.accountButton}>
               <Typography component='p' color='inherit' noWrap className={classes.fullName}>
                 {getFullName(true)}
               </Typography>
-            </div>
+            </ButtonBase>
           </Authenticated>
           <IconButton color='inherit' size='large' onClick={isAuthenticated ? signOut : openAuthModal}>
             {isAuthenticated ? <ExitToAppIcon/> : <Face/>}
