@@ -1,4 +1,4 @@
-import {teal} from "@material-ui/core/colors";
+import {blue, teal} from "@material-ui/core/colors";
 
 let base = {
   typography: {
@@ -19,13 +19,11 @@ const tealTheme = {
 const skyTheme = {
   ...base,
   palette: {
-    primary: {
-      main: '#e3f2fd',
-    },
+    primary: blue,
     secondary: {
-      main: '#e3f2fd',
+      main: '#2196f3',
     },
-  }
+  },
 };
 
 const redTheme = {

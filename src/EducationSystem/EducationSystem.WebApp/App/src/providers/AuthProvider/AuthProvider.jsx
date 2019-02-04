@@ -4,18 +4,8 @@ import Fetch from '../../helpers/Fetch';
 import {checkAuthData, clearAuthData, getAuthData, setAuthData, ValidateAuthModel, getFullName} from './common';
 import ProtectedFetch from '../../helpers/ProtectedFetch';
 import {withSnackbar} from "notistack";
-import {
-  Avatar, Button, Checkbox,
-  CircularProgress,
-  FormControl,
-  FormControlLabel,
-  Input,
-  InputLabel,
-  Modal,
-  Typography
-} from "@material-ui/core";
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import AuthModal from "./AuthModal/AuthModal";
+import AuthModal from './AuthModal/AuthModal';
+import {authRoutes, usersReutes} from '../../routes';
 
 const defaultState = {
   token: null,
@@ -43,9 +33,22 @@ class AuthProvider extends Component {
     }
   }
 
+  handleError = e =>
+    this.props.enqueueSnackbar(e, {
+      variant: 'error',
+      anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'right',
+      },
+    });
+  
   async componentDidMount() {
     if (!!this.state.token) {
-      await ProtectedFetch.check(this.actions.signOut)
+      let success =  await ProtectedFetch.check(this.actions.signOut);
+      if (success) {
+        const user = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
+        this.setState({user});
+      }
     }
   }
 
@@ -53,26 +56,18 @@ class AuthProvider extends Component {
   
   actions = {
     signIn: async authModel => {
-      const handleError = e =>
-        this.props.enqueueSnackbar(e, {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'right',
-          },
-        });
-
       try {
         ValidateAuthModel(authModel)
       } catch (e) {
-        handleError(e)
+        this.handleError(e)
       }
 
-      const authData = await Fetch.post('/api/auth/signin', JSON.stringify(authModel), handleError);
+      const authData = await Fetch.post(authRoutes.signIn, JSON.stringify(authModel), this.handleError);
 
       if (authData) {
         setAuthData(authData);
-        this.setState({...authData});
+        const user = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
+        this.setState({...authData, user});
         return true;
       }
 
@@ -92,7 +87,7 @@ class AuthProvider extends Component {
 
       return isAuthenticated;
     },
-    getFullName: () => getFullName(this.state.user),
+    getFullName: withInitial => getFullName(this.state.user, withInitial),
     openAuthModal: this.handleAuthModal(true)
   };
 

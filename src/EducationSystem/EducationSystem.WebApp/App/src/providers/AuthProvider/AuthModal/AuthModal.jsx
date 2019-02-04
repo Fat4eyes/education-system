@@ -24,18 +24,15 @@ class AuthModal extends Component {
   state = {
     email: '',
     password: '',
-    remember: false,
     isLoading: false
   };
 
   handleInput = ({target: {name, value}}) => this.setState({[name]: value});
-  handleCheckbox = ({target: {checked}}) => this.setState({remember: checked});
 
   handleSubmit = (handleClose, signInHandler) => async () => {
     const authModel = {
       Email: this.state.email,
-      Password: this.state.password,
-      Remember: this.state.remember
+      Password: this.state.password
     };
 
     try {
@@ -84,9 +81,6 @@ class AuthModal extends Component {
                 <InputLabel htmlFor='password'>Пароль</InputLabel>
                 <Input name='password' type='password' onChange={this.handleInput} value={this.state.password}/>
               </FormControl>
-              <FormControlLabel
-                control={<Checkbox onClick={this.handleCheckbox} checked={this.state.remember} color='primary'/>}
-                label='Запомнить'/>
             </>
           }
           <Button onClick={this.handleSubmit(handleClose, signIn)}

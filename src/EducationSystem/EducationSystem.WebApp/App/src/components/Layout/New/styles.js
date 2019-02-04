@@ -1,4 +1,4 @@
-const drawerWidth = 200;
+const drawerWidth = 180;
 const toolbarHeight = 48;
 
 const styles = theme => ({
@@ -66,7 +66,7 @@ const styles = theme => ({
   page: {
     padding: theme.spacing.unit * 2,
     backgroundColor: theme.palette.grey["200"],
-    border: '0.5px dashed black',
+    //border: '0.5px dashed black',
 
     minHeight: `calc(100% - ${toolbarHeight + theme.spacing.unit * 8}px)`,
     margin: `${toolbarHeight + theme.spacing.unit * 2}px 5% ${theme.spacing.unit * 2}px`

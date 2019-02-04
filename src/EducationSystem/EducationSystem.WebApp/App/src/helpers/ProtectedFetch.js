@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie'
 import {TOKEN} from '../providers/AuthProvider/constants';
 import Fetch from './Fetch';
+import {authRoutes} from '../routes';
 
 class ProtectedFetch extends Fetch {
   static handleToken(onError) {
@@ -36,13 +37,14 @@ class ProtectedFetch extends Fetch {
   static async check(onError) {
     const token = ProtectedFetch.handleToken();
     try {
-      let response = await fetch('/api/auth/check', {
+      let response = await fetch(authRoutes.check, {
         headers: {'Authorization': `Bearer ${token}`},
         method: 'POST'
       });
       if (!response.ok) {
         throw response;
       }
+      return true;
     } catch (e) {
       onError(e)
     }

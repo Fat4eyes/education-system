@@ -55,7 +55,7 @@ class Layout extends Component {
           <Authenticated>
             <div>
               <Typography component='p' color='inherit' noWrap className={classes.fullName}>
-                {getFullName()}
+                {getFullName(true)}
               </Typography>
             </div>
           </Authenticated>
@@ -68,19 +68,21 @@ class Layout extends Component {
         classes={{paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose)}}
         open={this.state.open} onClose={this.handleDrawer(false)} onOpen={this.handleDrawer(true)}>
         <div tabIndex={0} role='button' onClick={this.handleDrawer(false)} onKeyDown={this.handleDrawer(false)}>
-          <List>
+          <List component="nav">
             <ListItem component={SimpleLink} to='/' button>
               <ListItemIcon>
                 <HomeIcon/>
               </ListItemIcon>
               <ListItemText primary='Главная'/>
             </ListItem>
-            <ListItem component={SimpleLink} to='/private' button>
-              <ListItemIcon>
-                <HomeIcon/>
-              </ListItemIcon>
-              <ListItemText primary='Приватная'/>
-            </ListItem>
+            <Authenticated>
+              <ListItem component={SimpleLink} to='/account' button>
+                <ListItemIcon>
+                  <Face/>
+                </ListItemIcon>
+                <ListItemText primary='Аккаунт'/>
+              </ListItem>
+            </Authenticated>
           </List>
         </div>
       </SwipeableDrawer>
