@@ -24,13 +24,13 @@ namespace EducationSystem.Dependencies.Source
 
         private static void RegisterManagers(IServiceCollection services)
         {
-            services.AddTransient<IAuthManager, AuthManager>();
-            services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IManagerToken, ManagerToken>();
+            services.AddTransient<IManagerUser, ManagerUser>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
         {
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRepositoryUser, RepositoryUser>();
         }
 
         private static void RegisterDatabase(IServiceCollection services, IConfiguration configuration)

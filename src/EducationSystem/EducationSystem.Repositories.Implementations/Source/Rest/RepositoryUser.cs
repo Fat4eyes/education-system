@@ -6,16 +6,16 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class UserRepository : ReadOnlyRepository<DatabaseUser>, IUserRepository
+    public class RepositoryUser : RepositoryReadOnly<DatabaseUser>, IRepositoryUser
     {
-        public UserRepository(EducationSystemDatabaseContext context)
+        public RepositoryUser(EducationSystemDatabaseContext context)
             : base(context) { }
 
         public DatabaseUser GetByEmail(string email)
         {
             return AsQueryable()
-                .FirstOrDefault(x => string.Equals(x.Email, email,
-                    StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefault(x => string.Compare(x.Email, email,
+                    StringComparison.InvariantCultureIgnoreCase) == 0);
         }
     }
 }

@@ -28,8 +28,23 @@ namespace EducationSystem.Database.Source
             builder
                 .Entity<DatabaseUserRole>()
                 .HasOne(x => x.User)
-                .WithMany(s => s.Roles)
-                .HasForeignKey(sc => sc.UserId);
+                .WithMany(x => x.UserRoles)
+                .HasForeignKey(x => x.UserId);
+
+            builder
+                .Entity<DatabaseStudentGroup>()
+                .HasKey(x => new { x.StudentId, x.GroupId });
+
+            builder
+                .Entity<DatabaseStudentGroup>()
+                .HasOne(x => x.Student)
+                .WithOne(x => x.StudentGroup);
+
+            builder
+                .Entity<DatabaseStudentGroup>()
+                .HasOne(x => x.Group)
+                .WithMany(x => x.GroupStudents)
+                .HasForeignKey(x => x.GroupId);
         }
     }
 }

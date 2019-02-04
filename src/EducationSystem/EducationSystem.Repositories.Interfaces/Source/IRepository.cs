@@ -3,7 +3,7 @@ using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Repositories.Interfaces.Source
 {
-    public interface IRepository<TModel> : IReadOnlyRepository<TModel> where TModel : DatabaseModel
+    public interface IRepository<TModel> : IRepositoryReadOnly<TModel> where TModel : DatabaseModel
     {
         TModel Add(TModel model);
 

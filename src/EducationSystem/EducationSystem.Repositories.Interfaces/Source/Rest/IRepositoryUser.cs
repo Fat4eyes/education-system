@@ -2,7 +2,7 @@
 
 namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
-    public interface IUserRepository : IReadOnlyRepository<DatabaseUser>
+    public interface IRepositoryUser : IRepositoryReadOnly<DatabaseUser>
     {
         DatabaseUser GetByEmail(string email);
     }

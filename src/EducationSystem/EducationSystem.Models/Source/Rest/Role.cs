@@ -1,9 +1,9 @@
-﻿namespace EducationSystem.Models.Source.Rest
-{
-    public class Role : RoleShort
-    {
-        public string Description { get; set; }
+﻿using EducationSystem.Models.Source.Rest.Base;
 
-        public int Level { get; set; }
+namespace EducationSystem.Models.Source.Rest
+{
+    public class Role : Model
+    {
+        public string Name { get; set; }
     }
 }

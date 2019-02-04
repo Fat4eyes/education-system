@@ -1,10 +1,17 @@
-﻿using EducationSystem.Models.Source.Responses;
+﻿using System.Linq;
+using System.Security.Claims;
+using EducationSystem.Models.Source.Responses;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EducationSystem.WebApp.Source.Controllers.Base
+namespace EducationSystem.WebApp.Source.Tamers
 {
-    public class BaseController : Controller
+    public class Tamer : Controller
     {
+        protected string GetCurrentUserEmail() =>
+            HttpContext.User?.Claims?
+                .FirstOrDefault(x => x.Type == ClaimsIdentity.DefaultNameClaimType)?
+                .Value;
+
         protected new IActionResult Ok(object @object)
             => base.Json(CreateResponse(@object));
 

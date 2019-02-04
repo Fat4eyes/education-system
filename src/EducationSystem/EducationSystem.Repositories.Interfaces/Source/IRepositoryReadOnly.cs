@@ -4,7 +4,7 @@ using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Repositories.Interfaces.Source
 {
-    public interface IReadOnlyRepository<out TModel> where TModel : DatabaseModel
+    public interface IRepositoryReadOnly<out TModel> where TModel : DatabaseModel
     {
         IQueryable<TModel> AsQueryable();
 

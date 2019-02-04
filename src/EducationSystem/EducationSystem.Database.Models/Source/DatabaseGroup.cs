@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Database.Models.Source
@@ -29,5 +30,7 @@ namespace EducationSystem.Database.Models.Source
 
         [Column("year")]
         public virtual int? Year { get; set; }
+
+        public virtual List<DatabaseStudentGroup> GroupStudents { get; set; }
     }
 }

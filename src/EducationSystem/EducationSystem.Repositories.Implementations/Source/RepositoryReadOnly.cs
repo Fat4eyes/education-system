@@ -6,12 +6,12 @@ using EducationSystem.Repositories.Interfaces.Source;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
-    public class ReadOnlyRepository<TModel> : IReadOnlyRepository<TModel>
+    public class RepositoryReadOnly<TModel> : IRepositoryReadOnly<TModel>
         where TModel : DatabaseModel
     {
         protected EducationSystemDatabaseContext Context { get; }
 
-        public ReadOnlyRepository(EducationSystemDatabaseContext context)
+        public RepositoryReadOnly(EducationSystemDatabaseContext context)
         {
             Context = context;
         }

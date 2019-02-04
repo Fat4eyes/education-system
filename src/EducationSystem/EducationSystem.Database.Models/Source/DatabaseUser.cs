@@ -25,6 +25,8 @@ namespace EducationSystem.Database.Models.Source
         [Column("active")]
         public virtual int Active { get; set; }
 
-        public virtual List<DatabaseUserRole> Roles { get; set; }
+        public virtual List<DatabaseUserRole> UserRoles { get; set; }
+
+        public virtual DatabaseStudentGroup StudentGroup { get; set; }
     }
 }
