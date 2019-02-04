@@ -15,7 +15,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         {
             return AsQueryable()
                 .FirstOrDefault(x => string.Compare(x.Email, email,
-                    StringComparison.InvariantCultureIgnoreCase) == 0);
+                    StringComparison.CurrentCultureIgnoreCase) == 0);
         }
     }
 }
