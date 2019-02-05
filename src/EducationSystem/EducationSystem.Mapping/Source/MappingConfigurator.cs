@@ -20,7 +20,10 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<DatabaseStudyPlan, StudyPlan>();
             expression.CreateMap<DatabaseStudyProfile, StudyProfile>();
             expression.CreateMap<DatabaseInstitute, Institute>();
-            expression.CreateMap<DatabaseTest, Test>();
+            expression.CreateMap<DatabaseTest, Test>()
+                .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive == 1))
+                .ForMember(d => d.IsRandom, o => o.MapFrom(s => s.IsRandom == 1));
+
             expression.CreateMap<DatabaseTheme, Theme>();
             expression.CreateMap<DatabaseTestResult, TestResult>();
 
