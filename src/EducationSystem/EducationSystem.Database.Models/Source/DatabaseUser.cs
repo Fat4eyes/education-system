@@ -28,5 +28,7 @@ namespace EducationSystem.Database.Models.Source
         public virtual List<DatabaseUserRole> UserRoles { get; set; }
 
         public virtual DatabaseStudentGroup StudentGroup { get; set; }
+
+        public virtual List<DatabaseTestResult> TestResults { get; set; }
     }
 }

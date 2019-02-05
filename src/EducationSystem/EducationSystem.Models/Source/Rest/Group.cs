@@ -4,8 +4,6 @@ namespace EducationSystem.Models.Source.Rest
 {
     public class Group : Model
     {
-        public StudyPlan StudyPlan { get; set; }
-
         public string Prefix { get; set; }
 
         public int Course { get; set; }

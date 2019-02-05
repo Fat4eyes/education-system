@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Rest;
@@ -23,13 +24,31 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public User GetUserByEmail(string email)
         {
+            return Mapper.Map<User>(GetUser(email));
+        }
+
+        public UserWithGroup GetUserWithGroupByEmail(string email)
+        {
+            return Mapper.Map<UserWithGroup>(GetUser(email));
+        }
+
+        public UserWithGroupAndStudyPlan GetUserWithGroupAndStudyPlanByEmail(string email)
+        {
+            return Mapper.Map<UserWithGroupAndStudyPlan>(GetUser(email));
+        }
+
+        public UserWithTestResults GetUserWithTestResultsByEmail(string email)
+        {
+            return Mapper.Map<UserWithTestResults>(GetUser(email));
+        }
+
+        private DatabaseUser GetUser(string email)
+        {
             if (string.IsNullOrWhiteSpace(email))
                 throw new ArgumentException(nameof(email));
 
-            var user = RepositoryUser.GetByEmail(email) ??
+            return RepositoryUser.GetByEmail(email) ??
                 throw new EducationSystemNotFoundException($"Пользователь не найден. Электронная почта: {email}.");
-
-            return Mapper.Map<User>(user);
         }
     }
 }

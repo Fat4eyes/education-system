@@ -3,7 +3,7 @@ using AutoMapper;
 using EducationSystem.Mapping.Source;
 using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.Tests.Source.Rest.Base
+namespace EducationSystem.Tests.Source.Rest
 {
     public abstract class TestsManager<TManager> where TManager : class
     {

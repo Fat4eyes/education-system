@@ -19,7 +19,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Route("current")]
         public IActionResult Current()
         {
-            return Json(ManagerUser.GetUserByEmail(GetCurrentUserEmail()));
+            return Json(ManagerUser.GetUserWithGroupByEmail(GetCurrentUserEmail()));
         }
     }
 }

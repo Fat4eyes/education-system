@@ -7,12 +7,12 @@ namespace EducationSystem.Database.Models.Source
     public class DatabaseDiscipline : DatabaseModel
     {
         [Column("name")]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [Column("abbreviation")]
-        public string Abbreviation { get; set; }
+        public virtual string Abbreviation { get; set; }
 
         [Column("description")]
-        public string Description { get; set; }
+        public virtual string Description { get; set; }
     }
 }

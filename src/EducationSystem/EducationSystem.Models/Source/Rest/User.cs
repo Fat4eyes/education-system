@@ -16,7 +16,5 @@ namespace EducationSystem.Models.Source.Rest
         public bool Active { get; set; }
 
         public List<Role> Roles { get; set; }
-
-        public Group Group { get; set; }
     }
 }

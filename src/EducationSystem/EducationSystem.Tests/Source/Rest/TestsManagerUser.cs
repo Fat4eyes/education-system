@@ -5,7 +5,6 @@ using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
-using EducationSystem.Tests.Source.Rest.Base;
 
 namespace EducationSystem.Tests.Source.Rest
 {
@@ -32,7 +31,7 @@ namespace EducationSystem.Tests.Source.Rest
                 .Setup(x => x.GetByEmail(It.IsAny<string>()))
                 .Returns(new DatabaseUser { Email = "duck@gmail.com", FirstName = "Виктор" });
 
-            var user = ManagerUser.GetUserByEmail("duck@gmail.com");
+            var user = ManagerUser.GetUserWithGroupByEmail("duck@gmail.com");
 
             Assert.Equal("Виктор", user.FirstName);
         }
@@ -45,7 +44,7 @@ namespace EducationSystem.Tests.Source.Rest
                 .Returns((DatabaseUser) null);
 
             Assert.Throws<EducationSystemNotFoundException>(() =>
-                ManagerUser.GetUserByEmail("duck@gmail.com"));
+                ManagerUser.GetUserWithGroupByEmail("duck@gmail.com"));
         }
     }
 }

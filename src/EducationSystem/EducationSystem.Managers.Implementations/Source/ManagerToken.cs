@@ -7,7 +7,6 @@ using AutoMapper;
 using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source;
-using EducationSystem.Models;
 using EducationSystem.Models.Source;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.Extensions.Logging;
