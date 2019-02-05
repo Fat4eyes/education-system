@@ -31,7 +31,7 @@ namespace EducationSystem.Tests.Source.Rest
                 .Setup(x => x.GetByEmail(It.IsAny<string>()))
                 .Returns(new DatabaseUser { Email = "duck@gmail.com", FirstName = "Виктор" });
 
-            var user = ManagerUser.GetUserWithGroupByEmail("duck@gmail.com");
+            var user = ManagerUser.GetUserByEmail("duck@gmail.com");
 
             Assert.Equal("Виктор", user.FirstName);
         }
@@ -44,7 +44,7 @@ namespace EducationSystem.Tests.Source.Rest
                 .Returns((DatabaseUser) null);
 
             Assert.Throws<EducationSystemNotFoundException>(() =>
-                ManagerUser.GetUserWithGroupByEmail("duck@gmail.com"));
+                ManagerUser.GetUserByEmail("duck@gmail.com"));
         }
     }
 }
