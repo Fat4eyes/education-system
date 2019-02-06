@@ -30,6 +30,11 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                 query = query.Include(x => x.Discipline);
             }
 
+            if (options.WithQuestions)
+            {
+                query = query.Include(x => x.Questions);
+            }
+
             return query;
         }
     }

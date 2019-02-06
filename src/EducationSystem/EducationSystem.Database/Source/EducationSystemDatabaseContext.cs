@@ -9,6 +9,8 @@ namespace EducationSystem.Database.Source
         public DbSet<DatabaseRole> Roles { get; set; }
         public DbSet<DatabaseTest> Tests { get; set; }
         public DbSet<DatabaseGroup> Groups { get; set; }
+        public DbSet<DatabaseAnswer> Answers { get; set; }
+        public DbSet<DatabaseQuestion> Questions { get; set; }
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
         public DbSet<DatabaseInstitute> Institutes { get; set; }
         public DbSet<DatabaseDiscipline> Disciplines { get; set; }
@@ -21,6 +23,22 @@ namespace EducationSystem.Database.Source
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
+        {
+            BuildUserRole(builder);
+            BuildStudentGroup(builder);
+            BuildTestTheme(builder);
+
+            BuildTestResult(builder);
+
+            BuildStudyPlan(builder);
+            BuildStudyProfile(builder);
+
+            BuildQuestion(builder);
+
+            BuildTheme(builder);
+        }
+
+        private static void BuildUserRole(ModelBuilder builder)
         {
             builder
                 .Entity<DatabaseUserRole>()
@@ -37,7 +55,10 @@ namespace EducationSystem.Database.Source
                 .HasOne(x => x.Role)
                 .WithMany(x => x.RoleUsers)
                 .HasForeignKey(x => x.RoleId);
+        }
 
+        private static void BuildStudentGroup(ModelBuilder builder)
+        {
             builder
                 .Entity<DatabaseStudentGroup>()
                 .HasKey(x => new { x.StudentId, x.GroupId });
@@ -52,17 +73,10 @@ namespace EducationSystem.Database.Source
                 .HasOne(x => x.Group)
                 .WithMany(x => x.GroupStudents)
                 .HasForeignKey(x => x.GroupId);
+        }
 
-            builder
-                .Entity<DatabaseTestResult>()
-                .HasKey(x => new { x.UserId, x.TestId });
-
-            builder
-                .Entity<DatabaseTestResult>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.TestResults)
-                .HasForeignKey(x => x.UserId);
-
+        private static void BuildTestTheme(ModelBuilder builder)
+        {
             builder
                 .Entity<DatabaseTestTheme>()
                 .HasKey(x => new { x.TestId, x.ThemeId });
@@ -78,24 +92,55 @@ namespace EducationSystem.Database.Source
                 .HasOne(x => x.Theme)
                 .WithMany(x => x.ThemeTests)
                 .HasForeignKey(x => x.ThemeId);
+        }
+
+        private static void BuildTestResult(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseTestResult>()
+                .HasKey(x => new { x.UserId, x.TestId });
 
             builder
-                .Entity<DatabaseGroup>()
-                .HasOne(x => x.StudyPlan)
-                .WithMany(x => x.Groups)
-                .HasForeignKey(x => x.StudyPlanId);
+                .Entity<DatabaseTestResult>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.TestResults)
+                .HasForeignKey(x => x.UserId);
+        }
 
+        private static void BuildStudyPlan(ModelBuilder builder)
+        {
             builder
                 .Entity<DatabaseStudyPlan>()
-                .HasOne(x => x.StudyProfile)
-                .WithMany(x => x.StudyPlans)
-                .HasForeignKey(x => x.StudyProfileId);
+                .HasMany(x => x.Groups)
+                .WithOne(x => x.StudyPlan)
+                .HasForeignKey(x => x.StudyPlanId);
+        }
 
+        private static void BuildStudyProfile(ModelBuilder builder)
+        {
             builder
                 .Entity<DatabaseStudyProfile>()
-                .HasOne(x => x.Institute)
-                .WithMany(x => x.StudyProfiles)
-                .HasForeignKey(x => x.InstituteId);
+                .HasMany(x => x.StudyPlans)
+                .WithOne(x => x.StudyProfile)
+                .HasForeignKey(x => x.StudyProfileId);
+        }
+
+        private static void BuildQuestion(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseQuestion>()
+                .HasMany(x => x.Answers)
+                .WithOne(x => x.Question)
+                .HasForeignKey(x => x.QuestionId);
+        }
+
+        private static void BuildTheme(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseTheme>()
+                .HasMany(x => x.Questions)
+                .WithOne(x => x.Theme)
+                .HasForeignKey(x => x.ThemeId);
         }
     }
 }

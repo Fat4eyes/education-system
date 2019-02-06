@@ -29,6 +29,10 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<DatabaseTheme, Theme>();
             expression.CreateMap<DatabaseTestResult, TestResult>();
 
+            expression.CreateMap<DatabaseQuestion, Question>();
+            expression.CreateMap<DatabaseAnswer, Answer>()
+                .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
+
             expression.ForAllMaps(Configure);
         }
 

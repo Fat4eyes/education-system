@@ -17,5 +17,7 @@ namespace EducationSystem.Database.Models.Source
         public virtual DatabaseDiscipline Discipline { get; set; }
 
         public virtual List<DatabaseTestTheme> ThemeTests { get; set; }
+
+        public virtual List<DatabaseQuestion> Questions { get; set; }
     }
 }

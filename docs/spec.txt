@@ -38,6 +38,7 @@ Test Result Options:
 Theme Options:
     List Options
     WithDiscipline          (по умолчанию: false)       +
+    WithQuestions           (по умолчанию: false)       +
 
 Study Plan Options:
     List Options
@@ -46,6 +47,13 @@ Study Plan Options:
 Study Profile Options:
     List Options
     WithInstitute           (по умолчанию: false)       +
+
+Answer Options:
+    List Options
+
+Question Options:
+    List Options
+    WithAnswers             (по умолчанию: false)       +
 
 Users:
     [Options]   GET Users                           List<User>          [Admin] +
