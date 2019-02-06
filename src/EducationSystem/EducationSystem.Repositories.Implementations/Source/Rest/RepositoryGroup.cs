@@ -10,35 +10,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryGroup : RepositoryReadOnly<DatabaseGroup>, IRepositoryGroup
+    public class RepositoryGroup : RepositoryReadOnly<DatabaseGroup, OptionsGroup>, IRepositoryGroup
     {
         public RepositoryGroup(EducationSystemDatabaseContext context)
             : base(context) { }
 
         public (int Count, List<DatabaseGroup> Groups) GetGroups(OptionsGroup options)
         {
-            var query = GetQueryableByOptions(options);
+            return FilterByOptions(GetQueryableWithInclusions(options), options).ApplyPaging(options);
+        }
 
+        public DatabaseGroup GetGroupById(int id, OptionsGroup options)
+        {
+            return GetQueryableWithInclusions(options).FirstOrDefault(x => x.Id == id);
+        }
+
+        public DatabaseGroup GetGroupByUserId(int userId, OptionsGroup options)
+        {
+            return GetQueryableWithInclusions(options)
+                .FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == userId));
+        }
+
+        protected override IQueryable<DatabaseGroup> FilterByOptions(IQueryable<DatabaseGroup> query, OptionsGroup options)
+        {
             if (string.IsNullOrWhiteSpace(options.Name) == false)
             {
                 query = query.Where(x => x.Name.Contains(options.Name, StringComparison.CurrentCultureIgnoreCase));
             }
 
-            return query.ApplyPaging(options);
+            return query;
         }
 
-        public DatabaseGroup GetGroupById(int id, OptionsGroup options)
-        {
-            return GetQueryableByOptions(options).FirstOrDefault(x => x.Id == id);
-        }
-
-        public DatabaseGroup GetGroupByUserId(int userId, OptionsGroup options)
-        {
-            return GetQueryableByOptions(options)
-                .FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == userId));
-        }
-
-        private IQueryable<DatabaseGroup> GetQueryableByOptions(OptionsGroup options)
+        protected override IQueryable<DatabaseGroup> GetQueryableWithInclusions(OptionsGroup options)
         {
             var query = AsQueryable();
 

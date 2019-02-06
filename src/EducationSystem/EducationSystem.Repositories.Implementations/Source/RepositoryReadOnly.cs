@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using EducationSystem.Database.Models.Source.Base;
 using EducationSystem.Database.Source;
+using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
-    public class RepositoryReadOnly<TModel> : IRepositoryReadOnly<TModel>
+    public abstract class RepositoryReadOnly<TModel, TOptions> : IRepositoryReadOnly<TModel>
         where TModel : DatabaseModel
+        where TOptions : Options
     {
         protected EducationSystemDatabaseContext Context { get; }
 
-        public RepositoryReadOnly(EducationSystemDatabaseContext context)
+        protected RepositoryReadOnly(EducationSystemDatabaseContext context)
         {
             Context = context;
         }
@@ -30,6 +32,16 @@ namespace EducationSystem.Repositories.Implementations.Source
             return Context
                 .Set<TModel>()
                 .FirstOrDefault(x => x.Id == id);
+        }
+
+        protected virtual IQueryable<TModel> GetQueryableWithInclusions(TOptions options)
+        {
+            return AsQueryable();
+        }
+
+        protected virtual IQueryable<TModel> FilterByOptions(IQueryable<TModel> query, TOptions options)
+        {
+            return query;
         }
     }
 }

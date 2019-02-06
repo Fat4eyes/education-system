@@ -10,42 +10,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryUser : RepositoryReadOnly<DatabaseUser>, IRepositoryUser
+    public class RepositoryUser : RepositoryReadOnly<DatabaseUser, OptionsUser>, IRepositoryUser
     {
         public RepositoryUser(EducationSystemDatabaseContext context)
             : base(context) { }
 
         public (int Count, List<DatabaseUser> Users) GetUsers(OptionsUser options)
         {
-            return GetQueryableByOptions(options).ApplyPaging(options);
+            return FilterByOptions(GetQueryableWithInclusions(options), options).ApplyPaging(options);
         }
 
         public (int Count, List<DatabaseUser> Users) GetUsersByGroupId(int groupId, OptionsUser options)
         {
-            return GetQueryableByOptions(options)
+            return FilterByOptions(GetQueryableWithInclusions(options), options)
                 .Where(x => x.StudentGroup.GroupId == groupId)
                 .ApplyPaging(options);
         }
 
         public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, OptionsUser options)
         {
-            return GetQueryableByOptions(options)
+            return FilterByOptions(GetQueryableWithInclusions(options), options)
                 .Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
                 .ApplyPaging(options);
         }
 
         public DatabaseUser GetUserById(int id, OptionsUser options)
         {
-            return GetQueryableByOptions(options).FirstOrDefault(x => x.Id == id);
+            return GetQueryableWithInclusions(options).FirstOrDefault(x => x.Id == id);
         }
 
         public DatabaseUser GetUserByEmail(string email, OptionsUser options)
         {
-            return GetQueryableByOptions(options).FirstOrDefault(
+            return GetQueryableWithInclusions(options).FirstOrDefault(
                 x => string.Compare(x.Email, email, StringComparison.CurrentCultureIgnoreCase) == 0);
         }
 
-        private IQueryable<DatabaseUser> GetQueryableByOptions(OptionsUser options)
+        protected override IQueryable<DatabaseUser> GetQueryableWithInclusions(OptionsUser options)
         {
             var query = AsQueryable();
 
@@ -53,14 +53,14 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             {
                 query = query
                     .Include(x => x.StudentGroup)
-                    .ThenInclude(x => x.Group);
+                        .ThenInclude(x => x.Group);
             }
 
             if (options.WithRoles)
             {
                 query = query
                     .Include(x => x.UserRoles)
-                    .ThenInclude(x => x.Role);
+                        .ThenInclude(x => x.Role);
             }
 
             if (options.WithTestResults)

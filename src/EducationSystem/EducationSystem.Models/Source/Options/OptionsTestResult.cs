@@ -11,5 +11,7 @@
         public int? TestId { get; set; } = null;
 
         public bool WithTest { get; set; } = false;
+
+        public bool WithThemes { get; set; } = false;
     }
 }

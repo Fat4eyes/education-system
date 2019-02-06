@@ -6,6 +6,10 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
     public interface IRepositoryTestResult : IRepositoryReadOnly<DatabaseTestResult>
     {
-        (int Count, List<DatabaseTestResult> TestResults) GetTestResultByUserId(int userId, OptionsTestResult options);
+        (int Count, List<DatabaseTestResult> TestResults) GetTestResults(OptionsTestResult options);
+
+        (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByUserId(int userId, OptionsTestResult options);
+
+        DatabaseTestResult GetTestResultById(int id, OptionsTestResult options);
     }
 }

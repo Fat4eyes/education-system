@@ -7,18 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryStudyPlan : RepositoryReadOnly<DatabaseStudyPlan>, IRepositoryStudyPlan
+    public class RepositoryStudyPlan : RepositoryReadOnly<DatabaseStudyPlan, OptionsStudyPlan>, IRepositoryStudyPlan
     {
         public RepositoryStudyPlan(EducationSystemDatabaseContext context)
             : base(context) { }
 
         public DatabaseStudyPlan GetStudyPlanByUserId(int userId, OptionsStudyPlan options)
         {
-            return GetQueryableByOptions(options)
-                .FirstOrDefault(a => a.Groups.Any(b => b.GroupStudents.Any(c => c.StudentId == userId)));
+            return GetQueryableWithInclusions(options).FirstOrDefault(
+                a => a.Groups.Any(b => b.GroupStudents.Any(c => c.StudentId == userId)));
         }
 
-        private IQueryable<DatabaseStudyPlan> GetQueryableByOptions(OptionsStudyPlan options)
+        protected override IQueryable<DatabaseStudyPlan> GetQueryableWithInclusions(OptionsStudyPlan options)
         {
             var query = AsQueryable();
 

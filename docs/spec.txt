@@ -23,6 +23,7 @@ Test Options:
     DisciplineId            (по умолчанию: NULL)        +
     OnlyActive              (по умолчанию: false)       +
     WithDiscipline          (по умолчанию: false)       +
+    WithThemes              (по умолчанию: false)       +
 
 Test Result Options:
     List Options
@@ -31,6 +32,7 @@ Test Result Options:
     GroupId                 (по умолчанию: NULL)        +
     TestId                  (по умолчанию: NULL)        +
     WithTest                (по умолчанию: false)       +
+    WithThemes              (по умолчанию: false)       +   Если WithThemes = True, то значение WithTest не учитывается.
 
 Theme Options:
     List Options
@@ -79,8 +81,8 @@ Tests:
     [Options]   GET Tests/{Id}/Themes               List<Theme>         [Admin] +
 
 TestResults:
-    [Options]   GET TestResults                     List<TestResult>    [Admin]
-    [Options]   GET TestResults/{Id}                TestResult          [Admin]
+    [Options]   GET TestResults                     List<TestResult>    [Admin] +
+    [Options]   GET TestResults/{Id}                TestResult          [Admin] +
 
 401 Unauthorized
 
