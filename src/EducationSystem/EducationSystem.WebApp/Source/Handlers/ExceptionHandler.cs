@@ -6,7 +6,6 @@ using EducationSystem.Models.Source.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace EducationSystem.WebApp.Source.Handlers
 {
@@ -50,16 +49,13 @@ namespace EducationSystem.WebApp.Source.Handlers
         }
 
         private static Task CreateSuccessResponse(HttpContext context, Exception exception) =>
-            CreateResponse(context, HttpStatusCode.OK, JsonConvert.SerializeObject(
-                new ErrorResponse(exception.Message), GetJsonSerializerSettings()));
+            CreateResponse(context, HttpStatusCode.OK,
+                JsonConvert.SerializeObject(new ErrorResponse(exception.Message)));
 
         private static Task CreateErrorResponse(HttpContext context) =>
             CreateResponse(context, HttpStatusCode.InternalServerError,
                 "Внутренняя ошибка сервера. Попробуйте повторить операцию еще раз. " +
                 "Если ошибка будет повторяться, пожалуйста, обратитесь к администратору.");
-
-        private static JsonSerializerSettings GetJsonSerializerSettings() =>
-            new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
         private static Task CreateResponse(HttpContext context, HttpStatusCode statusCode, string text)
         {

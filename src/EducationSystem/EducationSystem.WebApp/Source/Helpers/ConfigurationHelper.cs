@@ -2,8 +2,11 @@
 using EducationSystem.Constants.Source;
 using EducationSystem.Mapping.Source;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace EducationSystem.WebApp.Source.Helpers
 {
@@ -14,6 +17,13 @@ namespace EducationSystem.WebApp.Source.Helpers
 
         public static void ConfigureSpaStaticFiles(SpaStaticFilesOptions options) =>
             options.RootPath = "App/build";
+
+        public static void ConfigureJson(MvcJsonOptions options)
+        {
+            options.SerializerSettings.MaxDepth = 1;
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+        }
 
         public static void ConfigureJwtBearer(JwtBearerOptions options)
         {
