@@ -33,7 +33,8 @@ Test Result Options:
     TestId                  (по умолчанию: NULL)        +
     WithTest                (по умолчанию: false)       +
     WithThemes              (по умолчанию: false)       +   Если WithThemes = True, то значение WithTest не учитывается.
-
+                                                            Темы относятся к конкретному тесту, а не к результату.
+                                                            Поэтому тест будет тоже возвращен совместно с темами.
 Theme Options:
     List Options
     WithDiscipline          (по умолчанию: false)       +
@@ -83,6 +84,8 @@ Tests:
 TestResults:
     [Options]   GET TestResults                     List<TestResult>    [Admin] +
     [Options]   GET TestResults/{Id}                TestResult          [Admin] +
+
+Все поля со значением NULL возращены не будут!
 
 401 Unauthorized
 
