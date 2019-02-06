@@ -1,5 +1,4 @@
-﻿using EducationSystem.Models;
-using EducationSystem.Models.Source;
+﻿using EducationSystem.Models.Source;
 
 namespace EducationSystem.Managers.Interfaces.Source
 {

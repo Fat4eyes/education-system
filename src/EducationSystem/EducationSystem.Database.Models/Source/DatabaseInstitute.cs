@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Database.Models.Source
@@ -11,5 +12,7 @@ namespace EducationSystem.Database.Models.Source
 
         [Column("description")]
         public virtual string Description { get; set; }
+
+        public virtual List<DatabaseStudyProfile> StudyProfiles { get; set; }
     }
 }

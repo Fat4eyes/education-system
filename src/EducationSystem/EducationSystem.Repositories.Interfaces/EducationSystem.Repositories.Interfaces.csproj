@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
   </ItemGroup>
 
 </Project>

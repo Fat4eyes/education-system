@@ -4,10 +4,10 @@ namespace EducationSystem.Models.Source.Rest
 {
     public class StudyPlan : Model
     {
-        public StudyProfile StudyProfile { get; set; }
-
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         public int? Year { get; set; }
+
+        public StudyProfile StudyProfile { get; set; }
     }
 }

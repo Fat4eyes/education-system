@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Database.Models.Source
@@ -23,5 +24,7 @@ namespace EducationSystem.Database.Models.Source
 
         [Column("semesters")]
         public virtual int SemestersCount { get; set; }
+
+        public virtual List<DatabaseStudyPlan> StudyPlans { get; set; }
     }
 }

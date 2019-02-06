@@ -6,14 +6,14 @@ namespace EducationSystem.Database.Source
     public sealed class EducationSystemDatabaseContext : DbContext
     {
         public DbSet<DatabaseUser> Users { get; set; }
+        public DbSet<DatabaseRole> Roles { get; set; }
+        public DbSet<DatabaseTest> Tests { get; set; }
         public DbSet<DatabaseGroup> Groups { get; set; }
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
-        public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
         public DbSet<DatabaseInstitute> Institutes { get; set; }
-        public DbSet<DatabaseRole> Roles { get; set; }
         public DbSet<DatabaseDiscipline> Disciplines { get; set; }
-        public DbSet<DatabaseTest> Tests { get; set; }
         public DbSet<DatabaseTestResult> TestResults { get; set; }
+        public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
 
         public EducationSystemDatabaseContext(DbContextOptions options) : base(options)
         {
@@ -31,6 +31,12 @@ namespace EducationSystem.Database.Source
                 .HasOne(x => x.User)
                 .WithMany(x => x.UserRoles)
                 .HasForeignKey(x => x.UserId);
+
+            builder
+                .Entity<DatabaseUserRole>()
+                .HasOne(x => x.Role)
+                .WithMany(x => x.RoleUsers)
+                .HasForeignKey(x => x.RoleId);
 
             builder
                 .Entity<DatabaseStudentGroup>()
@@ -72,6 +78,24 @@ namespace EducationSystem.Database.Source
                 .HasOne(x => x.Theme)
                 .WithMany(x => x.ThemeTests)
                 .HasForeignKey(x => x.ThemeId);
+
+            builder
+                .Entity<DatabaseGroup>()
+                .HasOne(x => x.StudyPlan)
+                .WithMany(x => x.Groups)
+                .HasForeignKey(x => x.StudyPlanId);
+
+            builder
+                .Entity<DatabaseStudyPlan>()
+                .HasOne(x => x.StudyProfile)
+                .WithMany(x => x.StudyPlans)
+                .HasForeignKey(x => x.StudyProfileId);
+
+            builder
+                .Entity<DatabaseStudyProfile>()
+                .HasOne(x => x.Institute)
+                .WithMany(x => x.StudyProfiles)
+                .HasForeignKey(x => x.InstituteId);
         }
     }
 }

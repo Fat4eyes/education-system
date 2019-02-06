@@ -23,28 +23,5 @@ namespace EducationSystem.Tests.Source.Rest
                 LoggerMock.Object,
                 MockRepositoryUser.Object);
         }
-
-        [Fact]
-        public void GetUserByEmail_UserExists()
-        {
-            MockRepositoryUser
-                .Setup(x => x.GetByEmail(It.IsAny<string>()))
-                .Returns(new DatabaseUser { Email = "duck@gmail.com", FirstName = "Виктор" });
-
-            var user = ManagerUser.GetUserByEmail("duck@gmail.com");
-
-            Assert.Equal("Виктор", user.FirstName);
-        }
-
-        [Fact]
-        public void GetUserByEmail_UserNotExists()
-        {
-            MockRepositoryUser
-                .Setup(x => x.GetByEmail(It.IsAny<string>()))
-                .Returns((DatabaseUser) null);
-
-            Assert.Throws<EducationSystemNotFoundException>(() =>
-                ManagerUser.GetUserByEmail("duck@gmail.com"));
-        }
     }
 }

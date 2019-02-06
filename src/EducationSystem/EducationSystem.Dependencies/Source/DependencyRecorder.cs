@@ -25,12 +25,29 @@ namespace EducationSystem.Dependencies.Source
         private static void RegisterManagers(IServiceCollection services)
         {
             services.AddTransient<IManagerToken, ManagerToken>();
+
             services.AddTransient<IManagerUser, ManagerUser>();
+            services.AddTransient<IManagerGroup, ManagerGroup>();
+            services.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
+            services.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
+            services.AddTransient<IManagerInstitute, ManagerInstitute>();
+            services.AddTransient<IManagerRole, ManagerRole>();
+            services.AddTransient<IManagerTest, ManagerTest>();
+            services.AddTransient<IManagerTestResult, ManagerTestResult>();
+            services.AddTransient<IManagerTheme, ManagerTheme>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
         {
             services.AddTransient<IRepositoryUser, RepositoryUser>();
+            services.AddTransient<IRepositoryGroup, RepositoryGroup>();
+            services.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
+            services.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
+            services.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
+            services.AddTransient<IRepositoryRole, RepositoryRole>();
+            services.AddTransient<IRepositoryTest, RepositoryTest>();
+            services.AddTransient<IRepositoryTestResult, RepositoryTestResult>();
+            services.AddTransient<IRepositoryTheme, RepositoryTheme>();
         }
 
         private static void RegisterDatabase(IServiceCollection services, IConfiguration configuration)

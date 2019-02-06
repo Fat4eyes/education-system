@@ -8,6 +8,7 @@ using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Models.Source;
+using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -39,7 +40,7 @@ namespace EducationSystem.Managers.Implementations.Source
             if (string.IsNullOrWhiteSpace(request.Password))
                 throw new EducationSystemPublicException("Не указан пароль.");
 
-            var user = RepositoryUser.GetByEmail(request.Email) ??
+            var user = RepositoryUser.GetUserByEmail(request.Email, OptionsUser.IncludeRoles) ??
                 throw new EducationSystemNotFoundException(
                     $"Пользователь не найден. Электронная почта: {request.Email}.",
                     new EducationSystemPublicException("Неверная электронная почта или пароль."));
@@ -53,6 +54,7 @@ namespace EducationSystem.Managers.Implementations.Source
             }
 
             var claims = new List<Claim> {
+                new Claim("UserId", user.Id.ToString()),
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
             };
 
