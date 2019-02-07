@@ -11,5 +11,11 @@
     "LogLevel": {
       "Default": "Debug"
     }
+  },
+  "TokenParameters": {
+    "LifeTimeInMinutes": 60,
+    "Issuer": "Education-System-Issuer",
+    "Audience": "Education-System-Audience",
+    "SecretKey": "Education-System-Secret-Key"
   }
 }

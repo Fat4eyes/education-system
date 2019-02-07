@@ -1,6 +1,5 @@
 ﻿using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Models.Source;
-using EducationSystem.WebApp.Source.Tamers.Rest;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +17,7 @@ namespace EducationSystem.WebApp.Source.Tamers
 
         [HttpPost]
         [Route("generate")]
-        public IActionResult GenerateToken([FromBody] TokenRequest request)
+        public IActionResult Generate([FromBody] TokenRequest request)
         {
             return Json(ManagerToken.GenerateToken(request));
         }

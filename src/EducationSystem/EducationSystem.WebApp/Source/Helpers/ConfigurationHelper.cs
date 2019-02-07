@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Mapping.Source;
+using EducationSystem.Models.Source;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -25,9 +26,13 @@ namespace EducationSystem.WebApp.Source.Helpers
             options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         }
 
-        public static void ConfigureJwtBearer(JwtBearerOptions options)
+        public static void ConfigureJwtBearer(JwtBearerOptions options, IConfiguration configuration)
         {
             options.RequireHttpsMetadata = false;
+
+            var tokenParameters = configuration
+                .GetSection(nameof(TokenParameters))
+                .Get<TokenParameters>();
 
             options.TokenValidationParameters = new TokenValidationParameters
             {
@@ -35,9 +40,9 @@ namespace EducationSystem.WebApp.Source.Helpers
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = TokenParameters.Issuer,
-                ValidAudience = TokenParameters.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(TokenParameters.SecretKeyInBytes)
+                ValidIssuer = tokenParameters.Issuer,
+                ValidAudience = tokenParameters.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(tokenParameters.SecretKeyInBytes)
             };
         }
     }

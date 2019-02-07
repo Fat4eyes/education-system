@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Crypt = BCrypt.Net.BCrypt;
@@ -18,14 +18,17 @@ namespace EducationSystem.Managers.Implementations.Source
 {
     public class ManagerToken : Manager<ManagerToken>, IManagerToken
     {
+        protected IConfiguration Configuration { get; }
         protected IRepositoryUser RepositoryUser { get; }
 
         public ManagerToken(
             IMapper mapper,
             ILogger<ManagerToken> logger,
+            IConfiguration configuration,
             IRepositoryUser repositoryUser)
             : base(mapper, logger)
         {
+            Configuration = configuration;
             RepositoryUser = repositoryUser;
         }
 
@@ -61,20 +64,24 @@ namespace EducationSystem.Managers.Implementations.Source
             claims.AddRange(user.UserRoles.Select(x =>
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, x.Role.Name)));
 
-            var identity = new ClaimsIdentity(claims, "Token",
+            var identity = new ClaimsIdentity(claims, "TokenParameters",
                 ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);
 
+            var tokenParameters = Configuration
+                .GetSection(nameof(TokenParameters))
+                .Get<TokenParameters>();
+
             var now = DateTime.UtcNow;
-            var expires = now.Add(TimeSpan.FromMinutes(90));
+            var expires = now.Add(TimeSpan.FromMinutes(tokenParameters.LifeTimeInMinutes));
 
             var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(TokenParameters.SecretKeyInBytes),
+                new SymmetricSecurityKey(tokenParameters.SecretKeyInBytes),
                 SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                TokenParameters.Issuer,
-                TokenParameters.Audience,
+                tokenParameters.Issuer,
+                tokenParameters.Audience,
                 identity.Claims, now, expires, signingCredentials);
 
             return new TokenResponse(new JwtSecurityTokenHandler().WriteToken(token));
