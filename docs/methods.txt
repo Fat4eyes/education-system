@@ -1,0 +1,50 @@
+Users:
+    [Options]   GET Users                           List<User>          [Admin] +
+    [Options]   GET Users/{Id}                      User                [Admin] +
+    [Options]   GET Users/Current                   User                [*]     +
+    [Options]   GET Users/{Id}/Group                Group               [Admin] +
+    [Options]   GET Users/Current/Group             Group               [*]     +
+    [Options]   GET Users/{Id}/StudyPlan            StudyPlan           [Admin] +
+    [Options]   GET Users/Current/StudyPlan         StudyPlan           [*]     +
+    [Options]   GET Users/{Id}/StudyProfile         StudyProfile        [Admin] +
+    [Options]   GET Users/Current/StudyProfile      StudyProfile        [*]     +
+                GET Users/{Id}/Institute            Institute           [Admin] +
+    [Options]   GET Users/Current/Institute         Institute           [*]     +
+    [Options]   GET Users/{Id}/Roles                List<Role>          [Admin] +
+    [Options]   GET Users/Current/Roles             List<Role>          [*]     +
+    [Options]   GET Users/{Id}/TestResults          List<TestResult>    [Admin] +
+    [Options]   GET Users/Current/TestResults       List<TestResult>    [*]     +
+
+Groups:
+    [Options]   GET Groups                          List<Group>         [Admin] +
+    [Options]   GET Groups/{Id}                     Group               [Admin] +
+    [Options]   GET Groups/Current                  Group               [*]     +
+    [Options]   GET Groups/{Id}/Users               List<User>          [Admin] +
+
+Roles:
+    [Options]   GET Roles                           List<Role>          [Admin] +
+    [Options]   GET Roles/{Id}                      Role                [Admin] +
+    [Options]   GET Roles/Current                   List<Role>          [*]     +
+    [Options]   GET Roles/{Id}/Users                List<User>          [Admin] +
+
+Tests:
+    [Options]   GET Tests                           List<Test>          [Admin] +
+    [Options]   GET Tests/{Id}                      Test                [Admin] +
+    [Options]   GET Tests/{Id}/Themes               List<Theme>         [Admin] +
+
+TestResults:
+    [Options]   GET TestResults                     List<TestResult>    [Admin] +
+    [Options]   GET TestResults/{Id}                TestResult          [Admin] +
+
+Themes:
+    [Options]   GET Themes                          List<Theme>         [Admin] +
+    [Options]   GET Themes/{Id}                     Theme               [Admin] +
+    [Options]   GET Themes/{Id}/Questions           List<Question>      [Admin] +
+
+Disciplines:
+    [Options]   GET Disciplines                     List<Discipline>    [Admin] +
+    [Options]   GET Disciplines/{Id}                Discipline          [Admin] +
+    [Options]   GET Disciplines/{Id}/Tests          List<Test>          [Admin] +
+    [Options]   GET Disciplines/{Id}/Themes         List<Theme>         [Admin] +
+
+Все поля со значением NULL возращены не будут!
