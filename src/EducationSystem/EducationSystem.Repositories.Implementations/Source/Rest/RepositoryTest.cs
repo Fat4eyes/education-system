@@ -19,15 +19,17 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .ApplyPaging(options);
 
+        public (int Count, List<DatabaseTest> Tests) GetTestsByDisciplineId(int disciplineId, OptionsTest options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
+                .Where(x => x.DisciplineId == disciplineId)
+                .ApplyPaging(options);
+
         public DatabaseTest GetTetsById(int id, OptionsTest options) =>
             IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(x => x.Id == id);
 
         protected override IQueryable<DatabaseTest> IncludeByOptions(IQueryable<DatabaseTest> query, OptionsTest options)
         {
-            if (options.WithDiscipline)
-                query = query.Include(x => x.Discipline);
-
             if (options.WithThemes)
             {
                 query = query

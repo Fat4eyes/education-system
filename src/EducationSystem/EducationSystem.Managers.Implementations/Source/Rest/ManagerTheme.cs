@@ -37,6 +37,13 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Theme>(Mapper.Map<List<Theme>>(themes), count);
         }
 
+        public PagedData<Theme> GetThemesByDisciplineId(int disciplineId, OptionsTheme options)
+        {
+            var (count, themes) = RepositoryTheme.GetThemesByDisciplineId(disciplineId, options);
+
+            return new PagedData<Theme>(Mapper.Map<List<Theme>>(themes), count);
+        }
+
         public Theme GetThemeById(int id, OptionsTheme options)
         {
             var theme = RepositoryTheme.GetThemeById(id, options) ??

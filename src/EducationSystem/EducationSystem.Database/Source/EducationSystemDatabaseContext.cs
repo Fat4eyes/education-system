@@ -36,6 +36,8 @@ namespace EducationSystem.Database.Source
             BuildQuestion(builder);
 
             BuildTheme(builder);
+
+            BuildDiscipline(builder);
         }
 
         private static void BuildUserRole(ModelBuilder builder)
@@ -141,6 +143,21 @@ namespace EducationSystem.Database.Source
                 .HasMany(x => x.Questions)
                 .WithOne(x => x.Theme)
                 .HasForeignKey(x => x.ThemeId);
+        }
+
+        private static void BuildDiscipline(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseDiscipline>()
+                .HasMany(x => x.Tests)
+                .WithOne(x => x.Discipline)
+                .HasForeignKey(x => x.DisciplineId);
+
+            builder
+                .Entity<DatabaseDiscipline>()
+                .HasMany(x => x.Themes)
+                .WithOne(x => x.Discipline)
+                .HasForeignKey(x => x.DisciplineId);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("{themeId:int}/Questions")]
-        //[Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
         public IActionResult GetThemeQuestions(int themeId, OptionsQuestion options)
         {
             return Json(ManagerQuestion.GetQuestionsByThemeId(themeId, options));

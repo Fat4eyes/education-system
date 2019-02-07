@@ -36,6 +36,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IManagerTestResult, ManagerTestResult>();
             services.AddTransient<IManagerTheme, ManagerTheme>();
             services.AddTransient<IManagerQuestion, ManagerQuestion>();
+            services.AddTransient<IManagerDiscipline, ManagerDiscipline>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
@@ -50,6 +51,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryTestResult, RepositoryTestResult>();
             services.AddTransient<IRepositoryTheme, RepositoryTheme>();
             services.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
+            services.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
         }
 
         private static void RegisterDatabase(IServiceCollection services, IConfiguration configuration)

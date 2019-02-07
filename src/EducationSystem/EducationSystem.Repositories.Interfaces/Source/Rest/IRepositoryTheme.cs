@@ -10,6 +10,8 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
 
         (int Count, List<DatabaseTheme> Themes) GetThemesByTestId(int testId, OptionsTheme options);
 
+        (int Count, List<DatabaseTheme> Themes) GetThemesByDisciplineId(int disciplineId, OptionsTheme options);
+
         DatabaseTheme GetThemeById(int id, OptionsTheme options);
     }
 }

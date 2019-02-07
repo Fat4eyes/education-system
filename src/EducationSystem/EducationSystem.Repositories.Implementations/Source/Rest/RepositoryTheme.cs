@@ -23,15 +23,17 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                 .Where(x => x.ThemeTests.Any(y => y.TestId == testId))
                 .ApplyPaging(options);
 
+        public (int Count, List<DatabaseTheme> Themes) GetThemesByDisciplineId(int disciplineId, OptionsTheme options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
+                .Where(x => x.DisciplineId == disciplineId)
+                .ApplyPaging(options);
+
         public DatabaseTheme GetThemeById(int id, OptionsTheme options) =>
             IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(x => x.Id == id);
 
         protected override IQueryable<DatabaseTheme> IncludeByOptions(IQueryable<DatabaseTheme> query, OptionsTheme options)
         {
-            if (options.WithDiscipline)
-                query = query.Include(x => x.Discipline);
-
             if (options.WithQuestions)
                 query = query.Include(x => x.Questions);
 

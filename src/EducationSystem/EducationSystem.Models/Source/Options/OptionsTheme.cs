@@ -2,8 +2,6 @@
 {
     public class OptionsTheme : Options
     {
-        public bool WithDiscipline { get; set; } = false;
-
         public bool WithQuestions { get; set; } = false;
     }
 }

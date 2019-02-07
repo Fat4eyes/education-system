@@ -9,7 +9,6 @@ namespace EducationSystem.Repositories.Implementations.Source
 {
     public abstract class RepositoryReadOnly<TModel, TOptions> : IRepositoryReadOnly<TModel>
         where TModel : DatabaseModel
-        where TOptions : Options
     {
         protected EducationSystemDatabaseContext Context { get; }
 

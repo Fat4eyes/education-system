@@ -1,4 +1,5 @@
-﻿using EducationSystem.Models.Source.Rest.Base;
+﻿using System.Collections.Generic;
+using EducationSystem.Models.Source.Rest.Base;
 
 namespace EducationSystem.Models.Source.Rest
 {
@@ -9,5 +10,9 @@ namespace EducationSystem.Models.Source.Rest
         public string Abbreviation { get; set; }
 
         public string Description { get; set; }
+
+        public List<Test> Tests { get; set; }
+
+        public List<Theme> Themes { get; set; }
     }
 }

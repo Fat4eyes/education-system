@@ -10,6 +10,8 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 
         PagedData<Theme> GetThemesByTestId(int testId, OptionsTheme options);
 
+        PagedData<Theme> GetThemesByDisciplineId(int disciplineId, OptionsTheme options);
+
         Theme GetThemeById(int id, OptionsTheme options);
     }
 }

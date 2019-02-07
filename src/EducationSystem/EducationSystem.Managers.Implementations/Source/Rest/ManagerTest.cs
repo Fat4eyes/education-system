@@ -30,6 +30,13 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
         }
 
+        public PagedData<Test> GetTestsByDisciplineId(int disciplineId, OptionsTest options)
+        {
+            var (count, tests) = RepositoryTest.GetTestsByDisciplineId(disciplineId, options);
+
+            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
+        }
+
         public Test GetTestById(int id, OptionsTest options)
         {
             var test = RepositoryTest.GetTetsById(id, options) ??

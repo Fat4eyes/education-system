@@ -22,7 +22,6 @@ Test Options:
     Name                    (по умолчанию: NULL)        +
     DisciplineId            (по умолчанию: NULL)        +
     OnlyActive              (по умолчанию: false)       +
-    WithDiscipline          (по умолчанию: false)       +
     WithThemes              (по умолчанию: false)       +
 
 Test Result Options:
@@ -37,7 +36,6 @@ Test Result Options:
                                                             Поэтому тест будет тоже возвращен совместно с темами.
 Theme Options:
     List Options
-    WithDiscipline          (по умолчанию: false)       +
     WithQuestions           (по умолчанию: false)       +
 
 Study Plan Options:
@@ -54,6 +52,11 @@ Answer Options:
 Question Options:
     List Options
     WithAnswers             (по умолчанию: false)       +
+
+Discipline Options:
+    List Options
+    WithTests               (по умолчанию: false)       +
+    WithThemes              (по умолчанию: false)       +
 
 Users:
     [Options]   GET Users                           List<User>          [Admin] +
@@ -97,6 +100,12 @@ Themes:
     [Options]   GET Themes                          List<Theme>         [Admin] +
     [Options]   GET Themes/{Id}                     Theme               [Admin] +
     [Options]   GET Themes/{Id}/Questions           List<Question>      [Admin] +
+
+Disciplines:
+    [Options]   GET Disciplines                     List<Discipline>    [Admin] +
+    [Options]   GET Disciplines/{Id}                Discipline          [Admin] +
+    [Options]   GET Disciplines/{Id}/Tests          List<Test>          [Admin] +
+    [Options]   GET Disciplines/{Id}/Themes         List<Theme>         [Admin] +
 
 Все поля со значением NULL возращены не будут!
 
