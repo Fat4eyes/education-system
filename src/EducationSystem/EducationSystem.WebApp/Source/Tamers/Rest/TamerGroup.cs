@@ -42,7 +42,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("{groupId:int}/Users")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetGroup(int groupId, OptionsUser options)
+        public IActionResult GetGroupUsers(int groupId, OptionsUser options)
         {
             return Json(ManagerUser.GetUsersByGroupId(groupId, options));
         }

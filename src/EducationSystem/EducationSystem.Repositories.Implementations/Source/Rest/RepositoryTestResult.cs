@@ -14,38 +14,30 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryTestResult(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseTestResult> TestResults) GetTestResults(OptionsTestResult options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options).ApplyPaging(options);
-        }
+        public (int Count, List<DatabaseTestResult> TestResults) GetTestResults(OptionsTestResult options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
+                .ApplyPaging(options);
 
-        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByUserId(int userId, OptionsTestResult options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options)
+        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByUserId(int userId, OptionsTestResult options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .Where(x => x.UserId == userId)
                 .ApplyPaging(options);
-        }
 
-        public DatabaseTestResult GetTestResultById(int id, OptionsTestResult options)
+        public DatabaseTestResult GetTestResultById(int id, OptionsTestResult options) =>
+            IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(x => x.TestId == id);
+
+        protected override IQueryable<DatabaseTestResult> IncludeByOptions(IQueryable<DatabaseTestResult> query, OptionsTestResult options)
         {
-            return GetQueryableWithInclusions(options).FirstOrDefault(x => x.TestId == id);
-        }
-
-        protected override IQueryable<DatabaseTestResult> GetQueryableWithInclusions(OptionsTestResult options)
-        {
-            var query = AsQueryable();
-
             if (options.WithTest)
-            {
                 query = query.Include(x => x.Test);
-            }
 
             if (options.WithThemes)
             {
                 query = query
                     .Include(x => x.Test)
-                        .ThenInclude(x => x.TestThemes)
-                            .ThenInclude(x => x.Theme);
+                    .ThenInclude(x => x.TestThemes)
+                    .ThenInclude(x => x.Theme);
             }
 
             return query;
@@ -54,24 +46,16 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         protected override IQueryable<DatabaseTestResult> FilterByOptions(IQueryable<DatabaseTestResult> query, OptionsTestResult options)
         {
             if (options.ProfileId.HasValue)
-            {
                 query = query.Where(x => x.User.StudentGroup.Group.StudyPlan.StudyProfileId == options.ProfileId);
-            }
 
             if (options.DisciplineId.HasValue)
-            {
                 query = query.Where(x => x.Test.DisciplineId == options.DisciplineId);
-            }
 
             if (options.GroupId.HasValue)
-            {
                 query = query.Where(x => x.User.StudentGroup.GroupId == options.GroupId);
-            }
 
             if (options.TestId.HasValue)
-            {
                 query = query.Where(x => x.TestId == options.TestId);
-            }
 
             return query;
         }

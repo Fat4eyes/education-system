@@ -93,6 +93,11 @@ TestResults:
     [Options]   GET TestResults                     List<TestResult>    [Admin] +
     [Options]   GET TestResults/{Id}                TestResult          [Admin] +
 
+Themes:
+    [Options]   GET Themes                          List<Theme>         [Admin] +
+    [Options]   GET Themes/{Id}                     Theme               [Admin] +
+    [Options]   GET Themes/{Id}/Questions           List<Question>      [Admin] +
+
 Все поля со значением NULL возращены не будут!
 
 401 Unauthorized

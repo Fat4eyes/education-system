@@ -8,6 +8,8 @@ namespace EducationSystem.Models.Source.Rest
 
         public int? Year { get; set; }
 
+        public int StudyProfileId { get; set; }
+
         public StudyProfile StudyProfile { get; set; }
     }
 }

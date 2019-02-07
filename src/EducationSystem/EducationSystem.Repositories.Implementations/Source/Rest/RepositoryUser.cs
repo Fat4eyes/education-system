@@ -15,40 +15,30 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryUser(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseUser> Users) GetUsers(OptionsUser options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options).ApplyPaging(options);
-        }
+        public (int Count, List<DatabaseUser> Users) GetUsers(OptionsUser options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
+                .ApplyPaging(options);
 
-        public (int Count, List<DatabaseUser> Users) GetUsersByGroupId(int groupId, OptionsUser options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options)
+        public (int Count, List<DatabaseUser> Users) GetUsersByGroupId(int groupId, OptionsUser options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .Where(x => x.StudentGroup.GroupId == groupId)
                 .ApplyPaging(options);
-        }
 
-        public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, OptionsUser options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options)
+        public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, OptionsUser options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
                 .ApplyPaging(options);
-        }
 
-        public DatabaseUser GetUserById(int id, OptionsUser options)
+        public DatabaseUser GetUserById(int id, OptionsUser options) =>
+            IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(x => x.Id == id);
+
+        public DatabaseUser GetUserByEmail(string email, OptionsUser options) =>
+            IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(x => string.Compare(x.Email, email, StringComparison.CurrentCultureIgnoreCase) == 0);
+
+        protected override IQueryable<DatabaseUser> IncludeByOptions(IQueryable<DatabaseUser> query, OptionsUser options)
         {
-            return GetQueryableWithInclusions(options).FirstOrDefault(x => x.Id == id);
-        }
-
-        public DatabaseUser GetUserByEmail(string email, OptionsUser options)
-        {
-            return GetQueryableWithInclusions(options).FirstOrDefault(
-                x => string.Compare(x.Email, email, StringComparison.CurrentCultureIgnoreCase) == 0);
-        }
-
-        protected override IQueryable<DatabaseUser> GetQueryableWithInclusions(OptionsUser options)
-        {
-            var query = AsQueryable();
-
             if (options.WithGroup)
             {
                 query = query
@@ -64,9 +54,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             }
 
             if (options.WithTestResults)
-            {
                 query = query.Include(x => x.TestResults);
-            }
 
             return query;
         }

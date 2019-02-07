@@ -6,6 +6,8 @@ namespace EducationSystem.Models.Source.Rest
     {
         public string Name { get; set; }
 
+        public int InstituteId { get; set; }
+
         public Institute Institute { get; set; }
     }
 }

@@ -9,6 +9,8 @@ namespace EducationSystem.Models.Source.Rest
 
         public int Time { get; set; }
 
+        public int ThemeId { get; set; }
+
         public List<Answer> Answers { get; set; }
     }
 }

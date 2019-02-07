@@ -11,6 +11,10 @@ namespace EducationSystem.Models.Source.Rest
 
         public DateTime DateTime { get; set; }
 
+        public int TestId { get; set; }
+
+        public int UserId { get; set; }
+
         public Test Test { get; set; }
     }
 }

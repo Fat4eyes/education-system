@@ -14,18 +14,16 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public DatabaseStudyPlan GetStudyPlanByUserId(int userId, OptionsStudyPlan options)
         {
-            return GetQueryableWithInclusions(options).FirstOrDefault(
-                a => a.Groups.Any(b => b.GroupStudents.Any(c => c.StudentId == userId)));
+            return IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(a => a.Groups
+                    .Any(b => b.GroupStudents
+                    .Any(c => c.StudentId == userId)));
         }
 
-        protected override IQueryable<DatabaseStudyPlan> GetQueryableWithInclusions(OptionsStudyPlan options)
+        protected override IQueryable<DatabaseStudyPlan> IncludeByOptions(IQueryable<DatabaseStudyPlan> query, OptionsStudyPlan options)
         {
-            var query = AsQueryable();
-
             if (options.WithStudyProfile)
-            {
                 query = query.Include(x => x.StudyProfile);
-            }
 
             return query;
         }

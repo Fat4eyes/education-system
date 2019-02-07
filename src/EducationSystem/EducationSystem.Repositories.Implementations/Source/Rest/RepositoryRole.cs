@@ -13,14 +13,12 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryRole(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseRole> Roles) GetRoles(OptionsRole options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options).ApplyPaging(options);
-        }
+        public (int Count, List<DatabaseRole> Roles) GetRoles(OptionsRole options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
+                .ApplyPaging(options);
 
-        public DatabaseRole GetRoleByUserId(int userId, OptionsRole options)
-        {
-            return GetQueryableWithInclusions(options).FirstOrDefault(x => x.RoleUsers.Any(y => y.User.Id == userId));
-        }
+        public DatabaseRole GetRoleByUserId(int userId, OptionsRole options) =>
+            IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(x => x.RoleUsers.Any(y => y.User.Id == userId));
     }
 }

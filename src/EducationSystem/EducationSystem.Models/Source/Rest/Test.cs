@@ -13,6 +13,8 @@ namespace EducationSystem.Models.Source.Rest
 
         public int IsActive { get; set; }
 
+        public int DisciplineId { get; set; }
+
         public Discipline Discipline { get; set; }
 
         public List<Theme> Themes { get; set; }

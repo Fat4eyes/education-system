@@ -14,26 +14,26 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryTheme(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseTheme> Themes) GetThemesByTestId(int testId, OptionsTheme options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options)
+        public (int Count, List<DatabaseTheme> Themes) GetThemes(OptionsTheme options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
+                .ApplyPaging(options);
+
+        public (int Count, List<DatabaseTheme> Themes) GetThemesByTestId(int testId, OptionsTheme options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .Where(x => x.ThemeTests.Any(y => y.TestId == testId))
                 .ApplyPaging(options);
-        }
 
-        protected override IQueryable<DatabaseTheme> GetQueryableWithInclusions(OptionsTheme options)
+        public DatabaseTheme GetThemeById(int id, OptionsTheme options) =>
+            IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(x => x.Id == id);
+
+        protected override IQueryable<DatabaseTheme> IncludeByOptions(IQueryable<DatabaseTheme> query, OptionsTheme options)
         {
-            var query = AsQueryable();
-
             if (options.WithDiscipline)
-            {
                 query = query.Include(x => x.Discipline);
-            }
 
             if (options.WithQuestions)
-            {
                 query = query.Include(x => x.Questions);
-            }
 
             return query;
         }

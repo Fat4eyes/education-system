@@ -15,40 +15,30 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryGroup(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseGroup> Groups) GetGroups(OptionsGroup options)
-        {
-            return FilterByOptions(GetQueryableWithInclusions(options), options).ApplyPaging(options);
-        }
+        public (int Count, List<DatabaseGroup> Groups) GetGroups(OptionsGroup options) =>
+            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
+                .ApplyPaging(options);
 
-        public DatabaseGroup GetGroupById(int id, OptionsGroup options)
-        {
-            return GetQueryableWithInclusions(options).FirstOrDefault(x => x.Id == id);
-        }
+        public DatabaseGroup GetGroupById(int id, OptionsGroup options) =>
+            IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(x => x.Id == id);
 
-        public DatabaseGroup GetGroupByUserId(int userId, OptionsGroup options)
-        {
-            return GetQueryableWithInclusions(options)
+        public DatabaseGroup GetGroupByUserId(int userId, OptionsGroup options) =>
+            IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == userId));
-        }
 
         protected override IQueryable<DatabaseGroup> FilterByOptions(IQueryable<DatabaseGroup> query, OptionsGroup options)
         {
             if (string.IsNullOrWhiteSpace(options.Name) == false)
-            {
                 query = query.Where(x => x.Name.Contains(options.Name, StringComparison.CurrentCultureIgnoreCase));
-            }
 
             return query;
         }
 
-        protected override IQueryable<DatabaseGroup> GetQueryableWithInclusions(OptionsGroup options)
+        protected override IQueryable<DatabaseGroup> IncludeByOptions(IQueryable<DatabaseGroup> query, OptionsGroup options)
         {
-            var query = AsQueryable();
-
             if (options.WithStudyPlan)
-            {
                 query = query.Include(x => x.StudyPlan);
-            }
 
             return query;
         }

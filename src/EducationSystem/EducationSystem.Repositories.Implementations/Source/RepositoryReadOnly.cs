@@ -34,9 +34,9 @@ namespace EducationSystem.Repositories.Implementations.Source
                 .FirstOrDefault(x => x.Id == id);
         }
 
-        protected virtual IQueryable<TModel> GetQueryableWithInclusions(TOptions options)
+        protected virtual IQueryable<TModel> IncludeByOptions(IQueryable<TModel> query, TOptions options)
         {
-            return AsQueryable();
+            return query;
         }
 
         protected virtual IQueryable<TModel> FilterByOptions(IQueryable<TModel> query, TOptions options)

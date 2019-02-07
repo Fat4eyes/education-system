@@ -13,12 +13,12 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public DatabaseInstitute GetInstituteByUserId(int userId, OptionsInstitute options)
         {
-            return GetQueryableWithInclusions(options)
+            return IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(a => a.StudyProfiles
                     .Any(b => b.StudyPlans
-                        .Any(c => c.Groups
-                            .Any(d => d.GroupStudents
-                                .Any(e => e.StudentId == userId)))));
+                    .Any(c => c.Groups
+                    .Any(d => d.GroupStudents
+                    .Any(e => e.StudentId == userId)))));
         }
     }
 }
