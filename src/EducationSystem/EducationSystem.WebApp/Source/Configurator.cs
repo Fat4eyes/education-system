@@ -32,7 +32,7 @@ namespace EducationSystem.WebApp.Source
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(ConfigurationHelper.ConfigureJwtBearer);
+                .AddJwtBearer(x => ConfigurationHelper.ConfigureJwtBearer(x, Configuration));
 
             services
                 .AddMvc()
