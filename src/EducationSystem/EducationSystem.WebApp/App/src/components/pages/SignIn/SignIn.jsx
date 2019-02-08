@@ -68,7 +68,7 @@ class SignIn extends Component {
           <Typography variant='h5' className={classes.label}>Вход</Typography>
         </Grid>
         <If condition={this.state.IsLoading}>
-          <Grid item xs>
+          <Grid item xs className={classes.progress}>
             <CircularProgress size={50} thickness={5}/>
           </Grid>
         </If>

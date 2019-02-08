@@ -12,7 +12,7 @@ import CheckIcon from '@material-ui/icons/Check';
 @withAuthenticated
 class Account extends Component {
   render() {
-    let {classes, auth: {user, getFullName}} = this.props;
+    let {classes, auth: {User, getFullName}} = this.props;
     
     const GridRow = ({name, value}) =>
       <Grid item container spacing={16} justify='space-around'>
@@ -46,7 +46,7 @@ class Account extends Component {
         <Grid item xl={7} sm={10} xs={12}>
           <Paper className={classes.paper} elevation={1}>
             <GridRowWithIcon Icon={AccountIcon} text={getFullName()} children={
-              user.active && <Grid item>
+              User.Active && <Grid item>
                 <Tooltip title='Учетная запись подтверждена'>
                   <CheckIcon/>
                 </Tooltip>
@@ -58,8 +58,8 @@ class Account extends Component {
           <Paper className={classes.paper} elevation={1}>
             <GridRowWithIcon Icon={ListIcon} text='Основная информация'/>
             <Divider className={classes.divider}/>
-            <GridRow name='Электронная почта' value={user.email}/>
-            {user.group && <GridRow name='Группа' value={user.group.name}/>}
+            <GridRow name='Электронная почта' value={User.Email}/>
+            {User.Group && <GridRow name='Группа' value={User.Group.Name}/>}
           </Paper>
         </Grid>
       </Grid>

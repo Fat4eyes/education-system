@@ -14,6 +14,7 @@ import {
 import styles from './LayoutStyles'
 import SchoolIcon from '@material-ui/icons/School'
 import AccountIcon from '@material-ui/icons/AccountCircle'
+import HomeIcon from '@material-ui/icons/Home'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import Grow from '../stuff/Grow'
 import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
@@ -43,19 +44,22 @@ class Layout extends Component {
 
     const isAuthenticated = checkAuth()
 
-    const LeftMenuItem = ({component, to, tooltip, closeOnClick}) => 
+    const LeftMenuItem = ({component, to, Icon, tooltip, closeOnClick}) => 
       <ListItem disableGutters dense onClick={() => !!closeOnClick && this.handleLeftMenu()}>
         <Tooltip title={
           <Typography color='inherit'>{tooltip}</Typography>
         } TransitionComponent={Zoom} placement='right'>
         <IconButton component={component} to={to} color='secondary'>
-          <AccountIcon/>
+          <Icon/>
         </IconButton>
       </Tooltip>
     </ListItem>
     
     const LeftMenu = ({closeOnClick}) => <List disablePadding dense className={classes.menuList}>
-      <LeftMenuItem component={SimpleLink} to='/' tooltip='Главная страница' closeOnClick={closeOnClick}/>
+      <LeftMenuItem component={SimpleLink} to='/' Icon={HomeIcon} tooltip='Главная страница' closeOnClick={closeOnClick}/>
+      <If condition={isAuthenticated}>
+        <LeftMenuItem component={SimpleLink} to='/account' Icon={AccountIcon} tooltip='Профиль' closeOnClick={closeOnClick}/>
+      </If>
     </List>
 
     return <div className={classes.root}>
@@ -82,7 +86,7 @@ class Layout extends Component {
               <MoreIcon/>
             </IconButton>
             <Menu anchorEl={this.state.MenuAnchor} open={!!this.state.MenuAnchor}>
-              <MenuItem onClick={this.handleMenu(false)}>Профиль</MenuItem>
+              <MenuItem component={SimpleLink} to='/account'  onClick={this.handleMenu(false)}>Профиль</MenuItem>
               <MenuItem onClick={this.handleMenu(false, signOut)}>Выйти</MenuItem>
             </Menu>
           </If>
