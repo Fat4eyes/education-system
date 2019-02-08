@@ -26,5 +26,7 @@ namespace EducationSystem.Database.Models.Source
         public virtual int SemestersCount { get; set; }
 
         public virtual List<DatabaseStudyPlan> StudyPlans { get; set; }
+
+        public virtual List<DatabaseStudyProfileDiscipline> Disciplines { get; set; }
     }
 }

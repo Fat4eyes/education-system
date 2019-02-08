@@ -28,6 +28,7 @@ namespace EducationSystem.Database.Source
             BuildUserRole(builder);
             BuildStudentGroup(builder);
             BuildTestTheme(builder);
+            BuildStudyProfileDiscipline(builder);
 
             BuildTestResult(builder);
             BuildStudyPlan(builder);
@@ -92,6 +93,25 @@ namespace EducationSystem.Database.Source
                 .HasOne(x => x.Theme)
                 .WithMany(x => x.ThemeTests)
                 .HasForeignKey(x => x.ThemeId);
+        }
+
+        public static void BuildStudyProfileDiscipline(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseStudyProfileDiscipline>()
+                .HasKey(x => new { x.DisciplineId, x.StudyProfileId });
+
+            builder
+                .Entity<DatabaseStudyProfileDiscipline>()
+                .HasOne(x => x.Discipline)
+                .WithMany(x => x.StudyProfiles)
+                .HasForeignKey(x => x.DisciplineId);
+
+            builder
+                .Entity<DatabaseStudyProfileDiscipline>()
+                .HasOne(x => x.StudyProfile)
+                .WithMany(x => x.Disciplines)
+                .HasForeignKey(x => x.StudyProfileId);
         }
 
         private static void BuildTestResult(ModelBuilder builder)
