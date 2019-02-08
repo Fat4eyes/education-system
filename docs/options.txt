@@ -34,6 +34,8 @@ Test Result Options:
     WithThemes              (по умолчанию: false)       +   Если WithThemes = True, то значение WithTest не учитывается.
                                                             Темы относятся к конкретному тесту, а не к результату.
                                                             Поэтому тест будет тоже возвращен совместно с темами.
+    WithGivenAnswers        (по умолчанию: false)       +
+
 Theme Options:
     List Options
     WithQuestions           (по умолчанию: false)       +

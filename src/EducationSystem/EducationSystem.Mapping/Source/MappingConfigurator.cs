@@ -28,6 +28,7 @@ namespace EducationSystem.Mapping.Source
 
             expression.CreateMap<DatabaseTheme, Theme>();
             expression.CreateMap<DatabaseTestResult, TestResult>();
+            expression.CreateMap<DatabaseGivenAnswer, GivenAnswer>();
 
             expression.CreateMap<DatabaseQuestion, Question>();
             expression.CreateMap<DatabaseAnswer, Answer>()

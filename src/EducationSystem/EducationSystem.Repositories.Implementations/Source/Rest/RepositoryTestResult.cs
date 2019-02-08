@@ -40,6 +40,9 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                     .ThenInclude(x => x.Theme);
             }
 
+            if (options.WithGivenAnswers)
+                query = query.Include(x => x.GivenAnswers);
+
             return query;
         }
 

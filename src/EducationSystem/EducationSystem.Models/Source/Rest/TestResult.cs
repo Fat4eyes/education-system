@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EducationSystem.Models.Source.Rest.Base;
 
 namespace EducationSystem.Models.Source.Rest
@@ -16,5 +17,7 @@ namespace EducationSystem.Models.Source.Rest
         public int UserId { get; set; }
 
         public Test Test { get; set; }
+
+        public List<GivenAnswer> GivenAnswers { get; set; }
     }
 }

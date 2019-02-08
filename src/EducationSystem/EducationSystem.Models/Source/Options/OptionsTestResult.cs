@@ -13,5 +13,7 @@
         public bool WithTest { get; set; } = false;
 
         public bool WithThemes { get; set; } = false;
+
+        public bool WithGivenAnswers { get; set; } = false;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
 
@@ -27,5 +28,7 @@ namespace EducationSystem.Database.Models.Source
 
         [Column("date_time")]
         public virtual DateTime DateTime { get; set; }
+
+        public virtual List<DatabaseGivenAnswer> GivenAnswers { get; set; }
     }
 }

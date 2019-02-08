@@ -26,5 +26,7 @@ namespace EducationSystem.Database.Models.Source
         public virtual int Time { get; set; }
 
         public virtual List<DatabaseAnswer> Answers { get; set; }
+
+        public virtual List<DatabaseGivenAnswer> GivenAnswers { get; set; }
     }
 }
