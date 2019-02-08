@@ -66,9 +66,11 @@ const styles = theme => ({
   page: {
     padding: theme.spacing.unit * 2,
     backgroundColor: theme.palette.grey["200"],
+    border: 'dashed 0.5px black',
 
     minHeight: `calc(100% - ${toolbarHeight + theme.spacing.unit * 8}px)`,
-    margin: `${toolbarHeight + theme.spacing.unit * 2}px 5% ${theme.spacing.unit * 2}px`
+    margin: `${toolbarHeight + theme.spacing.unit * 2}px 5% ${theme.spacing.unit * 2}px`,
+    display: 'flex'
   },
   fullName: {
     fontSize: 18,

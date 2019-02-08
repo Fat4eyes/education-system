@@ -3,6 +3,12 @@ import {blue, teal} from "@material-ui/core/colors";
 let base = {
   typography: {
     useNextVariants: true
+  },
+  mixins: {
+    toolbar: {
+      minHeight: 48,
+      padding: 0
+    }
   }
 };
 
@@ -38,8 +44,26 @@ const redTheme = {
   }
 };
 
+const baseTheme = {
+  ...base,
+  palette: {
+    primary: {
+      light: '#8ebce0',
+      main: '#5d8cae',
+      dark: '#2c5f7f',
+      contrastText: '#fafafa',
+    },
+    secondary: {
+      light: '#898989',
+      main: '#6e6e6e',
+      dark: '#3f3f3f',
+      contrastText: '#b2b5c5',
+    },
+  },
+}
 export {
   tealTheme, 
   skyTheme,
-  redTheme
+  redTheme,
+  baseTheme
 }

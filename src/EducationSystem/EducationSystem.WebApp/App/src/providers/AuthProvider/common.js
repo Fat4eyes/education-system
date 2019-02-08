@@ -1,50 +1,50 @@
-import {TOKEN, USER} from "./constants";
+import {TOKEN} from './constants'
 import Cookies from 'js-cookie'
 
-const emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+const emailRegular = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
 const ValidateAuthModel = ({Email, Password}) => {
   if (typeof Email !== 'string')
-    throw 'Почтовый адресс не корректный';
+    throw 'Почтовый адресс не корректный'
   if (typeof Password !== 'string' || Password.length < 6)
-    throw 'Пароль не корректный';
-};
+    throw 'Пароль не корректный'
+}
 
-const setAuthData = ({token}) => {
-  Cookies.set(TOKEN, token);
-};
+const setAuthData = ({Token}) => {
+  Cookies.set(TOKEN, Token)
+}
 
 const clearAuthData = () => {
-  Cookies.remove(TOKEN);
-};
+  Cookies.remove(TOKEN)
+}
 
 const getAuthData = () => ({
-  token: Cookies.get(TOKEN),
-});
+  Token: Cookies.get(TOKEN)
+})
 
-const checkAuthData = ({token}) =>
-  !!token;
+const checkAuthData = ({Token}) =>
+  !!Token
 
 const capitalize = str => {
-  str = str || '';
+  str = str || ''
   return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase()
-};
+}
 
 const getInitials = str => !!str.length
   ? `${str.slice(0, 1)}.`
-  : str;
+  : str
 
-const getFullName = ({lastName, firstName, middleName}, withInitials) => {
-  lastName = capitalize(lastName || '');
-  firstName = capitalize(firstName || '');
-  middleName = capitalize(middleName || '');
-  
-  let fullName = `${lastName} `;
-  return fullName + (withInitials 
-    ? `${getInitials(firstName)} ${getInitials(middleName)}`
-    : `${firstName} ${middleName}`
+const getFullName = ({LastName, FirstName, MiddleName}, withInitials) => {
+  LastName = capitalize(LastName || '')
+  FirstName = capitalize(FirstName || '')
+  MiddleName = capitalize(MiddleName || '')
+
+  let fullName = `${LastName} `
+  return fullName + (withInitials
+      ? `${getInitials(FirstName)} ${getInitials(MiddleName)}`
+      : `${FirstName} ${MiddleName}`
   ).trim()
-};
+}
 
 export {
   ValidateAuthModel,

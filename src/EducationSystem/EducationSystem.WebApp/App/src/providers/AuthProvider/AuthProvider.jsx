@@ -8,8 +8,8 @@ import AuthModal from './AuthModal/AuthModal';
 import {authRoutes, usersReutes} from '../../routes';
 
 const defaultState = {
-  token: null,
-  user: {},
+  Token: null,
+  User: {},
   isAuthModalOpen: false
 };
 
@@ -43,11 +43,11 @@ class AuthProvider extends Component {
     });
   
   async componentDidMount() {
-    if (!!this.state.token) {
+    if (!!this.state.Token) {
       let success =  await ProtectedFetch.check(this.actions.signOut);
       if (success) {
-        const user = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
-        this.setState({user});
+        const User = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
+        this.setState({User});
       }
     }
   }
@@ -66,8 +66,8 @@ class AuthProvider extends Component {
 
       if (authData) {
         setAuthData(authData);
-        const user = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
-        this.setState({...authData, user});
+        const User = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
+        this.setState({...authData, User});
         return true;
       }
 
@@ -82,12 +82,12 @@ class AuthProvider extends Component {
       const isAuthenticated = checkAuthData(authData);
 
       if (!!role) {
-        return isAuthenticated && authData.user.roles.find(r => r.name === role)
+        return isAuthenticated && authData.User.Roles.find(r => r.Name === role)
       }
 
       return isAuthenticated;
     },
-    getFullName: withInitial => getFullName(this.state.user, withInitial),
+    getFullName: withInitial => getFullName(this.state.User, withInitial),
     openAuthModal: this.handleAuthModal(true)
   };
 

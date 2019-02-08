@@ -6,14 +6,14 @@ class Fetch {
       if (!response.ok) 
         throw response;
       
-      const {success, data, error} = await response.json();
+      const {Success, Data, Error} = await response.json();
       
-      if (success === true) 
-        return data;
+      if (Success === true) 
+        return Data;
 
-      throw error
+      throw Error
       
-    } catch (error) {
+    } catch (Error) {
       const handleError = e => {
         e = e.trim();
         if (e[e.length - 1] === '.') {
@@ -22,35 +22,35 @@ class Fetch {
         onError ? onError(e) : console.log(e)
       };
       
-      switch (typeof error) {
+      switch (typeof Error) {
         case 'object':
-          switch (error.status) {
+          switch (Error.status) {
             case 401:
               return handleError('Вы не авторизованны');
             case 403:
               return handleError('Не лезь, она тебя сожрет.(Недостаточно прав)');
             case 500:
-              return handleError(await error.text());
+              return handleError(await Error.text());
             default:
-              return console.log(error)
+              return console.log(Error)
           }
         case 'string':
         default:
-          if (error === undefined || error === null)
+          if (Error === undefined || Error === null)
             return handleError('Упс, просто бэк не дали.');
-          return handleError(error);
+          return handleError(Error);
       }
     }
   }
 
-  static async post(url, data, onError) {
+  static async post(url, Data, onError) {
     return Fetch.handleFetch(url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: data
+      body: Data
     }, onError)
   };
 

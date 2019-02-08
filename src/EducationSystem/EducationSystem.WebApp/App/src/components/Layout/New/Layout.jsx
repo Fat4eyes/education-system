@@ -77,6 +77,12 @@ class Layout extends Component {
               <ListItemText primary='Главная'/>
             </ListItem>
             <Authenticated>
+              <ListItem component={SimpleLink} to='/tests' button>
+                <ListItemIcon>
+                  <Face/>
+                </ListItemIcon>
+                <ListItemText primary='Аккаунт'/>
+              </ListItem>
               <ListItem component={SimpleLink} to='/account' button>
                 <ListItemIcon>
                   <Face/>
