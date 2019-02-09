@@ -7,7 +7,7 @@ let base = {
   mixins: {
     toolbar: {
       minHeight: 48,
-      padding: '0 5px'
+      padding: '5px 5px'
     }
   }
 };

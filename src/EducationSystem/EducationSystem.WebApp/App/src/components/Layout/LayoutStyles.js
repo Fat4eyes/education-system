@@ -24,13 +24,13 @@ const styles = theme => {
       },
     },
     menu: {
-      top: toolbar.minHeight,
+      top: toolbar.minHeight + 10,
       padding: '0'
     },
     content: {
       padding: contentBasePadding,
       paddingLeft: contentBasePadding + drawerWidth,
-      minHeight: `calc(100vh - ${contentBasePadding * 2 + toolbar.minHeight}px)`,
+      minHeight: `calc(100vh - ${contentBasePadding * 2 + toolbar.minHeight  + 10}px)`,
       backgroundColor: theme.palette.grey['200'],
       [theme.breakpoints.down('xs')]: {
         paddingLeft: contentBasePadding
@@ -106,7 +106,7 @@ const styles = theme => {
       }
     },
     moreMenu: {
-      top: `${toolbar.minHeight}px !important`,
+      top: `${toolbar.minHeight  + 10}px !important`,
       right: 0
     },
     hover: {
