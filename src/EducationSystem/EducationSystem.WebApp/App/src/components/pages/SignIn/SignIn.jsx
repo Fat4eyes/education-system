@@ -36,7 +36,8 @@ class SignIn extends Component {
 
     try {
       this.setState({IsLoading: true})
-      await this.props.auth.signIn(authModel)
+      if (!await this.props.auth.signIn(authModel))
+        this.setState({IsLoading: false})
     } catch (e) {
       this.props.enqueueSnackbar(e, {
         variant: 'error',

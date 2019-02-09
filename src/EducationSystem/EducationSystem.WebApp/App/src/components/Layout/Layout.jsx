@@ -1,16 +1,5 @@
 import React, {Component} from 'react'
-import {
-  AppBar,
-  Drawer,
-  IconButton,
-  List,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-  withStyles,
-  Zoom
-} from '@material-ui/core'
+import {AppBar, Drawer, IconButton, List, Menu, MenuItem, Toolbar, Typography, withStyles} from '@material-ui/core'
 import styles from './LayoutStyles'
 import SchoolIcon from '@material-ui/icons/School'
 import AccountIcon from '@material-ui/icons/AccountCircle'
@@ -23,8 +12,15 @@ import Routes from './New/Routes/Routes'
 import SimpleLink from '../SimpleLink'
 import ListItem from '@material-ui/core/ListItem'
 import classNames from 'classnames'
+import {unstable_useMediaQuery as useMediaQuery} from '@material-ui/core/useMediaQuery'
+import {useTheme} from '@material-ui/styles'
 import Tooltip from '@material-ui/core/Tooltip'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import Zoom from '@material-ui/core/Zoom'
+import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
 
+@withWidth()
 @withStyles(styles)
 @withAuthenticated
 class Layout extends Component {
@@ -34,89 +30,108 @@ class Layout extends Component {
   }
 
   handleInput = ({target: {name, value}}) => this.setState({[name]: value})
-  handleMenu = (open, callback) => ({currentTarget}) => {
-    this.setState({MenuAnchor: !!open ? currentTarget : null}, () => callback && callback())
+  handleMenu = (callback) => ({currentTarget}) => {
+    
+    this.setState({MenuAnchor: !!this.state.MenuAnchor ? null : currentTarget}, () => callback && callback())
   }
   handleLeftMenu = () => this.setState({IsLeftMenuOpen: !this.state.IsLeftMenuOpen})
 
   render() {
     let {classes, auth: {checkAuth, getFullName, signOut}} = this.props
 
-    const isAuthenticated = checkAuth()
+    const isAuthenticated = checkAuth();
+    let isXs = isWidthDown('xs', this.props.width)
 
-    const LeftMenuItem = ({component, to, Icon, tooltip, closeOnClick}) => 
-      <ListItem disableGutters dense onClick={() => !!closeOnClick && this.handleLeftMenu()}>
-        <Tooltip title={
-          <Typography color='inherit'>{tooltip}</Typography>
-        } TransitionComponent={Zoom} placement='right'>
-        <IconButton component={component} to={to} color='secondary'>
-          <Icon/>
-        </IconButton>
-      </Tooltip>
-    </ListItem>
-    
-    const LeftMenu = ({closeOnClick}) => <List disablePadding dense className={classes.menuList}>
-      <LeftMenuItem component={SimpleLink} to='/' Icon={HomeIcon} tooltip='Главная страница' closeOnClick={closeOnClick}/>
+    const LeftMenuItem = ({component, to, Icon, tooltip, closeOnClick}) =>
+      <ListItem button={!!isXs} 
+                disableGutters={!isXs}
+                dense 
+                onClick={() => !!closeOnClick && this.handleLeftMenu()}>
+        <If condition={isXs} orElse={
+          <Tooltip className={classes.staticLeftMenu} title={
+            <Typography color='inherit'>{tooltip}</Typography>
+          } TransitionComponent={Zoom} placement='right'>
+            <IconButton component={component} to={to} color='secondary'>
+              <Icon/>
+            </IconButton>
+          </Tooltip>
+        }>
+          <ListItemIcon>
+            <Icon/>
+          </ListItemIcon>
+          <ListItemText inset primary={
+            <Typography noWrap color='inherit'>{tooltip}</Typography>
+          }/>
+        </If>
+      </ListItem>
+
+    const LeftMenu = ({closeOnClick}) => <List disablePadding className={classes.menuList}>
+      <LeftMenuItem component={SimpleLink} to='/' Icon={HomeIcon} tooltip='Главная'
+                    closeOnClick={closeOnClick}/>
       <If condition={isAuthenticated}>
-        <LeftMenuItem component={SimpleLink} to='/account' Icon={AccountIcon} tooltip='Профиль' closeOnClick={closeOnClick}/>
+        <LeftMenuItem component={SimpleLink} to='/account' Icon={AccountIcon} tooltip='Профиль'
+                      closeOnClick={closeOnClick}/>
       </If>
     </List>
 
     return <div className={classes.root}>
+      
       <AppBar position='static'>
         <Toolbar>
-          <SchoolIcon className={classNames(classes.staticLeftMenu, classes.leftMenuIcon)}/>
-          <IconButton className={classes.leftMenu} onClick={this.handleLeftMenu} color='inherit'>
-            <SchoolIcon/>
-          </IconButton>
+          <If condition={isXs} orElse={<SchoolIcon className={classes.leftMenuIcon}/>}>
+            <IconButton onClick={this.handleLeftMenu} color='inherit'>
+              <SchoolIcon/>
+            </IconButton>
+          </If>
           <Typography variant='h6' color='inherit' className={classes.title}>
             Система обучения
           </Typography>
           <Grow/>
-          <If condition={!isAuthenticated}>
+          <If condition={isAuthenticated} orElse={
             <IconButton className={classes.rightMenuIcon} component={SimpleLink} to='/signin' color='inherit'>
               <AccountIcon/>
             </IconButton>
-          </If>
-          <If condition={isAuthenticated}>
+          }>
             <Typography variant='h6' color='inherit'>
               {getFullName(true)}
             </Typography>
-            <IconButton color='inherit' onClick={this.handleMenu(true)}>
+            <IconButton className={classes.rightMenuIcon}  color='inherit' onClick={this.handleMenu()}>
               <MoreIcon/>
             </IconButton>
-            <Menu anchorEl={this.state.MenuAnchor} open={!!this.state.MenuAnchor}>
-              <MenuItem component={SimpleLink} to='/account'  onClick={this.handleMenu(false)}>Профиль</MenuItem>
-              <MenuItem onClick={this.handleMenu(false, signOut)}>Выйти</MenuItem>
+            <Menu classes={{paper: classes.moreMenu}}
+                  anchorEl={this.state.MenuAnchor}
+                  open={!!this.state.MenuAnchor}
+                  onClose={this.handleMenu()}>
+              <MenuItem component={SimpleLink} to='/account' onClick={this.handleMenu()}>Профиль</MenuItem>
+              <MenuItem onClick={this.handleMenu(signOut)}>Выйти</MenuItem>
             </Menu>
           </If>
         </Toolbar>
       </AppBar>
-      <Drawer
-        open
-        variant='permanent'
-        className={classes.staticLeftMenu}
-        classes={{paper: classes.menu}}>
-        <LeftMenu/>
-      </Drawer>
-      <Drawer
-        open={this.state.IsLeftMenuOpen}
-        variant='permanent'
-        className={classNames(classes.drawer, {
-          [classes.drawerOpen]: this.state.IsLeftMenuOpen,
-          [classes.drawerClose]: !this.state.IsLeftMenuOpen,
-        }, classes.leftMenu)}
-        classes={{
-          paper: classNames(classes.menu, {
+      <If condition={isXs} orElse={
+        <Drawer open variant='permanent' classes={{paper: classes.menu}}>
+          <LeftMenu/>
+        </Drawer>
+      }>
+        <Drawer
+          open={this.state.IsLeftMenuOpen}
+          variant='permanent'
+          className={classNames(classes.drawer, {
             [classes.drawerOpen]: this.state.IsLeftMenuOpen,
-            [classes.drawerClose]: !this.state.IsLeftMenuOpen,
-          }),
-        }}>
-        <div className={classNames(classes.curtain, {
-          [classes.hide]: !this.state.IsLeftMenuOpen
-        })}/>
-        <LeftMenu closeOnClick/>
-      </Drawer>
+            [classes.drawerClose]: !this.state.IsLeftMenuOpen
+          })}
+          classes={{
+            paper: classNames(classes.menu, {
+              [classes.drawerOpen]: this.state.IsLeftMenuOpen,
+              [classes.drawerClose]: !this.state.IsLeftMenuOpen
+            })
+          }}>
+          <div onClick={this.handleLeftMenu} className={classNames(classes.curtain, {
+            [classes.hide]: !this.state.IsLeftMenuOpen
+          })}/>
+          <LeftMenu closeOnClick/>
+        </Drawer>
+      </If>
       <main className={classes.content}>
         <Routes/>
       </main>

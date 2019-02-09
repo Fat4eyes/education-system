@@ -1,5 +1,4 @@
 const styles = theme => {
-  console.log(theme)
   let {
     spacing: {unit: spacingUnit},
     mixins: {toolbar}
@@ -19,7 +18,10 @@ const styles = theme => {
       }
     },
     drawer: {
-      width: drawerWidth
+      width: drawerWidth,
+      [theme.breakpoints.down('xs')]: {
+        width: '45%'
+      },
     },
     menu: {
       top: toolbar.minHeight,
@@ -40,11 +42,19 @@ const styles = theme => {
         display: 'inline'
       },
     },
+    MenuItemName: {
+      display: 'none',
+      [theme.breakpoints.down('xs')]: {
+        display: 'inline'
+      },
+    },
     leftMenuIcon: {
-      paddingLeft: 12
+      paddingLeft: 12,
+      marginRight: 5
     },
     rightMenuIcon: {
-      paddingRight: 12
+      paddingRight: 12,
+      marginLeft: 5
     },
     staticLeftMenu: {
       display: 'inline',
@@ -54,6 +64,9 @@ const styles = theme => {
     },
     drawerOpen: {
       width: drawerWidth,
+      [theme.breakpoints.down('xs')]: {
+        width: '45%'
+      },
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
@@ -76,10 +89,30 @@ const styles = theme => {
       height: '100%',
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
     },
+    curtainGlobal: {
+      position: 'fixed',
+      top: 0,
+      width: '100%',
+      height: '100%',
+      zIndex: 1201
+    },
     menuList: {
-      zIndex: 1201,
+      zIndex: 1203,
       backgroundColor: theme.palette.grey['100'],
-      height: '100%'
+      height: '100%',
+      padding: '0 5px',
+      [theme.breakpoints.down('xs')]: {
+        padding: 0
+      }
+    },
+    moreMenu: {
+      top: `${toolbar.minHeight}px !important`,
+      right: 0
+    },
+    hover: {
+      '&:hover' : {
+        transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+      }
     }
   })
 }

@@ -60,6 +60,7 @@ class AuthProvider extends Component {
         ValidateAuthModel(authModel)
       } catch (e) {
         this.handleError(e)
+        return false
       }
 
       const authData = await Fetch.post(authRoutes.signIn, JSON.stringify(authModel), this.handleError);
