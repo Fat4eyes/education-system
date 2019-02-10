@@ -20,34 +20,36 @@ const TablePagination = (props) => {
   const rightPage = page + 1 < count.all / count.perPage ? page + 1 : page
 
   return <Grid container alignItems='center' spacing={16} className={classes.root}>
-    <If condition={!showChangeCountPerPageBlock}>
+    <If condition={!!count.current} orElse={<Grid item xs/>}>
+      <If condition={!showChangeCountPerPageBlock}>
+        <Grid item>
+          <Typography variant='subtitle1' className={classes.typography}>
+            Количество записей на странице
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Select variant='filled' value={count.perPage} onChange={onCountPerPageChange} className={classes.select}>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={25}>25</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+          </Select>
+        </Grid>
+      </If>
+      <Grid item xs/>
       <Grid item>
         <Typography variant='subtitle1' className={classes.typography}>
-          Количество записей на странице
+          {`${(page * 10 + 1)}-${(page * 10 + count.current)} из ${count.all}`}
         </Typography>
       </Grid>
       <Grid item>
-        <Select variant='filled' value={count.perPage} onChange={onCountPerPageChange} className={classes.select}>
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={25}>25</MenuItem>
-          <MenuItem value={50}>50</MenuItem>
-        </Select>
+        <IconButton disabled={count.perPage > count.all} onClick={() => page !== leftPage && onPageChange(leftPage)}>
+          <ChevronLeftIcon/>
+        </IconButton>
+        <IconButton disabled={count.perPage > count.all} onClick={() => page !== rightPage && onPageChange(rightPage)}>
+          <ChevronRightIcon/>
+        </IconButton>
       </Grid>
     </If>
-    <Grid item xs/>
-    <Grid item>
-      <Typography variant='subtitle1' className={classes.typography}>
-        {`${(page * 10 + 1)}-${(page * 10 + count.current)} из ${count.all}`}
-      </Typography>
-    </Grid>
-    <Grid item>
-      <IconButton disabled={count.perPage > count.all} onClick={() => page !== leftPage && onPageChange(leftPage)}>
-        <ChevronLeftIcon/>
-      </IconButton>
-      <IconButton disabled={count.perPage > count.all} onClick={() => page !== rightPage && onPageChange(rightPage)}>
-        <ChevronRightIcon/>
-      </IconButton>
-    </Grid>
   </Grid>
 }
 

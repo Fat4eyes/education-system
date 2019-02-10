@@ -91,8 +91,6 @@ class AuthProvider extends Component {
       const isAuthenticated = checkAuthData(getAuthData())
 
       if (!!role) {
-        console.log(this.state.User)
-        
         return isAuthenticated && 
           this.state.User && 
           this.state.User.Roles &&

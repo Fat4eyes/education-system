@@ -12,6 +12,9 @@ const TestsTableStyles = theme => ({
     padding: theme.spacing.unit * 3,
     backgroundColor: theme.palette.grey['50'],
   },
+  tableContainer: {
+    minHeight: 100
+  },
   root: {
     borderSpacing: `${theme.spacing.unit / 2}px !important`,
     borderCollapse: 'separate !important',
@@ -23,7 +26,7 @@ const TestsTableStyles = theme => ({
     },
     '& th': {
       borderBottom: 'none'
-    }
+    },
   }, 
   footer: {
     '& tr': {
@@ -49,6 +52,14 @@ const TestsTableStyles = theme => ({
     '&::before':{
       borderBottom: 'none'
     }
+  },
+  loading: {
+    width: 100,
+    position: 'relative',
+    left: '50%',
+    top: '50%',
+    padding: '10px 0',
+    transform: 'translate(-50%, -50%)'
   }
 })
 

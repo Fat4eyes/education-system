@@ -12,9 +12,11 @@ import MenuItem from '@material-ui/core/MenuItem'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
+import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 
-const TestsFilter = ({classes, Disciplines, DisciplineId, IsActive, handleInput}) =>
-  <ExpansionPanel className={classes.expansionPanel}>
+const TestsFilter = ({classes, Disciplines, DisciplineId, IsActive, handleInput, width}) => {
+  let isXs = isWidthDown('xs', width)
+  return <ExpansionPanel defaultExpanded={!isXs} className={classes.expansionPanel}>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
       <Typography>Фильтр</Typography>
     </ExpansionPanelSummary>
@@ -39,6 +41,7 @@ const TestsFilter = ({classes, Disciplines, DisciplineId, IsActive, handleInput}
       </form>
     </ExpansionPanelDetails>
   </ExpansionPanel>
+}
 
 TestsFilter.propTypes = {
   Disciplines: PropTypes.array.isRequired,
@@ -63,4 +66,4 @@ const styles = theme => ({
   }
 })
 
-export default withStyles(styles)(TestsFilter)
+export default withStyles(styles)(withWidth()(TestsFilter))

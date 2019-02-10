@@ -1,20 +1,8 @@
-const If = ({condition, children, orElse}) => {
-  // if (condition) {
-  //   return children
-  // }
-  //
-  // if (orElse) {
-  //   return orElse
-  // } 
-  //
-  // return null
-  
-  return condition 
+const If = ({condition, children, orElse}) =>
+  condition
     ? children
     : orElse
-      ? orElse
-      : null
-
-}
+    ? orElse
+    : null
 
 export default If

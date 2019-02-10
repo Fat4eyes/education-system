@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Grid, Paper, Table, TableBody, TableCell, Typography, withStyles} from '@material-ui/core'
+import {CircularProgress, Grid, Paper, Table, TableBody, TableCell, Typography, withStyles} from '@material-ui/core'
 import TestsTableStyles from './TestsTableStyles'
 import TableRow from '@material-ui/core/TableRow'
 import If from '../../../If'
@@ -10,9 +10,10 @@ import UrlBuilder from '../../../../helpers/UrlBuilder'
 import {disciplineRoutes, testRoutes} from '../../../../routes'
 import Mapper from '../../../../helpers/Mapper'
 import TestsFilter from './TestsFilter'
+import {withSnackbar} from 'notistack'
 
 @withStyles(TestsTableStyles)
-//@withSnackbar
+@withSnackbar
 class TestsTable extends Component {
   constructor(props) {
     super(props)
@@ -23,11 +24,13 @@ class TestsTable extends Component {
         DisciplineId: null,
         Disciplines: []
       },
+      IsLoading: true,
       Count: 0,
       CountPerPage: 10,
       Page: 0,
       Items: [TestModel]
     }
+    this.tableRef = React.createRef()
   }
 
   async componentDidMount() {
@@ -46,6 +49,7 @@ class TestsTable extends Component {
       this.setState({
         Items: Mapper.map(Items, TestModel),
         Count,
+        IsLoading: false,
         Filter: {
           ...this.state.Filter,
           Disciplines
@@ -73,7 +77,7 @@ class TestsTable extends Component {
           ...param
         })
       )
-      this.setState({Items: Mapper.map(Items, TestModel), Count: Count})
+      this.setState({Items: Mapper.map(Items, TestModel), Count: Count, IsLoading: false})
     } catch (e) {
       this.props.enqueueSnackbar(e, {
         variant: 'error',
@@ -86,22 +90,25 @@ class TestsTable extends Component {
   }
 
   handleChangePage = async page =>
-    this.setState({Page: page},
+    this.setState({Page: page, IsLoading: true},
       async () =>
         await this.getTests({
           Skip: page * this.state.CountPerPage,
-          Take: this.state.CountPerPage
+          Take: this.state.CountPerPage,
+          IsLoading: false
         }))
 
   handleChangeRowsPerPage = ({target: {value}}) => {
     if (value === this.state.CountPerPage) return
     this.setState({
       CountPerPage: value,
-      Page: 0
+      Page: 0,
+      IsLoading: true
     }, async () => {
       await this.getTests({
         Skip: 0,
-        Take: value
+        Take: value,
+        IsLoading: false
       })
     })
   }
@@ -120,6 +127,7 @@ class TestsTable extends Component {
         ...this.state.Filter,
         [name]: (!!isChecked ? checked : (value || null))
       },
+      IsLoading: true,
       Page: 0
     }, this.getTests)
 
@@ -127,9 +135,16 @@ class TestsTable extends Component {
     let {classes} = this.props
     let {DisciplineId, Disciplines, IsActive} = this.state.Filter
 
+    const getTableHeight = () => {
+      if (this.tableRef.current)
+        return this.tableRef.current.clientHeight
+      else
+        return 100
+    }
+
     return <Grid container justify='space-around' className={classes.main} spacing={16}>
       <Grid item xs={12} lg={3}>
-        <TestsFilter handleInput={this.handleFilter} 
+        <TestsFilter handleInput={this.handleFilter}
                      DisciplineId={DisciplineId || 0}
                      Disciplines={Disciplines}
                      IsActive={IsActive}
@@ -147,29 +162,49 @@ class TestsTable extends Component {
             onPageChange={this.handleChangePage}
             onCountPerPageChange={this.handleChangeRowsPerPage}
           />
-          <Table className={classes.root}>
-            <TableBody>
-              {this.state.Items.map((test, index) =>
-                <React.Fragment key={test.Id || index}>
-                  <TableRow hover selected={test.IsSelected} classes={{selected: classes.selected}} color='primary'
-                            onClick={() => this.handleDatailsClick(test.Id)}>
-                    <TableCell>
-                      <Typography variant='subtitle1'
-                                  className={test.IsSelected ? classes.titleSelected : classes.titleNotSelected}>
-                        {test.Subject}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                  <If condition={test.IsSelected}>
-                    <TableRow className={classes.testDetails}>
+          <If condition={!this.state.IsLoading} orElse={
+            <div style={{height: getTableHeight()}}>
+              <div className={classes.loading}>
+                <CircularProgress size={100} thickness={1}/>
+              </div>
+            </div>
+          }>
+            <div ref={this.tableRef} className={classes.tableContainer}>
+              <Table className={classes.root} ref={this.tableRef}>
+                <TableBody>
+                  <If condition={!!this.state.Items.length} orElse={
+                    <TableRow color='primary'>
                       <TableCell>
-                        {test.Subject}
+                        <Typography variant='subtitle1' className={classes.titleNotSelected}>
+                          {'Не найдено'}
+                        </Typography>
                       </TableCell>
                     </TableRow>
+                  }>
+                    {this.state.Items.map((test, index) =>
+                      <React.Fragment key={test.Id || index}>
+                        <TableRow hover selected={test.IsSelected} classes={{selected: classes.selected}} color='primary'
+                                  onClick={() => this.handleDatailsClick(test.Id)}>
+                          <TableCell>
+                            <Typography variant='subtitle1'
+                                        className={test.IsSelected ? classes.titleSelected : classes.titleNotSelected}>
+                              {test.Subject}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                        <If condition={test.IsSelected}>
+                          <TableRow className={classes.testDetails}>
+                            <TableCell>
+                              {test.Subject}
+                            </TableCell>
+                          </TableRow>
+                        </If>
+                      </React.Fragment>)}
                   </If>
-                </React.Fragment>)}
-            </TableBody>
-          </Table>
+                </TableBody>
+              </Table>
+            </div>
+          </If>
           <TablePagination
             count={{
               all: this.state.Count,
