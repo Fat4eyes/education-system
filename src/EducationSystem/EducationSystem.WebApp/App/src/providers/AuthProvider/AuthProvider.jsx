@@ -1,26 +1,27 @@
 import React, {Component} from 'react'
 import AuthContext from './AuthContext'
-import Fetch from '../../helpers/Fetch';
-import {checkAuthData, clearAuthData, getAuthData, setAuthData, ValidateAuthModel, getFullName} from './common';
-import ProtectedFetch from '../../helpers/ProtectedFetch';
-import {withSnackbar} from "notistack";
-import AuthModal from './AuthModal/AuthModal';
-import {authRoutes, usersReutes} from '../../routes';
+import Fetch from '../../helpers/Fetch'
+import {checkAuthData, clearAuthData, getAuthData, getFullName, setAuthData, ValidateAuthModel} from './common'
+import ProtectedFetch from '../../helpers/ProtectedFetch'
+import {withSnackbar} from 'notistack'
+import AuthModal from './AuthModal/AuthModal'
+import {authRoutes, usersRoutes} from '../../routes'
+import UrlBuilder from '../../helpers/UrlBuilder'
 
 const defaultState = {
   Token: null,
   User: {},
   isAuthModalOpen: false
-};
+}
 
-const {Provider, Consumer} = AuthContext;
+const {Provider, Consumer} = AuthContext
 
 @withSnackbar
 class AuthProvider extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    const authData = getAuthData();
+    const authData = getAuthData()
 
     if (checkAuthData(authData)) {
       this.state = {
@@ -28,7 +29,7 @@ class AuthProvider extends Component {
         ...authData
       }
     } else {
-      clearAuthData();
+      clearAuthData()
       this.state = {...defaultState}
     }
   }
@@ -38,22 +39,26 @@ class AuthProvider extends Component {
       variant: 'error',
       anchorOrigin: {
         vertical: 'bottom',
-        horizontal: 'right',
-      },
-    });
-  
+        horizontal: 'right'
+      }
+    })
+
   async componentDidMount() {
     if (!!this.state.Token) {
-      let success =  await ProtectedFetch.check(this.actions.signOut);
+      let success = await ProtectedFetch.check(this.actions.signOut)
       if (success) {
-        const User = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
-        this.setState({User});
+        let url = UrlBuilder.Build(usersRoutes.getInfo, {
+          WithRoles: true
+        })
+
+        const User = await ProtectedFetch.get(url, this.handleError)
+        this.setState({User})
       }
     }
   }
 
-  handleAuthModal = value => () => this.setState({isAuthModalOpen: value});
-  
+  handleAuthModal = value => () => this.setState({isAuthModalOpen: value})
+
   actions = {
     signIn: async authModel => {
       try {
@@ -63,51 +68,59 @@ class AuthProvider extends Component {
         return false
       }
 
-      const authData = await Fetch.post(authRoutes.signIn, JSON.stringify(authModel), this.handleError);
+      const authData = await Fetch.post(authRoutes.signIn, JSON.stringify(authModel), this.handleError)
 
       if (authData) {
-        setAuthData(authData);
-        const User = await ProtectedFetch.get(usersReutes.getInfo, this.handleError);
-        this.setState({...authData, User});
-        return true;
+        setAuthData(authData)
+        let url = UrlBuilder.Build(usersRoutes.getInfo, {
+          WithRoles: true
+        })
+
+        const User = await ProtectedFetch.get(url, this.handleError)
+        this.setState({...authData, User})
+        return true
       }
 
-      return false;
+      return false
     },
     signOut: () => {
-      clearAuthData();
+      clearAuthData()
       this.setState({...defaultState})
     },
     checkAuth: (role) => {
-      const authData = getAuthData();
-      const isAuthenticated = checkAuthData(authData);
+      const isAuthenticated = checkAuthData(getAuthData())
 
       if (!!role) {
-        return isAuthenticated && authData.User.Roles.find(r => r.Name === role)
+        console.log(this.state.User)
+        
+        return isAuthenticated && 
+          this.state.User && 
+          this.state.User.Roles &&
+          this.state.User.Roles.find(r => r.Name === role)
       }
 
-      return isAuthenticated;
+      return isAuthenticated
     },
     getFullName: withInitial => getFullName(this.state.User, withInitial),
     openAuthModal: this.handleAuthModal(true)
-  };
+  }
 
   render() {
     return <Provider value={{...this.state, ...this.actions}}>
       {this.props.children}
-      <AuthModal 
+      <AuthModal
         open={this.state.isAuthModalOpen}
         handleClose={this.handleAuthModal(false)}
-        {...this.state} 
+        {...this.state}
         {...this.actions}/>
-    </Provider>;
+    </Provider>
   }
 }
 
 const withAuthenticated = Component => props =>
   <Consumer>
     {values => <Component {...props} auth={{...values}}/>}
-  </Consumer>;
+  </Consumer>
 
 export default AuthProvider
 

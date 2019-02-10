@@ -3,7 +3,7 @@ const authRoutes = {
   check: '/api/token/check'
 };
 
-const usersReutes = {
+const usersRoutes = {
   getInfo: '/api/users/current'
 };
 
@@ -12,8 +12,21 @@ const accountRoutes = {
 };
 
 
+const disciplineRoutes = {
+  getDisciplines: `/api/disciplines`,
+  getDiscipline: id => `/api/disciplines/${id}`,
+  getDisciplineTests: id => `/api/disciplines/${id}/tests`,
+  getDisciplineThemes: id => `/api/disciplines/${id}/themes`
+};
+
+const testRoutes = {
+  getTests: `/api/tests`,
+};
+
 export {
   authRoutes,
-  usersReutes,
-  accountRoutes
+  usersRoutes,
+  accountRoutes,
+  disciplineRoutes,
+  testRoutes
 }

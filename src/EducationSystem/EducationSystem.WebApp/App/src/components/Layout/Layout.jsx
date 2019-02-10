@@ -80,6 +80,8 @@ class Layout extends Component {
       <If condition={isAuthenticated}>
         <LeftMenuItem component={SimpleLink} to='/account' Icon={AccountIcon} tooltip='Профиль'
                       closeOnClick={closeOnClick}/>
+      </If>
+      <If condition={checkAuth('Admin')}>
         <LeftMenuItem component={SimpleLink} to='/tests' Icon={QuestionIcon} tooltip='Тесты'
                       closeOnClick={closeOnClick}/>
       </If>
@@ -89,7 +91,7 @@ class Layout extends Component {
 
       <AppBar position='static'>
         <Toolbar>
-          <If condition={isXs} orElse={<SchoolIcon className={classes.leftMenuIcon}/>}>
+          <If condition={isXs} orElse={<div className={classes.leftMenuIcon}><SchoolIcon/></div>}>
             <IconButton onClick={this.handleLeftMenu} color='inherit'>
               <SchoolIcon/>
             </IconButton>

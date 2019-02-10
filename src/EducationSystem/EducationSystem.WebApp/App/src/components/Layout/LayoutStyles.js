@@ -12,7 +12,7 @@ const styles = theme => {
       display: 'block'
     },
     title: {
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing.unit + toolbar.minHeight + 10,
       [theme.breakpoints.down('xs')]: {
         display: 'none'
       }
@@ -29,7 +29,7 @@ const styles = theme => {
     },
     content: {
       padding: contentBasePadding,
-      paddingLeft: contentBasePadding + drawerWidth,
+      paddingLeft: contentBasePadding + drawerWidth + 10,
       minHeight: `calc(100vh - ${contentBasePadding * 2 + toolbar.minHeight  + 10}px)`,
       backgroundColor: theme.palette.grey['200'],
       [theme.breakpoints.down('xs')]: {
@@ -49,8 +49,18 @@ const styles = theme => {
       },
     },
     leftMenuIcon: {
-      paddingLeft: 12,
-      marginRight: 5
+      position: 'fixed',
+      left: 0,
+      height: toolbar.minHeight + 10,
+      width: toolbar.minHeight + 10,
+      paddingRight: 1,
+      backgroundColor: theme.palette.primary.main,
+      '& svg': {
+        position: 'absolute',
+        top: '50%',
+        left: '49%',
+        transform: 'translate(-50%, -49%)'
+      }
     },
     rightMenuIcon: {
       paddingRight: 12,

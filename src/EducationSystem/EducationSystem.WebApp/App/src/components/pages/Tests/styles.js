@@ -30,7 +30,10 @@ const styles = theme => ({
   },
   expansionPanelDetails: {
     padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px !important`
-  }
+  },
+  table: {
+    
+  },
 });
 
 export default styles

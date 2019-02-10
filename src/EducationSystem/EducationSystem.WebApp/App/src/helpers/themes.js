@@ -54,7 +54,7 @@ const baseTheme = {
       contrastText: '#fafafa',
     },
     secondary: {
-      light: '#898989',
+      light: '#d4d4d4',
       main: '#6e6e6e',
       dark: '#3f3f3f',
       contrastText: '#b2b5c5',

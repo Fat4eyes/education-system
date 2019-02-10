@@ -5,7 +5,7 @@ import {authRoutes} from '../routes';
 
 class ProtectedFetch extends Fetch {
   static handleToken(onError) {
-    return Cookies.get(TOKEN) || onError();
+    return Cookies.get(TOKEN) || (onError && onError()) || false;
   }
 
   static async post(url, data, onError) {
