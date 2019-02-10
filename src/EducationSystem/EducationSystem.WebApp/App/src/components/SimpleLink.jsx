@@ -1,9 +1,17 @@
 import React from 'react'
-import {Link} from "react-router-dom";
+import {NavLink} from 'react-router-dom'
+import {withTheme} from '@material-ui/core/styles'
 
-const SimpleLink = props => <Link {...props} style={{ 
-  textDecoration: 'none',
-  borderBottom: 'none'
-}}/>;
+const SimpleLink = props => {
+  console.log(props.theme.palette.primary.main)
+  
+  return <NavLink
+    {...props}
+    exact
+    activeStyle={{
+      color: props.theme.palette.primary.main
+    }}
+  />
+}
 
-export default SimpleLink
+export default withTheme()(SimpleLink)

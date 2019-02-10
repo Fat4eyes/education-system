@@ -113,6 +113,24 @@ const styles = theme => {
       '&:hover' : {
         transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
       }
+    },
+    listItem: {
+      [theme.breakpoints.down('xs')]: {
+        padding: '5px 0',
+        '& a': {
+          paddingLeft: 15,
+          width: '100%',
+          textTransform: 'capitalize',
+          justifyContent: 'start',
+          fontSize: 15,
+          '& svg': {
+            marginRight: 10
+          },
+          '& span':{
+            fontSize: '1rem'
+          }
+        }
+      },
     }
   })
 }

@@ -1,8 +1,20 @@
 import React, {Component} from 'react'
-import {AppBar, Drawer, IconButton, List, Menu, MenuItem, Toolbar, Typography, withStyles} from '@material-ui/core'
+import {
+  AppBar, 
+  Button,
+  Drawer,
+  IconButton,
+  List,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+  withStyles
+} from '@material-ui/core'
 import styles from './LayoutStyles'
 import SchoolIcon from '@material-ui/icons/School'
 import AccountIcon from '@material-ui/icons/AccountCircle'
+import QuestionIcon from '@material-ui/icons/QuestionAnswer'
 import HomeIcon from '@material-ui/icons/Home'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import Grow from '../stuff/Grow'
@@ -12,13 +24,11 @@ import Routes from './New/Routes/Routes'
 import SimpleLink from '../SimpleLink'
 import ListItem from '@material-ui/core/ListItem'
 import classNames from 'classnames'
-import {unstable_useMediaQuery as useMediaQuery} from '@material-ui/core/useMediaQuery'
-import {useTheme} from '@material-ui/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Zoom from '@material-ui/core/Zoom'
-import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
+import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 
 @withWidth()
 @withStyles(styles)
@@ -31,7 +41,7 @@ class Layout extends Component {
 
   handleInput = ({target: {name, value}}) => this.setState({[name]: value})
   handleMenu = (callback) => ({currentTarget}) => {
-    
+
     this.setState({MenuAnchor: !!this.state.MenuAnchor ? null : currentTarget}, () => callback && callback())
   }
   handleLeftMenu = () => this.setState({IsLeftMenuOpen: !this.state.IsLeftMenuOpen})
@@ -39,14 +49,16 @@ class Layout extends Component {
   render() {
     let {classes, auth: {checkAuth, getFullName, signOut}} = this.props
 
-    const isAuthenticated = checkAuth();
+    const isAuthenticated = checkAuth()
     let isXs = isWidthDown('xs', this.props.width)
 
     const LeftMenuItem = ({component, to, Icon, tooltip, closeOnClick}) =>
-      <ListItem button={!!isXs} 
+      <ListItem button={!!isXs}
                 disableGutters={!isXs}
-                dense 
-                onClick={() => !!closeOnClick && this.handleLeftMenu()}>
+                dense
+                onClick={() => !!closeOnClick && this.handleLeftMenu()}
+                className={classes.listItem}
+      >
         <If condition={isXs} orElse={
           <Tooltip className={classes.staticLeftMenu} title={
             <Typography color='inherit'>{tooltip}</Typography>
@@ -56,12 +68,9 @@ class Layout extends Component {
             </IconButton>
           </Tooltip>
         }>
-          <ListItemIcon>
-            <Icon/>
-          </ListItemIcon>
-          <ListItemText inset primary={
-            <Typography noWrap color='inherit'>{tooltip}</Typography>
-          }/>
+          <Button disableRipple size='small' component={component} to={to} color='secondary'>
+            <Icon/><Typography component='span' noWrap color='inherit'>{tooltip}</Typography>
+          </Button>
         </If>
       </ListItem>
 
@@ -71,11 +80,13 @@ class Layout extends Component {
       <If condition={isAuthenticated}>
         <LeftMenuItem component={SimpleLink} to='/account' Icon={AccountIcon} tooltip='Профиль'
                       closeOnClick={closeOnClick}/>
+        <LeftMenuItem component={SimpleLink} to='/tests' Icon={QuestionIcon} tooltip='Тесты'
+                      closeOnClick={closeOnClick}/>
       </If>
     </List>
 
     return <div className={classes.root}>
-      
+
       <AppBar position='static'>
         <Toolbar>
           <If condition={isXs} orElse={<SchoolIcon className={classes.leftMenuIcon}/>}>
@@ -95,7 +106,7 @@ class Layout extends Component {
             <Typography variant='h6' color='inherit'>
               {getFullName(true)}
             </Typography>
-            <IconButton className={classes.rightMenuIcon}  color='inherit' onClick={this.handleMenu()}>
+            <IconButton className={classes.rightMenuIcon} color='inherit' onClick={this.handleMenu()}>
               <MoreIcon/>
             </IconButton>
             <Menu classes={{paper: classes.moreMenu}}
