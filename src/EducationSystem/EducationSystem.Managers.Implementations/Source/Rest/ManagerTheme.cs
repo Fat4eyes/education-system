@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
@@ -47,9 +48,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Theme GetThemeById(int id, OptionsTheme options)
         {
             var theme = RepositoryTheme.GetThemeById(id, options) ??
-               throw new EducationSystemException(
-                   $"Тема не найдена. Идентификатор: {id}.",
-                   new EducationSystemPublicException("Тема не найден."));
+                throw new EducationSystemException(
+                    string.Format(Messages.Theme.NotFoundById, id),
+                    new EducationSystemPublicException(Messages.Theme.NotFoundPublic));
 
             return Mapper.Map<Theme>(theme);
         }

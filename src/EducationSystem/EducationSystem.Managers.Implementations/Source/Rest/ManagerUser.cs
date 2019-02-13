@@ -47,8 +47,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var user = RepositoryUser.GetUserById(id, options) ??
                 throw new EducationSystemException(
-                    $"Пользователь не найден. Идентификатор: {id}.",
-                    new EducationSystemPublicException("Пользователь не найден."));
+                    string.Format(Messages.User.NotFoundById, id),
+                    new EducationSystemPublicException(Messages.User.NotFoundPublic));
 
             return Mapper.Map<User>(user);
         }

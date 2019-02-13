@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
@@ -41,8 +42,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var test = RepositoryTest.GetTetsById(id, options) ??
                throw new EducationSystemException(
-                   $"Тест не найден. Идентификатор: {id}.",
-                   new EducationSystemPublicException("Тест не найден."));
+                   string.Format(Messages.Test.NotFoundById, id),
+                   new EducationSystemPublicException(Messages.Test.NotFoundPublic));
 
             return Mapper.Map<Test>(test);
         }

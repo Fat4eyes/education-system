@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -38,8 +39,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             if (!UserHelper.IsStudent(studentId))
                 throw new EducationSystemNotFoundException(
-                    $"Пользователь не является студентом. Идентификатор: {studentId}. ",
-                    new EducationSystemPublicException("Пользователь не является студентом."));
+                    string.Format(Messages.User.NotStudent, studentId),
+                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var (count, testResults) = RepositoryTestResult.GetTestResultsByStudentId(studentId, options);
 
@@ -49,9 +50,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public TestResult GetTestResultById(int id, OptionsTestResult options)
         {
             var testResult = RepositoryTestResult.GetTestResultById(id, options) ??
-               throw new EducationSystemException(
-                   $"Результат теста не найден. Идентификатор: {id}.",
-                   new EducationSystemPublicException("Результат теста не найден."));
+                 throw new EducationSystemException(
+                     string.Format(Messages.TestResult.NotFoundById, id),
+                     new EducationSystemPublicException(Messages.TestResult.NotFoundPublic));
 
             return Mapper.Map<TestResult>(testResult);
         }

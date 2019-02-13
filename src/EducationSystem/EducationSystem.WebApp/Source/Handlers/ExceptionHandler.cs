@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Models.Source.Responses;
 using Microsoft.AspNetCore.Http;
@@ -53,9 +54,7 @@ namespace EducationSystem.WebApp.Source.Handlers
                 JsonConvert.SerializeObject(new ErrorResponse(exception.Message)));
 
         private static Task CreateErrorResponse(HttpContext context) =>
-            CreateResponse(context, HttpStatusCode.InternalServerError,
-                "Внутренняя ошибка сервера. Попробуйте повторить операцию еще раз. " +
-                "Если ошибка будет повторяться, пожалуйста, обратитесь к администратору.");
+            CreateResponse(context, HttpStatusCode.InternalServerError, Messages.InternalServerError);
 
         private static Task CreateResponse(HttpContext context, HttpStatusCode statusCode, string text)
         {

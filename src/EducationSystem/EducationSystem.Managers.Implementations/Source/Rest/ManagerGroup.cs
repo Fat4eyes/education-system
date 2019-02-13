@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -38,8 +39,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var group = RepositoryGroup.GetGroupById(id, options) ??
                 throw new EducationSystemNotFoundException(
-                    $"Группа не найдена. Идентификатор группы: {id}.",
-                    new EducationSystemPublicException("Группа не найдена."));
+                    string.Format(Messages.Group.NotFoundById, id),
+                    new EducationSystemPublicException(Messages.Group.NotFoundPublic));
 
             return Mapper.Map<Group>(group);
         }
@@ -48,13 +49,13 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             if (!UserHelper.IsStudent(studentId))
                 throw new EducationSystemNotFoundException(
-                    $"Пользователь не является студентом. Идентификатор: {studentId}. ",
-                    new EducationSystemPublicException("Пользователь не является студентом."));
+                    string.Format(Messages.User.NotStudent, studentId),
+                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var group = RepositoryGroup.GetGroupByStudentId(studentId, options) ??
                 throw new EducationSystemNotFoundException(
-                    $"Группа не найдена. Идентификатор студента (пользователя): {studentId}.",
-                    new EducationSystemPublicException("Группа не найдена."));
+                    string.Format(Messages.Group.NotFoundByStudentId, studentId),
+                    new EducationSystemPublicException(Messages.Group.NotFoundPublic));
 
             return Mapper.Map<Group>(group);
         }

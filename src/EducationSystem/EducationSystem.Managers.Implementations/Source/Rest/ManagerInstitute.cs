@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -28,13 +29,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Institute GetInstituteByStudentId(int studentId, OptionsInstitute options)
         {
             if (!UserHelper.IsStudent(studentId))
-                throw new EducationSystemPublicException(
-                    $"Пользователь не является студентом. Идентификатор: {studentId}.");
+                throw new EducationSystemNotFoundException(
+                    string.Format(Messages.User.NotStudent, studentId),
+                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var institute = RepositoryInstitute.GetInstituteByStudentId(studentId, options) ??
                throw new EducationSystemNotFoundException(
-                   $"Институт не найден. Идентификатор студента: {studentId}.",
-                   new EducationSystemPublicException("Институт не найден."));
+                   string.Format(Messages.Institute.NotFoundByStuentId, studentId),
+                   new EducationSystemPublicException(Messages.Institute.NotFoundPublic));
 
             return Mapper.Map<Institute>(institute);
         }

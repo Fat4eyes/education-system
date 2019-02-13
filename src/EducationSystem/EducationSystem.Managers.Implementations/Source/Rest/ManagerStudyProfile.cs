@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -29,13 +30,13 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             if (!UserHelper.IsStudent(studentId))
                 throw new EducationSystemNotFoundException(
-                    $"Пользователь не является студентом. Идентификатор: {studentId}. ",
-                    new EducationSystemPublicException("Пользователь не является студентом."));
+                    string.Format(Messages.User.NotStudent, studentId),
+                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var studyProfile = RepositoryStudyProfile.GetStudyProfileByStudentId(studentId, options) ??
                 throw new EducationSystemNotFoundException(
-                    $"Профиль обучения не найден. Идентификатор пользователя (студента): {studentId}.",
-                    new EducationSystemPublicException("Профиль обучения не найден."));
+                   string.Format(Messages.StudyProfile.NotFoundByStuentId, studentId),
+                   new EducationSystemPublicException(Messages.StudyProfile.NotFoundPublic));
 
             return Mapper.Map<StudyProfile>(studyProfile);
         }

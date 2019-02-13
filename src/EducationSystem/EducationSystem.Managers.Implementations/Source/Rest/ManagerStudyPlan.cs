@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -29,13 +30,13 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             if (!UserHelper.IsStudent(studentId))
                 throw new EducationSystemNotFoundException(
-                    $"Пользователь не является студентом. Идентификатор: {studentId}. ",
-                    new EducationSystemPublicException("Пользователь не является студентом."));
+                    string.Format(Messages.User.NotStudent, studentId),
+                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var studyPlan = RepositoryStudyPlan.GetStudyPlanByStudentId(studentId, options) ??
                 throw new EducationSystemNotFoundException(
-                    $"Учебный план не найден. Идентификатор студента (пользователя): {studentId}.",
-                    new EducationSystemPublicException("Учебный план не найден."));
+                    string.Format(Messages.StudyPlan.NotFoundByStuentId, studentId),
+                    new EducationSystemPublicException(Messages.StudyPlan.NotFoundPublic));
 
             return Mapper.Map<StudyPlan>(studyPlan);
         }

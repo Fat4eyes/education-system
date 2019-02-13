@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -44,13 +45,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Student GetStudentById(int id, OptionsStudent options)
         {
             if (!UserHelper.IsStudent(id))
-                throw new EducationSystemPublicException(
-                    $"Пользователь не является студентом. Идентификатор: {id}.");
+                throw new EducationSystemNotFoundException(
+                    string.Format(Messages.User.NotStudent, id),
+                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var student = RepositoryStudent.GetStudentById(id, options) ??
                throw new EducationSystemException(
-                   $"Студент (пользователь) не найден. Идентификатор: {id}.",
-                   new EducationSystemPublicException("Студент (пользователь) не найден."));
+                   string.Format(Messages.Student.NotFoundById),
+                   new EducationSystemPublicException(Messages.Student.NotFoundPublic));
 
             return Mapper.Map<Student>(student);
         }
