@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using EducationSystem.Constants.Source;
-using EducationSystem.Exceptions.Source;
+using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Options;
@@ -41,9 +41,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Test GetTestById(int id, OptionsTest options)
         {
             var test = RepositoryTest.GetTetsById(id, options) ??
-                throw new EducationSystemException(
-                    string.Format(Messages.Test.NotFoundById, id),
-                    new EducationSystemPublicException(Messages.Test.NotFoundPublic));
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.Test.NotFoundById(id),
+                    Messages.Test.NotFoundPublic);
 
             return Mapper.Map<Test>(test);
         }

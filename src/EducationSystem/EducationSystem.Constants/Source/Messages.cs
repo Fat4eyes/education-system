@@ -6,9 +6,15 @@
             "Внутренняя ошибка сервера. Попробуйте повторить операцию еще раз. " +
             "Если ошибка будет повторяться, пожалуйста, обратитесь к администратору.";
 
+        public static readonly string TokenError =
+            "Неверная электронная почта или пароль.";
+
         public static class Student
         {
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplteNotFoundById, parameter);
+
+            public static readonly string TemplteNotFoundById =
                 "Студент не найден. Идентификатор студента: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -17,14 +23,26 @@
 
         public static class User
         {
-            public static readonly string NotStudent =
+            public static string NotStudent(object parameter)
+                => string.Format(TemplateNotStudent, parameter);
+
+            public static readonly string TemplateNotStudent =
                 "Пользователь не является студентом. Идентификатор пользователя: {0}.";
 
             public static readonly string NotStudentPublic =
                 "Пользователь не является студентом.";
 
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplateNotFoundById, parameter);
+
+            public static readonly string TemplateNotFoundById =
                 "Пользователь не найден. Идентификатор: {0}.";
+
+            public static string NotFoundByEmail(object parameter)
+                => string.Format(TemplateNotFoundByEmail, parameter);
+
+            public static readonly string TemplateNotFoundByEmail =
+                "Пользователь не найден. Электронная почта: {0}";
 
             public static readonly string NotFoundPublic =
                 "Пользователь не найден.";
@@ -32,7 +50,10 @@
 
         public static class Discipline
         {
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplateNotFoundById, parameter);
+
+            public static readonly string TemplateNotFoundById =
                 "Дисциплина не найдена. Идентификатор дисциплины: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -41,10 +62,16 @@
 
         public static class Group
         {
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplateNotFoundById, parameter);
+
+            public static readonly string TemplateNotFoundById =
                 "Группа не найдена. Идентификатор группы: {0}.";
 
-            public static readonly string NotFoundByStudentId =
+            public static string NotFoundByStudentId(object parameter)
+                => string.Format(TemplateNotFoundByStudentId, parameter);
+
+            public static readonly string TemplateNotFoundByStudentId =
                 "Группа не найдена. Идентификатор студента (пользователя): {0}.";
 
             public static readonly string NotFoundPublic =
@@ -53,7 +80,10 @@
 
         public static class Institute
         {
-            public static readonly string NotFoundByStuentId =
+            public static string NotFoundByStuentId(object parameter)
+                => string.Format(TemplateNotFoundByStuentId, parameter);
+
+            public static readonly string TemplateNotFoundByStuentId =
                 "Институт не найден. Идентификатор студента: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -62,10 +92,16 @@
 
         public static class Role
         {
-            public static readonly string NotFoundByUserId =
+            public static string NotFoundByUserId(object parameter)
+                => string.Format(TemplateNotFoundByUserId, parameter);
+
+            public static readonly string TemplateNotFoundByUserId =
                 "Роль не найдена. Идентификатор пользователя: {0}.";
 
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplateNotFoundById, parameter);
+
+            public static readonly string TemplateNotFoundById =
                 "Роль не найдена. Идентификатор роли: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -74,7 +110,10 @@
 
         public static class StudyPlan
         {
-            public static readonly string NotFoundByStuentId =
+            public static string NotFoundByStuentId(object parameter)
+                => string.Format(TemplateNotFoundByStuentId, parameter);
+
+            public static readonly string TemplateNotFoundByStuentId =
                 "Учебный план не найден. Идентификатор студента: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -83,7 +122,10 @@
 
         public static class StudyProfile
         {
-            public static readonly string NotFoundByStuentId =
+            public static string NotFoundByStuentId(object parameter)
+                => string.Format(TemplateNotFoundByStuentId, parameter);
+
+            public static readonly string TemplateNotFoundByStuentId =
                 "Профиль обучения не найден. Идентификатор студента: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -92,7 +134,10 @@
 
         public static class Test
         {
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplateNotFoundById, parameter);
+
+            public static readonly string TemplateNotFoundById =
                 "Тест не найден. Идентификатор теста: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -101,7 +146,10 @@
 
         public static class TestResult
         {
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplateNotFoundById, parameter);
+
+            public static readonly string TemplateNotFoundById =
                 "Результат теста не найден. Идентификатор: {0}.";
 
             public static readonly string NotFoundPublic =
@@ -110,7 +158,10 @@
 
         public static class Theme
         {
-            public static readonly string NotFoundById =
+            public static string NotFoundById(object parameter)
+                => string.Format(TemplateNotFoundById, parameter);
+
+            public static readonly string TemplateNotFoundById =
                 "Тема не найдена. Идентификатор темы: {0}.";
 
             public static readonly string NotFoundPublic =

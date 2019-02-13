@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using EducationSystem.Constants.Source;
-using EducationSystem.Exceptions.Source;
+using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Options;
@@ -34,9 +34,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Discipline GetDisciplineById(int id, OptionsDiscipline options)
         {
             var discipline = RepositoryDiscipline.GetDisciplineById(id, options) ??
-                throw new EducationSystemException(
-                    string.Format(Messages.Discipline.NotFoundById, id),
-                    new EducationSystemPublicException(Messages.Discipline.NotFoundPublic));
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.Discipline.NotFoundById(id),
+                    Messages.Discipline.NotFoundPublic);
 
             return Mapper.Map<Discipline>(discipline);
         }

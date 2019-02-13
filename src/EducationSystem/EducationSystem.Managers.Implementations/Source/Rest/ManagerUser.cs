@@ -1,9 +1,7 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using System.Collections.Generic;
 using EducationSystem.Constants.Source;
-using EducationSystem.Database.Models.Source;
-using EducationSystem.Exceptions.Source;
+using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Options;
@@ -15,18 +13,15 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public class ManagerUser : Manager<ManagerUser>, IManagerUser
     {
-        protected IRepositoryRole RepositoryRole { get; }
         protected IRepositoryUser RepositoryUser { get; }
 
         public ManagerUser(
             IMapper mapper,
             ILogger<ManagerUser> logger,
-            IRepositoryUser repositoryUser,
-            IRepositoryRole repositoryRole)
+            IRepositoryUser repositoryUser)
             : base(mapper, logger)
         {
             RepositoryUser = repositoryUser;
-            RepositoryRole = repositoryRole;
         }
 
         public PagedData<User> GetUsers(OptionsUser options)
@@ -46,9 +41,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public User GetUserById(int id, OptionsUser options)
         {
             var user = RepositoryUser.GetUserById(id, options) ??
-                throw new EducationSystemException(
-                    string.Format(Messages.User.NotFoundById, id),
-                    new EducationSystemPublicException(Messages.User.NotFoundPublic));
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.User.NotFoundById(id),
+                    Messages.User.NotFoundPublic);
 
             return Mapper.Map<User>(user);
         }

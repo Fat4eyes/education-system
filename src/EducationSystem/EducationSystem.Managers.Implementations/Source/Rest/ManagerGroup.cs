@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using EducationSystem.Constants.Source;
-using EducationSystem.Exceptions.Source;
+using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
@@ -38,9 +38,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Group GetGroupById(int id, OptionsGroup options)
         {
             var group = RepositoryGroup.GetGroupById(id, options) ??
-                throw new EducationSystemNotFoundException(
-                    string.Format(Messages.Group.NotFoundById, id),
-                    new EducationSystemPublicException(Messages.Group.NotFoundPublic));
+                throw ExceptionHelper.CreateException(
+                    Messages.Group.NotFoundById(id),
+                    Messages.Group.NotFoundPublic);
 
             return Mapper.Map<Group>(group);
         }
@@ -48,14 +48,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Group GetGroupByStudentId(int studentId, OptionsGroup options)
         {
             if (!UserHelper.IsStudent(studentId))
-                throw new EducationSystemNotFoundException(
-                    string.Format(Messages.User.NotStudent, studentId),
-                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
+                throw ExceptionHelper.CreateException(
+                    Messages.User.NotStudent(studentId),
+                    Messages.User.NotStudentPublic);
 
             var group = RepositoryGroup.GetGroupByStudentId(studentId, options) ??
-                throw new EducationSystemNotFoundException(
-                    string.Format(Messages.Group.NotFoundByStudentId, studentId),
-                    new EducationSystemPublicException(Messages.Group.NotFoundPublic));
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.Group.NotFoundByStudentId(studentId),
+                    Messages.Group.NotFoundPublic);
 
             return Mapper.Map<Group>(group);
         }

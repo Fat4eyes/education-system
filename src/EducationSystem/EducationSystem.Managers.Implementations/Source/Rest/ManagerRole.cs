@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using EducationSystem.Constants.Source;
-using EducationSystem.Exceptions.Source;
+using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Options;
@@ -34,9 +34,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Role GetRoleByUserId(int userId, OptionsRole options)
         {
             var role = RepositoryRole.GetRoleByUserId(userId, options) ??
-                throw new EducationSystemNotFoundException(
-                    string.Format(Messages.Role.NotFoundByUserId, userId),
-                    new EducationSystemPublicException(Messages.Role.NotFoundPublic));
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.Role.NotFoundByUserId(userId),
+                    Messages.Role.NotFoundPublic);
 
             return Mapper.Map<Role>(role);
         }
@@ -44,9 +44,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Role GetRoleById(int id, OptionsRole options)
         {
             var role = RepositoryRole.GetById(id) ??
-                throw new EducationSystemNotFoundException(
-                    string.Format(Messages.Role.NotFoundById, id),
-                    new EducationSystemPublicException(Messages.Role.NotFoundPublic));
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.Role.NotFoundById(id),
+                    Messages.Role.NotFoundPublic);
 
             return Mapper.Map<Role>(role);
         }

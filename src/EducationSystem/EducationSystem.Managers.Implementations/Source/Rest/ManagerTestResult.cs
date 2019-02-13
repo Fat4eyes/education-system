@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using EducationSystem.Constants.Source;
-using EducationSystem.Exceptions.Source;
+using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
@@ -38,9 +38,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options)
         {
             if (!UserHelper.IsStudent(studentId))
-                throw new EducationSystemNotFoundException(
-                    string.Format(Messages.User.NotStudent, studentId),
-                    new EducationSystemPublicException(Messages.User.NotStudentPublic));
+                throw ExceptionHelper.CreateException(
+                    Messages.User.NotStudent(studentId),
+                    Messages.User.NotStudentPublic);
 
             var (count, testResults) = RepositoryTestResult.GetTestResultsByStudentId(studentId, options);
 
@@ -50,9 +50,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public TestResult GetTestResultById(int id, OptionsTestResult options)
         {
             var testResult = RepositoryTestResult.GetTestResultById(id, options) ??
-                throw new EducationSystemException(
-                    string.Format(Messages.TestResult.NotFoundById, id),
-                    new EducationSystemPublicException(Messages.TestResult.NotFoundPublic));
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.TestResult.NotFoundById(id),
+                    Messages.TestResult.NotFoundPublic);
 
             return Mapper.Map<TestResult>(testResult);
         }
