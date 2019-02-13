@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("Api/Themes")]
+    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerTheme : Tamer
     {
         protected IManagerTheme ManagerTheme { get; }
@@ -19,24 +20,15 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetThemes(OptionsTheme options)
-        {
-            return Json(ManagerTheme.GetThemes(options));
-        }
+        public IActionResult GetThemes(OptionsTheme options) =>
+            Json(ManagerTheme.GetThemes(options));
 
         [HttpGet("{themeId:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetTheme(int themeId, OptionsTheme options)
-        {
-            return Json(ManagerTheme.GetThemeById(themeId, options));
-        }
+        public IActionResult GetTheme(int themeId, OptionsTheme options) =>
+            Json(ManagerTheme.GetThemeById(themeId, options));
 
         [HttpGet("{themeId:int}/Questions")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetThemeQuestions(int themeId, OptionsQuestion options)
-        {
-            return Json(ManagerQuestion.GetQuestionsByThemeId(themeId, options));
-        }
+        public IActionResult GetThemeQuestions(int themeId, OptionsQuestion options) =>
+            Json(ManagerQuestion.GetQuestionsByThemeId(themeId, options));
     }
 }

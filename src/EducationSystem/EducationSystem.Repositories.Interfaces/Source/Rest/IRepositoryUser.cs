@@ -8,8 +8,6 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
     {
         (int Count, List<DatabaseUser> Users) GetUsers(OptionsUser options);
 
-        (int Count, List<DatabaseUser> Users) GetUsersByGroupId(int groupId, OptionsUser options);
-
         (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, OptionsUser options);
 
         DatabaseUser GetUserById(int id, OptionsUser options);

@@ -5,6 +5,6 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 {
     public interface IManagerInstitute
     {
-        Institute GetInstituteByUserId(int userId, OptionsInstitute options);
+        Institute GetInstituteByStudentId(int studentId, OptionsInstitute options);
     }
 }

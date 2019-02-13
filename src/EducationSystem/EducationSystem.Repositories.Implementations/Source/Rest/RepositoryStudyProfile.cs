@@ -12,13 +12,13 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryStudyProfile(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public DatabaseStudyProfile GetStudyProfileByUserId(int userId, OptionsStudyProfile options)
+        public DatabaseStudyProfile GetStudyProfileByStudentId(int studentId, OptionsStudyProfile options)
         {
             return IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(a => a.StudyPlans
                     .Any(b => b.Groups
                     .Any(c => c.GroupStudents
-                    .Any(d => d.StudentId == userId))));
+                    .Any(d => d.StudentId == studentId))));
         }
 
         protected override IQueryable<DatabaseStudyProfile> IncludeByOptions(IQueryable<DatabaseStudyProfile> query, OptionsStudyProfile options)

@@ -23,9 +23,9 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(x => x.Id == id);
 
-        public DatabaseGroup GetGroupByUserId(int userId, OptionsGroup options) =>
+        public DatabaseGroup GetGroupByStudentId(int studentId, OptionsGroup options) =>
             IncludeByOptions(AsQueryable(), options)
-                .FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == userId));
+                .FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == studentId));
 
         protected override IQueryable<DatabaseGroup> FilterByOptions(IQueryable<DatabaseGroup> query, OptionsGroup options)
         {

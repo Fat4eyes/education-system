@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/Tests")]
+    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerTest : Tamer
     {
         protected IManagerTest ManagerTest { get; }
@@ -19,24 +20,15 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetTests(OptionsTest options)
-        {
-            return Json(ManagerTest.GetTests(options));
-        }
+        public IActionResult GetTests(OptionsTest options) =>
+            Json(ManagerTest.GetTests(options));
 
         [HttpGet("{testId:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetTest(int testId, OptionsTest options)
-        {
-            return Json(ManagerTest.GetTestById(testId, options));
-        }
+        public IActionResult GetTest(int testId, OptionsTest options) =>
+            Json(ManagerTest.GetTestById(testId, options));
 
         [HttpGet("{testId:int}/Themes")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetTestThemes(int testId, OptionsTheme options)
-        {
-            return Json(ManagerTheme.GetThemesByTestId(testId, options));
-        }
+        public IActionResult GetTestThemes(int testId, OptionsTheme options) =>
+            Json(ManagerTheme.GetThemesByTestId(testId, options));
     }
 }

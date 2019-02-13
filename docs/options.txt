@@ -1,61 +1,64 @@
 List Options:
-    Skip                    (по умолчанию: 0)           +
-    Take                    (по умолчанию: 10)          +
-    All                     (по умолчанию: false)       +
+    Skip                    (по умолчанию: 0)
+    Take                    (по умолчанию: 10)
+    All                     (по умолчанию: false)
 
 User Options:
     List Options
-    WithGroup               (по умолчанию: false)       +
-    WithRoles               (по умолчанию: false)       +
-    WithTestResults         (по умолчанию: false)       +
+    WithGroup               (по умолчанию: false)
+    WithRoles               (по умолчанию: false)
+    WithTestResults         (по умолчанию: false)
+
+Student Options:
+    User Options
 
 Group Options:
     List Options
-    WithStudyPlan           (по умолчанию: NULL)        +
-    Name                    (по умолчанию: NULL)        +
+    WithStudyPlan           (по умолчанию: NULL)
+    Name                    (по умолчанию: NULL)
 
 Role Options:
     List Options
 
 Test Options:
     List Options
-    Name                    (по умолчанию: NULL)        +
-    DisciplineId            (по умолчанию: NULL)        +
-    OnlyActive              (по умолчанию: false)       +
-    WithThemes              (по умолчанию: false)       +
+    Name                    (по умолчанию: NULL)
+    DisciplineId            (по умолчанию: NULL)
+    OnlyActive              (по умолчанию: false)
+    WithThemes              (по умолчанию: false)
 
 Test Result Options:
     List Options
-    ProfileId               (по умолчанию: NULL)        +
-    DisciplineId            (по умолчанию: NULL)        +
-    GroupId                 (по умолчанию: NULL)        +
-    TestId                  (по умолчанию: NULL)        +
-    WithTest                (по умолчанию: false)       +
-    WithThemes              (по умолчанию: false)       +   Если WithThemes = True, то значение WithTest не учитывается.
-                                                            Темы относятся к конкретному тесту, а не к результату.
-                                                            Поэтому тест будет тоже возвращен совместно с темами.
-    WithGivenAnswers        (по умолчанию: false)       +
+    ProfileId               (по умолчанию: NULL)
+    DisciplineId            (по умолчанию: NULL)
+    GroupId                 (по умолчанию: NULL)
+    TestId                  (по умолчанию: NULL)
+    WithTest                (по умолчанию: false)
+    WithThemes              (по умолчанию: false)   Если WithThemes = True, то значение WithTest не учитывается.
+                                                    Темы относятся к конкретному тесту, а не к результату.
+                                                    Поэтому тест будет тоже возвращен совместно с темами.
+    WithGivenAnswers        (по умолчанию: false)
 
 Theme Options:
     List Options
-    WithQuestions           (по умолчанию: false)       +
+    WithQuestions           (по умолчанию: false)
 
 Study Plan Options:
     List Options
-    WithStudyProfile        (по умолчанию: false)       +
+    WithStudyProfile        (по умолчанию: false)
 
 Study Profile Options:
     List Options
-    WithInstitute           (по умолчанию: false)       +
+    WithInstitute           (по умолчанию: false)
 
 Answer Options:
     List Options
 
 Question Options:
     List Options
-    WithAnswers             (по умолчанию: false)       +
+    WithAnswers             (по умолчанию: false)
 
 Discipline Options:
     List Options
-    WithTests               (по умолчанию: false)       +
-    WithThemes              (по умолчанию: false)       +
+    WithTests               (по умолчанию: false)
+    WithThemes              (по умолчанию: false)

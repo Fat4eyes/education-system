@@ -11,14 +11,14 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryInstitute(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public DatabaseInstitute GetInstituteByUserId(int userId, OptionsInstitute options)
+        public DatabaseInstitute GetInstituteByStudentId(int studentId, OptionsInstitute options)
         {
             return IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(a => a.StudyProfiles
                     .Any(b => b.StudyPlans
                     .Any(c => c.Groups
                     .Any(d => d.GroupStudents
-                    .Any(e => e.StudentId == userId)))));
+                    .Any(e => e.StudentId == studentId)))));
         }
     }
 }

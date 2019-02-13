@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using EducationSystem.Database.Source;
 using EducationSystem.Database.Models.Source;
+using EducationSystem.Database.Source;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
@@ -10,42 +9,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryUser : RepositoryReadOnly<DatabaseUser, OptionsUser>, IRepositoryUser
+    public class RepositoryStudent : RepositoryReadOnly<DatabaseUser, OptionsStudent>, IRepositoryStudent
     {
-        public RepositoryUser(EducationSystemDatabaseContext context)
+        public RepositoryStudent(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseUser> Users) GetUsers(OptionsUser options) =>
+        public (int Count, List<DatabaseUser> Students) GetStudents(OptionsStudent options) =>
             FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .ApplyPaging(options);
 
-        public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, OptionsUser options) =>
+        public (int Count, List<DatabaseUser> Students) GetStudentsByGroupId(int groupId, OptionsStudent options) =>
             FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
-                .Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
+                .Where(x => x.StudentGroup.GroupId == groupId)
                 .ApplyPaging(options);
 
-        public DatabaseUser GetUserById(int id, OptionsUser options) =>
+        public DatabaseUser GetStudentById(int id, OptionsStudent options) =>
             IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(x => x.Id == id);
 
-        public DatabaseUser GetUserByEmail(string email, OptionsUser options) =>
-            IncludeByOptions(AsQueryable(), options)
-                .FirstOrDefault(x => string.Compare(x.Email, email, StringComparison.CurrentCultureIgnoreCase) == 0);
-
-        protected override IQueryable<DatabaseUser> IncludeByOptions(IQueryable<DatabaseUser> query, OptionsUser options)
+        protected override IQueryable<DatabaseUser> IncludeByOptions(IQueryable<DatabaseUser> query, OptionsStudent options)
         {
             if (options.WithGroup)
             {
                 query = query
                     .Include(x => x.StudentGroup)
-                        .ThenInclude(x => x.Group);
+                    .ThenInclude(x => x.Group);
             }
 
             if (options.WithRoles)
             {
                 query = query
                     .Include(x => x.UserRoles)
-                        .ThenInclude(x => x.Role);
+                    .ThenInclude(x => x.Role);
             }
 
             if (options.WithTestResults)

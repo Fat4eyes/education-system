@@ -18,9 +18,9 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .ApplyPaging(options);
 
-        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByUserId(int userId, OptionsTestResult options) =>
+        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, OptionsTestResult options) =>
             FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
-                .Where(x => x.UserId == userId)
+                .Where(x => x.UserId == studentId)
                 .ApplyPaging(options);
 
         public DatabaseTestResult GetTestResultById(int id, OptionsTestResult options) =>

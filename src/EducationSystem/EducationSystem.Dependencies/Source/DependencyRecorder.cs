@@ -1,4 +1,6 @@
 ﻿using EducationSystem.Database.Source;
+using EducationSystem.Helpers.Implementations.Source;
+using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source;
@@ -19,6 +21,7 @@ namespace EducationSystem.Dependencies.Source
             RegisterDatabase(services, configuration);
 
             RegisterManagers(services);
+            RegisterHelpers(services);
             RegisterRepositories(services);
         }
 
@@ -37,6 +40,12 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IManagerTheme, ManagerTheme>();
             services.AddTransient<IManagerQuestion, ManagerQuestion>();
             services.AddTransient<IManagerDiscipline, ManagerDiscipline>();
+            services.AddTransient<IManagerStudent, ManagerStudent>();
+        }
+
+        private static void RegisterHelpers(IServiceCollection services)
+        {
+            services.AddTransient<IUserHelper, UserHelper>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
@@ -52,6 +61,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryTheme, RepositoryTheme>();
             services.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
             services.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
+            services.AddTransient<IRepositoryStudent, RepositoryStudent>();
         }
 
         private static void RegisterDatabase(IServiceCollection services, IConfiguration configuration)

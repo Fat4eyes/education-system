@@ -7,8 +7,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
     public interface IManagerTestResult
     {
         PagedData<TestResult> GetTests(OptionsTestResult options);
-
-        PagedData<TestResult> GetTestResultsByUserId(int userId, OptionsTestResult options);
+        PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options);
 
         TestResult GetTestResultById(int id, OptionsTestResult options);
     }

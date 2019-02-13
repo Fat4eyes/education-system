@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/TestResults")]
+    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerTestResults : Tamer
     {
         protected IManagerTestResult ManagerTestResult { get; }
@@ -17,17 +18,11 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetTestResults(OptionsTestResult options)
-        {
-            return Json(ManagerTestResult.GetTests(options));
-        }
+        public IActionResult GetTestResults(OptionsTestResult options) =>
+            Json(ManagerTestResult.GetTests(options));
 
         [HttpGet("{testResultId:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetTestResult(int testResultId, OptionsTestResult options)
-        {
-            return Json(ManagerTestResult.GetTestResultById(testResultId, options));
-        }
+        public IActionResult GetTestResult(int testResultId, OptionsTestResult options) =>
+            Json(ManagerTestResult.GetTestResultById(testResultId, options));
     }
 }

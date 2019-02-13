@@ -9,7 +9,6 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         PagedData<Group> GetGroups(OptionsGroup options);
 
         Group GetGroupById(int id, OptionsGroup options);
-
-        Group GetGroupByUserId(int userId, OptionsGroup options);
+        Group GetGroupByStudentId(int studentId, OptionsGroup options);
     }
 }

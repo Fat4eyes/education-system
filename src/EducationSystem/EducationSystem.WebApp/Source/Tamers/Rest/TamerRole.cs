@@ -21,30 +21,22 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRoles(OptionsRole options)
-        {
-            return Json(ManagerRole.GetRoles(options));
-        }
+        public IActionResult GetRoles(OptionsRole options) =>
+            Json(ManagerRole.GetRoles(options));
 
         [HttpGet("{roleId:int}")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRole(int roleId, OptionsRole options)
-        {
-            return Json(ManagerRole.GetRoleById(roleId, options));
-        }
+        public IActionResult GetRole(int roleId, OptionsRole options) =>
+            Json(ManagerRole.GetRoleById(roleId, options));
 
         [Authorize]
         [HttpGet("Current")]
-        public IActionResult GetRole(OptionsRole options)
-        {
-            return Json(ManagerRole.GetRoleByUserId(GetUserId(), options));
-        }
+        public IActionResult GetRole(OptionsRole options) =>
+            Json(ManagerRole.GetRoleByUserId(GetUserId(), options));
 
         [HttpGet("{roleId:int}/Users")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRoleUsers(int roleId, OptionsUser options)
-        {
-            return Json(ManagerUser.GetUsersByRoleId(roleId, options));
-        }
+        public IActionResult GetRoleUsers(int roleId, OptionsUser options) =>
+            Json(ManagerUser.GetUsersByRoleId(roleId, options));
     }
 }

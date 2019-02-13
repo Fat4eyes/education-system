@@ -12,12 +12,12 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryStudyPlan(EducationSystemDatabaseContext context)
             : base(context) { }
 
-        public DatabaseStudyPlan GetStudyPlanByUserId(int userId, OptionsStudyPlan options)
+        public DatabaseStudyPlan GetStudyPlanByStudentId(int studentId, OptionsStudyPlan options)
         {
             return IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(a => a.Groups
                     .Any(b => b.GroupStudents
-                    .Any(c => c.StudentId == userId)));
+                    .Any(c => c.StudentId == studentId)));
         }
 
         protected override IQueryable<DatabaseStudyPlan> IncludeByOptions(IQueryable<DatabaseStudyPlan> query, OptionsStudyPlan options)

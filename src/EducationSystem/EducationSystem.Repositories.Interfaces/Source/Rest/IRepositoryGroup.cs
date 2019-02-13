@@ -10,6 +10,6 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
 
         DatabaseGroup GetGroupById(int id, OptionsGroup options);
 
-        DatabaseGroup GetGroupByUserId(int userId, OptionsGroup options);
+        DatabaseGroup GetGroupByStudentId(int studentId, OptionsGroup options);
     }
 }

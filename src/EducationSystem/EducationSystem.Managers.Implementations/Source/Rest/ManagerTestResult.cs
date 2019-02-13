@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using EducationSystem.Exceptions.Source;
+using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Options;
@@ -12,14 +13,17 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public class ManagerTestResult : Manager<ManagerTestResult>, IManagerTestResult
     {
+        protected IUserHelper UserHelper { get; }
         protected IRepositoryTestResult RepositoryTestResult { get; }
 
         public ManagerTestResult(
             IMapper mapper,
             ILogger<ManagerTestResult> logger,
+            IUserHelper userHelper,
             IRepositoryTestResult repositoryTestResult)
             : base(mapper, logger)
         {
+            UserHelper = userHelper;
             RepositoryTestResult = repositoryTestResult;
         }
 
@@ -30,9 +34,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<TestResult>(Mapper.Map<List<TestResult>>(testResults), count);
         }
 
-        public PagedData<TestResult> GetTestResultsByUserId(int userId, OptionsTestResult options)
+        public PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options)
         {
-            var (count, testResults) = RepositoryTestResult.GetTestResultsByUserId(userId, options);
+            if (!UserHelper.IsStudent(studentId))
+                throw new EducationSystemNotFoundException(
+                    $"Пользователь не является студентом. Идентификатор: {studentId}. ",
+                    new EducationSystemPublicException("Пользователь не является студентом."));
+
+            var (count, testResults) = RepositoryTestResult.GetTestResultsByStudentId(studentId, options);
 
             return new PagedData<TestResult>(Mapper.Map<List<TestResult>>(testResults), count);
         }

@@ -8,7 +8,7 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
     {
         (int Count, List<DatabaseTestResult> TestResults) GetTestResults(OptionsTestResult options);
 
-        (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByUserId(int userId, OptionsTestResult options);
+        (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, OptionsTestResult options);
 
         DatabaseTestResult GetTestResultById(int id, OptionsTestResult options);
     }

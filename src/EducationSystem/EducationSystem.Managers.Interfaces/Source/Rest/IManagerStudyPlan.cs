@@ -5,6 +5,6 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 {
     public interface IManagerStudyPlan
     {
-        StudyPlan GetStudyPlanByUserId(int userId, OptionsStudyPlan options);
+        StudyPlan GetStudyPlanByStudentId(int studentId, OptionsStudyPlan options);
     }
 }

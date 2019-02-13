@@ -1,50 +1,55 @@
+Students:
+    [Options]   GET Students                        List<Student>       [Admin & Lecturer & Employee]
+    [Options]   GET Students/Current                Student             [Student]
+    [Options]   GET Students/{Id}                   Student             [Admin & Lecturer & Employee]
+    [Options]   GET Students/Current/Group          Group               [Student]
+    [Options]   GET Students/{Id}/Group             Group               [Admin & Lecturer & Employee]
+    [Options]   GET Students/Current/StudyPlan      StudyPlan           [Student]
+    [Options]   GET Students/{Id}/StudyPlan         StudyPlan           [Admin & Lecturer & Employee]
+    [Options]   GET Students/Current/StudyProfile   StudyProfile        [Student]
+    [Options]   GET Students/{Id}/StudyProfile      StudyProfile        [Admin & Lecturer & Employee]
+    [Options]   GET Students/Current/Institute      Institute           [Student]
+                GET Students/{Id}/Institute         Institute           [Admin & Lecturer & Employee]
+    [Options]   GET Students/Current/TestResults    List<TestResult>    [Student]
+    [Options]   GET Students/{Id}/TestResults       List<TestResult>    [Admin & Lecturer & Employee]
+    [Options]   GET Students/Current/Disciplines    List<Discipline>    [Student]
+
 Users:
-    [Options]   GET Users                           List<User>          [Admin] +
-    [Options]   GET Users/{Id}                      User                [Admin] +
-    [Options]   GET Users/Current                   User                [*]     +
-    [Options]   GET Users/{Id}/Group                Group               [Admin] +
-    [Options]   GET Users/Current/Group             Group               [*]     +
-    [Options]   GET Users/{Id}/StudyPlan            StudyPlan           [Admin] +
-    [Options]   GET Users/Current/StudyPlan         StudyPlan           [*]     +
-    [Options]   GET Users/{Id}/StudyProfile         StudyProfile        [Admin] +
-    [Options]   GET Users/Current/StudyProfile      StudyProfile        [*]     +
-                GET Users/{Id}/Institute            Institute           [Admin] +
-    [Options]   GET Users/Current/Institute         Institute           [*]     +
-    [Options]   GET Users/{Id}/Roles                List<Role>          [Admin] +
-    [Options]   GET Users/Current/Roles             List<Role>          [*]     +
-    [Options]   GET Users/{Id}/TestResults          List<TestResult>    [Admin] +
-    [Options]   GET Users/Current/TestResults       List<TestResult>    [*]     +
+    [Options]   GET Users                           List<User>          [Admin]
+    [Options]   GET Users/{Id}                      User                [Admin]
+    [Options]   GET Users/Current                   User                [*]
+    [Options]   GET Users/{Id}/Roles                List<Role>          [Admin]
+    [Options]   GET Users/Current/Roles             List<Role>          [*]
 
 Groups:
-    [Options]   GET Groups                          List<Group>         [Admin] +
-    [Options]   GET Groups/{Id}                     Group               [Admin] +
-    [Options]   GET Groups/Current                  Group               [*]     +
-    [Options]   GET Groups/{Id}/Users               List<User>          [Admin] +
+    [Options]   GET Groups                          List<Group>         [Admin & Lecturer & Employee]
+    [Options]   GET Groups/{Id}                     Group               [Admin & Lecturer & Employee]
+    [Options]   GET Groups/{Id}/Students            List<Student>       [Admin & Lecturer & Employee]
 
 Roles:
-    [Options]   GET Roles                           List<Role>          [Admin] +
-    [Options]   GET Roles/{Id}                      Role                [Admin] +
-    [Options]   GET Roles/Current                   List<Role>          [*]     +
-    [Options]   GET Roles/{Id}/Users                List<User>          [Admin] +
+    [Options]   GET Roles                           List<Role>          [Admin]
+    [Options]   GET Roles/{Id}                      Role                [Admin]
+    [Options]   GET Roles/Current                   List<Role>          [*]
+    [Options]   GET Roles/{Id}/Users                List<User>          [Admin]
 
 Tests:
-    [Options]   GET Tests                           List<Test>          [Admin] +
-    [Options]   GET Tests/{Id}                      Test                [Admin] +
-    [Options]   GET Tests/{Id}/Themes               List<Theme>         [Admin] +
+    [Options]   GET Tests                           List<Test>          [Admin & Lecturer & Employee]
+    [Options]   GET Tests/{Id}                      Test                [Admin & Lecturer & Employee]
+    [Options]   GET Tests/{Id}/Themes               List<Theme>         [Admin & Lecturer & Employee]
 
 TestResults:
-    [Options]   GET TestResults                     List<TestResult>    [Admin] +
-    [Options]   GET TestResults/{Id}                TestResult          [Admin] +
+    [Options]   GET TestResults                     List<TestResult>    [Admin & Lecturer & Employee]
+    [Options]   GET TestResults/{Id}                TestResult          [Admin & Lecturer & Employee]
 
 Themes:
-    [Options]   GET Themes                          List<Theme>         [Admin] +
-    [Options]   GET Themes/{Id}                     Theme               [Admin] +
-    [Options]   GET Themes/{Id}/Questions           List<Question>      [Admin] +
+    [Options]   GET Themes                          List<Theme>         [Admin & Lecturer & Employee]
+    [Options]   GET Themes/{Id}                     Theme               [Admin & Lecturer & Employee]
+    [Options]   GET Themes/{Id}/Questions           List<Question>      [Admin & Lecturer & Employee]
 
 Disciplines:
-    [Options]   GET Disciplines                     List<Discipline>    [Admin] +
-    [Options]   GET Disciplines/{Id}                Discipline          [Admin] +
-    [Options]   GET Disciplines/{Id}/Tests          List<Test>          [Admin] +
-    [Options]   GET Disciplines/{Id}/Themes         List<Theme>         [Admin] +
+    [Options]   GET Disciplines                     List<Discipline>    [Admin & Lecturer & Employee]
+    [Options]   GET Disciplines/{Id}                Discipline          [Admin & Lecturer & Employee]
+    [Options]   GET Disciplines/{Id}/Tests          List<Test>          [Admin & Lecturer & Employee]
+    [Options]   GET Disciplines/{Id}/Themes         List<Theme>         [Admin & Lecturer & Employee]
 
 Все поля со значением NULL возращены не будут!

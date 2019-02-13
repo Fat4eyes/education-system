@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("Api/Disciplines")]
+    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerDiscipline : Tamer
     {
         protected IManagerTest ManagerTest { get; }
@@ -24,31 +25,19 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetDisciplines(OptionsDiscipline options)
-        {
-            return Json(ManagerDiscipline.GetDisciplines(options));
-        }
+        public IActionResult GetDisciplines(OptionsDiscipline options) =>
+            Json(ManagerDiscipline.GetDisciplines(options));
 
         [HttpGet("{disciplineId:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetDiscipline(int disciplineId, OptionsDiscipline options)
-        {
-            return Json(ManagerDiscipline.GetDisciplineById(disciplineId, options));
-        }
+        public IActionResult GetDiscipline(int disciplineId, OptionsDiscipline options) =>
+            Json(ManagerDiscipline.GetDisciplineById(disciplineId, options));
 
         [HttpGet("{disciplineId:int}/Tests")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetDisciplineTests(int disciplineId, OptionsTest options)
-        {
-            return Json(ManagerTest.GetTestsByDisciplineId(disciplineId, options));
-        }
+        public IActionResult GetDisciplineTests(int disciplineId, OptionsTest options) =>
+            Json(ManagerTest.GetTestsByDisciplineId(disciplineId, options));
 
         [HttpGet("{disciplineId:int}/Themes")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetDisciplineThemes(int disciplineId, OptionsTheme options)
-        {
-            return Json(ManagerTheme.GetThemesByDisciplineId(disciplineId, options));
-        }
+        public IActionResult GetDisciplineThemes(int disciplineId, OptionsTheme options) =>
+            Json(ManagerTheme.GetThemesByDisciplineId(disciplineId, options));
     }
 }

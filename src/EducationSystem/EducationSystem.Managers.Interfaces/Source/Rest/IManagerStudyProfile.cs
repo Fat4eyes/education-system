@@ -5,6 +5,6 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 {
     public interface IManagerStudyProfile
     {
-        StudyProfile GetStudyProfileByUserId(int userId, OptionsStudyProfile options);
+        StudyProfile GetStudyProfileByStudentId(int studentId, OptionsStudyProfile options);
     }
 }
