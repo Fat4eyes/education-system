@@ -50,9 +50,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var student = RepositoryStudent.GetStudentById(id, options) ??
-               throw new EducationSystemException(
-                   string.Format(Messages.Student.NotFoundById),
-                   new EducationSystemPublicException(Messages.Student.NotFoundPublic));
+                throw new EducationSystemException(
+                    string.Format(Messages.Student.NotFoundById),
+                    new EducationSystemPublicException(Messages.Student.NotFoundPublic));
 
             return Mapper.Map<Student>(student);
         }

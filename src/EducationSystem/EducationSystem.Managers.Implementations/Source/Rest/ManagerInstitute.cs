@@ -34,9 +34,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     new EducationSystemPublicException(Messages.User.NotStudentPublic));
 
             var institute = RepositoryInstitute.GetInstituteByStudentId(studentId, options) ??
-               throw new EducationSystemNotFoundException(
-                   string.Format(Messages.Institute.NotFoundByStuentId, studentId),
-                   new EducationSystemPublicException(Messages.Institute.NotFoundPublic));
+                throw new EducationSystemNotFoundException(
+                    string.Format(Messages.Institute.NotFoundByStuentId, studentId),
+                    new EducationSystemPublicException(Messages.Institute.NotFoundPublic));
 
             return Mapper.Map<Institute>(institute);
         }

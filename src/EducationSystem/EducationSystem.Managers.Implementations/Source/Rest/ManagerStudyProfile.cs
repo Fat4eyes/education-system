@@ -35,8 +35,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             var studyProfile = RepositoryStudyProfile.GetStudyProfileByStudentId(studentId, options) ??
                 throw new EducationSystemNotFoundException(
-                   string.Format(Messages.StudyProfile.NotFoundByStuentId, studentId),
-                   new EducationSystemPublicException(Messages.StudyProfile.NotFoundPublic));
+                    string.Format(Messages.StudyProfile.NotFoundByStuentId, studentId),
+                    new EducationSystemPublicException(Messages.StudyProfile.NotFoundPublic));
 
             return Mapper.Map<StudyProfile>(studyProfile);
         }

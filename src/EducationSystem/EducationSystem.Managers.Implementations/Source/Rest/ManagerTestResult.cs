@@ -50,9 +50,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public TestResult GetTestResultById(int id, OptionsTestResult options)
         {
             var testResult = RepositoryTestResult.GetTestResultById(id, options) ??
-                 throw new EducationSystemException(
-                     string.Format(Messages.TestResult.NotFoundById, id),
-                     new EducationSystemPublicException(Messages.TestResult.NotFoundPublic));
+                throw new EducationSystemException(
+                    string.Format(Messages.TestResult.NotFoundById, id),
+                    new EducationSystemPublicException(Messages.TestResult.NotFoundPublic));
 
             return Mapper.Map<TestResult>(testResult);
         }

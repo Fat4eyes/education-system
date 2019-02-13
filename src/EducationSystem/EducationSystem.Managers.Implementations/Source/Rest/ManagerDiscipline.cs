@@ -34,9 +34,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Discipline GetDisciplineById(int id, OptionsDiscipline options)
         {
             var discipline = RepositoryDiscipline.GetDisciplineById(id, options) ??
-               throw new EducationSystemException(
-                   string.Format(Messages.Discipline.NotFoundById, id),
-                   new EducationSystemPublicException(Messages.Discipline.NotFoundPublic));
+                throw new EducationSystemException(
+                    string.Format(Messages.Discipline.NotFoundById, id),
+                    new EducationSystemPublicException(Messages.Discipline.NotFoundPublic));
 
             return Mapper.Map<Discipline>(discipline);
         }

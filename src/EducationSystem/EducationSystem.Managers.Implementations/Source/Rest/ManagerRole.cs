@@ -34,9 +34,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Role GetRoleByUserId(int userId, OptionsRole options)
         {
             var role = RepositoryRole.GetRoleByUserId(userId, options) ??
-                  throw new EducationSystemNotFoundException(
-                      string.Format(Messages.Role.NotFoundByUserId, userId),
-                      new EducationSystemPublicException(Messages.Role.NotFoundPublic));
+                throw new EducationSystemNotFoundException(
+                    string.Format(Messages.Role.NotFoundByUserId, userId),
+                    new EducationSystemPublicException(Messages.Role.NotFoundPublic));
 
             return Mapper.Map<Role>(role);
         }
@@ -44,9 +44,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Role GetRoleById(int id, OptionsRole options)
         {
             var role = RepositoryRole.GetById(id) ??
-               throw new EducationSystemNotFoundException(
-                   string.Format(Messages.Role.NotFoundById, id),
-                   new EducationSystemPublicException(Messages.Role.NotFoundPublic));
+                throw new EducationSystemNotFoundException(
+                    string.Format(Messages.Role.NotFoundById, id),
+                    new EducationSystemPublicException(Messages.Role.NotFoundPublic));
 
             return Mapper.Map<Role>(role);
         }
