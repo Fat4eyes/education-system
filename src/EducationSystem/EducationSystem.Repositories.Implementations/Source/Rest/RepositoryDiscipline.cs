@@ -18,6 +18,21 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .ApplyPaging(options);
 
+        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, OptionsDiscipline options)
+        {
+            var query = FilterByOptions(IncludeByOptions(AsQueryable(), options), options);
+
+            query = query
+                .Where(x => x.Tests.Any(y => y.IsActive == 1))
+                .Where(x => x.StudyProfiles
+                    .Any(a => a.StudyProfile.StudyPlans
+                    .Any(b => b.Groups
+                    .Any(c => c.GroupStudents
+                    .Any(d => d.StudentId == studentId)))));
+
+            return query.ApplyPaging(options);
+        }
+
         public DatabaseDiscipline GetDisciplineById(int id, OptionsDiscipline options) =>
             IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(x => x.Id == id);

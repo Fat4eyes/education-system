@@ -15,6 +15,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         protected IManagerStudyProfile ManagerStudyProfile { get; }
         protected IManagerInstitute ManagerInstitute { get; }
         protected IManagerTestResult ManagerTestResult { get; }
+        protected IManagerDiscipline ManagerDiscipline { get; }
 
         public TamerStudent(
             IManagerStudent managerStudent,
@@ -22,7 +23,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             IManagerStudyPlan managerStudyPlan,
             IManagerStudyProfile managerStudyProfile,
             IManagerInstitute managerInstitute,
-            IManagerTestResult managerTestResult)
+            IManagerTestResult managerTestResult,
+            IManagerDiscipline managerDiscipline)
         {
             ManagerStudent = managerStudent;
             ManagerGroup = managerGroup;
@@ -30,6 +32,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             ManagerStudyProfile = managerStudyProfile;
             ManagerInstitute = managerInstitute;
             ManagerTestResult = managerTestResult;
+            ManagerDiscipline = managerDiscipline;
         }
 
         [HttpGet("")]
@@ -94,6 +97,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("Current/Disciplines")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentDisciplines(OptionsDiscipline options) => Ok();
+        public IActionResult GetStudentDisciplines(OptionsDiscipline options) =>
+            Json(ManagerDiscipline.GetDisciplinesByStudentId(GetUserId(), options));
     }
 }

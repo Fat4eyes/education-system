@@ -7,10 +7,6 @@ namespace EducationSystem.Models.Source.Rest
     {
         public string Subject { get; set; }
 
-        public int TotalTime { get; set; }
-
-        public int Attempts { get; set; }
-
         public int IsActive { get; set; }
 
         public int DisciplineId { get; set; }

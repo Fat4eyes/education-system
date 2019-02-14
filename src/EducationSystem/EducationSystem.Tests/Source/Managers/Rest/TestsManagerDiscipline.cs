@@ -27,6 +27,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             ManagerDiscipline = new ManagerDiscipline(
                 Mapper,
                 LoggerMock.Object,
+                MockUserHelper.Object,
                 MockRepositoryDiscipline.Object);
         }
 
