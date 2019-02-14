@@ -8,7 +8,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
     {
         PagedData<Role> GetRoles(OptionsRole options);
 
-        Role GetRoleByUserId(int userId, OptionsRole options);
         Role GetRoleById(int id, OptionsRole options);
+        Role GetRoleByUserId(int userId, OptionsRole options);
     }
 }
