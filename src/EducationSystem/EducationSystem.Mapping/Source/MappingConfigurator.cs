@@ -13,9 +13,7 @@ namespace EducationSystem.Mapping.Source
 
             expression.CreateMap<DatabaseUser, User>()
                 .ForMember(d => d.Active, o => o.MapFrom(s => s.Active == 1))
-                .ForMember(d => d.Group, o => o.MapFrom(s => s.StudentGroup.Group))
-                .ForMember(d => d.Roles, o => o.MapFrom(s => s.UserRoles.Select(x => x.Role)))
-                .ForMember(d => d.TestResults, o => o.MapFrom(s => s.TestResults));
+                .ForMember(d => d.Roles, o => o.MapFrom(s => s.UserRoles.Select(x => x.Role)));
 
             expression.CreateMap<DatabaseUser, Student>()
                 .ForMember(d => d.Active, o => o.MapFrom(s => s.Active == 1))

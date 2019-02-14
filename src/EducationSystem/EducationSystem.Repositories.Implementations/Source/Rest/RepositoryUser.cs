@@ -34,22 +34,12 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         protected override IQueryable<DatabaseUser> IncludeByOptions(IQueryable<DatabaseUser> query, OptionsUser options)
         {
-            if (options.WithGroup)
-            {
-                query = query
-                    .Include(x => x.StudentGroup)
-                        .ThenInclude(x => x.Group);
-            }
-
             if (options.WithRoles)
             {
                 query = query
                     .Include(x => x.UserRoles)
                         .ThenInclude(x => x.Role);
             }
-
-            if (options.WithTestResults)
-                query = query.Include(x => x.TestResults);
 
             return query;
         }

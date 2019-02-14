@@ -5,12 +5,12 @@ List Options:
 
 User Options:
     List Options
-    WithGroup               (по умолчанию: false)
     WithRoles               (по умолчанию: false)
-    WithTestResults         (по умолчанию: false)
 
 Student Options:
-    User Options
+    List Options
+    WithGroup               (по умолчанию: false)
+    WithTestResults         (по умолчанию: false)
 
 Group Options:
     List Options
