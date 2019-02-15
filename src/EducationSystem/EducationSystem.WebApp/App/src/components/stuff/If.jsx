@@ -2,7 +2,7 @@ const If = ({condition, children, orElse}) =>
   condition
     ? children
     : orElse
-    ? orElse
-    : null
+      ? orElse
+      : null
 
 export default If

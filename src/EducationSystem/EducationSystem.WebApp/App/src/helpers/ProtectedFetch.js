@@ -1,15 +1,15 @@
 import Cookies from 'js-cookie'
-import {TOKEN} from '../providers/AuthProvider/constants';
-import Fetch from './Fetch';
-import {authRoutes} from '../routes';
+import Fetch from './Fetch'
+import {authRoutes} from '../routes'
+import {TokenCookieName} from '../constants'
 
 class ProtectedFetch extends Fetch {
   static handleToken(onError) {
-    return Cookies.get(TOKEN) || (onError && onError()) || false;
+    return Cookies.get(TokenCookieName) || (onError && onError()) || false
   }
 
   static async post(url, data, onError) {
-    const token = ProtectedFetch.handleToken();
+    const token = ProtectedFetch.handleToken()
     return token
       ? Fetch.handleFetch(url, {
         method: 'POST',
@@ -24,7 +24,7 @@ class ProtectedFetch extends Fetch {
   };
 
   static async get(url, onError) {
-    const token = ProtectedFetch.handleToken();
+    const token = ProtectedFetch.handleToken()
     return token
       ? Fetch.handleFetch(url, {
         headers: {
@@ -35,18 +35,19 @@ class ProtectedFetch extends Fetch {
   };
 
   static async check(onError) {
-    const token = ProtectedFetch.handleToken();
+    const token = ProtectedFetch.handleToken()
     try {
       let response = await fetch(authRoutes.check, {
         headers: {'Authorization': `Bearer ${token}`},
         method: 'POST'
-      });
+      })
       if (!response.ok) {
-        throw response;
+        throw response
       }
-      return true;
+      return true
     } catch (e) {
       onError(e)
+      return false
     }
   };
 }

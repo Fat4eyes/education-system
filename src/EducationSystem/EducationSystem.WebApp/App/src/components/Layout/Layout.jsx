@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import {
-  AppBar, 
+  AppBar,
   Button,
   Drawer,
   IconButton,
@@ -19,21 +19,19 @@ import HomeIcon from '@material-ui/icons/Home'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import Grow from '../stuff/Grow'
 import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
-import If from '../If'
-import Routes from './New/Routes/Routes'
-import SimpleLink from '../SimpleLink'
+import Routes from './Routes'
+import {If, SimpleLink} from '../core'
 import ListItem from '@material-ui/core/ListItem'
 import classNames from 'classnames'
 import Tooltip from '@material-ui/core/Tooltip'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import Zoom from '@material-ui/core/Zoom'
 import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
+import * as Handlers from '../../helpers/Handlers'
 
 @withWidth()
 @withStyles(styles)
 @withAuthenticated
-class Layout extends Component {
+class Layout extends PureComponent {
   state = {
     MenuAnchor: null,
     IsLeftMenuOpen: false
@@ -41,13 +39,12 @@ class Layout extends Component {
 
   handleInput = ({target: {name, value}}) => this.setState({[name]: value})
   handleMenu = (callback) => ({currentTarget}) => {
-
     this.setState({MenuAnchor: !!this.state.MenuAnchor ? null : currentTarget}, () => callback && callback())
   }
   handleLeftMenu = () => this.setState({IsLeftMenuOpen: !this.state.IsLeftMenuOpen})
 
   render() {
-    let {classes, auth: {checkAuth, getFullName, signOut}} = this.props
+    let {classes, auth: {checkAuth, User, signOut}} = this.props
 
     const isAuthenticated = checkAuth()
     let isXs = isWidthDown('xs', this.props.width)
@@ -106,7 +103,7 @@ class Layout extends Component {
             </IconButton>
           }>
             <Typography variant='h6' color='inherit'>
-              {getFullName(true)}
+              {Handlers.getFullName(User, true)}
             </Typography>
             <IconButton className={classes.rightMenuIcon} color='inherit' onClick={this.handleMenu()}>
               <MoreIcon/>

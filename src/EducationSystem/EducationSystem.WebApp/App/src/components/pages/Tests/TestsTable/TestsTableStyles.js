@@ -13,7 +13,6 @@ const TestsTableStyles = theme => ({
     backgroundColor: theme.palette.grey['50'],
   },
   tableContainer: {
-    minHeight: 100
   },
   root: {
     borderSpacing: `${theme.spacing.unit / 2}px !important`,
@@ -60,6 +59,13 @@ const TestsTableStyles = theme => ({
     top: '50%',
     padding: '10px 0',
     transform: 'translate(-50%, -50%)'
+  },
+  cursor: {
+    cursor: 'pointer'
+  },
+  loadingBlock: {
+    padding: '0 5px 0 4px',
+    height: 4
   }
 })
 

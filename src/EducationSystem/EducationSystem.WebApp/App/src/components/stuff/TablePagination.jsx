@@ -3,9 +3,10 @@ import {Grid, IconButton, Select, Typography} from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import If from '../If'
+import {If} from '../core'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
+import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 
 const TablePagination = (props) => {
   const {
@@ -14,14 +15,16 @@ const TablePagination = (props) => {
     onPageChange,
     onCountPerPageChange,
     showChangeCountPerPageBlock,
-    classes
+    classes,
+    width
   } = props
   const leftPage = page > 0 ? page - 1 : 0
   const rightPage = page + 1 < count.all / count.perPage ? page + 1 : page
+  let isXs = isWidthDown('xs', width)
 
   return <Grid container alignItems='center' spacing={16} className={classes.root}>
     <If condition={!!count.current} orElse={<Grid item xs/>}>
-      <If condition={!showChangeCountPerPageBlock}>
+      <If condition={!showChangeCountPerPageBlock && !isXs}>
         <Grid item>
           <Typography variant='subtitle1' className={classes.typography}>
             Количество записей на странице
@@ -83,4 +86,4 @@ const styles = theme => ({
   }
 })
 
-export default withStyles(styles)(TablePagination)
+export default withWidth()(withStyles(styles)(TablePagination))

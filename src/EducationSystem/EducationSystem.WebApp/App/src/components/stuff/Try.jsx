@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Typography, withStyles} from "@material-ui/core";
+import {Typography, withStyles} from '@material-ui/core'
 
 const styles = () => ({
   root: {
@@ -8,25 +8,25 @@ const styles = () => ({
     left: `50%`,
     transform: `translate(-50%, -50%)`,
     textAlign: 'center'
-  },
-});
+  }
+})
 
 @withStyles(styles)
 class Try extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       hasError: false,
       error: ''
-    };
+    }
   }
 
   componentDidCatch(error) {
-    this.setState({hasError: true, error: error.message});
+    this.setState({hasError: true, error: error.message})
   }
 
   render() {
-    const {Catch, classes} = this.props;
+    const {Catch, classes} = this.props
     if (this.state.hasError) {
       return Catch || <div className={classes.root}>
         <Typography variant="h5" component="h3">
@@ -35,9 +35,9 @@ class Try extends Component {
         <Typography variant="h5" component="h3">
           Обратитесь к администратору.
         </Typography>
-      </div>;
+      </div>
     }
-    return this.props.children;
+    return this.props.children
   }
 }
 

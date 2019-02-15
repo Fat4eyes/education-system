@@ -50,7 +50,7 @@ class Fetch {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: Data
+      body: JSON.stringify(Data)
     }, onError)
   };
 

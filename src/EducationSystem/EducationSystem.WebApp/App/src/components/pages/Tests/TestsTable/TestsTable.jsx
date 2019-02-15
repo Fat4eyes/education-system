@@ -1,16 +1,21 @@
 import React, {Component} from 'react'
 import {CircularProgress, Grid, Paper, Table, TableBody, TableCell, Typography, withStyles} from '@material-ui/core'
-import TestsTableStyles from './TestsTableStyles'
 import TableRow from '@material-ui/core/TableRow'
-import If from '../../../If'
-import TablePagination from '../../../stuff/TablePagination'
-import {TestModel} from '../models'
-import ProtectedFetch from '../../../../helpers/ProtectedFetch'
-import UrlBuilder from '../../../../helpers/UrlBuilder'
+import {If, TablePagination} from '../../../core'
 import {disciplineRoutes, testRoutes} from '../../../../routes'
-import Mapper from '../../../../helpers/Mapper'
 import TestsFilter from './TestsFilter'
 import {withSnackbar} from 'notistack'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import {Snackbar, ProtectedFetch, UrlBuilder, Mapper} from '../../../../helpers'
+import TestsTableStyles from './TestsTableStyles'
+
+const TestModel = {
+  Subject: '',
+  TotalTime: '',
+  Attempts: '',
+  IsActive: '',
+  IsSelected: false
+}
 
 @withStyles(TestsTableStyles)
 @withSnackbar
@@ -24,13 +29,15 @@ class TestsTable extends Component {
         DisciplineId: null,
         Disciplines: []
       },
-      IsLoading: true,
+      IsLoading: false,
+      IsFirstLoading: true,
       Count: 0,
       CountPerPage: 10,
       Page: 0,
       Items: [TestModel]
     }
     this.tableRef = React.createRef()
+    this.Snackbar = new Snackbar(this.props.enqueueSnackbar)
   }
 
   async componentDidMount() {
@@ -49,20 +56,14 @@ class TestsTable extends Component {
       this.setState({
         Items: Mapper.map(Items, TestModel),
         Count,
-        IsLoading: false,
+        IsFirstLoad: false,
         Filter: {
           ...this.state.Filter,
           Disciplines
         }
       })
     } catch (e) {
-      this.props.enqueueSnackbar(e, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
+      this.Snackbar.Error(e)
     }
   }
 
@@ -79,13 +80,7 @@ class TestsTable extends Component {
       )
       this.setState({Items: Mapper.map(Items, TestModel), Count: Count, IsLoading: false})
     } catch (e) {
-      this.props.enqueueSnackbar(e, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
+      this.Snackbar.Error(e)
     }
   }
 
@@ -114,6 +109,7 @@ class TestsTable extends Component {
   }
 
   handleDatailsClick = id => {
+    if (this.state.IsLoading) return
     this.setState({
       Items: this.state.Items.map(t => ({
         ...t, IsSelected: t.Id === id ? !t.IsSelected : false
@@ -121,15 +117,24 @@ class TestsTable extends Component {
     })
   }
 
-  handleFilter = isChecked => ({target: {name, value, checked}}) =>
-    this.setState({
+  handleFilter = isChecked => ({target: {name, value, checked}}) => {
+    if (isChecked) {
+      if (checked === this.state.Filter.IsActive)
+        return
+    } else {
+      if (value === this.state.Filter[name] || value === 0 && this.state.Filter[name] === null)
+        return
+    }
+
+    return this.setState({
       Filter: {
         ...this.state.Filter,
         [name]: (!!isChecked ? checked : (value || null))
       },
       IsLoading: true,
       Page: 0
-    }, this.getTests)
+    }, () => setTimeout(this.getTests, 2000))
+  }
 
   render() {
     let {classes} = this.props
@@ -162,13 +167,18 @@ class TestsTable extends Component {
             onPageChange={this.handleChangePage}
             onCountPerPageChange={this.handleChangeRowsPerPage}
           />
-          <If condition={!this.state.IsLoading} orElse={
+          <If condition={!this.state.IsFirstLoad} orElse={
             <div style={{height: getTableHeight()}}>
               <div className={classes.loading}>
                 <CircularProgress size={100} thickness={1}/>
               </div>
             </div>
           }>
+            <div className={classes.loadingBlock}>
+              <If condition={this.state.IsLoading}>
+                <LinearProgress/>
+              </If>
+            </div>
             <div ref={this.tableRef} className={classes.tableContainer}>
               <Table className={classes.root} ref={this.tableRef}>
                 <TableBody>
@@ -183,8 +193,10 @@ class TestsTable extends Component {
                   }>
                     {this.state.Items.map((test, index) =>
                       <React.Fragment key={test.Id || index}>
-                        <TableRow hover selected={test.IsSelected} classes={{selected: classes.selected}} color='primary'
-                                  onClick={() => this.handleDatailsClick(test.Id)}>
+                        <TableRow hover selected={test.IsSelected} classes={{selected: classes.selected}}
+                                  color='primary'
+                                  onClick={() => this.handleDatailsClick(test.Id)}
+                                  className={classes.cursor}>
                           <TableCell>
                             <Typography variant='subtitle1'
                                         className={test.IsSelected ? classes.titleSelected : classes.titleNotSelected}>
