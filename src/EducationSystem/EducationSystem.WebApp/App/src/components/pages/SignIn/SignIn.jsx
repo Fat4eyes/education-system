@@ -35,17 +35,21 @@ class SignIn extends Component {
   handleInput = ({target: {name, value}}) => this.setState({[name]: value})
   handleSubmit = async () => {
     this.setState({IsLoading: true, Redirect: false})
-    const result = await this.props.auth.signIn({Email: this.state.Email, Password: this.state.Password})
+    const result = await this.props.auth.signIn({Email: this.state.Email.trim(), Password: this.state.Password.trim()})
     this.setState({IsLoading: false, Redirect: !!result})
   }
-
-
+  handleKeyDown = async ({key}) => {
+    if (key === 'Enter') {
+      await this.handleSubmit()
+    }
+  }
+  
   render() {
     const {classes, auth: {checkAuth}} = this.props
     const {from} = this.props.location.state || {from: {pathname: '/'}}
 
     return <If condition={!(this.state.Redirect && checkAuth())} orElse={<Redirect to={from}/>}>
-      <Grid container justify='center' className={classes.root}>
+      <Grid container justify='center' className={classes.root} onKeyDown={this.handleKeyDown}>
         <Grid container item xs={10} sm={9} md={6} lg={4} justify='center' className={classes.form} direction='column'
               spacing={16}>
           <Grid item xs>
