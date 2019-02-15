@@ -11,29 +11,12 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     public class TamerUser : Tamer
     {
         protected IManagerUser ManagerUser { get; }
-        protected IManagerGroup ManagerGroup { get; }
-        protected IManagerStudyPlan ManagerStudyPlan { get; }
-        protected IManagerStudyProfile ManagerStudyProfile { get; }
-        protected IManagerInstitute ManagerInstitute { get; }
         protected IManagerRole ManagerRole { get; }
-        protected IManagerTestResult ManagerTestResult { get; }
 
-        public TamerUser(
-            IManagerUser managerUser,
-            IManagerGroup managerGroup,
-            IManagerStudyPlan managerStudyPlan,
-            IManagerStudyProfile managerStudyProfile,
-            IManagerInstitute managerInstitute,
-            IManagerRole managerRole,
-            IManagerTestResult managerTestResult)
+        public TamerUser(IManagerUser managerUser, IManagerRole managerRole)
         {
             ManagerUser = managerUser;
-            ManagerGroup = managerGroup;
-            ManagerStudyPlan = managerStudyPlan;
-            ManagerStudyProfile = managerStudyProfile;
-            ManagerInstitute = managerInstitute;
             ManagerRole = managerRole;
-            ManagerTestResult = managerTestResult;
         }
 
         [HttpGet("")]

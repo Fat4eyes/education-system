@@ -38,7 +38,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         public Group GetGroupById(int id, OptionsGroup options)
         {
             var group = RepositoryGroup.GetGroupById(id, options) ??
-                throw ExceptionHelper.CreateException(
+                throw ExceptionHelper.CreateNotFoundException(
                     Messages.Group.NotFoundById(id),
                     Messages.Group.NotFoundPublic);
 

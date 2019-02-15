@@ -1,9 +1,9 @@
-﻿using Moq;
-using AutoMapper;
+﻿using AutoMapper;
 using EducationSystem.Mapping.Source;
 using Microsoft.Extensions.Logging;
+using Moq;
 
-namespace EducationSystem.Tests.Source.Rest
+namespace EducationSystem.Tests.Source.Managers
 {
     public abstract class TestsManager<TManager> where TManager : class
     {

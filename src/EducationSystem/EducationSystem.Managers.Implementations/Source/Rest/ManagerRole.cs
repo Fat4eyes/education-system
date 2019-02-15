@@ -31,21 +31,21 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Role>(Mapper.Map<List<Role>>(roles), count);
         }
 
-        public Role GetRoleByUserId(int userId, OptionsRole options)
+        public Role GetRoleById(int id, OptionsRole options)
         {
-            var role = RepositoryRole.GetRoleByUserId(userId, options) ??
+            var role = RepositoryRole.GetRoleById(id, options) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Role.NotFoundByUserId(userId),
+                    Messages.Role.NotFoundById(id),
                     Messages.Role.NotFoundPublic);
 
             return Mapper.Map<Role>(role);
         }
 
-        public Role GetRoleById(int id, OptionsRole options)
+        public Role GetRoleByUserId(int userId, OptionsRole options)
         {
-            var role = RepositoryRole.GetById(id) ??
+            var role = RepositoryRole.GetRoleByUserId(userId, options) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Role.NotFoundById(id),
+                    Messages.Role.NotFoundByUserId(userId),
                     Messages.Role.NotFoundPublic);
 
             return Mapper.Map<Role>(role);

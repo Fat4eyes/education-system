@@ -8,6 +8,7 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
     {
         (int Count, List<DatabaseRole> Roles) GetRoles(OptionsRole options);
 
+        DatabaseRole GetRoleById(int id, OptionsRole options);
         DatabaseRole GetRoleByUserId(int userId, OptionsRole options);
     }
 }

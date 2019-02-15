@@ -17,6 +17,10 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
                 .ApplyPaging(options);
 
+        public DatabaseRole GetRoleById(int id, OptionsRole options) =>
+            IncludeByOptions(AsQueryable(), options)
+                .FirstOrDefault(x => x.Id == id);
+
         public DatabaseRole GetRoleByUserId(int userId, OptionsRole options) =>
             IncludeByOptions(AsQueryable(), options)
                 .FirstOrDefault(x => x.RoleUsers.Any(y => y.User.Id == userId));
