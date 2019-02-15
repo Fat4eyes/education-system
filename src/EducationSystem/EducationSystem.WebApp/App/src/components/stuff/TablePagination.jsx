@@ -45,10 +45,10 @@ const TablePagination = (props) => {
         </Typography>
       </Grid>
       <Grid item>
-        <IconButton disabled={count.perPage > count.all} onClick={() => page !== leftPage && onPageChange(leftPage)}>
+        <IconButton disabled={count.perPage > count.all || page === 0} onClick={() => page !== leftPage && onPageChange(leftPage)}>
           <ChevronLeftIcon/>
         </IconButton>
-        <IconButton disabled={count.perPage > count.all} onClick={() => page !== rightPage && onPageChange(rightPage)}>
+        <IconButton disabled={count.perPage > count.all || page >= (count.all / count.perPage - 1)} onClick={() => page !== rightPage && onPageChange(rightPage)}>
           <ChevronRightIcon/>
         </IconButton>
       </Grid>

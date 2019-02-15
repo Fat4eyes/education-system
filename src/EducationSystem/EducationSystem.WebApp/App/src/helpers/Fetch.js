@@ -1,3 +1,5 @@
+import history from '../history'
+
 class Fetch {
   static async handleFetch(url, options, onError) {
     try {
@@ -26,6 +28,7 @@ class Fetch {
         case 'object':
           switch (Error.status) {
             case 401:
+              history.push('/signin');
               return handleError('Вы не авторизованны');
             case 403:
               return handleError('Не лезь, она тебя сожрет.(Недостаточно прав)');

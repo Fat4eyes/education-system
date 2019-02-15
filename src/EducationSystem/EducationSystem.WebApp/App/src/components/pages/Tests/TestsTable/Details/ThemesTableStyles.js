@@ -1,34 +1,34 @@
 const ThemesTableStyles = theme => {
   const loadindHeight = 4
-  
+  const border = `solid 1px ${theme.palette.grey['300']}`
+  const userSelectNone = {
+    '-webkit-touch-callout': 'none',
+    '-webkit-user-select': 'none',
+    '-khtml-user-select': 'none',
+    '-moz-user-select': 'none',
+    '-ms-user-select': 'none',
+    'user-select': 'none'
+  }
+
   return ({
     root: {
-      margin: 'auto'
+      marginTop: theme.spacing.unit,
+      padding: `${theme.spacing.unit}px 0`,
+      borderTop: border,
+      borderBottom: border
     },
-    table: {
-      borderSpacing: `${theme.spacing.unit / 2}px !important`,
-      borderCollapse: 'separate !important',
-      paddingBottom: loadindHeight,
-    },
-    cell: {
-      padding: 0
-    },
-    loadingBlock: {
-      padding: '0 5px 0 4px',
+    progress: {
       height: loadindHeight
     },
-    themeHeader: {
-      [theme.breakpoints.up('xs')]: {
-        width: 150
-      },
-      [theme.breakpoints.up('sm')]: {
-        width: 200
-      },
-      [theme.breakpoints.up('md')]: {
-        width: 400
-      },
-      [theme.breakpoints.up('lg')]: {
-        width: 500
+    row: {
+      margin: `${theme.spacing.unit / 2}px 0`
+    },
+    rowHeader: {
+      ...userSelectNone,
+      padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+      backgroundColor: theme.palette.grey['200'],
+      '&:hover': {
+        backgroundColor: theme.palette.grey['300']
       }
     }
   })

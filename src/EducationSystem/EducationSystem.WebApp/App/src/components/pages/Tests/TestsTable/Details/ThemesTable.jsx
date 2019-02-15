@@ -1,25 +1,16 @@
 import React, {Component} from 'react'
-import {
-  Grid,
-  IconButton,
-  LinearProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography,
-  withStyles
-} from '@material-ui/core'
+import {CircularProgress, Grid, IconButton, LinearProgress, Typography, withStyles} from '@material-ui/core'
 import {Mapper, ProtectedFetch, UrlBuilder} from '../../../../../helpers'
 import {testRoutes} from '../../../../../routes'
-import {If, Try} from '../../../../core'
-import ThemesTableStyles from './ThemesTableStyles'
+import {If} from '../../../../core'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 import PropTypes from 'prop-types'
+import ThemesTableStyles from './ThemesTableStyles'
+import classNames from 'classnames'
 
 const ThemeModel = {
   Name: '1',
@@ -36,7 +27,7 @@ class ThemesTable extends Component {
       TestId: this.props.TestId,
       IsLoading: true,
       Count: 0,
-      CountPerPage: 5,
+      CountPerPage: 1,
       Page: 0,
       Items: [ThemeModel]
     }
@@ -63,6 +54,7 @@ class ThemesTable extends Component {
 
   async componentDidMount() {
     await this.getThemes()
+    this.props.handleDetailsLoad(this.state.TestId)
   }
 
   handleChangePage = async page => {
@@ -92,67 +84,72 @@ class ThemesTable extends Component {
     }
     let isLg = isWidthDown('lg', width)
 
-    return <If condition={!!Count} orElse={
-      <Grid item xs={12} container justify='center'>
+    const Pagination = () => <>
+      <If condition={Count > CountPerPage} orElse={
         <Typography variant='subtitle1'>
-          Тем не найдено
+          Темы:
         </Typography>
-      </Grid>
-    }>
-      <Grid item xs={2} container justify='center' alignItems='center' direction={isLg ? 'column' : 'row'}>
-        <If condition={Count > CountPerPage} orElse={
+      }>
+        <If condition={!isLg} orElse={<>
+          <IconButton {...leftPageProps}>
+            <ExpandLessIcon/>
+          </IconButton>
           <Typography variant='subtitle1'>
-            Темы:
+            {`${(Page * CountPerPage + CurrentCount)} из ${Count}`}
           </Typography>
-        }>
-          <If condition={!isLg} orElse={<>
-            <IconButton {...leftPageProps}>
-              <ExpandLessIcon/>
-            </IconButton>
-            <Typography variant='subtitle1'>
-              {`${(Page * CountPerPage + CurrentCount)} из ${Count}`}
-            </Typography>
-            <IconButton {...rightPageProps}>
-              <ExpandMoreIcon/>
-            </IconButton>
-          </>}>
-            <IconButton {...leftPageProps}>
-              <ChevronLeftIcon/>
-            </IconButton>
-            <Typography variant='subtitle1'>
-              {`${(Page * CountPerPage + CurrentCount)} из ${Count}`}
-            </Typography>
-            <IconButton {...rightPageProps}>
-              <ChevronRightIcon/>
-            </IconButton>
-          </If>
+          <IconButton {...rightPageProps}>
+            <ExpandMoreIcon/>
+          </IconButton>
+        </>}>
+          <IconButton {...leftPageProps}>
+            <ChevronLeftIcon/>
+          </IconButton>
+          <Typography variant='subtitle1'>
+            {`${(Page * CountPerPage + CurrentCount)} из ${Count}`}
+          </Typography>
+          <IconButton {...rightPageProps}>
+            <ChevronRightIcon/>
+          </IconButton>
         </If>
-      </Grid>
-      <Grid item xs={10} className={classes.root}>
-        <Try>
-          <div>
-            <div className={classes.loadingBlock}>
-              <If condition={this.state.IsLoading}>
-                <LinearProgress/>
-              </If>
-            </div>
-            <Table className={classes.table}>
-              <TableBody>
-                {this.state.Items.map((theme, index) =>
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Typography noWrap variant='subtitle1' className={classes.themeHeader}>
-                        {theme.Name}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </Try>
-      </Grid>
-    </If>
+      </If>
+    </>
+
+    const Progress = () =>
+      <div className={classes.progress}>
+        <If condition={this.state.IsLoading}>
+          <LinearProgress/>
+        </If>
+      </div>
+
+    return <Grid container className={classes.root}>
+      <If condition={!Count && !this.state.IsLoading}>
+        <Grid item xs={12} container justify='center' wrap='nowrap' zeroMinWidth>
+          <Typography variant='subtitle1' noWrap>
+            Тем не найдено
+          </Typography>
+        </Grid>
+      </If>
+      <If condition={!!Count}>
+        <Grid item xs={2} container justify='center' alignItems='center' direction={isLg ? 'column' : 'row'}>
+          <Pagination/>
+        </Grid>
+        <Grid item xs={10}>
+          <Progress/>
+          <Grid container>
+            {this.state.Items.map((theme, index) =>
+              <Grid item xs={12} container wrap='nowrap' zeroMinWidth key={index}
+                    className={classNames(classes.row, classes.rowHeader)}>
+                <Typography noWrap variant='subtitle1'>
+                  {theme.Name}
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+          <Progress/>
+        </Grid>
+      </If>
+    </Grid>
+
   }
 }
 

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import {CircularProgress, Grid, Paper, Table, TableBody, TableCell, Typography, withStyles} from '@material-ui/core'
-import TableRow from '@material-ui/core/TableRow'
+import {CircularProgress, Grid, Paper, Typography, withStyles} from '@material-ui/core'
 import {If, TablePagination} from '../../../core'
 import {disciplineRoutes, testRoutes} from '../../../../routes'
 import TestsFilter from './TestsFilter'
@@ -8,15 +7,17 @@ import {withSnackbar} from 'notistack'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import {Mapper, ProtectedFetch, Snackbar, UrlBuilder} from '../../../../helpers'
 import TestsTableStyles from './TestsTableStyles'
-import TestDetails from './Details/TestDetails'
 import classNames from 'classnames'
+import TestDetails from './Details/TestDetails'
+import Collapse from '@material-ui/core/Collapse'
 
 const TestModel = {
   Subject: '',
   TotalTime: '',
   Attempts: '',
   IsActive: '',
-  IsSelected: false
+  IsSelected: false,
+  IsDetailsLoaded: false
 }
 
 const minLengthForTrigger = 3
@@ -39,7 +40,7 @@ class TestsTable extends Component {
       Count: 0,
       CountPerPage: 10,
       Page: 0,
-      Items: [TestModel]
+      Items: []
     }
     this.tableRef = React.createRef()
     this.Snackbar = new Snackbar(this.props.enqueueSnackbar)
@@ -118,7 +119,17 @@ class TestsTable extends Component {
     if (this.state.IsLoading) return
     this.setState({
       Items: this.state.Items.map(t => ({
-        ...t, IsSelected: t.Id === id ? !t.IsSelected : false
+        ...t,
+        IsSelected: t.Id === id ? !t.IsSelected : false,
+        IsDetailsLoaded: false
+      }))
+    })
+  }
+
+  handleDetailsLoad = id => {
+    this.setState({
+      Items: this.state.Items.map(t => ({
+        ...t, IsDetailsLoaded: t.Id === id
       }))
     })
   }
@@ -176,7 +187,7 @@ class TestsTable extends Component {
     }
 
     return <Grid container justify='space-around' className={classes.main} spacing={16}>
-      <Grid item xs={12} md={3}>
+      <Grid item xs={12} md={4} lg={3}>
         <TestsFilter handleInput={this.handleFilter}
                      DisciplineId={DisciplineId || 0}
                      Disciplines={Disciplines}
@@ -185,7 +196,7 @@ class TestsTable extends Component {
                      handleSearch={this.handleSearch}
         />
       </Grid>
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} md={8} lg={9}>
         <Paper className={classes.paper}>
           <TablePagination
             count={{
@@ -210,40 +221,37 @@ class TestsTable extends Component {
               </If>
             </div>
             <div ref={this.tableRef} className={classes.tableContainer}>
-              <Table className={classes.root} ref={this.tableRef}>
-                <TableBody>
-                  <If condition={!!this.state.Items.length} orElse={
-                    <TableRow color='primary'>
-                      <TableCell>
-                        <Typography variant='subtitle1' className={classes.titleNotSelected}>
-                          {'Не найдено'}
+              <Grid container ref={this.tableRef}>
+                <If condition={!!this.state.Items.length} orElse={
+                  <Grid item xs={12} color='primary'>
+                    <Typography variant='subtitle1' className={classes.titleNotSelected}>
+                      {'Не найдено'}
+                    </Typography>
+                  </Grid>
+                }>
+                  {this.state.Items.map((test, index) =>
+                    <Grid container key={index} className={classes.row}>
+                      <Grid item xs={12} container wrap='nowrap' zeroMinWidth
+                            className={classNames(classes.rowHeader, {
+                              [classes.rowHeaderSelected]: test.IsSelected && test.IsDetailsLoaded
+                            })}
+                            onClick={() => this.handleDatailsClick(test.Id)}
+                      >
+                        <Typography noWrap variant='subtitle1'>
+                          {test.Subject}
                         </Typography>
-                      </TableCell>
-                    </TableRow>
-                  }>
-                    {this.state.Items.map((test, index) =>
-                      <React.Fragment key={test.Id || index}>
-                        <TableRow hover selected={test.IsSelected} classes={{selected: classes.selected}}
-                                  color='primary'
-                                  onClick={() => this.handleDatailsClick(test.Id)}
-                                  className={classes.cursor}>
-                          <TableCell>
-                            <Typography noWrap variant='subtitle1'
-                                        className={classNames(classes.header, {
-                                          [classes.titleSelected]: test.IsSelected,
-                                          [classes.titleNotSelected]: !test.IsSelected
-                                        })}>
-                              {test.Subject}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                        <If condition={test.IsSelected}>
-                          <TestDetails test={test}/>
+                      </Grid>
+                      <Grid item xs={12} className={classes.rowProgress}>
+                        <If condition={test.IsSelected && !test.IsDetailsLoaded}>
+                          <LinearProgress/>
                         </If>
-                      </React.Fragment>)}
-                  </If>
-                </TableBody>
-              </Table>
+                      </Grid>
+                      <Collapse in={test.IsDetailsLoaded} className={classes.collapse}>
+                        <TestDetails test={test} handleDetailsLoad={this.handleDetailsLoad}/>
+                      </Collapse>
+                    </Grid>)}
+                </If>
+              </Grid>
             </div>
           </If>
           <TablePagination
