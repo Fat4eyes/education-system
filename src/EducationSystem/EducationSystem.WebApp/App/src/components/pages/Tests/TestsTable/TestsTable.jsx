@@ -9,6 +9,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import {Snackbar, ProtectedFetch, UrlBuilder, Mapper} from '../../../../helpers'
 import TestsTableStyles from './TestsTableStyles'
 import TestDetails from './Details/TestDetails'
+import classNames from 'classnames'
 
 const TestModel = {
   Subject: '',
@@ -199,8 +200,11 @@ class TestsTable extends Component {
                                   onClick={() => this.handleDatailsClick(test.Id)}
                                   className={classes.cursor}>
                           <TableCell>
-                            <Typography variant='subtitle1'
-                                        className={test.IsSelected ? classes.titleSelected : classes.titleNotSelected}>
+                            <Typography noWrap variant='subtitle1'
+                                        className={classNames(classes.header, {
+                                          [classes.titleSelected]: test.IsSelected,
+                                          [classes.titleNotSelected]: !test.IsSelected
+                                        })}>
                               {test.Subject}
                             </Typography>
                           </TableCell>

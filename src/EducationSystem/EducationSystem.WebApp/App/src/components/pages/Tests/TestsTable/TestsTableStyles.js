@@ -63,6 +63,20 @@ const TestsTableStyles = theme => ({
   loadingBlock: {
     padding: '0 5px 0 4px',
     height: 4
+  },
+  header: {
+    [theme.breakpoints.up('xs')]: {
+      width: 250
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: 400
+    },
+    [theme.breakpoints.up('md')]: {
+      width: 600
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: 800
+    }
   }
 })
 

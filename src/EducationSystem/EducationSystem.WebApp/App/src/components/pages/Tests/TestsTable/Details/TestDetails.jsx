@@ -10,7 +10,7 @@ const TestDetails = ({test, classes, ...props}) => <>
         <Grid item xs={12} container alignItems='center' className={classes.detailsBlock}>
           {/*TODO Информация по тесту, управляющие кнопки, что-то еще?*/}
           <Typography variant='subtitle1'>
-            Информация по тесту, управляющие кнопки, что-то еще?
+            {test.Subject}
           </Typography>
         </Grid>
         <Grid item xs={12} container className={classes.themesGridBlock}>
