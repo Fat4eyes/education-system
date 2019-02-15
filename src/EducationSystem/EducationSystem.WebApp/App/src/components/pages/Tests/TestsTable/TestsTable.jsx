@@ -220,7 +220,7 @@ class TestsTable extends Component {
                 <LinearProgress/>
               </If>
             </div>
-            <div ref={this.tableRef} className={classes.tableContainer}>
+            <div ref={this.tableRef}>
               <Grid container ref={this.tableRef}>
                 <If condition={!!this.state.Items.length} orElse={
                   <Grid item xs={12} color='primary'>
