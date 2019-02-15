@@ -5,6 +5,7 @@ import TablePagination from './stuff/TablePagination'
 import Loading from './stuff/Loading'
 import SimpleLink from './stuff/SimpleLink'
 import Text from './stuff/Text'
+import Search from './stuff/Search'
 
 export {
   If,
@@ -13,5 +14,6 @@ export {
   TablePagination,
   Loading,
   SimpleLink,
-  Text
+  Text,
+  Search
 }

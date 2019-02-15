@@ -6,7 +6,7 @@ import {disciplineRoutes, testRoutes} from '../../../../routes'
 import TestsFilter from './TestsFilter'
 import {withSnackbar} from 'notistack'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import {Snackbar, ProtectedFetch, UrlBuilder, Mapper} from '../../../../helpers'
+import {Mapper, ProtectedFetch, Snackbar, UrlBuilder} from '../../../../helpers'
 import TestsTableStyles from './TestsTableStyles'
 import TestDetails from './Details/TestDetails'
 import classNames from 'classnames'
@@ -19,6 +19,8 @@ const TestModel = {
   IsSelected: false
 }
 
+const minLengthForTrigger = 3
+
 @withStyles(TestsTableStyles)
 @withSnackbar
 class TestsTable extends Component {
@@ -29,7 +31,8 @@ class TestsTable extends Component {
       Filter: {
         IsActive: false,
         DisciplineId: null,
-        Disciplines: []
+        Disciplines: [],
+        Name: ''
       },
       IsLoading: false,
       IsFirstLoading: true,
@@ -75,6 +78,7 @@ class TestsTable extends Component {
         UrlBuilder.Build(testRoutes.getTests, {
           DisciplineId: this.state.Filter.DisciplineId,
           OnlyActive: this.state.Filter.IsActive,
+          Name: this.state.Filter.Name.length < 3 ? null : this.state.Filter.Name,
           Skip: 0,
           Take: this.state.CountPerPage,
           ...param
@@ -138,9 +142,31 @@ class TestsTable extends Component {
     }, this.getTests)
   }
 
+  handleSearch = ({target: {name, value}}) => {
+    const oldValue = this.state.Filter[name]
+
+    if (value.length >= minLengthForTrigger || value.length < minLengthForTrigger && oldValue.length >= minLengthForTrigger) {
+      this.setState({
+        Filter: {
+          ...this.state.Filter,
+          [name]: value || ''
+        },
+        IsLoading: true,
+        Page: 0
+      }, this.getTests)
+    } else {
+      this.setState({
+        Filter: {
+          ...this.state.Filter,
+          [name]: value || ''
+        }
+      })
+    }
+  }
+
   render() {
     let {classes} = this.props
-    let {DisciplineId, Disciplines, IsActive} = this.state.Filter
+    let {DisciplineId, Disciplines, IsActive, Name} = this.state.Filter
 
     const getTableHeight = () => {
       if (this.tableRef.current)
@@ -155,6 +181,8 @@ class TestsTable extends Component {
                      DisciplineId={DisciplineId || 0}
                      Disciplines={Disciplines}
                      IsActive={IsActive}
+                     Name={Name}
+                     handleSearch={this.handleSearch}
         />
       </Grid>
       <Grid item xs={12} lg={9}>

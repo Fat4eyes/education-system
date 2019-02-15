@@ -13,8 +13,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
+import {Search} from '../../../core'
 
-const TestsFilter = ({classes, Disciplines, DisciplineId, IsActive, handleInput, width}) => {
+const TestsFilter = ({classes, Disciplines, DisciplineId, Name, IsActive, handleInput, handleSearch, width}) => {
   let isXs = isWidthDown('xs', width)
   return <ExpansionPanel defaultExpanded={!isXs} className={classes.expansionPanel}>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
@@ -22,6 +23,9 @@ const TestsFilter = ({classes, Disciplines, DisciplineId, IsActive, handleInput,
     </ExpansionPanelSummary>
     <ExpansionPanelDetails className={classes.expansionPanelDetails}>
       <form autoComplete='off' className={classes.form}>
+        <FormControl className={classes.formControl}>
+          <Search name='Name' value={Name} onChange={handleSearch}/>
+        </FormControl>
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="group">Дисциплина</InputLabel>
           <Select value={DisciplineId}
@@ -47,7 +51,9 @@ TestsFilter.propTypes = {
   Disciplines: PropTypes.array.isRequired,
   DisciplineId: PropTypes.number.isRequired,
   IsActive: PropTypes.bool.isRequired,
-  handleInput: PropTypes.func.isRequired
+  handleInput: PropTypes.func.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+  Name: PropTypes.string.isRequired,
 }
 
 const styles = theme => ({
