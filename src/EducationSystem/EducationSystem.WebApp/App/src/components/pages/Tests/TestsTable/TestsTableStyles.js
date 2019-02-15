@@ -66,7 +66,7 @@ const TestsTableStyles = theme => ({
   },
   header: {
     [theme.breakpoints.up('xs')]: {
-      width: 250
+      width: 150
     },
     [theme.breakpoints.up('sm')]: {
       width: 400
@@ -75,7 +75,7 @@ const TestsTableStyles = theme => ({
       width: 600
     },
     [theme.breakpoints.up('lg')]: {
-      width: 800
+      width: 700
     }
   }
 })
