@@ -8,6 +8,7 @@ import {withSnackbar} from 'notistack'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import {Snackbar, ProtectedFetch, UrlBuilder, Mapper} from '../../../../helpers'
 import TestsTableStyles from './TestsTableStyles'
+import TestDetails from './Details/TestDetails'
 
 const TestModel = {
   Subject: '',
@@ -205,11 +206,7 @@ class TestsTable extends Component {
                           </TableCell>
                         </TableRow>
                         <If condition={test.IsSelected}>
-                          <TableRow className={classes.testDetails}>
-                            <TableCell>
-                              {test.Subject}
-                            </TableCell>
-                          </TableRow>
+                          <TestDetails test={test}/>
                         </If>
                       </React.Fragment>)}
                   </If>

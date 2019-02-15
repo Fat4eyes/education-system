@@ -38,9 +38,6 @@ const TestsTableStyles = theme => ({
   selected: {
     backgroundColor: theme.palette.primary.main + '!important'
   },
-  testDetails: {
-    backgroundColor: theme.palette.grey['50'] + '!important'
-  },
   titleSelected: {
     color: 'white'
   },
