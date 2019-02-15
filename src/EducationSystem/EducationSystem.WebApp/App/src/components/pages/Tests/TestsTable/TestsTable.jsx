@@ -133,7 +133,7 @@ class TestsTable extends Component {
       },
       IsLoading: true,
       Page: 0
-    }, () => setTimeout(this.getTests, 2000))
+    }, this.getTests)
   }
 
   render() {

@@ -28,9 +28,9 @@ class ProtectedRoute extends Component {
   }
   
   render() {
-    let {component: Component, role, ...rest} = this.props
+    let {component: Component, role, auth, ...rest} = this.props
 
-    const handlePrivateRender = props => this.state.IsAuthenticated
+    const handlePrivateRender = props => auth.checkAuth(role)
       ? <Component {...props} />
       : <Redirect to={{pathname: role ? '/' : '/signin', state: {from: props.location}}}/>
 

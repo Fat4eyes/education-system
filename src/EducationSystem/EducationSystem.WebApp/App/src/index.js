@@ -8,12 +8,9 @@ import {Loading, Try} from './components/core'
 import {blue} from './themes'
 import {unregister} from './serviceWorker'
 import './index.less'
-import environment from './environment'
 import history from './history'
 
-// console.log(environment)
-
-const Layout = React.lazy(() => { 
+const Layout = React.lazy(() => {
   return new Promise(resolve => { //TODO Задержка для дев-тестирования 
     setTimeout(() => resolve(import('./components/Layout/Layout')), 500)
   })
