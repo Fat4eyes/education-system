@@ -176,7 +176,7 @@ class TestsTable extends Component {
     }
 
     return <Grid container justify='space-around' className={classes.main} spacing={16}>
-      <Grid item xs={12} lg={3}>
+      <Grid item xs={12} md={3}>
         <TestsFilter handleInput={this.handleFilter}
                      DisciplineId={DisciplineId || 0}
                      Disciplines={Disciplines}
@@ -185,7 +185,7 @@ class TestsTable extends Component {
                      handleSearch={this.handleSearch}
         />
       </Grid>
-      <Grid item xs={12} lg={9}>
+      <Grid item xs={12} md={9}>
         <Paper className={classes.paper}>
           <TablePagination
             count={{

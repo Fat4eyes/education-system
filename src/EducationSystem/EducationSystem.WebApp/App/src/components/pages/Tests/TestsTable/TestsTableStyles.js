@@ -1,9 +1,9 @@
 const TestsTableStyles = theme => ({
   main: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'row'
     },
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       flexDirection: 'row-reverse'
     },
 
@@ -72,7 +72,7 @@ const TestsTableStyles = theme => ({
       width: 400
     },
     [theme.breakpoints.up('md')]: {
-      width: 600
+      width: 550
     },
     [theme.breakpoints.up('lg')]: {
       width: 700

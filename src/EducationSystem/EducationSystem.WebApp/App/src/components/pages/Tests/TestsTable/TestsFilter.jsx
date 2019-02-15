@@ -16,8 +16,8 @@ import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 import {Search} from '../../../core'
 
 const TestsFilter = ({classes, Disciplines, DisciplineId, Name, IsActive, handleInput, handleSearch, width}) => {
-  let isXs = isWidthDown('xs', width)
-  return <ExpansionPanel defaultExpanded={!isXs} className={classes.expansionPanel}>
+  let widthDown = isWidthDown('md', width)
+  return <ExpansionPanel defaultExpanded={!widthDown} className={classes.expansionPanel}>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
       <Typography>Фильтр</Typography>
     </ExpansionPanelSummary>
