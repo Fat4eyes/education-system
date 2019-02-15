@@ -17,6 +17,7 @@ const TestModel = {
   Attempts: '',
   IsActive: '',
   IsSelected: false,
+  
   IsDetailsLoaded: false
 }
 
@@ -120,8 +121,7 @@ class TestsTable extends Component {
     this.setState({
       Items: this.state.Items.map(t => ({
         ...t,
-        IsSelected: t.Id === id ? !t.IsSelected : false,
-        IsDetailsLoaded: false
+        IsSelected: t.Id === id ? !t.IsSelected : false
       }))
     })
   }
@@ -246,7 +246,7 @@ class TestsTable extends Component {
                           <LinearProgress/>
                         </If>
                       </Grid>
-                      <Collapse in={test.IsDetailsLoaded} className={classes.collapse}>
+                      <Collapse timeout={500} in={test.IsDetailsLoaded && test.IsSelected} className={classes.collapse} onClick={() => console.log('1')}>
                         <TestDetails test={test} handleDetailsLoad={this.handleDetailsLoad}/>
                       </Collapse>
                     </Grid>)}

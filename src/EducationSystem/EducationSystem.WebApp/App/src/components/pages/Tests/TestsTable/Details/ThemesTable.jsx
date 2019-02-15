@@ -27,7 +27,7 @@ class ThemesTable extends Component {
       TestId: this.props.TestId,
       IsLoading: true,
       Count: 0,
-      CountPerPage: 1,
+      CountPerPage: 5,
       Page: 0,
       Items: [ThemeModel]
     }

@@ -12,7 +12,7 @@ const TestDetails = ({test, handleDetailsLoad, classes, ...props}) => {
         {test.Subject}
       </Typography>
     </Grid>
-    <If condition={test.IsSelected}>
+    <If condition={test.IsSelected || test.IsDetailsLoaded}>
       <ThemesTable TestId={test.Id} handleDetailsLoad={handleDetailsLoad}/>
     </If>
   </Grid>
