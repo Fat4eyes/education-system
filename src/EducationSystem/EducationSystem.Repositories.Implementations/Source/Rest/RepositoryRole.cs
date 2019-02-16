@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EducationSystem.Database.Models.Source;
-using EducationSystem.Database.Source;
+using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
@@ -10,7 +10,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
     public class RepositoryRole : RepositoryReadOnly<DatabaseRole, OptionsRole>, IRepositoryRole
     {
-        public RepositoryRole(EducationSystemDatabaseContext context)
+        public RepositoryRole(DatabaseContext context)
             : base(context) { }
 
         public (int Count, List<DatabaseRole> Roles) GetRoles(OptionsRole options) =>

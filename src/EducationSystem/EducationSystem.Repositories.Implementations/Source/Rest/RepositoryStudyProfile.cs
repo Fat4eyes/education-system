@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using EducationSystem.Database.Models.Source;
-using EducationSystem.Database.Source;
+using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
     public class RepositoryStudyProfile : RepositoryReadOnly<DatabaseStudyProfile, OptionsStudyProfile>, IRepositoryStudyProfile
     {
-        public RepositoryStudyProfile(EducationSystemDatabaseContext context)
+        public RepositoryStudyProfile(DatabaseContext context)
             : base(context) { }
 
         public DatabaseStudyProfile GetStudyProfileByStudentId(int studentId, OptionsStudyProfile options)

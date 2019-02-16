@@ -12,16 +12,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EducationSystem.Dependencies.Source
 {
-    public static class DependencyRecorder
+    public static class DependencyRegistrar
     {
         public static void Register(IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient(x => configuration);
 
-            RegisterDatabase(services, configuration);
+            RegisterDatabases(services, configuration);
 
-            RegisterManagers(services);
             RegisterHelpers(services);
+            RegisterManagers(services);
             RegisterRepositories(services);
         }
 
@@ -64,9 +64,9 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryStudent, RepositoryStudent>();
         }
 
-        private static void RegisterDatabase(IServiceCollection services, IConfiguration configuration)
+        private static void RegisterDatabases(IServiceCollection services, IConfiguration configuration)
         {
-            DatabaseRecorder.Register(services, configuration);
+            DatabaseRegistrar.Register(services, configuration);
         }
     }
 }

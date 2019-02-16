@@ -43,9 +43,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Extensions"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helpers", "Helpers", "{1B186B5E-3C7E-4242-98E7-45DF8F538B91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Helpers.Implementations", "EducationSystem.Helpers.Implementations\EducationSystem.Helpers.Implementations.csproj", "{DFC7E845-4763-4656-81B3-841224F6AE31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Helpers.Implementations", "EducationSystem.Helpers.Implementations\EducationSystem.Helpers.Implementations.csproj", "{DFC7E845-4763-4656-81B3-841224F6AE31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Helpers.Interfaces", "EducationSystem.Helpers.Interfaces\EducationSystem.Helpers.Interfaces.csproj", "{4F978F41-EEB1-45DE-8390-276ECF06C075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Helpers.Interfaces", "EducationSystem.Helpers.Interfaces\EducationSystem.Helpers.Interfaces.csproj", "{4F978F41-EEB1-45DE-8390-276ECF06C075}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

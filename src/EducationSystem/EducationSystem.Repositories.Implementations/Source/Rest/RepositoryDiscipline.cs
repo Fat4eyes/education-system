@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EducationSystem.Database.Models.Source;
-using EducationSystem.Database.Source;
+using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
@@ -11,7 +11,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
     public class RepositoryDiscipline : RepositoryReadOnly<DatabaseDiscipline, OptionsDiscipline>, IRepositoryDiscipline
     {
-        public RepositoryDiscipline(EducationSystemDatabaseContext context)
+        public RepositoryDiscipline(DatabaseContext context)
             : base(context) { }
 
         public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(OptionsDiscipline options) =>

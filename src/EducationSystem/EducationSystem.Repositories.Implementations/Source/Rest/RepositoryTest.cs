@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EducationSystem.Database.Models.Source;
-using EducationSystem.Database.Source;
+using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
@@ -12,7 +12,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
     public class RepositoryTest : RepositoryReadOnly<DatabaseTest, OptionsTest>, IRepositoryTest
     {
-        public RepositoryTest(EducationSystemDatabaseContext context)
+        public RepositoryTest(DatabaseContext context)
             : base(context) { }
 
         public (int Count, List<DatabaseTest> Tests) GetTests(OptionsTest options) =>

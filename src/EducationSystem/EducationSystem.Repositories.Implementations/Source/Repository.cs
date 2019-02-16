@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Database.Models.Source.Base;
-using EducationSystem.Database.Source;
+using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ namespace EducationSystem.Repositories.Implementations.Source
         where TModel : DatabaseModel
         where TOptions : Options
     {
-        public Repository(EducationSystemDatabaseContext context)
+        public Repository(DatabaseContext context)
             : base(context) { }
 
         public TModel Add(TModel model)

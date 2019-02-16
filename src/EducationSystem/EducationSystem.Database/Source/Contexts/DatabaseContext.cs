@@ -1,9 +1,9 @@
 ﻿using EducationSystem.Database.Models.Source;
 using Microsoft.EntityFrameworkCore;
 
-namespace EducationSystem.Database.Source
+namespace EducationSystem.Database.Source.Contexts
 {
-    public sealed class EducationSystemDatabaseContext : DbContext
+    public sealed class DatabaseContext : DbContext
     {
         public DbSet<DatabaseUser> Users { get; set; }
         public DbSet<DatabaseRole> Roles { get; set; }
@@ -18,7 +18,7 @@ namespace EducationSystem.Database.Source
         public DbSet<DatabaseGivenAnswer> GivenAnswers { get; set; }
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
 
-        public EducationSystemDatabaseContext(DbContextOptions options) : base(options)
+        public DatabaseContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
         }

@@ -29,7 +29,7 @@ namespace EducationSystem.Database.Models.Source
         public virtual int IsActive { get; set; }
 
         [Column("is_random")]
-        public virtual int IsRandom { get; set; }
+        public virtual int? IsRandom { get; set; }
 
         public virtual List<DatabaseTestTheme> TestThemes { get; set; }
     }

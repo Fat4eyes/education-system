@@ -38,12 +38,12 @@ namespace EducationSystem.WebApp.Source
                 .AddMvc()
                 .AddJsonOptions(ConfigurationHelper.ConfigureJson);
 
-            DependencyRecorder.Register(services, Configuration);
+            DependencyRegistrar.Register(services, Configuration);
         }
 
         public void Configure(IApplicationBuilder builder, IHostingEnvironment environment, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddFile(Configuration.GetSection("Logging"));
+            loggerFactory.AddFile(Configuration.GetSection("LoggingParameters"));
 
             if (environment.IsDevelopment())
             {

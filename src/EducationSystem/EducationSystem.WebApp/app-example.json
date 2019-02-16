@@ -1,12 +1,12 @@
 ﻿{
-  "Database": {
-    "Name": "pussy",
+  "DatabaseParameters": {
+    "Name": "",
     "Host": "127.0.0.1",
     "Port": "3306",
-    "UserName": "victor",
-    "UserPassword": "qwerty123"
+    "UserName": "",
+    "UserPassword": ""
   },
-  "Logging": {
+  "LoggingParameters": {
     "PathFormat": "Logs/Log-{Date}.log",
     "LogLevel": {
       "Default": "Debug"

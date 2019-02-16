@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using EducationSystem.Database.Models.Source.Base;
-using EducationSystem.Database.Source;
+using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Repositories.Interfaces.Source;
 
 namespace EducationSystem.Repositories.Implementations.Source
@@ -9,9 +9,9 @@ namespace EducationSystem.Repositories.Implementations.Source
     public abstract class RepositoryReadOnly<TModel, TOptions> : IRepositoryReadOnly<TModel>
         where TModel : DatabaseModel
     {
-        protected EducationSystemDatabaseContext Context { get; }
+        protected DatabaseContext Context { get; }
 
-        protected RepositoryReadOnly(EducationSystemDatabaseContext context)
+        protected RepositoryReadOnly(DatabaseContext context)
         {
             Context = context;
         }
