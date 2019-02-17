@@ -10,29 +10,29 @@ class ProtectedRoute extends Component {
   constructor(props) {
     super(props)
 
-    let {auth, role} = this.props
+    let {auth, userRole} = this.props
     
     this.state = {
-      IsAuthenticated: auth.checkAuth(role)
+      IsAuthenticated: auth.checkAuth(userRole)
     }
 
     this.Snackbar = new Snackbar(this.props.enqueueSnackbar)
   }
   
   componentDidMount() {
-    let {role} = this.props
+    let {userRole} = this.props
     
-    if (role && !this.state.IsAuthenticated) {
+    if (userRole && !this.state.IsAuthenticated) {
       this.Snackbar.Error('Недостаточно прав')
     }
   }
   
   render() {
-    let {component: Component, role, auth, ...rest} = this.props
+    let {component: Component, userRole, auth, ...rest} = this.props
 
-    const handlePrivateRender = props => auth.checkAuth(role)
+    const handlePrivateRender = props => auth.checkAuth(userRole)
       ? <Component {...props} />
-      : <Redirect to={{pathname: role ? '/' : '/signin', state: {from: props.location}}}/>
+      : <Redirect to={{pathname: userRole ? '/' : '/signin', state: {from: props.location}}}/>
 
     return <Route {...rest} render={handlePrivateRender}/>
   }

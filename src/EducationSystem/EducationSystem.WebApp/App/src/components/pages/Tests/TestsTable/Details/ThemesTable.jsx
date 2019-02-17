@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {CircularProgress, Grid, IconButton, LinearProgress, Typography, withStyles} from '@material-ui/core'
+import {Grid, IconButton, LinearProgress, Typography, withStyles} from '@material-ui/core'
 import {Mapper, ProtectedFetch, UrlBuilder} from '../../../../../helpers'
 import {testRoutes} from '../../../../../routes'
 import {If} from '../../../../core'

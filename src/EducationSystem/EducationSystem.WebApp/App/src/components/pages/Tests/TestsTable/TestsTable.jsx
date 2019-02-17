@@ -17,7 +17,7 @@ const TestModel = {
   Attempts: '',
   IsActive: '',
   IsSelected: false,
-  
+
   IsDetailsLoaded: false
 }
 
@@ -139,7 +139,7 @@ class TestsTable extends Component {
       if (checked === this.state.Filter.IsActive)
         return
     } else {
-      if (value === this.state.Filter[name] || value === 0 && this.state.Filter[name] === null)
+      if (value === this.state.Filter[name] || (value === 0 && this.state.Filter[name] === null))
         return
     }
 
@@ -156,7 +156,7 @@ class TestsTable extends Component {
   handleSearch = ({target: {name, value}}) => {
     const oldValue = this.state.Filter[name]
 
-    if (value.length >= minLengthForTrigger || value.length < minLengthForTrigger && oldValue.length >= minLengthForTrigger) {
+    if (value.length >= minLengthForTrigger || (value.length < minLengthForTrigger && oldValue.length >= minLengthForTrigger)) {
       this.setState({
         Filter: {
           ...this.state.Filter,
@@ -246,7 +246,7 @@ class TestsTable extends Component {
                           <LinearProgress/>
                         </If>
                       </Grid>
-                      <Collapse timeout={500} in={test.IsDetailsLoaded && test.IsSelected} className={classes.collapse} onClick={() => console.log('1')}>
+                      <Collapse timeout={500} in={test.IsDetailsLoaded && test.IsSelected} className={classes.collapse}>
                         <TestDetails test={test} handleDetailsLoad={this.handleDetailsLoad}/>
                       </Collapse>
                     </Grid>)}

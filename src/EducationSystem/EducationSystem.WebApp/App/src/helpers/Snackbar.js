@@ -1,3 +1,5 @@
+import Exception from './Exception'
+
 const anchorParam = {
   br: {
     vertical: 'bottom',
@@ -11,8 +13,12 @@ class Snackbar {
   }
 
 
-  Error = (message = '') => {
-    return this.enqueueSnackbar(message.toString(), {
+  Error = (e = '') => {
+    if (e instanceof Exception) {
+      e = e.message
+    }
+    
+    return this.enqueueSnackbar(e.toString(), {
       variant: 'error',
       anchorOrigin: anchorParam.br
     })

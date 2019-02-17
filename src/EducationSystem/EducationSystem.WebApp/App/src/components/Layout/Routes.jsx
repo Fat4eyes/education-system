@@ -11,7 +11,7 @@ const Routes = () =>
     <Route exact path='/' component={Home}/>
     <Route path='/signin' component={SignIn}/>
     <ProtectedRoute path='/account' component={Account}/>
-    <ProtectedRoute path='/tests' component={Tests} role='Admin'/>
+    <ProtectedRoute path='/tests' component={Tests} userRole='Admin'/>
   </Switch>
 
 export default Routes

@@ -41,7 +41,7 @@ const TablePagination = (props) => {
       <Grid item xs/>
       <Grid item>
         <Typography variant='subtitle1' className={classes.typography}>
-          {`${(page * 10 + 1)}-${(page * 10 + count.current)} из ${count.all}`}
+          {`${(page * count.perPage + 1)}-${(page * count.perPage + count.current)} из ${count.all}`}
         </Typography>
       </Grid>
       <Grid item>

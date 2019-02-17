@@ -4,9 +4,9 @@ import {Exception} from '../../helpers'
 
 export const ValidateAuthModel = ({Email, Password}) => {
   if (typeof Email !== 'string' || !Email.length)
-    throw 'Почтовый адрес некорректный'
+    throw new Exception('Почтовый адрес некорректный')
   if (typeof Password !== 'string' || !Password.length)
-    throw 'Пароль некорректный'
+    throw new Exception('Пароль некорректный')
 }
 
 export const handleAuthData = {
