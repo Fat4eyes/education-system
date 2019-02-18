@@ -4,43 +4,29 @@ using System.Linq;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Extensions.Source;
-using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
-using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryGroup : RepositoryReadOnly<DatabaseGroup, OptionsGroup>, IRepositoryGroup
+    public class RepositoryGroup : RepositoryReadOnly<DatabaseGroup>, IRepositoryGroup
     {
         public RepositoryGroup(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseGroup> Groups) GetGroups(OptionsGroup options) =>
-            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
-                .ApplyPaging(options);
-
-        public DatabaseGroup GetGroupById(int id, OptionsGroup options) =>
-            IncludeByOptions(AsQueryable(), options)
-                .FirstOrDefault(x => x.Id == id);
-
-        public DatabaseGroup GetGroupByStudentId(int studentId, OptionsGroup options) =>
-            IncludeByOptions(AsQueryable(), options)
-                .FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == studentId));
-
-        protected override IQueryable<DatabaseGroup> FilterByOptions(IQueryable<DatabaseGroup> query, OptionsGroup options)
+        public (int Count, List<DatabaseGroup> Groups) GetGroups(FilterGroup filter)
         {
-            if (string.IsNullOrWhiteSpace(options.Name) == false)
-                query = query.Where(x => x.Name.Contains(options.Name, StringComparison.CurrentCultureIgnoreCase));
+            var query = AsQueryable();
 
-            return query;
+            if (string.IsNullOrWhiteSpace(filter.Name) == false)
+                query = query.Where(x => x.Name.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
+
+            return query.ApplyPaging(filter);
         }
 
-        protected override IQueryable<DatabaseGroup> IncludeByOptions(IQueryable<DatabaseGroup> query, OptionsGroup options)
-        {
-            if (options.WithStudyPlan)
-                query = query.Include(x => x.StudyPlan);
+        public DatabaseGroup GetGroupById(int id) => GetById(id);
 
-            return query;
-        }
+        public DatabaseGroup GetGroupByStudentId(int studentId) =>
+            AsQueryable().FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == studentId));
     }
 }

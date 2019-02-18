@@ -50,7 +50,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryInstitute
-                .Setup(x => x.GetInstituteByStudentId(999, It.IsAny<OptionsInstitute>()))
+                .Setup(x => x.GetInstituteByStudentId(999))
                 .Returns(new DatabaseInstitute { Name = "ИИТиУвТС" });
 
             var institute = ManagerInstitute.GetInstituteByStudentId(999, new OptionsInstitute());
@@ -66,7 +66,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryInstitute
-                .Setup(x => x.GetInstituteByStudentId(999, It.IsAny<OptionsInstitute>()))
+                .Setup(x => x.GetInstituteByStudentId(999))
                 .Returns((DatabaseInstitute) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

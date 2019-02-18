@@ -23,7 +23,7 @@ namespace EducationSystem.Database.Source
                 .Append($" PASSWORD = {database.UserPassword}; ");
 
             services.AddDbContext<DatabaseContext>(x => x
-                .UseLazyLoadingProxies(false)
+                .UseLazyLoadingProxies()
                 .UseMySQL(builder.ToString()));
         }
     }

@@ -4,11 +4,13 @@ using EducationSystem.Models.Source.Options;
 
 namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
+    using EducationSystem.Models.Source.Filters;
+
     public interface IRepositoryDiscipline : IRepositoryReadOnly<DatabaseDiscipline>
     {
-        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(OptionsDiscipline options);
-        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, OptionsDiscipline options);
+        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(Filter options);
+        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, Filter filter);
 
-        DatabaseDiscipline GetDisciplineById(int id, OptionsDiscipline options);
+        DatabaseDiscipline GetDisciplineById(int id);
     }
 }

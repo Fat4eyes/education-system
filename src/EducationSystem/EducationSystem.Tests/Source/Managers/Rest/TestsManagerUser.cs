@@ -29,7 +29,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetUserById_Found()
         {
             MockRepositoryUser
-                .Setup(x => x.GetUserById(999, It.IsAny<OptionsUser>()))
+                .Setup(x => x.GetUserById(999))
                 .Returns(new DatabaseUser { FirstName = "Victor" });
 
             var user = ManagerUser.GetUserById(999, new OptionsUser());
@@ -41,7 +41,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetUserById_NotFound()
         {
             MockRepositoryUser
-                .Setup(x => x.GetUserById(999, It.IsAny<OptionsUser>()))
+                .Setup(x => x.GetUserById(999))
                 .Returns((DatabaseUser) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

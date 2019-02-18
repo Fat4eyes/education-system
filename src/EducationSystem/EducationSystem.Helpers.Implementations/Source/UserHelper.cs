@@ -33,6 +33,6 @@ namespace EducationSystem.Helpers.Implementations.Source
                 StringComparison.CurrentCultureIgnoreCase);
 
         private DatabaseRole GetUserRole(int userId) =>
-            RepositoryRole.GetRoleByUserId(userId, OptionsRole.Empty);
+            RepositoryRole.GetRoleByUserId(userId);
     }
 }

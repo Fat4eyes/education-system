@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,15 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        public IActionResult GetTests(OptionsTest options) =>
-            Json(ManagerTest.GetTests(options));
+        public IActionResult GetTests(OptionsTest options, FilterTest filter) =>
+            Json(ManagerTest.GetTests(options, filter));
 
         [HttpGet("{testId:int}")]
         public IActionResult GetTest(int testId, OptionsTest options) =>
             Json(ManagerTest.GetTestById(testId, options));
 
         [HttpGet("{testId:int}/Themes")]
-        public IActionResult GetTestThemes(int testId, OptionsTheme options) =>
-            Json(ManagerTheme.GetThemesByTestId(testId, options));
+        public IActionResult GetTestThemes(int testId, OptionsTheme options, FilterTheme filter) =>
+            Json(ManagerTheme.GetThemesByTestId(testId, options, filter));
     }
 }

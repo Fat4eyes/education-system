@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -37,8 +38,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetStudents(OptionsStudent options) =>
-            Json(ManagerStudent.GetStudents(options));
+        public IActionResult GetStudents(OptionsStudent options, Filter filter) =>
+            Json(ManagerStudent.GetStudents(options, filter));
 
         [HttpGet("Current")]
         [Roles(UserRoles.Student)]
@@ -87,17 +88,17 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("Current/TestResults")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentTestResults(OptionsTestResult options) =>
-            Json(ManagerTestResult.GetTestResultsByStudentId(GetUserId(), options));
+        public IActionResult GetStudentTestResults(OptionsTestResult options, Filter filter) =>
+            Json(ManagerTestResult.GetTestResultsByStudentId(GetUserId(), options, filter));
 
         [HttpGet("{studentId:int}/TestResults")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetUserTestResults(int studentId, OptionsTestResult options) =>
-            Json(ManagerTestResult.GetTestResultsByStudentId(studentId, options));
+        public IActionResult GetUserTestResults(int studentId, OptionsTestResult options, Filter filter) =>
+            Json(ManagerTestResult.GetTestResultsByStudentId(studentId, options, filter));
 
         [HttpGet("Current/Disciplines")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentDisciplines(OptionsDiscipline options) =>
-            Json(ManagerDiscipline.GetDisciplinesByStudentId(GetUserId(), options));
+        public IActionResult GetStudentDisciplines(OptionsDiscipline options, Filter filter) =>
+            Json(ManagerDiscipline.GetDisciplinesByStudentId(GetUserId(), options, filter));
     }
 }

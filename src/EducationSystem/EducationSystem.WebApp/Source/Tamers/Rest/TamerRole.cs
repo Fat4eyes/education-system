@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Authorization;
@@ -21,8 +22,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRoles(OptionsRole options) =>
-            Json(ManagerRole.GetRoles(options));
+        public IActionResult GetRoles(OptionsRole options, Filter filter) =>
+            Json(ManagerRole.GetRoles(options, filter));
 
         [HttpGet("{roleId:int}")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
@@ -36,7 +37,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("{roleId:int}/Users")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRoleUsers(int roleId, OptionsUser options) =>
-            Json(ManagerUser.GetUsersByRoleId(roleId, options));
+        public IActionResult GetRoleUsers(int roleId, OptionsUser options, Filter filter) =>
+            Json(ManagerUser.GetUsersByRoleId(roleId, options, filter));
     }
 }

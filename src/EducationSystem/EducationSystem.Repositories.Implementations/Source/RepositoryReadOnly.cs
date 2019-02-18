@@ -6,7 +6,7 @@ using EducationSystem.Repositories.Interfaces.Source;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
-    public abstract class RepositoryReadOnly<TModel, TOptions> : IRepositoryReadOnly<TModel>
+    public abstract class RepositoryReadOnly<TModel> : IRepositoryReadOnly<TModel>
         where TModel : DatabaseModel
     {
         protected DatabaseContext Context { get; }
@@ -30,16 +30,6 @@ namespace EducationSystem.Repositories.Implementations.Source
             return Context
                 .Set<TModel>()
                 .FirstOrDefault(x => x.Id == id);
-        }
-
-        protected virtual IQueryable<TModel> IncludeByOptions(IQueryable<TModel> query, TOptions options)
-        {
-            return query;
-        }
-
-        protected virtual IQueryable<TModel> FilterByOptions(IQueryable<TModel> query, TOptions options)
-        {
-            return query;
         }
     }
 }

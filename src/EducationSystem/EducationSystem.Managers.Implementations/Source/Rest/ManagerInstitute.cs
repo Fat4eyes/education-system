@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EducationSystem.Constants.Source;
+using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -33,12 +34,17 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var institute = RepositoryInstitute.GetInstituteByStudentId(studentId, options) ??
+            var institute = RepositoryInstitute.GetInstituteByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Institute.NotFoundByStuentId(studentId),
                     Messages.Institute.NotFoundPublic);
 
-            return Mapper.Map<Institute>(institute);
+            return Mapper.Map<Institute>(Map(institute));
+        }
+
+        private Institute Map(DatabaseInstitute institute)
+        {
+            return Mapper.Map<DatabaseInstitute, Institute>(institute);
         }
     }
 }

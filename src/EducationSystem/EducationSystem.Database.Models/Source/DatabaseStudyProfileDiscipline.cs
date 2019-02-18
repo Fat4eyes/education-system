@@ -6,15 +6,15 @@ namespace EducationSystem.Database.Models.Source
     public class DatabaseStudyProfileDiscipline
     {
         [Column("discipline_id")]
-        public int DisciplineId { get; set; }
+        public virtual int DisciplineId { get; set; }
 
         [ForeignKey(nameof(DisciplineId))]
-        public DatabaseDiscipline Discipline { get; set; }
+        public virtual DatabaseDiscipline Discipline { get; set; }
 
         [Column("profile_id")]
-        public int StudyProfileId { get; set; }
+        public virtual int StudyProfileId { get; set; }
 
         [ForeignKey(nameof(StudyProfileId))]
-        public DatabaseStudyProfile StudyProfile { get; set; }
+        public virtual DatabaseStudyProfile StudyProfile { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryStudyProfile
-                .Setup(x => x.GetStudyProfileByStudentId(999, It.IsAny<OptionsStudyProfile>()))
+                .Setup(x => x.GetStudyProfileByStudentId(999))
                 .Returns(new DatabaseStudyProfile { Name = "Study Profile" });
 
             var studyProfile = ManagerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile());
@@ -66,7 +66,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryStudyProfile
-                .Setup(x => x.GetStudyProfileByStudentId(999, It.IsAny<OptionsStudyProfile>()))
+                .Setup(x => x.GetStudyProfileByStudentId(999))
                 .Returns((DatabaseStudyProfile) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

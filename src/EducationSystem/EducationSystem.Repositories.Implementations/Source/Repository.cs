@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
-    public class Repository<TModel, TOptions> : RepositoryReadOnly<TModel, TOptions>, IRepository<TModel>
+    public class Repository<TModel, TOptions> : RepositoryReadOnly<TModel>, IRepository<TModel>
         where TModel : DatabaseModel
         where TOptions : Options
     {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EducationSystem.Constants.Source;
+using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -33,12 +34,24 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var studyProfile = RepositoryStudyProfile.GetStudyProfileByStudentId(studentId, options) ??
+            var studyProfile = RepositoryStudyProfile.GetStudyProfileByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.StudyProfile.NotFoundByStuentId(studentId),
                     Messages.StudyProfile.NotFoundPublic);
 
-            return Mapper.Map<StudyProfile>(studyProfile);
+            return Mapper.Map<StudyProfile>(Map(studyProfile, options));
+        }
+
+        private StudyProfile Map(DatabaseStudyProfile studyProfile, OptionsStudyProfile options)
+        {
+            return Mapper.Map<DatabaseStudyProfile, StudyProfile>(studyProfile, x =>
+            {
+                x.AfterMap((s, d) =>
+                {
+                    if (options.WithInstitute)
+                        d.Institute = Mapper.Map<Institute>(s.Institute);
+                });
+            });
         }
     }
 }

@@ -2,6 +2,7 @@
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Moq;
@@ -38,7 +39,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(false);
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerTestResult.GetTestResultsByStudentId(999, new OptionsTestResult()));
+                () => ManagerTestResult.GetTestResultsByStudentId(999, new OptionsTestResult(), new Filter()));
         }
     }
 }

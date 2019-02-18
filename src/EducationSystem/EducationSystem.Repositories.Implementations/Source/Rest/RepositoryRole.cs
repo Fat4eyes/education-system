@@ -3,26 +3,22 @@ using System.Linq;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Extensions.Source;
-using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryRole : RepositoryReadOnly<DatabaseRole, OptionsRole>, IRepositoryRole
+    public class RepositoryRole : RepositoryReadOnly<DatabaseRole>, IRepositoryRole
     {
         public RepositoryRole(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseRole> Roles) GetRoles(OptionsRole options) =>
-            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
-                .ApplyPaging(options);
+        public (int Count, List<DatabaseRole> Roles) GetRoles(Filter filter) =>
+            AsQueryable().ApplyPaging(filter);
 
-        public DatabaseRole GetRoleById(int id, OptionsRole options) =>
-            IncludeByOptions(AsQueryable(), options)
-                .FirstOrDefault(x => x.Id == id);
+        public DatabaseRole GetRoleById(int id) => GetById(id);
 
-        public DatabaseRole GetRoleByUserId(int userId, OptionsRole options) =>
-            IncludeByOptions(AsQueryable(), options)
-                .FirstOrDefault(x => x.RoleUsers.Any(y => y.User.Id == userId));
+        public DatabaseRole GetRoleByUserId(int userId) =>
+            AsQueryable().FirstOrDefault(x => x.RoleUsers.Any(y => y.User.Id == userId));
     }
 }

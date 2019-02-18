@@ -5,6 +5,6 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
     public interface IRepositoryInstitute : IRepositoryReadOnly<DatabaseInstitute>
     {
-        DatabaseInstitute GetInstituteByStudentId(int studentId, OptionsInstitute options);
+        DatabaseInstitute GetInstituteByStudentId(int studentId);
     }
 }
