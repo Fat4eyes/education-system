@@ -53,12 +53,12 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public void DeleteTestById(int id)
         {
-            if (RepositoryTest.GetById(id) == null)
+            var test = RepositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Test.NotFoundById(id),
                     Messages.Test.NotFoundPublic);
 
-            RepositoryTest.Delete(id);
+            RepositoryTest.Delete(test);
             RepositoryTest.SaveChanges();
         }
 

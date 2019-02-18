@@ -60,12 +60,12 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public void DeleteThemeById(int id)
         {
-            if (RepositoryTheme.GetById(id) == null)
+            var theme = RepositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Theme.NotFoundById(id),
                     Messages.Theme.NotFoundPublic);
 
-            RepositoryTheme.Delete(id);
+            RepositoryTheme.Delete(theme);
             RepositoryTheme.SaveChanges();
         }
 
