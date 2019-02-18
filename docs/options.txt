@@ -26,6 +26,7 @@ Study Profile Options:
 
 Question Options:
     WithAnswers             (по умолчанию: false)
+    WithProgram             (по умолчанию: false)
 
 Discipline Options:
     WithTests               (по умолчанию: false)

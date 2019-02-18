@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EducationSystem.Enums.Source;
 using EducationSystem.Models.Source.Rest.Base;
 
 namespace EducationSystem.Models.Source.Rest
@@ -7,10 +8,16 @@ namespace EducationSystem.Models.Source.Rest
     {
         public string Text { get; set; }
 
+        public QuestionType Type { get; set; }
+
         public int Time { get; set; }
 
         public int ThemeId { get; set; }
 
         public List<Answer> Answers { get; set; }
+
+        public int? ProgramId { get; set; }
+
+        public Program Program { get; set; }
     }
 }

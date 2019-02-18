@@ -49,10 +49,13 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Question, o => o.Ignore());
 
             expression.CreateMap<DatabaseQuestion, Question>()
-                .ForMember(d => d.Answers, o => o.Ignore());
+                .ForMember(d => d.Answers, o => o.Ignore())
+                .ForMember(d => d.Program, o => o.Ignore());
 
             expression.CreateMap<DatabaseAnswer, Answer>()
                 .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
+
+            expression.CreateMap<DatabaseProgram, Program>();
 
             expression.CreateMap<DatabaseInstitute, Institute>();
 

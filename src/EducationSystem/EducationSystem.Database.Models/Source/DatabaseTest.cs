@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
+using EducationSystem.Enums.Source;
 
 namespace EducationSystem.Database.Models.Source
 {
@@ -23,7 +24,7 @@ namespace EducationSystem.Database.Models.Source
         public virtual int Attempts { get; set; }
 
         [Column("type")]
-        public virtual int Type { get; set; }
+        public virtual TestType Type { get; set; }
 
         [Column("is_active")]
         public virtual int IsActive { get; set; }

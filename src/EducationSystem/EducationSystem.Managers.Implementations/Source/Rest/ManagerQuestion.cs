@@ -40,6 +40,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 {
                     if (options.WithAnswers)
                         d.Answers = Mapper.Map<List<Answer>>(s.Answers);
+
+                    if (options.WithProgram)
+                        d.Program = Mapper.Map<Program>(s.Program);
                 });
             });
         }

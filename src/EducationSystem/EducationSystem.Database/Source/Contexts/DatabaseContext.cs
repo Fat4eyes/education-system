@@ -10,6 +10,7 @@ namespace EducationSystem.Database.Source.Contexts
         public DbSet<DatabaseTest> Tests { get; set; }
         public DbSet<DatabaseGroup> Groups { get; set; }
         public DbSet<DatabaseAnswer> Answers { get; set; }
+        public DbSet<DatabaseProgram> Programs { get; set; }
         public DbSet<DatabaseQuestion> Questions { get; set; }
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
         public DbSet<DatabaseInstitute> Institutes { get; set; }
@@ -154,6 +155,12 @@ namespace EducationSystem.Database.Source.Contexts
                 .HasMany(x => x.GivenAnswers)
                 .WithOne(x => x.Question)
                 .HasForeignKey(x => x.QuestionId);
+
+            builder
+                .Entity<DatabaseQuestion>()
+                .HasOne(x => x.Program)
+                .WithOne(x => x.Question)
+                .HasForeignKey<DatabaseProgram>(x => x.QuestionId);
         }
 
         private static void BuildTheme(ModelBuilder builder)
