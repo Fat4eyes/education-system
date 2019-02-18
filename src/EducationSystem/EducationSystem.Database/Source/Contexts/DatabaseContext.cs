@@ -18,6 +18,7 @@ namespace EducationSystem.Database.Source.Contexts
         public DbSet<DatabaseTestResult> TestResults { get; set; }
         public DbSet<DatabaseGivenAnswer> GivenAnswers { get; set; }
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
+        public DbSet<DatabaseExtraAttempt> ExtraAttempts { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {
