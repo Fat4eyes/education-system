@@ -44,4 +44,7 @@
     [Filter]    [Options]   GET Disciplines/{Id}/Tests          List<Test>          [Admin & Lecturer & Employee]
     [Filter]    [Options]   GET Disciplines/{Id}/Themes         List<Theme>         [Admin & Lecturer & Employee]
 
+                            DELETE Tests/{Id}                   OK                  [Admin & Lecturer & Employee]
+                            DELETE Themes/{Id}                  OK                  [Admin & Lecturer & Employee]
+
 Все поля со значением NULL возращены не будут!
