@@ -42,7 +42,7 @@ namespace EducationSystem.Managers.Implementations.Source
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
                 throw ExceptionHelper.CreatePublicException(Messages.TokenError);
 
-            var user = RepositoryUser.GetUserByEmail(request.Email, OptionsUser.IncludeRoles) ??
+            var user = RepositoryUser.GetUserByEmail(request.Email) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.User.NotFoundByEmail(request.Email),
                     Messages.TokenError);

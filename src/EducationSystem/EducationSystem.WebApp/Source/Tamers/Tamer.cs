@@ -28,6 +28,12 @@ namespace EducationSystem.WebApp.Source.Tamers
         protected new IActionResult Ok()
             => base.Json(CreateResponse(null));
 
+        protected IActionResult Ok(Action action)
+        {
+            action();
+            return Ok();
+        }
+
         private static SuccessResponse CreateResponse(object @object)
             => new SuccessResponse(@object);
     }

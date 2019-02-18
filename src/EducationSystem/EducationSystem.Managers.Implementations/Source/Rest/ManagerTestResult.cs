@@ -52,7 +52,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public TestResult GetTestResultById(int id, OptionsTestResult options)
         {
-            var testResult = RepositoryTestResult.GetTestResultById(id) ??
+            var testResult = RepositoryTestResult.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.TestResult.NotFoundById(id),
                     Messages.TestResult.NotFoundPublic);

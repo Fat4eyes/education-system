@@ -29,7 +29,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetRoleById_Found()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleById(999))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseRole { Name = "Student" });
 
             var role = ManagerRole.GetRoleById(999, new OptionsRole());
@@ -41,7 +41,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetRoleById_NotFound()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleById(999))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseRole) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

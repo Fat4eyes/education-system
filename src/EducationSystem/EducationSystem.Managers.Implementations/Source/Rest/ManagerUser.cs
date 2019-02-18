@@ -43,7 +43,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public User GetUserById(int id, OptionsUser options)
         {
-            var user = RepositoryUser.GetUserById(id) ??
+            var user = RepositoryUser.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.User.NotFoundById(id),
                     Messages.User.NotFoundPublic);

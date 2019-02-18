@@ -8,7 +8,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryTheme : RepositoryReadOnly<DatabaseTheme>, IRepositoryTheme
+    public class RepositoryTheme : Repository<DatabaseTheme>, IRepositoryTheme
     {
         public RepositoryTheme(DatabaseContext context)
             : base(context) { }
@@ -16,16 +16,18 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public (int Count, List<DatabaseTheme> Themes) GetThemes(FilterTheme filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseTheme> Themes) GetThemesByTestId(int testId, FilterTheme filter) =>
-            AsQueryable()
+        public (int Count, List<DatabaseTheme> Themes) GetThemesByTestId(int testId, FilterTheme filter)
+        {
+            return AsQueryable()
                 .Where(x => x.ThemeTests.Any(y => y.TestId == testId))
                 .ApplyPaging(filter);
+        }
 
-        public (int Count, List<DatabaseTheme> Themes) GetThemesByDisciplineId(int disciplineId, FilterTheme filter) =>
-            AsQueryable()
+        public (int Count, List<DatabaseTheme> Themes) GetThemesByDisciplineId(int disciplineId, FilterTheme filter)
+        {
+            return AsQueryable()
                 .Where(x => x.DisciplineId == disciplineId)
                 .ApplyPaging(filter);
-
-        public DatabaseTheme GetThemeById(int id) => GetById(id);
+        }
     }
 }

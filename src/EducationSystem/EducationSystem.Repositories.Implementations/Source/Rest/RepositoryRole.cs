@@ -16,8 +16,6 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public (int Count, List<DatabaseRole> Roles) GetRoles(Filter filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public DatabaseRole GetRoleById(int id) => GetById(id);
-
         public DatabaseRole GetRoleByUserId(int userId) =>
             AsQueryable().FirstOrDefault(x => x.RoleUsers.Any(y => y.User.Id == userId));
     }

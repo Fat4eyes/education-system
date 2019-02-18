@@ -35,7 +35,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetGroupById_Found()
         {
             MockRepositoryGroup
-                .Setup(x => x.GetGroupById(999))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseGroup { Name = "ИС-42" });
 
             var group = ManagerGroup.GetGroupById(999, new OptionsGroup());
@@ -47,7 +47,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetGroupById_NotFound()
         {
             MockRepositoryGroup
-                .Setup(x => x.GetGroupById(999))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseGroup) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

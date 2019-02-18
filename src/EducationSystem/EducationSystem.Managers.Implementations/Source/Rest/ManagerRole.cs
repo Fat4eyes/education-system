@@ -36,7 +36,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Role GetRoleById(int id, OptionsRole options)
         {
-            var role = RepositoryRole.GetRoleById(id) ??
+            var role = RepositoryRole.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Role.NotFoundById(id),
                     Messages.Role.NotFoundPublic);

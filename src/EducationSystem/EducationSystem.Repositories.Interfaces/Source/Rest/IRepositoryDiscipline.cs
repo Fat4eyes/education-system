@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Database.Models.Source;
-using EducationSystem.Models.Source.Options;
 
 namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
@@ -10,7 +9,5 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
     {
         (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(Filter options);
         (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, Filter filter);
-
-        DatabaseDiscipline GetDisciplineById(int id);
     }
 }

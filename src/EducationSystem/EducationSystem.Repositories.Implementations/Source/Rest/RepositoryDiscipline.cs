@@ -28,7 +28,5 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                     .Any(d => d.StudentId == studentId)))))
                 .ApplyPaging(filter);
         }
-
-        public DatabaseDiscipline GetDisciplineById(int id) => GetById(id);
     }
 }

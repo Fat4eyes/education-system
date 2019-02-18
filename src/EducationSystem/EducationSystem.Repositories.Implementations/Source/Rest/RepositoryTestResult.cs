@@ -16,11 +16,11 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public (int Count, List<DatabaseTestResult> TestResults) GetTestResults(Filter filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, Filter filter) =>
-            AsQueryable()
+        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, Filter filter)
+        {
+            return AsQueryable()
                 .Where(x => x.UserId == studentId)
                 .ApplyPaging(filter);
-
-        public DatabaseTestResult GetTestResultById(int id) => GetById(id);
+        }
     }
 }

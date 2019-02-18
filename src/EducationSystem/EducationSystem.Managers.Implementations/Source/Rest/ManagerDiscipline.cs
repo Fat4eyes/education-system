@@ -52,7 +52,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Discipline GetDisciplineById(int id, OptionsDiscipline options)
         {
-            var discipline = RepositoryDiscipline.GetDisciplineById(id) ??
+            var discipline = RepositoryDiscipline.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Discipline.NotFoundById(id),
                     Messages.Discipline.NotFoundPublic);

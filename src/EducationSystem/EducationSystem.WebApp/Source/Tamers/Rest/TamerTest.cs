@@ -31,5 +31,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [HttpGet("{testId:int}/Themes")]
         public IActionResult GetTestThemes(int testId, OptionsTheme options, FilterTheme filter) =>
             Json(ManagerTheme.GetThemesByTestId(testId, options, filter));
+
+        [HttpDelete("{testId:int}")]
+        public IActionResult DeleteTest(int testId) =>
+            Ok(() => ManagerTest.DeleteTestById(testId));
     }
 }

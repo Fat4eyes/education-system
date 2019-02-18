@@ -5,7 +5,6 @@ using EducationSystem.Database.Models.Source;
 using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Models.Source.Filters;
-using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
@@ -22,9 +21,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             AsQueryable().Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
                 .ApplyPaging(filter);
 
-        public DatabaseUser GetUserById(int id) => GetById(id);
-
-        public DatabaseUser GetUserByEmail(string email, OptionsUser options) =>
+        public DatabaseUser GetUserByEmail(string email) =>
             AsQueryable().FirstOrDefault(x => string.Equals(
                 x.Email, email, StringComparison.CurrentCultureIgnoreCase));
     }

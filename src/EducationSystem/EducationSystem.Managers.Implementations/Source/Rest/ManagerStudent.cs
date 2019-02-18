@@ -52,7 +52,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.User.NotStudent(id),
                     Messages.User.NotStudentPublic);
 
-            var student = RepositoryStudent.GetStudentById(id) ??
+            var student = RepositoryStudent.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Student.NotFoundById(id),
                     Messages.Student.NotFoundPublic);

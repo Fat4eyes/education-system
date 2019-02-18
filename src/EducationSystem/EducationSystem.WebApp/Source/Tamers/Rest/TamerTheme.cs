@@ -31,5 +31,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [HttpGet("{themeId:int}/Questions")]
         public IActionResult GetThemeQuestions(int themeId, OptionsQuestion options, Filter filter) =>
             Json(ManagerQuestion.GetQuestionsByThemeId(themeId, options, filter));
+
+        [HttpDelete("{themeId:int}")]
+        public IActionResult DeleteTheme(int themeId) =>
+            Ok(() => ManagerTheme.DeleteThemeById(themeId));
     }
 }

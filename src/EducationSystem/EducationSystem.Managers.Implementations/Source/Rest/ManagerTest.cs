@@ -43,12 +43,23 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Test GetTestById(int id, OptionsTest options)
         {
-            var test = RepositoryTest.GetTetsById(id) ??
+            var test = RepositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Test.NotFoundById(id),
                     Messages.Test.NotFoundPublic);
 
             return Mapper.Map<Test>(Map(test, options));
+        }
+
+        public void DeleteTestById(int id)
+        {
+            if (RepositoryTest.GetById(id) == null)
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.Test.NotFoundById(id),
+                    Messages.Test.NotFoundPublic);
+
+            RepositoryTest.Delete(id);
+            RepositoryTest.SaveChanges();
         }
 
         private Test Map(DatabaseTest test, OptionsTest options)

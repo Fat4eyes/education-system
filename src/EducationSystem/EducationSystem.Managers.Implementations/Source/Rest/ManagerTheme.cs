@@ -50,12 +50,23 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Theme GetThemeById(int id, OptionsTheme options)
         {
-            var theme = RepositoryTheme.GetThemeById(id) ??
+            var theme = RepositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Theme.NotFoundById(id),
                     Messages.Theme.NotFoundPublic);
 
             return Mapper.Map<Theme>(Map(theme, options));
+        }
+
+        public void DeleteThemeById(int id)
+        {
+            if (RepositoryTheme.GetById(id) == null)
+                throw ExceptionHelper.CreateNotFoundException(
+                    Messages.Theme.NotFoundById(id),
+                    Messages.Theme.NotFoundPublic);
+
+            RepositoryTheme.Delete(id);
+            RepositoryTheme.SaveChanges();
         }
 
         private Theme Map(DatabaseTheme theme, OptionsTheme options)

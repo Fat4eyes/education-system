@@ -11,5 +11,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         PagedData<Test> GetTestsByDisciplineId(int disciplineId, OptionsTest options, FilterTest filter);
 
         Test GetTestById(int id, OptionsTest options);
+
+        void DeleteTestById(int id);
     }
 }

@@ -12,5 +12,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         PagedData<Theme> GetThemesByDisciplineId(int disciplineId, OptionsTheme options, FilterTheme filter);
 
         Theme GetThemeById(int id, OptionsTheme options);
+
+        void DeleteThemeById(int id);
     }
 }

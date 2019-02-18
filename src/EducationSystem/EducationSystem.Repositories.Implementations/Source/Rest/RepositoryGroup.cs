@@ -24,8 +24,6 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             return query.ApplyPaging(filter);
         }
 
-        public DatabaseGroup GetGroupById(int id) => GetById(id);
-
         public DatabaseGroup GetGroupByStudentId(int studentId) =>
             AsQueryable().FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == studentId));
     }
