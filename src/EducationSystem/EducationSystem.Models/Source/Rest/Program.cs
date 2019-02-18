@@ -1,4 +1,5 @@
-﻿using EducationSystem.Enums.Source;
+﻿using System.Collections.Generic;
+using EducationSystem.Enums.Source;
 using EducationSystem.Models.Source.Rest.Base;
 
 namespace EducationSystem.Models.Source.Rest
@@ -14,5 +15,7 @@ namespace EducationSystem.Models.Source.Rest
         public int TimeLimit { get; set; }
 
         public int MemoryLimit { get; set; }
+
+        public List<ProgramData> ProgramDatas { get; set; }
     }
 }

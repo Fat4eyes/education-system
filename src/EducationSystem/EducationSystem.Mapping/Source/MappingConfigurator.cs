@@ -22,9 +22,6 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Tests, o => o.Ignore())
                 .ForMember(d => d.Themes, o => o.Ignore());
 
-            expression.CreateMap<User, Student>();
-            expression.CreateMap<DatabaseRole, Role>();
-
             expression.CreateMap<DatabaseGroup, Group>()
                 .ForMember(d => d.StudyPlan, o => o.Ignore());
 
@@ -55,9 +52,14 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<DatabaseAnswer, Answer>()
                 .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
 
-            expression.CreateMap<DatabaseProgram, Program>();
+            expression.CreateMap<DatabaseProgram, Program>()
+                .ForMember(d => d.ProgramDatas, o => o.Ignore());
 
+            expression.CreateMap<DatabaseRole, Role>();
+            expression.CreateMap<DatabaseProgramData, ProgramData>();
             expression.CreateMap<DatabaseInstitute, Institute>();
+
+            expression.CreateMap<User, Student>();
 
             expression.AllowNullCollections = true;
             expression.ForAllMaps(Configure);

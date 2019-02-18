@@ -19,6 +19,7 @@ namespace EducationSystem.Database.Source.Contexts
         public DbSet<DatabaseGivenAnswer> GivenAnswers { get; set; }
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
         public DbSet<DatabaseExtraAttempt> ExtraAttempts { get; set; }
+        public DbSet<DatabaseProgramData> ParametersSets { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {
@@ -37,6 +38,7 @@ namespace EducationSystem.Database.Source.Contexts
             BuildStudyProfile(builder);
             BuildQuestion(builder);
             BuildTheme(builder);
+            BuildProgram(builder);
             BuildUser(builder);
             BuildDiscipline(builder);
         }
@@ -186,6 +188,15 @@ namespace EducationSystem.Database.Source.Contexts
                 .HasMany(x => x.Themes)
                 .WithOne(x => x.Discipline)
                 .HasForeignKey(x => x.DisciplineId);
+        }
+
+        private static void BuildProgram(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseProgram>()
+                .HasMany(x => x.ProgramDatas)
+                .WithOne(x => x.Program)
+                .HasForeignKey(x => x.ProgramId);
         }
 
         private static void BuildUser(ModelBuilder builder)

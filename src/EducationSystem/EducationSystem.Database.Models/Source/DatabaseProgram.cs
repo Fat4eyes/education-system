@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
 using EducationSystem.Enums.Source;
 
@@ -24,5 +25,7 @@ namespace EducationSystem.Database.Models.Source
 
         [Column("memory_limit")]
         public virtual int MemoryLimit { get; set; }
+
+        public virtual List<DatabaseProgramData> ProgramDatas { get; set; }
     }
 }
