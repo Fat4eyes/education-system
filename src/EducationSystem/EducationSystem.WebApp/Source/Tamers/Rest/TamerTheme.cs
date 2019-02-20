@@ -21,19 +21,26 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        public IActionResult GetThemes(OptionsTheme options, FilterTheme filter) =>
-            Json(ManagerTheme.GetThemes(options, filter));
+        public IActionResult GetThemes(
+            [FromQuery] OptionsTheme options,
+            [FromQuery] FilterTheme filter)
+            => Ok(ManagerTheme.GetThemes(options, filter));
 
         [HttpGet("{themeId:int}")]
-        public IActionResult GetTheme(int themeId, OptionsTheme options) =>
-            Json(ManagerTheme.GetThemeById(themeId, options));
+        public IActionResult GetTheme(
+            [FromRoute] int themeId,
+            [FromQuery] OptionsTheme options)
+            => Ok(ManagerTheme.GetThemeById(themeId, options));
 
         [HttpGet("{themeId:int}/Questions")]
-        public IActionResult GetThemeQuestions(int themeId, OptionsQuestion options, Filter filter) =>
-            Json(ManagerQuestion.GetQuestionsByThemeId(themeId, options, filter));
+        public IActionResult GetThemeQuestions(
+            [FromRoute] int themeId,
+            [FromQuery] OptionsQuestion options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerQuestion.GetQuestionsByThemeId(themeId, options, filter));
 
         [HttpDelete("{themeId:int}")]
-        public IActionResult DeleteTheme(int themeId) =>
+        public IActionResult DeleteTheme([FromRoute] int themeId) =>
             Ok(() => ManagerTheme.DeleteThemeById(themeId));
     }
 }

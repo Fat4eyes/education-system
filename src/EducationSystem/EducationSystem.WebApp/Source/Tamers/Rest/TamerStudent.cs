@@ -38,67 +38,84 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetStudents(OptionsStudent options, Filter filter) =>
-            Json(ManagerStudent.GetStudents(options, filter));
+        public IActionResult GetStudents(
+            [FromQuery] OptionsStudent options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerStudent.GetStudents(options, filter));
 
         [HttpGet("Current")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudent(OptionsStudent options) =>
-            Json(ManagerStudent.GetStudentById(GetUserId(), options));
+        public IActionResult GetStudent([FromQuery] OptionsStudent options)
+            => Ok(ManagerStudent.GetStudentById(GetUserId(), options));
 
         [HttpGet("Current/Group")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentGroup(OptionsGroup options) =>
-            Json(ManagerGroup.GetGroupByStudentId(GetUserId(), options));
+        public IActionResult GetStudentGroup([FromQuery] OptionsGroup options)
+            => Ok(ManagerGroup.GetGroupByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/Group")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetStudentGroup(int studentId, OptionsGroup options) =>
-            Json(ManagerGroup.GetGroupByStudentId(studentId, options));
+        public IActionResult GetStudentGroup(
+            [FromRoute] int studentId,
+            [FromQuery] OptionsGroup options)
+            => Ok(ManagerGroup.GetGroupByStudentId(studentId, options));
 
         [HttpGet("Current/StudyPlan")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentStudyPlan(OptionsStudyPlan options) =>
-            Json(ManagerStudyPlan.GetStudyPlanByStudentId(GetUserId(), options));
+        public IActionResult GetStudentStudyPlan([FromQuery] OptionsStudyPlan options)
+            => Ok(ManagerStudyPlan.GetStudyPlanByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/StudyPlan")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetStudentStudyPlan(int studentId, OptionsStudyPlan options) =>
-            Json(ManagerStudyPlan.GetStudyPlanByStudentId(studentId, options));
+        public IActionResult GetStudentStudyPlan(
+            [FromRoute] int studentId,
+            [FromQuery] OptionsStudyPlan options)
+            => Ok(ManagerStudyPlan.GetStudyPlanByStudentId(studentId, options));
 
         [HttpGet("Current/StudyProfile")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentStudyProfile(OptionsStudyProfile options) =>
-            Json(ManagerStudyProfile.GetStudyProfileByStudentId(GetUserId(), options));
+        public IActionResult GetStudentStudyProfile([FromQuery] OptionsStudyProfile options)
+            => Ok(ManagerStudyProfile.GetStudyProfileByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/StudyProfile")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetUserStudyProfile(int studentId, OptionsStudyProfile options) =>
-            Json(ManagerStudyProfile.GetStudyProfileByStudentId(studentId, options));
+        public IActionResult GetUserStudyProfile(
+            [FromRoute] int studentId,
+            [FromQuery] OptionsStudyProfile options)
+            => Ok(ManagerStudyProfile.GetStudyProfileByStudentId(studentId, options));
 
         [HttpGet("Current/Institute")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentInstitute(OptionsInstitute options) =>
-            Json(ManagerInstitute.GetInstituteByStudentId(GetUserId(), options));
+        public IActionResult GetStudentInstitute([FromQuery] OptionsInstitute options)
+            => Ok(ManagerInstitute.GetInstituteByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/Institute")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetUserInstitute(int studentId, OptionsInstitute options) =>
-            Json(ManagerInstitute.GetInstituteByStudentId(studentId, options));
+        public IActionResult GetUserInstitute(
+            [FromRoute] int studentId,
+            [FromQuery] OptionsInstitute options)
+            => Ok(ManagerInstitute.GetInstituteByStudentId(studentId, options));
 
         [HttpGet("Current/TestResults")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentTestResults(OptionsTestResult options, Filter filter) =>
-            Json(ManagerTestResult.GetTestResultsByStudentId(GetUserId(), options, filter));
+        public IActionResult GetStudentTestResults(
+            [FromQuery] OptionsTestResult options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerTestResult.GetTestResultsByStudentId(GetUserId(), options, filter));
 
         [HttpGet("{studentId:int}/TestResults")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetUserTestResults(int studentId, OptionsTestResult options, Filter filter) =>
-            Json(ManagerTestResult.GetTestResultsByStudentId(studentId, options, filter));
+        public IActionResult GetUserTestResults(
+            [FromRoute] int studentId,
+            [FromQuery] OptionsTestResult options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerTestResult.GetTestResultsByStudentId(studentId, options, filter));
 
         [HttpGet("Current/Disciplines")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentDisciplines(OptionsDiscipline options, Filter filter) =>
-            Json(ManagerDiscipline.GetDisciplinesByStudentId(GetUserId(), options, filter));
+        public IActionResult GetStudentDisciplines(
+            [FromQuery] OptionsDiscipline options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerDiscipline.GetDisciplinesByStudentId(GetUserId(), options, filter));
     }
 }

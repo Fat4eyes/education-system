@@ -26,19 +26,29 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        public IActionResult GetDisciplines(OptionsDiscipline options, Filter filter) =>
-            Json(ManagerDiscipline.GetDisciplines(options, filter));
+        public IActionResult GetDisciplines(
+            [FromQuery] OptionsDiscipline options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerDiscipline.GetDisciplines(options, filter));
 
         [HttpGet("{disciplineId:int}")]
-        public IActionResult GetDiscipline(int disciplineId, OptionsDiscipline options) =>
-            Json(ManagerDiscipline.GetDisciplineById(disciplineId, options));
+        public IActionResult GetDiscipline(
+            [FromRoute] int disciplineId,
+            [FromQuery] OptionsDiscipline options)
+            => Ok(ManagerDiscipline.GetDisciplineById(disciplineId, options));
 
         [HttpGet("{disciplineId:int}/Tests")]
-        public IActionResult GetDisciplineTests(int disciplineId, OptionsTest options, FilterTest filter) =>
-            Json(ManagerTest.GetTestsByDisciplineId(disciplineId, options, filter));
+        public IActionResult GetDisciplineTests(
+            [FromRoute] int disciplineId,
+            [FromQuery] OptionsTest options,
+            [FromQuery] FilterTest filter)
+            => Ok(ManagerTest.GetTestsByDisciplineId(disciplineId, options, filter));
 
         [HttpGet("{disciplineId:int}/Themes")]
-        public IActionResult GetDisciplineThemes(int disciplineId, OptionsTheme options, FilterTheme filter) =>
-            Json(ManagerTheme.GetThemesByDisciplineId(disciplineId, options, filter));
+        public IActionResult GetDisciplineThemes(
+            [FromRoute] int disciplineId,
+            [FromQuery] OptionsTheme options,
+            [FromQuery] FilterTheme filter)
+            => Ok(ManagerTheme.GetThemesByDisciplineId(disciplineId, options, filter));
     }
 }

@@ -21,15 +21,22 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        public IActionResult GetGroups(OptionsGroup options, FilterGroup filter) =>
-            Json(ManagerGroup.GetGroups(options, filter));
+        public IActionResult GetGroups(
+            [FromQuery] OptionsGroup options,
+            [FromQuery] FilterGroup filter)
+            => Ok(ManagerGroup.GetGroups(options, filter));
 
         [HttpGet("{groupId:int}")]
-        public IActionResult GetGroup(int groupId, OptionsGroup options) =>
-            Json(ManagerGroup.GetGroupById(groupId, options));
+        public IActionResult GetGroup(
+            [FromRoute] int groupId,
+            [FromQuery] OptionsGroup options)
+            => Ok(ManagerGroup.GetGroupById(groupId, options));
 
         [HttpGet("{groupId:int}/Students")]
-        public IActionResult GetGroupStudents(int groupId, OptionsStudent options, Filter filter) =>
-            Json(ManagerStudent.GetStudentsByGroupId(groupId, options, filter));
+        public IActionResult GetGroupStudents(
+            [FromRoute] int groupId,
+            [FromQuery] OptionsStudent options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerStudent.GetStudentsByGroupId(groupId, options, filter));
     }
 }

@@ -19,11 +19,15 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        public IActionResult GetTestResults(OptionsTestResult options, Filter filter) =>
-            Json(ManagerTestResult.GetTests(options, filter));
+        public IActionResult GetTestResults(
+            [FromQuery] OptionsTestResult options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerTestResult.GetTests(options, filter));
 
         [HttpGet("{testResultId:int}")]
-        public IActionResult GetTestResult(int testResultId, OptionsTestResult options) =>
-            Json(ManagerTestResult.GetTestResultById(testResultId, options));
+        public IActionResult GetTestResult(
+            [FromRoute] int testResultId,
+            [FromQuery] OptionsTestResult options)
+            => Ok(ManagerTestResult.GetTestResultById(testResultId, options));
     }
 }

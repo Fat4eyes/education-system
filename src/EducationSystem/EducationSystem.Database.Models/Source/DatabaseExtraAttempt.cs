@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using EducationSystem.Database.Models.Source.Base;
 
 namespace EducationSystem.Database.Models.Source
 {
     [Table("extra_attempt")]
-    public class DatabaseExtraAttempt
+    public class DatabaseExtraAttempt : DatabaseModel
     {
         [Column("user_id")]
         public virtual int UserId { get; set; }
