@@ -17,17 +17,12 @@ namespace EducationSystem.WebApp.Source.Tamers
 
         [HttpPost]
         [Route("generate")]
-        public IActionResult Generate([FromBody] TokenRequest request)
-        {
-            return Json(ManagerToken.GenerateToken(request));
-        }
+        public IActionResult Generate([FromBody] TokenRequest request) =>
+            Ok(ManagerToken.GenerateToken(request));
 
         [HttpPost]
         [Authorize]
         [Route("check")]
-        public IActionResult Check()
-        {
-            return Ok();
-        }
+        public IActionResult Check() => Ok();
     }
 }

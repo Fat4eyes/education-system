@@ -29,7 +29,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetThemeById_Found()
         {
             MockRepositoryTheme
-                .Setup(x => x.GetThemeById(999, It.IsAny<OptionsTheme>()))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseTheme { Name = "HTML" });
 
             var theme = ManagerTheme.GetThemeById(999, new OptionsTheme());
@@ -41,7 +41,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetThemeById_NotFound()
         {
             MockRepositoryTheme
-                .Setup(x => x.GetThemeById(999, It.IsAny<OptionsTheme>()))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseTheme) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

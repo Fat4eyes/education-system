@@ -3,27 +3,21 @@ using System.Linq;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Extensions.Source;
-using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
-using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryQuestion : RepositoryReadOnly<DatabaseQuestion, OptionsQuestion>, IRepositoryQuestion
+    public class RepositoryQuestion : RepositoryReadOnly<DatabaseQuestion>, IRepositoryQuestion
     {
         public RepositoryQuestion(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, OptionsQuestion options) =>
-            FilterByOptions(IncludeByOptions(AsQueryable(), options), options)
-                .ApplyPaging(options);
-
-        protected override IQueryable<DatabaseQuestion> IncludeByOptions(IQueryable<DatabaseQuestion> query, OptionsQuestion options)
+        public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, Filter filter)
         {
-            if (options.WithAnswers)
-                query = query.Include(x => x.Answers);
-
-            return query;
+            return AsQueryable()
+                .Where(x => x.ThemeId == themeId)
+                .ApplyPaging(filter);
         }
     }
 }

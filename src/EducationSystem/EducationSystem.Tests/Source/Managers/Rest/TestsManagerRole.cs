@@ -29,7 +29,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetRoleById_Found()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleById(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseRole { Name = "Student" });
 
             var role = ManagerRole.GetRoleById(999, new OptionsRole());
@@ -41,7 +41,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetRoleById_NotFound()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleById(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseRole) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
@@ -52,7 +52,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetRoleByUserId_Found()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = "Student" });
 
             var role = ManagerRole.GetRoleByUserId(999, new OptionsRole());
@@ -64,7 +64,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetRoleByUserId_NotFound()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns((DatabaseRole) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

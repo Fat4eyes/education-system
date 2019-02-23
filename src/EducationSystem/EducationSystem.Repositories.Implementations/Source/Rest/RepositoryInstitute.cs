@@ -1,20 +1,19 @@
 ﻿using System.Linq;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Database.Source.Contexts;
-using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryInstitute : RepositoryReadOnly<DatabaseInstitute, OptionsInstitute>, IRepositoryInstitute
+    public class RepositoryInstitute : RepositoryReadOnly<DatabaseInstitute>, IRepositoryInstitute
     {
         public RepositoryInstitute(DatabaseContext context)
             : base(context) { }
 
-        public DatabaseInstitute GetInstituteByStudentId(int studentId, OptionsInstitute options)
+        public DatabaseInstitute GetInstituteByStudentId(int studentId)
         {
-            return IncludeByOptions(AsQueryable(), options)
-                .FirstOrDefault(a => a.StudyProfiles
+            return AsQueryable().FirstOrDefault(
+                a => a.StudyProfiles
                     .Any(b => b.StudyPlans
                     .Any(c => c.Groups
                     .Any(d => d.GroupStudents

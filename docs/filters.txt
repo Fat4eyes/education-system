@@ -1,0 +1,12 @@
+Filter:
+    Skip                    (по умолчанию: 0)
+    Take                    (по умолчанию: 10)
+    All                     (по умолчанию: false)
+
+Test Filter:
+    Name                    (по умолчанию: NULL)
+    DisciplineId            (по умолчанию: NULL)
+    OnlyActive              (по умолчанию: false)
+
+Group Filter:
+    Name                    (по умолчанию: NULL)

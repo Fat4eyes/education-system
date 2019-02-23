@@ -10,6 +10,7 @@ namespace EducationSystem.Database.Source.Contexts
         public DbSet<DatabaseTest> Tests { get; set; }
         public DbSet<DatabaseGroup> Groups { get; set; }
         public DbSet<DatabaseAnswer> Answers { get; set; }
+        public DbSet<DatabaseProgram> Programs { get; set; }
         public DbSet<DatabaseQuestion> Questions { get; set; }
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
         public DbSet<DatabaseInstitute> Institutes { get; set; }
@@ -17,6 +18,8 @@ namespace EducationSystem.Database.Source.Contexts
         public DbSet<DatabaseTestResult> TestResults { get; set; }
         public DbSet<DatabaseGivenAnswer> GivenAnswers { get; set; }
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
+        public DbSet<DatabaseExtraAttempt> ExtraAttempts { get; set; }
+        public DbSet<DatabaseProgramData> ParametersSets { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {
@@ -35,6 +38,7 @@ namespace EducationSystem.Database.Source.Contexts
             BuildStudyProfile(builder);
             BuildQuestion(builder);
             BuildTheme(builder);
+            BuildProgram(builder);
             BuildUser(builder);
             BuildDiscipline(builder);
         }
@@ -154,6 +158,12 @@ namespace EducationSystem.Database.Source.Contexts
                 .HasMany(x => x.GivenAnswers)
                 .WithOne(x => x.Question)
                 .HasForeignKey(x => x.QuestionId);
+
+            builder
+                .Entity<DatabaseQuestion>()
+                .HasOne(x => x.Program)
+                .WithOne(x => x.Question)
+                .HasForeignKey<DatabaseProgram>(x => x.QuestionId);
         }
 
         private static void BuildTheme(ModelBuilder builder)
@@ -178,6 +188,15 @@ namespace EducationSystem.Database.Source.Contexts
                 .HasMany(x => x.Themes)
                 .WithOne(x => x.Discipline)
                 .HasForeignKey(x => x.DisciplineId);
+        }
+
+        private static void BuildProgram(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseProgram>()
+                .HasMany(x => x.ProgramDatas)
+                .WithOne(x => x.Program)
+                .HasForeignKey(x => x.ProgramId);
         }
 
         private static void BuildUser(ModelBuilder builder)

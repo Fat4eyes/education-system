@@ -2,15 +2,13 @@
 using System.Threading.Tasks;
 using EducationSystem.Database.Models.Source.Base;
 using EducationSystem.Database.Source.Contexts;
-using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
-    public class Repository<TModel, TOptions> : RepositoryReadOnly<TModel, TOptions>, IRepository<TModel>
+    public class Repository<TModel> : RepositoryReadOnly<TModel>, IRepository<TModel>
         where TModel : DatabaseModel
-        where TOptions : Options
     {
         public Repository(DatabaseContext context)
             : base(context) { }

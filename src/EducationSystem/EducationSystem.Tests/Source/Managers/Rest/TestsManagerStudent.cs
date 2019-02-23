@@ -50,7 +50,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryStudent
-                .Setup(x => x.GetStudentById(999, It.IsAny<OptionsStudent>()))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseUser { FirstName = "Victor" });
 
             var student = ManagerStudent.GetStudentById(999, new OptionsStudent());
@@ -66,7 +66,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryStudent
-                .Setup(x => x.GetStudentById(999, It.IsAny<OptionsStudent>()))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseUser) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.WebApp", "EducationSystem.WebApp\EducationSystem.WebApp.csproj", "{D15A3179-781B-4B25-B187-B3BD84E4D538}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web Apps", "Web Apps", "{E106792D-1AFF-4913-A1B6-64EF92305368}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{E106792D-1AFF-4913-A1B6-64EF92305368}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Managers.Interfaces", "EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj", "{E9A2D913-96BD-4222-AA58-5EA5D3F8FE0F}"
 EndProject
@@ -46,6 +46,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Helpers.Implementations", "EducationSystem.Helpers.Implementations\EducationSystem.Helpers.Implementations.csproj", "{DFC7E845-4763-4656-81B3-841224F6AE31}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Helpers.Interfaces", "EducationSystem.Helpers.Interfaces\EducationSystem.Helpers.Interfaces.csproj", "{4F978F41-EEB1-45DE-8390-276ECF06C075}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Enums", "EducationSystem.Enums\EducationSystem.Enums.csproj", "{B32F6CF2-597E-46F1-84C8-485671FD8559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{4F978F41-EEB1-45DE-8390-276ECF06C075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F978F41-EEB1-45DE-8390-276ECF06C075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F978F41-EEB1-45DE-8390-276ECF06C075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B32F6CF2-597E-46F1-84C8-485671FD8559}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B32F6CF2-597E-46F1-84C8-485671FD8559}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B32F6CF2-597E-46F1-84C8-485671FD8559}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B32F6CF2-597E-46F1-84C8-485671FD8559}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -138,6 +144,7 @@ Global
 		{C3DC815A-78A7-4148-9CA9-40400BB94F20} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 		{DFC7E845-4763-4656-81B3-841224F6AE31} = {1B186B5E-3C7E-4242-98E7-45DF8F538B91}
 		{4F978F41-EEB1-45DE-8390-276ECF06C075} = {1B186B5E-3C7E-4242-98E7-45DF8F538B91}
+		{B32F6CF2-597E-46F1-84C8-485671FD8559} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {495FA56A-EC9C-42AE-BF5E-9C1FE88AFF91}

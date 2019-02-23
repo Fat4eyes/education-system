@@ -1,20 +1,20 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using EducationSystem.Models.Source.Options;
-
-namespace EducationSystem.Extensions.Source
+﻿namespace EducationSystem.Extensions.Source
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using EducationSystem.Models.Source.Filters;
+
     public static class QueryableExtensions
     {
-        public static (int Count, List<T> Items) ApplyPaging<T>(this IQueryable<T> query, Options options)
+        public static (int Count, List<T> Items) ApplyPaging<T>(this IQueryable<T> query, Filter filter)
         {
             var count = query.Count();
 
-            var items = options.All
+            var items = filter.All
                 ? query.ToList()
                 : query
-                    .Skip(options.Skip)
-                    .Take(options.Take)
+                    .Skip(filter.Skip)
+                    .Take(filter.Take)
                     .ToList();
 
             return (count, items);

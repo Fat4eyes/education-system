@@ -26,7 +26,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsAdmin_True()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Admin });
 
             Assert.True(UserHelper.IsAdmin(999));
@@ -36,7 +36,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsAdmin_False()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Student });
 
             Assert.False(UserHelper.IsAdmin(999));
@@ -46,7 +46,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsStudent_True()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Student });
 
             Assert.True(UserHelper.IsStudent(999));
@@ -56,7 +56,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsStudent_False()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Lecturer });
 
             Assert.False(UserHelper.IsStudent(999));
@@ -66,7 +66,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsLecturer_True()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Lecturer });
 
             Assert.True(UserHelper.IsLecturer(999));
@@ -76,7 +76,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsLecturer_False()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Employee });
 
             Assert.False(UserHelper.IsLecturer(999));
@@ -86,7 +86,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsEmployee_True()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Employee });
 
             Assert.True(UserHelper.IsEmployee(999));
@@ -96,7 +96,7 @@ namespace EducationSystem.Tests.Source.Helpers
         public void IsEmployee_False()
         {
             MockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999, It.IsAny<OptionsRole>()))
+                .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Admin });
 
             Assert.False(UserHelper.IsEmployee(999));

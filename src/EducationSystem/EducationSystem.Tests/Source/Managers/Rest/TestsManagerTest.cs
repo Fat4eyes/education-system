@@ -29,7 +29,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetTestById_Found()
         {
             MockRepositoryTest
-                .Setup(x => x.GetTetsById(999, It.IsAny<OptionsTest>()))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseTest { Subject = "Subject" });
 
             var test = ManagerTest.GetTestById(999, new OptionsTest());
@@ -41,7 +41,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetTetsById_NotFound()
         {
             MockRepositoryTest
-                .Setup(x => x.GetTetsById(999, It.IsAny<OptionsTest>()))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseTest) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

@@ -35,7 +35,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetGroupById_Found()
         {
             MockRepositoryGroup
-                .Setup(x => x.GetGroupById(999, It.IsAny<OptionsGroup>()))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseGroup { Name = "ИС-42" });
 
             var group = ManagerGroup.GetGroupById(999, new OptionsGroup());
@@ -47,7 +47,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetGroupById_NotFound()
         {
             MockRepositoryGroup
-                .Setup(x => x.GetGroupById(999, It.IsAny<OptionsGroup>()))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseGroup) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
@@ -73,7 +73,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryGroup
-                .Setup(x => x.GetGroupByStudentId(999, It.IsAny<OptionsGroup>()))
+                .Setup(x => x.GetGroupByStudentId(999))
                 .Returns(new DatabaseGroup { Name = "ИС-42" });
 
             var group = ManagerGroup.GetGroupByStudentId(999, new OptionsGroup());
@@ -89,7 +89,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(true);
 
             MockRepositoryGroup
-                .Setup(x => x.GetGroupByStudentId(999, It.IsAny<OptionsGroup>()))
+                .Setup(x => x.GetGroupByStudentId(999))
                 .Returns((DatabaseGroup) null);
 
             Assert.Throws<EducationSystemNotFoundException>(

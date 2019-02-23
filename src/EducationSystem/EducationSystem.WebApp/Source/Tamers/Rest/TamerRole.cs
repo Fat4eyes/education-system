@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Authorization;
@@ -21,22 +22,29 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRoles(OptionsRole options) =>
-            Json(ManagerRole.GetRoles(options));
+        public IActionResult GetRoles(
+            [FromQuery] OptionsRole options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerRole.GetRoles(options, filter));
 
         [HttpGet("{roleId:int}")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRole(int roleId, OptionsRole options) =>
-            Json(ManagerRole.GetRoleById(roleId, options));
+        public IActionResult GetRole(
+            [FromRoute] int roleId,
+            [FromQuery] OptionsRole options)
+            => Ok(ManagerRole.GetRoleById(roleId, options));
 
         [Authorize]
         [HttpGet("Current")]
-        public IActionResult GetRole(OptionsRole options) =>
-            Json(ManagerRole.GetRoleByUserId(GetUserId(), options));
+        public IActionResult GetRole([FromQuery] OptionsRole options)
+            => Ok(ManagerRole.GetRoleByUserId(GetUserId(), options));
 
         [HttpGet("{roleId:int}/Users")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetRoleUsers(int roleId, OptionsUser options) =>
-            Json(ManagerUser.GetUsersByRoleId(roleId, options));
+        public IActionResult GetRoleUsers(
+            [FromRoute] int roleId,
+            [FromQuery] OptionsUser options,
+            [FromQuery] Filter filter)
+            => Ok(ManagerUser.GetUsersByRoleId(roleId, options, filter));
     }
 }

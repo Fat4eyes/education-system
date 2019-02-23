@@ -35,7 +35,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetDisciplineById_Found()
         {
             MockRepositoryDiscipline
-                .Setup(x => x.GetDisciplineById(999, It.IsAny<OptionsDiscipline>()))
+                .Setup(x => x.GetById(999))
                 .Returns(new DatabaseDiscipline { Name = "WEB" });
 
             var discipline = ManagerDiscipline.GetDisciplineById(999, new OptionsDiscipline());
@@ -47,7 +47,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetDisciplineById_NotFound()
         {
             MockRepositoryDiscipline
-                .Setup(x => x.GetDisciplineById(999, It.IsAny<OptionsDiscipline>()))
+                .Setup(x => x.GetById(999))
                 .Returns((DatabaseDiscipline) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
