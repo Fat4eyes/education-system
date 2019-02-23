@@ -23,6 +23,9 @@
 
   <ItemGroup>
     <Content Remove="$(SpaRoot)\**" />
+    <Content Include="App\src\components\MaterialEditor\SideToolbar\blockTypeSelectStyles.module.less" />
+    <Content Include="App\src\components\MaterialEditor\SideToolbar\buttonStyles.module.less" />
+    <Content Include="App\src\components\MaterialEditor\SideToolbar\toolbarStyles.module.less" />
     <None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
   </ItemGroup>
 

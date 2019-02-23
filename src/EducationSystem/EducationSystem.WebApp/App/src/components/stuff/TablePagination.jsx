@@ -18,9 +18,24 @@ const TablePagination = (props) => {
     classes,
     width
   } = props
-  const leftPage = page > 0 ? page - 1 : 0
-  const rightPage = page + 1 < count.all / count.perPage ? page + 1 : page
+
   let isXs = isWidthDown('xs', width)
+
+  const leftPage = page > 0 ? page - 1 : 0
+  const PreviousPage = () => (
+    <IconButton disabled={count.perPage > count.all || page === 0}
+                onClick={() => page !== leftPage && onPageChange(leftPage)}>
+      <ChevronLeftIcon/>
+    </IconButton>
+  )
+
+  const rightPage = page + 1 < count.all / count.perPage ? page + 1 : page
+  const NextPage = () => (
+    <IconButton disabled={count.perPage > count.all || page >= (count.all / count.perPage - 1)}
+                onClick={() => page !== rightPage && onPageChange(rightPage)}>
+      <ChevronRightIcon/>
+    </IconButton>
+  )
 
   return <Grid container alignItems='center' spacing={16} className={classes.root}>
     <If condition={!!count.current} orElse={<Grid item xs/>}>
@@ -32,9 +47,7 @@ const TablePagination = (props) => {
         </Grid>
         <Grid item>
           <Select variant='filled' value={count.perPage} onChange={onCountPerPageChange} className={classes.select}>
-            <MenuItem value={10}>10</MenuItem>
-            <MenuItem value={25}>25</MenuItem>
-            <MenuItem value={50}>50</MenuItem>
+            {[12, 25, 50].map(i => <MenuItem key={i} value={i}>{i}</MenuItem>)}
           </Select>
         </Grid>
       </If>
@@ -45,12 +58,8 @@ const TablePagination = (props) => {
         </Typography>
       </Grid>
       <Grid item>
-        <IconButton disabled={count.perPage > count.all || page === 0} onClick={() => page !== leftPage && onPageChange(leftPage)}>
-          <ChevronLeftIcon/>
-        </IconButton>
-        <IconButton disabled={count.perPage > count.all || page >= (count.all / count.perPage - 1)} onClick={() => page !== rightPage && onPageChange(rightPage)}>
-          <ChevronRightIcon/>
-        </IconButton>
+        <PreviousPage/>
+        <NextPage/>
       </Grid>
     </If>
   </Grid>

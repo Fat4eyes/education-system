@@ -101,7 +101,7 @@ class TestsTable extends Component {
           IsLoading: false
         }))
 
-  handleChangeRowsPerPage = ({target: {value}}) => {
+  handleChangeRowsPerPage = (value) => {
     if (value === this.state.CountPerPage) return
     this.setState({
       CountPerPage: value,

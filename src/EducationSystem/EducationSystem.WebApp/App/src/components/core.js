@@ -6,6 +6,8 @@ import Loading from './stuff/Loading'
 import SimpleLink from './stuff/SimpleLink'
 import Text from './stuff/Text'
 import Search from './stuff/Search'
+import Fetch from './stuff/Fetch'
+import VTextField from './stuff/VTextField'
 
 export {
   If,
@@ -15,5 +17,7 @@ export {
   Loading,
   SimpleLink,
   Text,
-  Search
+  Search,
+  Fetch,
+  VTextField
 }

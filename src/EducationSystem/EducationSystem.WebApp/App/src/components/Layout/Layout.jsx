@@ -82,6 +82,8 @@ class Layout extends PureComponent {
         <LeftMenuItem component={SimpleLink} to='/tests' Icon={QuestionIcon} tooltip='Тесты'
                       closeOnClick={closeOnClick}/>
       </If>
+      <LeftMenuItem component={SimpleLink} to='/handletest' Icon={HomeIcon} tooltip='Еуые'
+                    closeOnClick={closeOnClick}/>
     </List>
 
     return <div className={classes.root}>
