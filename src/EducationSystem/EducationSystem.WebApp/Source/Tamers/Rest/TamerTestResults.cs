@@ -11,23 +11,23 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerTestResults : Tamer
     {
-        protected IManagerTestResult ManagerTestResult { get; }
+        private readonly IManagerTestResult _managerTestResult;
 
         public TamerTestResults(IManagerTestResult managerTestResult)
         {
-            ManagerTestResult = managerTestResult;
+            _managerTestResult = managerTestResult;
         }
 
         [HttpGet("")]
         public IActionResult GetTestResults(
             [FromQuery] OptionsTestResult options,
             [FromQuery] Filter filter)
-            => Ok(ManagerTestResult.GetTests(options, filter));
+            => Ok(_managerTestResult.GetTests(options, filter));
 
         [HttpGet("{testResultId:int}")]
         public IActionResult GetTestResult(
             [FromRoute] int testResultId,
             [FromQuery] OptionsTestResult options)
-            => Ok(ManagerTestResult.GetTestResultById(testResultId, options));
+            => Ok(_managerTestResult.GetTestResultById(testResultId, options));
     }
 }

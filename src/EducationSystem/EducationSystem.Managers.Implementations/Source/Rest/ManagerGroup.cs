@@ -15,10 +15,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerGroup : Manager<ManagerGroup>, IManagerGroup
+    public sealed class ManagerGroup : Manager<ManagerGroup>, IManagerGroup
     {
-        protected IUserHelper UserHelper { get; }
-        protected IRepositoryGroup RepositoryGroup { get; }
+        private readonly IUserHelper _userHelper;
+        private readonly IRepositoryGroup _repositoryGroup;
 
         public ManagerGroup(
             IMapper mapper,
@@ -27,20 +27,20 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryGroup repositoryGroup)
             : base(mapper, logger)
         {
-            UserHelper = userHelper;
-            RepositoryGroup = repositoryGroup;
+            _userHelper = userHelper;
+            _repositoryGroup = repositoryGroup;
         }
 
         public PagedData<Group> GetGroups(OptionsGroup options, FilterGroup filter)
         {
-            var (count, groups) = RepositoryGroup.GetGroups(filter);
+            var (count, groups) = _repositoryGroup.GetGroups(filter);
 
             return new PagedData<Group>(groups.Select(x => Map(x, options)).ToList(), count);
         }
 
         public Group GetGroupById(int id, OptionsGroup options)
         {
-            var group = RepositoryGroup.GetById(id) ??
+            var group = _repositoryGroup.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Group.NotFoundById(id),
                     Messages.Group.NotFoundPublic);
@@ -50,12 +50,12 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Group GetGroupByStudentId(int studentId, OptionsGroup options)
         {
-            if (!UserHelper.IsStudent(studentId))
+            if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var group = RepositoryGroup.GetGroupByStudentId(studentId) ??
+            var group = _repositoryGroup.GetGroupByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Group.NotFoundByStudentId(studentId),
                     Messages.Group.NotFoundPublic);

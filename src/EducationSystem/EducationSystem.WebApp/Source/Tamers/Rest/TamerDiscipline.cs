@@ -11,44 +11,44 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerDiscipline : Tamer
     {
-        protected IManagerTest ManagerTest { get; }
-        protected IManagerTheme ManagerTheme { get; }
-        protected IManagerDiscipline ManagerDiscipline { get; }
+        private readonly IManagerTest _managerTest;
+        private readonly IManagerTheme _managerTheme;
+        private readonly IManagerDiscipline _managerDiscipline;
 
         public TamerDiscipline(
             IManagerTest managerTest,
             IManagerTheme managerTheme,
             IManagerDiscipline managerDiscipline)
         {
-            ManagerDiscipline = managerDiscipline;
-            ManagerTest = managerTest;
-            ManagerTheme = managerTheme;
+            _managerDiscipline = managerDiscipline;
+            _managerTest = managerTest;
+            _managerTheme = managerTheme;
         }
 
         [HttpGet("")]
         public IActionResult GetDisciplines(
             [FromQuery] OptionsDiscipline options,
             [FromQuery] Filter filter)
-            => Ok(ManagerDiscipline.GetDisciplines(options, filter));
+            => Ok(_managerDiscipline.GetDisciplines(options, filter));
 
         [HttpGet("{disciplineId:int}")]
         public IActionResult GetDiscipline(
             [FromRoute] int disciplineId,
             [FromQuery] OptionsDiscipline options)
-            => Ok(ManagerDiscipline.GetDisciplineById(disciplineId, options));
+            => Ok(_managerDiscipline.GetDisciplineById(disciplineId, options));
 
         [HttpGet("{disciplineId:int}/Tests")]
         public IActionResult GetDisciplineTests(
             [FromRoute] int disciplineId,
             [FromQuery] OptionsTest options,
             [FromQuery] FilterTest filter)
-            => Ok(ManagerTest.GetTestsByDisciplineId(disciplineId, options, filter));
+            => Ok(_managerTest.GetTestsByDisciplineId(disciplineId, options, filter));
 
         [HttpGet("{disciplineId:int}/Themes")]
         public IActionResult GetDisciplineThemes(
             [FromRoute] int disciplineId,
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
-            => Ok(ManagerTheme.GetThemesByDisciplineId(disciplineId, options, filter));
+            => Ok(_managerTheme.GetThemesByDisciplineId(disciplineId, options, filter));
     }
 }

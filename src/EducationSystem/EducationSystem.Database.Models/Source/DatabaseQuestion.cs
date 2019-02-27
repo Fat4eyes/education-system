@@ -29,7 +29,9 @@ namespace EducationSystem.Database.Models.Source
         public virtual DatabaseProgram Program { get; set; }
 
         public virtual List<DatabaseAnswer> Answers { get; set; }
+            = new List<DatabaseAnswer>();
 
         public virtual List<DatabaseGivenAnswer> GivenAnswers { get; set; }
+            = new List<DatabaseGivenAnswer>();
     }
 }

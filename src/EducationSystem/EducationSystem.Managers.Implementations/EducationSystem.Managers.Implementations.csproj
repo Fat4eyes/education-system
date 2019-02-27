@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
     <ProjectReference Include="..\EducationSystem.Exceptions\EducationSystem.Exceptions.csproj" />
+    <ProjectReference Include="..\EducationSystem.Extensions\EducationSystem.Extensions.csproj" />
     <ProjectReference Include="..\EducationSystem.Helpers.Interfaces\EducationSystem.Helpers.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj" />

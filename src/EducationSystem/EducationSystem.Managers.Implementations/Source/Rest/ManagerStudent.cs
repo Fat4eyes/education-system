@@ -15,10 +15,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerStudent : Manager<ManagerStudent>, IManagerStudent
+    public sealed class ManagerStudent : Manager<ManagerStudent>, IManagerStudent
     {
-        protected IUserHelper UserHelper { get; }
-        protected IRepositoryStudent RepositoryStudent { get; }
+        private readonly IUserHelper _userHelper;
+        private readonly IRepositoryStudent _repositoryStudent;
 
         public ManagerStudent(
             IMapper mapper,
@@ -27,32 +27,32 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryStudent repositoryStudent)
             : base(mapper, logger)
         {
-            UserHelper = userHelper;
-            RepositoryStudent = repositoryStudent;
+            _userHelper = userHelper;
+            _repositoryStudent = repositoryStudent;
         }
 
         public PagedData<Student> GetStudents(OptionsStudent options, Filter filter)
         {
-            var (count, students) = RepositoryStudent.GetStudents(filter);
+            var (count, students) = _repositoryStudent.GetStudents(filter);
 
             return new PagedData<Student>(students.Select(x => Map(x, options)).ToList(), count);
         }
 
         public PagedData<Student> GetStudentsByGroupId(int groupId, OptionsStudent options, Filter filter)
         {
-            var (count, students) = RepositoryStudent.GetStudentsByGroupId(groupId, filter);
+            var (count, students) = _repositoryStudent.GetStudentsByGroupId(groupId, filter);
 
             return new PagedData<Student>(students.Select(x => Map(x, options)).ToList(), count);
         }
 
         public Student GetStudentById(int id, OptionsStudent options)
         {
-            if (!UserHelper.IsStudent(id))
+            if (!_userHelper.IsStudent(id))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(id),
                     Messages.User.NotStudentPublic);
 
-            var student = RepositoryStudent.GetById(id) ??
+            var student = _repositoryStudent.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Student.NotFoundById(id),
                     Messages.Student.NotFoundPublic);

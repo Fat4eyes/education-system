@@ -9,7 +9,6 @@ using EducationSystem.Exceptions.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Models.Source;
-using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,10 +17,10 @@ using Crypt = BCrypt.Net.BCrypt;
 
 namespace EducationSystem.Managers.Implementations.Source
 {
-    public class ManagerToken : Manager<ManagerToken>, IManagerToken
+    public sealed class ManagerToken : Manager<ManagerToken>, IManagerToken
     {
-        protected IConfiguration Configuration { get; }
-        protected IRepositoryUser RepositoryUser { get; }
+        private readonly IConfiguration _configuration;
+        private readonly IRepositoryUser _repositoryUser;
 
         public ManagerToken(
             IMapper mapper,
@@ -30,8 +29,8 @@ namespace EducationSystem.Managers.Implementations.Source
             IRepositoryUser repositoryUser)
             : base(mapper, logger)
         {
-            Configuration = configuration;
-            RepositoryUser = repositoryUser;
+            _configuration = configuration;
+            _repositoryUser = repositoryUser;
         }
 
         public TokenResponse GenerateToken(TokenRequest request)
@@ -42,7 +41,7 @@ namespace EducationSystem.Managers.Implementations.Source
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
                 throw ExceptionHelper.CreatePublicException(Messages.TokenError);
 
-            var user = RepositoryUser.GetUserByEmail(request.Email) ??
+            var user = _repositoryUser.GetUserByEmail(request.Email) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.User.NotFoundByEmail(request.Email),
                     Messages.TokenError);
@@ -67,7 +66,7 @@ namespace EducationSystem.Managers.Implementations.Source
                 ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);
 
-            var tokenParameters = Configuration
+            var tokenParameters = _configuration
                 .GetSection(nameof(TokenParameters))
                 .Get<TokenParameters>();
 

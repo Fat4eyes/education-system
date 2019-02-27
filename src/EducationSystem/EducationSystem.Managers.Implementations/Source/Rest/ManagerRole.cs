@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
 using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
@@ -14,9 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerRole : Manager<ManagerRole>, IManagerRole
+    public sealed class ManagerRole : Manager<ManagerRole>, IManagerRole
     {
-        protected IRepositoryRole RepositoryRole { get; }
+        private readonly IRepositoryRole _repositoryRole;
 
         public ManagerRole(
             IMapper mapper,
@@ -24,19 +23,19 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryRole repositoryRole)
             : base(mapper, logger)
         {
-            RepositoryRole = repositoryRole;
+            _repositoryRole = repositoryRole;
         }
 
         public PagedData<Role> GetRoles(OptionsRole options, Filter filter)
         {
-            var (count, roles) = RepositoryRole.GetRoles(filter);
+            var (count, roles) = _repositoryRole.GetRoles(filter);
 
             return new PagedData<Role>(roles.Select(Map).ToList(), count);
         }
 
         public Role GetRoleById(int id, OptionsRole options)
         {
-            var role = RepositoryRole.GetById(id) ??
+            var role = _repositoryRole.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Role.NotFoundById(id),
                     Messages.Role.NotFoundPublic);
@@ -46,7 +45,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Role GetRoleByUserId(int userId, OptionsRole options)
         {
-            var role = RepositoryRole.GetRoleByUserId(userId) ??
+            var role = _repositoryRole.GetRoleByUserId(userId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Role.NotFoundByUserId(userId),
                     Messages.Role.NotFoundPublic);

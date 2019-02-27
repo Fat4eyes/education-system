@@ -14,5 +14,6 @@ namespace EducationSystem.Database.Models.Source
         public virtual string Description { get; set; }
 
         public virtual List<DatabaseStudyProfile> StudyProfiles { get; set; }
+            = new List<DatabaseStudyProfile>();
     }
 }

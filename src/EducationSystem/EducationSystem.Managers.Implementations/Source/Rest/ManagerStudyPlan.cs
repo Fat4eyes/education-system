@@ -11,10 +11,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerStudyPlan : Manager<ManagerStudyPlan>, IManagerStudyPlan
+    public sealed class ManagerStudyPlan : Manager<ManagerStudyPlan>, IManagerStudyPlan
     {
-        protected IUserHelper UserHelper { get; }
-        protected IRepositoryStudyPlan RepositoryStudyPlan { get; }
+        private readonly IUserHelper _userHelper;
+        private readonly IRepositoryStudyPlan _repositoryStudyPlan;
 
         public ManagerStudyPlan(
             IMapper mapper,
@@ -23,18 +23,18 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryStudyPlan repositoryStudyPlan)
             : base(mapper, logger)
         {
-            UserHelper = userHelper;
-            RepositoryStudyPlan = repositoryStudyPlan;
+            _userHelper = userHelper;
+            _repositoryStudyPlan = repositoryStudyPlan;
         }
 
         public StudyPlan GetStudyPlanByStudentId(int studentId, OptionsStudyPlan options)
         {
-            if (!UserHelper.IsStudent(studentId))
+            if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var studyPlan = RepositoryStudyPlan.GetStudyPlanByStudentId(studentId) ??
+            var studyPlan = _repositoryStudyPlan.GetStudyPlanByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.StudyPlan.NotFoundByStuentId(studentId),
                     Messages.StudyPlan.NotFoundPublic);

@@ -5,7 +5,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryInstitute : RepositoryReadOnly<DatabaseInstitute>, IRepositoryInstitute
+    public sealed class RepositoryInstitute : RepositoryReadOnly<DatabaseInstitute>, IRepositoryInstitute
     {
         public RepositoryInstitute(DatabaseContext context)
             : base(context) { }

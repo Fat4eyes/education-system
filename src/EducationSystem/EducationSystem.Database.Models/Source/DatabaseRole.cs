@@ -20,5 +20,6 @@ namespace EducationSystem.Database.Models.Source
         public virtual int Level { get; set; }
 
         public virtual List<DatabaseUserRole> RoleUsers { get; set; }
+            = new List<DatabaseUserRole>();
     }
 }

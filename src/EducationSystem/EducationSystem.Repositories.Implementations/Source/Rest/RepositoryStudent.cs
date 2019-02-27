@@ -8,7 +8,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryStudent : RepositoryReadOnly<DatabaseUser>, IRepositoryStudent
+    public sealed class RepositoryStudent : RepositoryReadOnly<DatabaseUser>, IRepositoryStudent
     {
         public RepositoryStudent(DatabaseContext context)
             : base(context) { }

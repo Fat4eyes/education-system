@@ -8,17 +8,17 @@ namespace EducationSystem.WebApp.Source.Tamers
     [Route("api/Token")]
     public class TamerToken : Tamer
     {
-        protected IManagerToken ManagerToken { get; }
+        private readonly IManagerToken _managerToken;
 
         public TamerToken(IManagerToken managerToken)
         {
-            ManagerToken = managerToken;
+            _managerToken = managerToken;
         }
 
         [HttpPost]
         [Route("generate")]
         public IActionResult Generate([FromBody] TokenRequest request) =>
-            Ok(ManagerToken.GenerateToken(request));
+            Ok(_managerToken.GenerateToken(request));
 
         [HttpPost]
         [Authorize]

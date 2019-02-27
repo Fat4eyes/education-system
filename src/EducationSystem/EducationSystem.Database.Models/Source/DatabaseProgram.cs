@@ -27,5 +27,6 @@ namespace EducationSystem.Database.Models.Source
         public virtual int MemoryLimit { get; set; }
 
         public virtual List<DatabaseProgramData> ProgramDatas { get; set; }
+            = new List<DatabaseProgramData>();
     }
 }

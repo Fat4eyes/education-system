@@ -17,9 +17,12 @@ namespace EducationSystem.Database.Models.Source
         public virtual string Description { get; set; }
 
         public virtual List<DatabaseTest> Tests { get; set; }
+            = new List<DatabaseTest>();
 
         public virtual List<DatabaseTheme> Themes { get; set; }
+            = new List<DatabaseTheme>();
 
         public virtual List<DatabaseStudyProfileDiscipline> StudyProfiles { get; set; }
+            = new List<DatabaseStudyProfileDiscipline>();
     }
 }

@@ -15,10 +15,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerTestResult : Manager<ManagerTestResult>, IManagerTestResult
+    public sealed class ManagerTestResult : Manager<ManagerTestResult>, IManagerTestResult
     {
-        protected IUserHelper UserHelper { get; }
-        protected IRepositoryTestResult RepositoryTestResult { get; }
+        private readonly IUserHelper _userHelper;
+        private readonly IRepositoryTestResult _repositoryTestResult;
 
         public ManagerTestResult(
             IMapper mapper,
@@ -27,32 +27,32 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryTestResult repositoryTestResult)
             : base(mapper, logger)
         {
-            UserHelper = userHelper;
-            RepositoryTestResult = repositoryTestResult;
+            _userHelper = userHelper;
+            _repositoryTestResult = repositoryTestResult;
         }
 
         public PagedData<TestResult> GetTests(OptionsTestResult options, Filter filter)
         {
-            var (count, testResults) = RepositoryTestResult.GetTestResults(filter);
+            var (count, testResults) = _repositoryTestResult.GetTestResults(filter);
 
             return new PagedData<TestResult>(testResults.Select(x => Map(x, options)).ToList(), count);
         }
 
         public PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options, Filter filter)
         {
-            if (!UserHelper.IsStudent(studentId))
+            if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var (count, testResults) = RepositoryTestResult.GetTestResultsByStudentId(studentId, filter);
+            var (count, testResults) = _repositoryTestResult.GetTestResultsByStudentId(studentId, filter);
 
             return new PagedData<TestResult>(testResults.Select(x => Map(x, options)).ToList(), count);
         }
 
         public TestResult GetTestResultById(int id, OptionsTestResult options)
         {
-            var testResult = RepositoryTestResult.GetById(id) ??
+            var testResult = _repositoryTestResult.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.TestResult.NotFoundById(id),
                     Messages.TestResult.NotFoundPublic);

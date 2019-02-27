@@ -1,8 +1,9 @@
-﻿using EducationSystem.Database.Models.Source;
+﻿using System.Collections.Generic;
+using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
-using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Moq;
@@ -12,17 +13,13 @@ namespace EducationSystem.Tests.Source.Managers.Rest
 {
     public class TestsManagerDiscipline : TestsManager<ManagerDiscipline>
     {
-        protected IManagerDiscipline ManagerDiscipline { get; }
+        private readonly IManagerDiscipline ManagerDiscipline;
 
-        protected Mock<IRepositoryDiscipline> MockRepositoryDiscipline { get; set; }
-
-        protected Mock<IUserHelper> MockUserHelper { get; set; }
+        private readonly Mock<IRepositoryDiscipline> MockRepositoryDiscipline;
 
         public TestsManagerDiscipline()
         {
             MockRepositoryDiscipline = new Mock<IRepositoryDiscipline>();
-
-            MockUserHelper = new Mock<IUserHelper>();
 
             ManagerDiscipline = new ManagerDiscipline(
                 Mapper,
@@ -52,6 +49,102 @@ namespace EducationSystem.Tests.Source.Managers.Rest
 
             Assert.Throws<EducationSystemNotFoundException>(
                 () => ManagerDiscipline.GetDisciplineById(999, new OptionsDiscipline()));
+        }
+
+        [Fact]
+        public void GetDisciplinesByStudentId_NotStudent()
+        {
+            MockUserHelper
+                .Setup(x => x.IsStudent(999))
+                .Returns(false);
+
+            Assert.Throws<EducationSystemException>(
+                () => ManagerDiscipline.GetDisciplinesByStudentId
+                    (999, new OptionsDiscipline(), new Filter()));
+        }
+
+        [Fact]
+        public void GetDisciplinesByStudentId_FoundWithTests()
+        {
+            MockUserHelper
+                .Setup(x => x.IsStudent(999))
+                .Returns(true);
+
+            var disciplines = GetDisciplines();
+
+            MockRepositoryDiscipline
+                .Setup(x => x.GetDisciplinesByStudentId(999, It.IsAny<Filter>()))
+                .Returns((disciplines.Count, disciplines));
+
+            var data = ManagerDiscipline.GetDisciplinesByStudentId
+                (999, new OptionsDiscipline { WithTests = true }, new Filter());
+
+            Assert.Equal(2, data.Count);
+
+            Assert.Null(data.Items[0].Themes);
+            Assert.Null(data.Items[1].Themes);
+
+            Assert.Single(data.Items[0].Tests);
+            Assert.Single(data.Items[1].Tests);
+
+            Assert.Equal("Test", data.Items[0].Tests[0].Subject);
+            Assert.Equal("Test", data.Items[1].Tests[0].Subject);
+        }
+
+        [Fact]
+        public void GetDisciplinesByStudentId_FoundWithThemes()
+        {
+            MockUserHelper
+                .Setup(x => x.IsStudent(999))
+                .Returns(true);
+
+            var disciplines = GetDisciplines();
+
+            MockRepositoryDiscipline
+                .Setup(x => x.GetDisciplinesByStudentId(999, It.IsAny<Filter>()))
+                .Returns((disciplines.Count, disciplines));
+
+            var data = ManagerDiscipline.GetDisciplinesByStudentId
+                (999, new OptionsDiscipline { WithThemes = true }, new Filter());
+
+            Assert.Equal(2, data.Count);
+
+            Assert.Null(data.Items[0].Tests);
+            Assert.Null(data.Items[1].Tests);
+
+            Assert.Single(data.Items[0].Themes);
+
+            Assert.Equal(2, data.Items[1].Themes.Count);
+
+            Assert.Equal("Theme", data.Items[0].Themes[0].Name);
+            Assert.Equal("Theme", data.Items[1].Themes[0].Name);
+        }
+
+        private static List<DatabaseDiscipline> GetDisciplines()
+        {
+            return new List<DatabaseDiscipline>
+            {
+                new DatabaseDiscipline
+                {
+                    Themes = new List<DatabaseTheme> {
+                        Creator.CreateThemeWithQuestions()
+                    },
+                    Tests = new List<DatabaseTest> {
+                        Creator.CreateTest(true)
+                    }
+                },
+                new DatabaseDiscipline
+                {
+                    Themes = new List<DatabaseTheme> {
+                        Creator.CreateThemeWithQuestions(),
+                        Creator.CreateThemeWithQuestions()
+                    },
+                    Tests = new List<DatabaseTest> {
+                        Creator.CreateTest(true),
+                        Creator.CreateTest(false)
+                    }
+                }
+            };
         }
     }
 }

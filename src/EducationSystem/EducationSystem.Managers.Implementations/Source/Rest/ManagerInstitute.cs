@@ -11,10 +11,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerInstitute : Manager<ManagerInstitute>, IManagerInstitute
+    public sealed class ManagerInstitute : Manager<ManagerInstitute>, IManagerInstitute
     {
-        protected IUserHelper UserHelper { get; }
-        protected IRepositoryInstitute RepositoryInstitute { get; }
+        private readonly IUserHelper _userHelper;
+        private readonly IRepositoryInstitute _repositoryInstitute;
 
         public ManagerInstitute(
             IMapper mapper,
@@ -23,18 +23,18 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryInstitute repositoryInstitute)
             : base(mapper, logger)
         {
-            UserHelper = userHelper;
-            RepositoryInstitute = repositoryInstitute;
+            _userHelper = userHelper;
+            _repositoryInstitute = repositoryInstitute;
         }
 
         public Institute GetInstituteByStudentId(int studentId, OptionsInstitute options)
         {
-            if (!UserHelper.IsStudent(studentId))
+            if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var institute = RepositoryInstitute.GetInstituteByStudentId(studentId) ??
+            var institute = _repositoryInstitute.GetInstituteByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Institute.NotFoundByStuentId(studentId),
                     Messages.Institute.NotFoundPublic);

@@ -30,5 +30,6 @@ namespace EducationSystem.Database.Models.Source
         public virtual DateTime DateTime { get; set; }
 
         public virtual List<DatabaseGivenAnswer> GivenAnswers { get; set; }
+            = new List<DatabaseGivenAnswer>();
     }
 }

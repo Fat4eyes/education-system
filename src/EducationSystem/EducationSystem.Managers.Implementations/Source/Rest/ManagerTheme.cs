@@ -14,9 +14,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerTheme : Manager<ManagerTheme>, IManagerTheme
+    public sealed class ManagerTheme : Manager<ManagerTheme>, IManagerTheme
     {
-        protected IRepositoryTheme RepositoryTheme { get; }
+        private readonly IRepositoryTheme _repositoryTheme;
 
         public ManagerTheme(
             IMapper mapper,
@@ -24,33 +24,33 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryTheme repositoryTheme)
             : base(mapper, logger)
         {
-            RepositoryTheme = repositoryTheme;
+            _repositoryTheme = repositoryTheme;
         }
 
         public PagedData<Theme> GetThemes(OptionsTheme options, FilterTheme filter)
         {
-            var (count, themes) = RepositoryTheme.GetThemes(filter);
+            var (count, themes) = _repositoryTheme.GetThemes(filter);
 
             return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
         }
 
         public PagedData<Theme> GetThemesByTestId(int testId, OptionsTheme options, FilterTheme filter)
         {
-            var (count, themes) = RepositoryTheme.GetThemesByTestId(testId, filter);
+            var (count, themes) = _repositoryTheme.GetThemesByTestId(testId, filter);
 
             return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
         }
 
         public PagedData<Theme> GetThemesByDisciplineId(int disciplineId, OptionsTheme options, FilterTheme filter)
         {
-            var (count, themes) = RepositoryTheme.GetThemesByDisciplineId(disciplineId, filter);
+            var (count, themes) = _repositoryTheme.GetThemesByDisciplineId(disciplineId, filter);
 
             return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
         }
 
         public Theme GetThemeById(int id, OptionsTheme options)
         {
-            var theme = RepositoryTheme.GetById(id) ??
+            var theme = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Theme.NotFoundById(id),
                     Messages.Theme.NotFoundPublic);
@@ -60,13 +60,13 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public void DeleteThemeById(int id)
         {
-            var theme = RepositoryTheme.GetById(id) ??
+            var theme = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Theme.NotFoundById(id),
                     Messages.Theme.NotFoundPublic);
 
-            RepositoryTheme.Delete(theme);
-            RepositoryTheme.SaveChanges();
+            _repositoryTheme.Delete(theme);
+            _repositoryTheme.SaveChanges();
         }
 
         private Theme Map(DatabaseTheme theme, OptionsTheme options)

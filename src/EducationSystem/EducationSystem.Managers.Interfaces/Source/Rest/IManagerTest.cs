@@ -9,6 +9,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
     {
         PagedData<Test> GetTests(OptionsTest options, FilterTest filter);
         PagedData<Test> GetTestsByDisciplineId(int disciplineId, OptionsTest options, FilterTest filter);
+        PagedData<Test> GetTestsByStudentId(int studentId, OptionsTest options, FilterTest filter);
 
         Test GetTestById(int id, OptionsTest options);
 

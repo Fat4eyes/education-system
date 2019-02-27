@@ -11,6 +11,7 @@
                             GET Students/{Id}/Institute         Institute           [Admin & Lecturer & Employee]
     [Filter]    [Options]   GET Students/Current/TestResults    List<TestResult>    [Student]
     [Filter]    [Options]   GET Students/{Id}/TestResults       List<TestResult>    [Admin & Lecturer & Employee]
+    [Filter]    [Options]   GET Students/Current/Tests          List<Test>          [Student]
     [Filter]    [Options]   GET Students/Current/Disciplines    List<Discipline>    [Student]
 
     [Filter]    [Options]   GET Users                           List<User>          [Admin]

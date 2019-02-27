@@ -8,7 +8,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryQuestion : RepositoryReadOnly<DatabaseQuestion>, IRepositoryQuestion
+    public sealed class RepositoryQuestion : RepositoryReadOnly<DatabaseQuestion>, IRepositoryQuestion
     {
         public RepositoryQuestion(DatabaseContext context)
             : base(context) { }

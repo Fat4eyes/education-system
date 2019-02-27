@@ -6,13 +6,13 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Helpers.Implementations.Source
 {
-    public class UserHelper : IUserHelper
+    public sealed class UserHelper : IUserHelper
     {
-        protected IRepositoryRole RepositoryRole { get; }
+        private readonly IRepositoryRole _repositoryRole;
 
         public UserHelper(IRepositoryRole repositoryRole)
         {
-            RepositoryRole = repositoryRole;
+            _repositoryRole = repositoryRole;
         }
 
         public bool IsStudent(int userId) =>
@@ -32,6 +32,6 @@ namespace EducationSystem.Helpers.Implementations.Source
                 StringComparison.CurrentCultureIgnoreCase);
 
         private DatabaseRole GetUserRole(int userId) =>
-            RepositoryRole.GetRoleByUserId(userId);
+            _repositoryRole.GetRoleByUserId(userId);
     }
 }

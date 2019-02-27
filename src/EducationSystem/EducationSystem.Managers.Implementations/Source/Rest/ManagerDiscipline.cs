@@ -4,6 +4,7 @@ using AutoMapper;
 using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
@@ -15,10 +16,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerDiscipline : Manager<ManagerDiscipline>, IManagerDiscipline
+    public sealed class ManagerDiscipline : Manager<ManagerDiscipline>, IManagerDiscipline
     {
-        protected IUserHelper UserHelper { get; }
-        protected IRepositoryDiscipline RepositoryDiscipline { get; }
+        private readonly IUserHelper _userHelper;
+        private readonly IRepositoryDiscipline _repositoryDiscipline;
 
         public ManagerDiscipline(
             IMapper mapper,
@@ -27,32 +28,32 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryDiscipline repositoryDiscipline)
             : base(mapper, logger)
         {
-            UserHelper = userHelper;
-            RepositoryDiscipline = repositoryDiscipline;
+            _userHelper = userHelper;
+            _repositoryDiscipline = repositoryDiscipline;
         }
 
         public PagedData<Discipline> GetDisciplines(OptionsDiscipline options, Filter filter)
         {
-            var (count, disciplines) = RepositoryDiscipline.GetDisciplines(filter);
+            var (count, disciplines) = _repositoryDiscipline.GetDisciplines(filter);
 
             return new PagedData<Discipline>(disciplines.Select(x => Map(x, options)).ToList(), count);
         }
 
         public PagedData<Discipline> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, Filter filter)
         {
-            if (!UserHelper.IsStudent(studentId))
+            if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var (count, disciplines) = RepositoryDiscipline.GetDisciplinesByStudentId(studentId, filter);
+            var (count, disciplines) = _repositoryDiscipline.GetDisciplinesByStudentId(studentId, filter);
 
             return new PagedData<Discipline>(disciplines.Select(x => MapForStudent(x, options)).ToList(), count);
         }
 
         public Discipline GetDisciplineById(int id, OptionsDiscipline options)
         {
-            var discipline = RepositoryDiscipline.GetById(id) ??
+            var discipline = _repositoryDiscipline.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.Discipline.NotFoundById(id),
                     Messages.Discipline.NotFoundPublic);
@@ -84,7 +85,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     if (options.WithTests)
                     {
                         d.Tests = s.Tests
-                            .Where(y => y.IsActive == 1 && y.TestThemes.Any(z => z.Theme.Questions.Any()))
+                            .Where(y => y.IsActive == 1)
+                            .Where(y => y.TestThemes?.IsNotEmpty(z => z.Theme?.Questions.IsNotEmpty() == true) == true)
                             .Select(y => Mapper.Map<Test>(y))
                             .ToList();
                     }
@@ -92,7 +94,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     if (options.WithThemes)
                     {
                         d.Themes = s.Themes
-                            .Where(y => y.Questions.Any())
+                            .Where(y => y.Questions.IsNotEmpty())
                             .Select(y => Mapper.Map<Theme>(y))
                             .ToList();
                     }

@@ -11,32 +11,32 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerGroup : Tamer
     {
-        protected IManagerStudent ManagerStudent { get; }
-        protected IManagerGroup ManagerGroup { get; }
+        private readonly IManagerGroup _managerGroup;
+        private readonly IManagerStudent _managerStudent;
 
-        public TamerGroup(IManagerStudent managerStudent, IManagerGroup managerGroup)
+        public TamerGroup(IManagerGroup managerGroup, IManagerStudent managerStudent)
         {
-            ManagerStudent = managerStudent;
-            ManagerGroup = managerGroup;
+            _managerGroup = managerGroup;
+            _managerStudent = managerStudent;
         }
 
         [HttpGet("")]
         public IActionResult GetGroups(
             [FromQuery] OptionsGroup options,
             [FromQuery] FilterGroup filter)
-            => Ok(ManagerGroup.GetGroups(options, filter));
+            => Ok(_managerGroup.GetGroups(options, filter));
 
         [HttpGet("{groupId:int}")]
         public IActionResult GetGroup(
             [FromRoute] int groupId,
             [FromQuery] OptionsGroup options)
-            => Ok(ManagerGroup.GetGroupById(groupId, options));
+            => Ok(_managerGroup.GetGroupById(groupId, options));
 
         [HttpGet("{groupId:int}/Students")]
         public IActionResult GetGroupStudents(
             [FromRoute] int groupId,
             [FromQuery] OptionsStudent options,
             [FromQuery] Filter filter)
-            => Ok(ManagerStudent.GetStudentsByGroupId(groupId, options, filter));
+            => Ok(_managerStudent.GetStudentsByGroupId(groupId, options, filter));
     }
 }

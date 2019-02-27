@@ -12,9 +12,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerQuestion : Manager<ManagerQuestion>, IManagerQuestion
+    public sealed class ManagerQuestion : Manager<ManagerQuestion>, IManagerQuestion
     {
-        protected IRepositoryQuestion RepositoryQuestion { get; }
+        private readonly IRepositoryQuestion _repositoryQuestion;
 
         public ManagerQuestion(
             IMapper mapper,
@@ -22,12 +22,12 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryQuestion repositoryQuestion)
             : base(mapper, logger)
         {
-            RepositoryQuestion = repositoryQuestion;
+            _repositoryQuestion = repositoryQuestion;
         }
 
         public PagedData<Question> GetQuestionsByThemeId(int themeId, OptionsQuestion options, Filter filter)
         {
-            var (count, questions) = RepositoryQuestion.GetQuestionsByThemeId(themeId, filter);
+            var (count, questions) = _repositoryQuestion.GetQuestionsByThemeId(themeId, filter);
 
             return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
         }

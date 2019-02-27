@@ -11,36 +11,36 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerTest : Tamer
     {
-        protected IManagerTest ManagerTest { get; }
-        protected IManagerTheme ManagerTheme { get; }
+        private readonly IManagerTest _managerTest;
+        private readonly IManagerTheme _managerTheme;
 
         public TamerTest(IManagerTest managerTest, IManagerTheme managerTheme)
         {
-            ManagerTest = managerTest;
-            ManagerTheme = managerTheme;
+            _managerTest = managerTest;
+            _managerTheme = managerTheme;
         }
 
         [HttpGet("")]
         public IActionResult GetTests(
             [FromQuery] OptionsTest options,
             [FromQuery] FilterTest filter)
-            => Ok(ManagerTest.GetTests(options, filter));
+            => Ok(_managerTest.GetTests(options, filter));
 
         [HttpGet("{testId:int}")]
         public IActionResult GetTest(
             [FromRoute] int testId,
             [FromQuery] OptionsTest options)
-            => Ok(ManagerTest.GetTestById(testId, options));
+            => Ok(_managerTest.GetTestById(testId, options));
 
         [HttpGet("{testId:int}/Themes")]
         public IActionResult GetTestThemes(
             [FromRoute] int testId,
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
-            => Ok(ManagerTheme.GetThemesByTestId(testId, options, filter));
+            => Ok(_managerTheme.GetThemesByTestId(testId, options, filter));
 
         [HttpDelete("{testId:int}")]
         public IActionResult DeleteTest([FromRoute] int testId) =>
-            Ok(() => ManagerTest.DeleteTestById(testId));
+            Ok(() => _managerTest.DeleteTestById(testId));
     }
 }

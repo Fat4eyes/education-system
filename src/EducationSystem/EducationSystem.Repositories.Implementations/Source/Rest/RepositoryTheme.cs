@@ -8,7 +8,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryTheme : Repository<DatabaseTheme>, IRepositoryTheme
+    public sealed class RepositoryTheme : Repository<DatabaseTheme>, IRepositoryTheme
     {
         public RepositoryTheme(DatabaseContext context)
             : base(context) { }

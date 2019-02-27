@@ -32,5 +32,6 @@ namespace EducationSystem.Database.Models.Source
         public virtual int? Year { get; set; }
 
         public virtual List<DatabaseStudentGroup> GroupStudents { get; set; }
+            = new List<DatabaseStudentGroup>();
     }
 }

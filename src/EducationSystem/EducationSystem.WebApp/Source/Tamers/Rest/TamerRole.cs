@@ -11,13 +11,13 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Route("Api/Roles")]
     public class TamerRole : Tamer
     {
-        protected IManagerUser ManagerUser { get; }
-        protected IManagerRole ManagerRole { get; }
+        private readonly IManagerUser _managerUser;
+        private readonly IManagerRole _managerRole;
 
         public TamerRole(IManagerUser managerUser, IManagerRole managerRole)
         {
-            ManagerUser = managerUser;
-            ManagerRole = managerRole;
+            _managerUser = managerUser;
+            _managerRole = managerRole;
         }
 
         [HttpGet("")]
@@ -25,19 +25,19 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public IActionResult GetRoles(
             [FromQuery] OptionsRole options,
             [FromQuery] Filter filter)
-            => Ok(ManagerRole.GetRoles(options, filter));
+            => Ok(_managerRole.GetRoles(options, filter));
 
         [HttpGet("{roleId:int}")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
         public IActionResult GetRole(
             [FromRoute] int roleId,
             [FromQuery] OptionsRole options)
-            => Ok(ManagerRole.GetRoleById(roleId, options));
+            => Ok(_managerRole.GetRoleById(roleId, options));
 
         [Authorize]
         [HttpGet("Current")]
         public IActionResult GetRole([FromQuery] OptionsRole options)
-            => Ok(ManagerRole.GetRoleByUserId(GetUserId(), options));
+            => Ok(_managerRole.GetRoleByUserId(GetUserId(), options));
 
         [HttpGet("{roleId:int}/Users")]
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
@@ -45,6 +45,6 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromRoute] int roleId,
             [FromQuery] OptionsUser options,
             [FromQuery] Filter filter)
-            => Ok(ManagerUser.GetUsersByRoleId(roleId, options, filter));
+            => Ok(_managerUser.GetUsersByRoleId(roleId, options, filter));
     }
 }

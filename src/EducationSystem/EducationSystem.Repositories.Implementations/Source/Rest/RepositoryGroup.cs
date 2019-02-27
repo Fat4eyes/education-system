@@ -9,7 +9,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public class RepositoryGroup : RepositoryReadOnly<DatabaseGroup>, IRepositoryGroup
+    public sealed class RepositoryGroup : RepositoryReadOnly<DatabaseGroup>, IRepositoryGroup
     {
         public RepositoryGroup(DatabaseContext context)
             : base(context) { }

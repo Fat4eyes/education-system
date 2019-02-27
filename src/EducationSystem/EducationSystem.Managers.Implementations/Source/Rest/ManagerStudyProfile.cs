@@ -11,10 +11,10 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerStudyProfile : Manager<ManagerStudyProfile>, IManagerStudyProfile
+    public sealed class ManagerStudyProfile : Manager<ManagerStudyProfile>, IManagerStudyProfile
     {
-        protected IUserHelper UserHelper { get; }
-        protected IRepositoryStudyProfile RepositoryStudyProfile { get; }
+        private readonly IUserHelper _userHelper;
+        private readonly IRepositoryStudyProfile _repositoryStudyProfile;
 
         public ManagerStudyProfile(
             IMapper mapper,
@@ -23,18 +23,18 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryStudyProfile repositoryStudyProfile)
             : base(mapper, logger)
         {
-            UserHelper = userHelper;
-            RepositoryStudyProfile = repositoryStudyProfile;
+            _userHelper = userHelper;
+            _repositoryStudyProfile = repositoryStudyProfile;
         }
 
         public StudyProfile GetStudyProfileByStudentId(int studentId, OptionsStudyProfile options)
         {
-            if (!UserHelper.IsStudent(studentId))
+            if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var studyProfile = RepositoryStudyProfile.GetStudyProfileByStudentId(studentId) ??
+            var studyProfile = _repositoryStudyProfile.GetStudyProfileByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.StudyProfile.NotFoundByStuentId(studentId),
                     Messages.StudyProfile.NotFoundPublic);

@@ -14,9 +14,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Managers.Implementations.Source.Rest
 {
-    public class ManagerUser : Manager<ManagerUser>, IManagerUser
+    public sealed class ManagerUser : Manager<ManagerUser>, IManagerUser
     {
-        protected IRepositoryUser RepositoryUser { get; }
+        private readonly IRepositoryUser _repositoryUser;
 
         public ManagerUser(
             IMapper mapper,
@@ -24,26 +24,26 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             IRepositoryUser repositoryUser)
             : base(mapper, logger)
         {
-            RepositoryUser = repositoryUser;
+            _repositoryUser = repositoryUser;
         }
 
         public PagedData<User> GetUsers(OptionsUser options, Filter filter)
         {
-            var (count, users) = RepositoryUser.GetUsers(filter);
+            var (count, users) = _repositoryUser.GetUsers(filter);
 
             return new PagedData<User>(users.Select(x => Map(x, options)).ToList(), count);
         }
 
         public PagedData<User> GetUsersByRoleId(int roleId, OptionsUser options, Filter filter)
         {
-            var (count, users) = RepositoryUser.GetUsersByRoleId(roleId, filter);
+            var (count, users) = _repositoryUser.GetUsersByRoleId(roleId, filter);
 
             return new PagedData<User>(users.Select(x => Map(x, options)).ToList(), count);
         }
 
         public User GetUserById(int id, OptionsUser options)
         {
-            var user = RepositoryUser.GetById(id) ??
+            var user = _repositoryUser.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     Messages.User.NotFoundById(id),
                     Messages.User.NotFoundPublic);

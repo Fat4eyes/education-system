@@ -1,5 +1,4 @@
 ﻿using EducationSystem.Exceptions.Source;
-using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Filters;
@@ -16,13 +15,9 @@ namespace EducationSystem.Tests.Source.Managers.Rest
 
         protected Mock<IRepositoryTestResult> MockRepositoryTestResult { get; set; }
 
-        protected Mock<IUserHelper> MockUserHelper { get; set; }
-
         public TestsManagerTestResult()
         {
             MockRepositoryTestResult = new Mock<IRepositoryTestResult>();
-
-            MockUserHelper = new Mock<IUserHelper>();
 
             ManagerTestResult = new ManagerTestResult(
                 Mapper,
