@@ -86,7 +86,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     {
                         d.Tests = s.Tests
                             .Where(y => y.IsActive == 1)
-                            .Where(y => y.TestThemes?.IsNotEmpty(z => z.Theme?.Questions.IsNotEmpty() == true) == true)
+                            .Where(y => y.TestThemes.IsNotEmpty(z => z.Theme?.Questions.IsNotEmpty() == true))
                             .Select(y => Mapper.Map<Test>(y))
                             .ToList();
                     }
