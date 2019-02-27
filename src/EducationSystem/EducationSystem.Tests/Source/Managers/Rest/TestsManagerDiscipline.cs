@@ -127,21 +127,42 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 new DatabaseDiscipline
                 {
                     Themes = new List<DatabaseTheme> {
-                        Creator.CreateThemeWithQuestions()
+                        Creator.CreateTheme(
+                            new DatabaseQuestion(),
+                            new DatabaseQuestion(),
+                            new DatabaseQuestion())
                     },
                     Tests = new List<DatabaseTest> {
-                        Creator.CreateTest(true)
+                        Creator.CreateActiveTest(
+                            Creator.CreateTheme(
+                                new DatabaseQuestion(),
+                                new DatabaseQuestion(),
+                                new DatabaseQuestion()))
                     }
                 },
                 new DatabaseDiscipline
                 {
                     Themes = new List<DatabaseTheme> {
-                        Creator.CreateThemeWithQuestions(),
-                        Creator.CreateThemeWithQuestions()
+                        Creator.CreateTheme(
+                            new DatabaseQuestion(),
+                            new DatabaseQuestion(),
+                            new DatabaseQuestion()),
+                        Creator.CreateTheme(
+                            new DatabaseQuestion(),
+                            new DatabaseQuestion(),
+                            new DatabaseQuestion())
                     },
                     Tests = new List<DatabaseTest> {
-                        Creator.CreateTest(true),
-                        Creator.CreateTest(false)
+                        Creator.CreateActiveTest(
+                            Creator.CreateTheme(
+                                new DatabaseQuestion(),
+                                new DatabaseQuestion(),
+                                new DatabaseQuestion())),
+                        Creator.CreateTest(
+                            Creator.CreateTheme(
+                                new DatabaseQuestion(),
+                                new DatabaseQuestion(),
+                                new DatabaseQuestion()))
                     }
                 }
             };

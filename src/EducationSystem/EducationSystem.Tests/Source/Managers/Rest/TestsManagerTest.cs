@@ -93,31 +93,28 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         {
             return new List<DatabaseTest>
             {
-                new DatabaseTest
-                {
-                    TestThemes = new List<DatabaseTestTheme>
-                    {
-                        new DatabaseTestTheme { Theme = Creator.CreateThemeWithQuestions() },
-                        new DatabaseTestTheme { Theme = Creator.CreateThemeWithQuestions() }
-                    }
-                },
-                new DatabaseTest
-                {
-                    TestThemes = new List<DatabaseTestTheme>
-                    {
-                        new DatabaseTestTheme { Theme = Creator.CreateThemeWithQuestions() },
-                        new DatabaseTestTheme { Theme = Creator.CreateTheme() }
-                    }
-                },
-                new DatabaseTest
-                {
-                    TestThemes = new List<DatabaseTestTheme>
-                    {
-                        new DatabaseTestTheme { Theme = Creator.CreateThemeWithQuestions() },
-                        new DatabaseTestTheme { Theme = Creator.CreateTheme() },
-                        new DatabaseTestTheme { Theme = Creator.CreateTheme() }
-                    }
-                }
+                Creator.CreateTest(
+                    Creator.CreateTheme(
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion()),
+                    Creator.CreateTheme(
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion())),
+                Creator.CreateTest(
+                    Creator.CreateTheme(),
+                    Creator.CreateTheme(
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion())),
+                Creator.CreateTest(
+                    Creator.CreateTheme(),
+                    Creator.CreateTheme(),
+                    Creator.CreateTheme(
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion(),
+                        new DatabaseQuestion()))
             };
         }
     }

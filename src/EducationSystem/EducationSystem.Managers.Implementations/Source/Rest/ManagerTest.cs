@@ -86,7 +86,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 x.AfterMap((s, d) =>
                 {
                     if (options.WithThemes)
-                        d.Themes = Mapper.Map<List<Theme>>(s.TestThemes?.Select(y => y.Theme));
+                        d.Themes = Mapper.Map<List<Theme>>(s.TestThemes.Select(y => y.Theme));
                 });
             });
         }

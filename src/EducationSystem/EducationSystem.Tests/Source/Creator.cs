@@ -3,37 +3,41 @@ using EducationSystem.Database.Models.Source;
 
 namespace EducationSystem.Tests.Source
 {
-    public static class Creator
+    internal static class Creator
     {
-        public static DatabaseTheme CreateTheme()
+        public static DatabaseTheme CreateTheme(params DatabaseQuestion[] questions)
         {
-            return new DatabaseTheme { Name = "Theme" };
-        }
-
-        public static DatabaseTheme CreateThemeWithQuestions()
-        {
-            return new DatabaseTheme
-            {
+            var theme = new DatabaseTheme {
                 Name = "Theme",
-                Questions = new List<DatabaseQuestion>
-                {
-                    new DatabaseQuestion(),
-                    new DatabaseQuestion(),
-                    new DatabaseQuestion()
-                }
+                Questions = new List<DatabaseQuestion>()
             };
+
+            foreach (var question in questions)
+                theme.Questions.Add(question);
+
+            return theme;
         }
 
-        public static DatabaseTest CreateTest(bool isActive)
+        public static DatabaseTest CreateTest(params DatabaseTheme[] themes)
         {
-            return new DatabaseTest
-            {
+            var test = new DatabaseTest {
                 Subject = "Test",
-                IsActive = isActive ? 1 : 0,
-                TestThemes = new List<DatabaseTestTheme> {
-                    new DatabaseTestTheme { Theme = CreateThemeWithQuestions() }
-                }
+                TestThemes = new List<DatabaseTestTheme>()
             };
+
+            foreach (var theme in themes)
+                test.TestThemes.Add(new DatabaseTestTheme { Theme = theme });
+
+            return test;
+        }
+
+        public static DatabaseTest CreateActiveTest(params DatabaseTheme[] themes)
+        {
+            var test = CreateTest(themes);
+
+            test.IsActive = 1;
+
+            return test;
         }
     }
 }
