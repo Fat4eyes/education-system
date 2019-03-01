@@ -10,14 +10,14 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Route("Api/Students")]
     public class TamerStudent : Tamer
     {
-        protected readonly IManagerTest _managerTest;
-        protected readonly IManagerGroup _managerGroup;
-        protected readonly IManagerStudent _managerStudent;
-        protected readonly IManagerStudyPlan _managerStudyPlan;
-        protected readonly IManagerInstitute _managerInstitute;
-        protected readonly IManagerTestResult _managerTestResult;
-        protected readonly IManagerDiscipline _managerDiscipline;
-        protected readonly IManagerStudyProfile _managerStudyProfile;
+        private readonly IManagerTest _managerTest;
+        private readonly IManagerGroup _managerGroup;
+        private readonly IManagerStudent _managerStudent;
+        private readonly IManagerStudyPlan _managerStudyPlan;
+        private readonly IManagerInstitute _managerInstitute;
+        private readonly IManagerTestResult _managerTestResult;
+        private readonly IManagerDiscipline _managerDiscipline;
+        private readonly IManagerStudyProfile _managerStudyProfile;
 
         public TamerStudent(
             IManagerTest managerTest,
