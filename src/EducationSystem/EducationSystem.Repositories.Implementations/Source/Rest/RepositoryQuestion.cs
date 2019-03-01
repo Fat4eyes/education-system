@@ -23,8 +23,10 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId)
         {
             return AsQueryable()
-                .Where(x => x.Theme.ThemeTests.Any(y => y.TestId == testId))
-                .Where(x => x.Theme.ThemeTests.Any(y => y.Test.IsActive == 1 && y.Test.TestThemes.Any(z => z.Theme.Questions.Any())))
+                .Where(x => x.Theme.ThemeTests.Any(y =>
+                    y.TestId == testId &&
+                    y.Test.IsActive == 1 &&
+                    y.Test.TestThemes.Any(z => z.Theme.Questions.Any())))
                 .Where(x => x.Theme.Discipline.StudyProfiles
                     .Any(a => a.StudyProfile.StudyPlans
                     .Any(b => b.Groups
