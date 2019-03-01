@@ -2,10 +2,13 @@
 using System.Linq;
 using EducationSystem.Models.Source.Responses;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace EducationSystem.WebApp.Source.Tamers
 {
     [ApiController]
+    [JsonConverter(typeof(StringEnumConverter))]
     public class Tamer : ControllerBase
     {
         protected int GetUserId()
