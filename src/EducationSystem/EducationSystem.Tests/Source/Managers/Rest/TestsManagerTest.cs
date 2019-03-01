@@ -59,7 +59,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(false);
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerTest.GetTestsByStudentId(999, new OptionsTest(), new FilterTest()));
+                () => ManagerTest.GetTestsForStudent(999, new OptionsTest(), new FilterTest()));
         }
 
         [Fact]
@@ -72,10 +72,10 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             var tests = GetTests();
 
             MockRepositoryTest
-                .Setup(x => x.GetTestsByStudentId(999, It.IsAny<FilterTest>()))
+                .Setup(x => x.GetTestsForStudent(999, It.IsAny<FilterTest>()))
                 .Returns((tests.Count, tests));
 
-            var data = ManagerTest.GetTestsByStudentId
+            var data = ManagerTest.GetTestsForStudent
                 (999, new OptionsTest { WithThemes = true }, new FilterTest());
 
             Assert.Equal(3, data.Count);

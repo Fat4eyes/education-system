@@ -3,52 +3,59 @@
 [C] Student
 [*] Admin / Lecturer / Employee / Student
 
-[Options] [Filter] [B] GET Students                         List<Student>
+[Options] [Filter] [B] GET Students                         List<Student>           (PagedData)
 [Options]          [B] GET Students/{Id}                    Student
 [Options]          [B] GET Students/{Id}/Group              Group
 [Options]          [B] GET Students/{Id}/StudyPlan          StudyPlan
 [Options]          [B] GET Students/{Id}/StudyProfile       StudyProfile
                    [B] GET Students/{Id}/Institute          Institute
-[Options] [Filter] [B] GET Students/{Id}/TestResults        List<TestResult>
+[Options] [Filter] [B] GET Students/{Id}/TestResults        List<TestResult>        (PagedData)
 [Options]          [C] GET Students/Current                 Student
 [Options]          [C] GET Students/Current/Group           Group
 [Options]          [C] GET Students/Current/StudyPlan       StudyPlan
 [Options]          [C] GET Students/Current/StudyProfile    StudyProfile
 [Options]          [C] GET Students/Current/Institute       Institute
-[Options] [Filter] [C] GET Students/Current/TestResults     List<TestResult>
-[Options] [Filter] [C] GET Students/Current/Tests           List<Test>
-[Options] [Filter] [C] GET Students/Current/Disciplines     List<Discipline>
+[Options] [Filter] [C] GET Students/Current/TestResults     List<TestResult>        (PagedData)
+[Options] [Filter] [C] GET Students/Current/Tests           List<Test>              (PagedData)
+[Options]          [C] GET Students/Current/Tests/{Id}      Test
+[Options] [Filter] [C] GET Students/Current/Disciplines     List<Discipline>        (PagedData)
 
-[Options] [Filter] [A] GET Users                            List<User>
+
+Возвращает указанное количество (Count) вопросов указанного теста (TestId) для текущего студента.
+Вопросы каждый раз перемешиваются.
+[C] GET Students/Current/Tests/{TestId}/Questions/{Count}
+        List<Question>
+
+[Options] [Filter] [A] GET Users                            List<User>              (PagedData)
 [Options]          [A] GET Users/{Id}                       User
 [Options]          [A] GET Users/{Id}/Roles                 Role
 [Options]          [*] GET Users/Current                    User
 [Options]          [*] GET Users/Current/Roles              Role
 
-[Options] [Filter] [B] GET Groups                           List<Group>
+[Options] [Filter] [B] GET Groups                           List<Group>             (PagedData)
 [Options]          [B] GET Groups/{Id}                      Group
-[Options] [Filter] [B] GET Groups/{Id}/Students             List<Student>
+[Options] [Filter] [B] GET Groups/{Id}/Students             List<Student>           (PagedData)
 
-[Options] [Filter] [A] GET Roles                            List<Role>
+[Options] [Filter] [A] GET Roles                            List<Role>              (PagedData)
 [Options]          [A] GET Roles/{Id}                       Role
-[Options] [Filter] [A] GET Roles/{Id}/Users                 List<User>
+[Options] [Filter] [A] GET Roles/{Id}/Users                 List<User>              (PagedData)
 [Options]          [*] GET Roles/Current                    Role
 
-[Options] [Filter] [B] GET Tests                            List<Test>
+[Options] [Filter] [B] GET Tests                            List<Test>              (PagedData)
 [Options]          [B] GET Tests/{Id}                       Test
-[Options] [Filter] [B] GET Tests/{Id}/Themes                List<Theme>
+[Options] [Filter] [B] GET Tests/{Id}/Themes                List<Theme>             (PagedData)
 
-[Options] [Filter] [B] GET TestResults                      List<TestResult>
+[Options] [Filter] [B] GET TestResults                      List<TestResult>        (PagedData)
 [Options]          [B] GET TestResults/{Id}                 TestResult
 
-[Options] [Filter] [B] GET Themes                           List<Theme>
+[Options] [Filter] [B] GET Themes                           List<Theme>             (PagedData)
 [Options]          [B] GET Themes/{Id}                      Theme
-[Options] [Filter] [B] GET Themes/{Id}/Questions            List<Question>
+[Options] [Filter] [B] GET Themes/{Id}/Questions            List<Question>          (PagedData)
 
-[Options] [Filter] [B] GET Disciplines                      List<Discipline>
+[Options] [Filter] [B] GET Disciplines                      List<Discipline>        (PagedData)
 [Options]          [B] GET Disciplines/{Id}                 Discipline
-[Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>
-[Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>
+[Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>              (PagedData)
+[Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
 
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}

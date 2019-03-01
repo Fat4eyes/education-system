@@ -59,7 +59,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(false);
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerDiscipline.GetDisciplinesByStudentId
+                () => ManagerDiscipline.GetDisciplinesForStudent
                     (999, new OptionsDiscipline(), new FilterDiscipline()));
         }
 
@@ -73,10 +73,10 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             var disciplines = GetDisciplines();
 
             MockRepositoryDiscipline
-                .Setup(x => x.GetDisciplinesByStudentId(999, It.IsAny<FilterDiscipline>()))
+                .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
                 .Returns((disciplines.Count, disciplines));
 
-            var data = ManagerDiscipline.GetDisciplinesByStudentId
+            var data = ManagerDiscipline.GetDisciplinesForStudent
                 (999, new OptionsDiscipline { WithTests = true }, new FilterDiscipline());
 
             Assert.Equal(2, data.Count);
@@ -101,10 +101,10 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             var disciplines = GetDisciplines();
 
             MockRepositoryDiscipline
-                .Setup(x => x.GetDisciplinesByStudentId(999, It.IsAny<FilterDiscipline>()))
+                .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
                 .Returns((disciplines.Count, disciplines));
 
-            var data = ManagerDiscipline.GetDisciplinesByStudentId
+            var data = ManagerDiscipline.GetDisciplinesForStudent
                 (999, new OptionsDiscipline { WithThemes = true }, new FilterDiscipline());
 
             Assert.Equal(2, data.Count);

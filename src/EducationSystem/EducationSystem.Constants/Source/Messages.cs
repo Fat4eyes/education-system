@@ -140,6 +140,12 @@
             public static readonly string TemplateNotFoundById =
                 "Тест не найден. Идентификатор теста: {0}.";
 
+            public static string NotFoundForStudentById(object a, object b)
+                => string.Format(TemplateNotFoundForStudentById, a, b);
+
+            public static readonly string TemplateNotFoundForStudentById =
+                "Тест не найден. Идентификатор теста: {0}. Идентификатор студента: {1}.";
+
             public static readonly string NotFoundPublic =
                 "Тест не найден.";
         }

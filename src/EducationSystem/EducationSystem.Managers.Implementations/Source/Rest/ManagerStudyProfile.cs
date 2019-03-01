@@ -39,7 +39,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.StudyProfile.NotFoundByStuentId(studentId),
                     Messages.StudyProfile.NotFoundPublic);
 
-            return Mapper.Map<StudyProfile>(Map(studyProfile, options));
+            return Map(studyProfile, options);
         }
 
         private StudyProfile Map(DatabaseStudyProfile studyProfile, OptionsStudyProfile options)

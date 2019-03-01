@@ -6,6 +6,8 @@ namespace EducationSystem.Extensions.Source
 {
     public static class EnumerableExtensions
     {
+        private static readonly Random Random = new Random();
+
         public static bool IsEmpty<T>(this IEnumerable<T> items)
             => items == null || items.Any() == false;
 
@@ -17,5 +19,21 @@ namespace EducationSystem.Extensions.Source
 
         public static bool IsNotEmpty<T>(this IEnumerable<T> items, Func<T, bool> predicate)
             => items?.Any(predicate) == true;
+
+        public static IEnumerable<T> Mix<T>(this IEnumerable<T> items)
+        {
+            var elements = items.ToList();
+
+            for (var i = 0; i < elements.Count; i++)
+            {
+                var element = elements.First();
+
+                elements.RemoveAt(0);
+
+                elements.Insert(Random.Next(elements.Count), element);
+            }
+
+            return elements;
+        }
     }
 }

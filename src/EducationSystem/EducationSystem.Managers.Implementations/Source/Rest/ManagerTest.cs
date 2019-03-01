@@ -46,14 +46,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Test>(tests.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public PagedData<Test> GetTestsByStudentId(int studentId, OptionsTest options, FilterTest filter)
+        public PagedData<Test> GetTestsForStudent(int studentId, OptionsTest options, FilterTest filter)
         {
             if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var (count, tests) = _repositoryTest.GetTestsByStudentId(studentId, filter);
+            var (count, tests) = _repositoryTest.GetTestsForStudent(studentId, filter);
 
             return new PagedData<Test>(tests.Select(x => MapForStudent(x, options)).ToList(), count);
         }
@@ -65,7 +65,22 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.Test.NotFoundById(id),
                     Messages.Test.NotFoundPublic);
 
-            return Mapper.Map<Test>(Map(test, options));
+            return Map(test, options);
+        }
+
+        public Test GetTestForStudentById(int id, int studentId, OptionsTest options)
+        {
+            if (!_userHelper.IsStudent(studentId))
+                throw ExceptionHelper.CreateException(
+                    Messages.User.NotStudent(studentId),
+                    Messages.User.NotStudentPublic);
+
+            var test = _repositoryTest.GetTestForStudentById(id, studentId) ??
+               throw ExceptionHelper.CreateNotFoundException(
+                   Messages.Test.NotFoundForStudentById(id, studentId),
+                   Messages.Test.NotFoundPublic);
+
+            return MapForStudent(test, options);
         }
 
         public void DeleteTestById(int id)

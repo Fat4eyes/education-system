@@ -19,5 +19,18 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                 .Where(x => x.ThemeId == themeId)
                 .ApplyPaging(filter);
         }
+
+        public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId)
+        {
+            return AsQueryable()
+                .Where(x => x.Theme.ThemeTests.Any(y => y.TestId == testId))
+                .Where(x => x.Theme.ThemeTests.Any(y => y.Test.IsActive == 1 && y.Test.TestThemes.Any(z => z.Theme.Questions.Any())))
+                .Where(x => x.Theme.Discipline.StudyProfiles
+                    .Any(a => a.StudyProfile.StudyPlans
+                    .Any(b => b.Groups
+                    .Any(c => c.GroupStudents
+                    .Any(d => d.StudentId == studentId)))))
+                .ToList();
+        }
     }
 }

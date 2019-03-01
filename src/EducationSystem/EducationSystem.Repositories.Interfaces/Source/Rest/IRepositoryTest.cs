@@ -8,6 +8,9 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
     {
         (int Count, List<DatabaseTest> Tests) GetTests(FilterTest filter);
         (int Count, List<DatabaseTest> Tests) GetTestsByDisciplineId(int disciplineId, FilterTest filter);
-        (int Count, List<DatabaseTest> Tests) GetTestsByStudentId(int studentId, FilterTest filter);
+
+        (int Count, List<DatabaseTest> Tests) GetTestsForStudent(int studentId, FilterTest filter);
+
+        DatabaseTest GetTestForStudentById(int id, int studentId);
     }
 }

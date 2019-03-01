@@ -39,7 +39,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.Institute.NotFoundByStuentId(studentId),
                     Messages.Institute.NotFoundPublic);
 
-            return Mapper.Map<Institute>(Map(institute));
+            return Map(institute);
         }
 
         private Institute Map(DatabaseInstitute institute)

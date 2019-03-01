@@ -43,7 +43,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             return query.ApplyPaging(filter);
         }
 
-        public (int Count, List<DatabaseTest> Tests) GetTestsByStudentId(int studentId, FilterTest filter)
+        public (int Count, List<DatabaseTest> Tests) GetTestsForStudent(int studentId, FilterTest filter)
         {
             var query = AsQueryable()
                 .Where(x => x.IsActive == 1 && x.TestThemes.Any(y => y.Theme.Questions.Any()))
@@ -60,6 +60,19 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                 query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
 
             return query.ApplyPaging(filter);
+        }
+
+        public DatabaseTest GetTestForStudentById(int id, int studentId)
+        {
+            return AsQueryable()
+                .Where(x => x.Id == id)
+                .Where(x => x.IsActive == 1)
+                .Where(x => x.TestThemes.Any(y => y.Theme.Questions.Any()))
+                .FirstOrDefault(x => x.Discipline.StudyProfiles
+                    .Any(a => a.StudyProfile.StudyPlans
+                    .Any(b => b.Groups
+                    .Any(c => c.GroupStudents
+                    .Any(d => d.StudentId == studentId)))));
         }
     }
 }

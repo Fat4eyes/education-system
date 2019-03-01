@@ -55,7 +55,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.Theme.NotFoundById(id),
                     Messages.Theme.NotFoundPublic);
 
-            return Mapper.Map<Theme>(Map(theme, options));
+            return Map(theme, options);
         }
 
         public void DeleteThemeById(int id)

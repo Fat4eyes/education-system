@@ -16,7 +16,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(FilterDiscipline filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, FilterDiscipline filter)
+        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesForStudent(int studentId, FilterDiscipline filter)
         {
             return AsQueryable()
                 .Where(x => x.Themes.Any(y => y.Questions.Any()))

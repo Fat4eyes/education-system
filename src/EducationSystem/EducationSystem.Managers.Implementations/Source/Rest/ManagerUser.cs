@@ -48,7 +48,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.User.NotFoundById(id),
                     Messages.User.NotFoundPublic);
 
-            return Mapper.Map<User>(Map(user, options));
+            return Map(user, options);
         }
 
         private User Map(DatabaseUser user, OptionsUser options)

@@ -57,7 +57,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.TestResult.NotFoundById(id),
                     Messages.TestResult.NotFoundPublic);
 
-            return Mapper.Map<TestResult>(Map(testResult, options));
+            return Map(testResult, options);
         }
 
         private TestResult Map(DatabaseTestResult testResult, OptionsTestResult options)

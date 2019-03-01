@@ -40,7 +40,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.Role.NotFoundById(id),
                     Messages.Role.NotFoundPublic);
 
-            return Mapper.Map<Role>(Map(role));
+            return Map(role);
         }
 
         public Role GetRoleByUserId(int userId, OptionsRole options)

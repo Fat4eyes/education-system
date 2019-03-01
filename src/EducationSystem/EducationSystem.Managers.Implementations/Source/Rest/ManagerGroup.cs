@@ -45,7 +45,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.Group.NotFoundById(id),
                     Messages.Group.NotFoundPublic);
 
-            return Mapper.Map<Group>(Map(group, options));
+            return Map(group, options);
         }
 
         public Group GetGroupByStudentId(int studentId, OptionsGroup options)
@@ -60,7 +60,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.Group.NotFoundByStudentId(studentId),
                     Messages.Group.NotFoundPublic);
 
-            return Mapper.Map<Group>(Map(group, options));
+            return Map(group, options);
         }
 
         private Group Map(DatabaseGroup group, OptionsGroup options)

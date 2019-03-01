@@ -39,14 +39,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Discipline>(disciplines.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public PagedData<Discipline> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter)
+        public PagedData<Discipline> GetDisciplinesForStudent(int studentId, OptionsDiscipline options, FilterDiscipline filter)
         {
             if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(
                     Messages.User.NotStudent(studentId),
                     Messages.User.NotStudentPublic);
 
-            var (count, disciplines) = _repositoryDiscipline.GetDisciplinesByStudentId(studentId, filter);
+            var (count, disciplines) = _repositoryDiscipline.GetDisciplinesForStudent(studentId, filter);
 
             return new PagedData<Discipline>(disciplines.Select(x => MapForStudent(x, options)).ToList(), count);
         }
@@ -58,7 +58,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     Messages.Discipline.NotFoundById(id),
                     Messages.Discipline.NotFoundPublic);
 
-            return Mapper.Map<Discipline>(Map(discipline, options));
+            return Map(discipline, options);
         }
 
         private Discipline Map(DatabaseDiscipline discipline, OptionsDiscipline options)
