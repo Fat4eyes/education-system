@@ -13,7 +13,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryRole(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseRole> Roles) GetRoles(Filter filter) =>
+        public (int Count, List<DatabaseRole> Roles) GetRoles(FilterRole filter) =>
             AsQueryable().ApplyPaging(filter);
 
         public DatabaseRole GetRoleByUserId(int userId) =>

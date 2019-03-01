@@ -6,7 +6,7 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
     public interface IRepositoryRole : IRepositoryReadOnly<DatabaseRole>
     {
-        (int Count, List<DatabaseRole> Roles) GetRoles(Filter filter);
+        (int Count, List<DatabaseRole> Roles) GetRoles(FilterRole filter);
 
         DatabaseRole GetRoleByUserId(int userId);
     }

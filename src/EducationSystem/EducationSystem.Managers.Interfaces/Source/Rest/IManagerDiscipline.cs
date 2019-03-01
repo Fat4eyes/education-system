@@ -7,8 +7,8 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 {
     public interface IManagerDiscipline
     {
-        PagedData<Discipline> GetDisciplines(OptionsDiscipline options, Filter filter);
-        PagedData<Discipline> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, Filter filter);
+        PagedData<Discipline> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter);
+        PagedData<Discipline> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter);
 
         Discipline GetDisciplineById(int id, OptionsDiscipline options);
     }

@@ -34,7 +34,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Returns(false);
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerTestResult.GetTestResultsByStudentId(999, new OptionsTestResult(), new Filter()));
+                () => ManagerTestResult.GetTestResultsByStudentId(999, new OptionsTestResult(), new FilterTestResult()));
         }
     }
 }

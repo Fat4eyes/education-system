@@ -13,7 +13,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryQuestion(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, Filter filter)
+        public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, FilterQuestion filter)
         {
             return AsQueryable()
                 .Where(x => x.ThemeId == themeId)

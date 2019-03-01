@@ -7,7 +7,7 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
 
     public interface IRepositoryDiscipline : IRepositoryReadOnly<DatabaseDiscipline>
     {
-        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(Filter options);
-        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, Filter filter);
+        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(FilterDiscipline filter);
+        (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, FilterDiscipline filter);
     }
 }

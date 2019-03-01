@@ -13,10 +13,10 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryTestResult(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseTestResult> TestResults) GetTestResults(Filter filter) =>
+        public (int Count, List<DatabaseTestResult> TestResults) GetTestResults(FilterTestResult filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, Filter filter)
+        public (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, FilterTestResult filter)
         {
             return AsQueryable()
                 .Where(x => x.UserId == studentId)

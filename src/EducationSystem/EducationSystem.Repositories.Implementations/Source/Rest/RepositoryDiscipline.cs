@@ -13,10 +13,10 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryDiscipline(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(Filter options) =>
-                AsQueryable().ApplyPaging(options);
+        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(FilterDiscipline filter) =>
+            AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, Filter filter)
+        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesByStudentId(int studentId, FilterDiscipline filter)
         {
             return AsQueryable()
                 .Where(x => x.Themes.Any(y => y.Questions.Any()))

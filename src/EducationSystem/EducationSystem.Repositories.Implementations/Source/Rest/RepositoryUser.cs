@@ -14,10 +14,10 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryUser(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseUser> Users) GetUsers(Filter filter) =>
+        public (int Count, List<DatabaseUser> Users) GetUsers(FilterUser filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, Filter filter) =>
+        public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, FilterUser filter) =>
             AsQueryable().Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
                 .ApplyPaging(filter);
 

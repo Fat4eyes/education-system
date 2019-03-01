@@ -28,7 +28,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [HttpGet("")]
         public IActionResult GetDisciplines(
             [FromQuery] OptionsDiscipline options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterDiscipline filter)
             => Ok(_managerDiscipline.GetDisciplines(options, filter));
 
         [HttpGet("{disciplineId:int}")]

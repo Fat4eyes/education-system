@@ -31,14 +31,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             _repositoryStudent = repositoryStudent;
         }
 
-        public PagedData<Student> GetStudents(OptionsStudent options, Filter filter)
+        public PagedData<Student> GetStudents(OptionsStudent options, FilterStudent filter)
         {
             var (count, students) = _repositoryStudent.GetStudents(filter);
 
             return new PagedData<Student>(students.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public PagedData<Student> GetStudentsByGroupId(int groupId, OptionsStudent options, Filter filter)
+        public PagedData<Student> GetStudentsByGroupId(int groupId, OptionsStudent options, FilterStudent filter)
         {
             var (count, students) = _repositoryStudent.GetStudentsByGroupId(groupId, filter);
 

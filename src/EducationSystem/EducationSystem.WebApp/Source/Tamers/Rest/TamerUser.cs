@@ -24,7 +24,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin)]
         public IActionResult GetUsers(
             [FromQuery] OptionsUser options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterUser filter)
             => Ok(_managerUser.GetUsers(options, filter));
 
         [HttpGet("{userId:int}")]

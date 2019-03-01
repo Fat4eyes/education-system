@@ -36,7 +36,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public IActionResult GetGroupStudents(
             [FromRoute] int groupId,
             [FromQuery] OptionsStudent options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterStudent filter)
             => Ok(_managerStudent.GetStudentsByGroupId(groupId, options, filter));
     }
 }

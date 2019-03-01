@@ -43,7 +43,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
         public IActionResult GetStudents(
             [FromQuery] OptionsStudent options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterStudent filter)
             => Ok(_managerStudent.GetStudents(options, filter));
 
         [HttpGet("Current")]
@@ -103,7 +103,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Student)]
         public IActionResult GetStudentTestResults(
             [FromQuery] OptionsTestResult options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterTestResult filter)
             => Ok(_managerTestResult.GetTestResultsByStudentId(GetUserId(), options, filter));
 
         [HttpGet("{studentId:int}/TestResults")]
@@ -111,7 +111,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public IActionResult GetUserTestResults(
             [FromRoute] int studentId,
             [FromQuery] OptionsTestResult options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterTestResult filter)
             => Ok(_managerTestResult.GetTestResultsByStudentId(studentId, options, filter));
 
         [HttpGet("Current/Tests")]
@@ -125,7 +125,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Student)]
         public IActionResult GetStudentDisciplines(
             [FromQuery] OptionsDiscipline options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterDiscipline filter)
             => Ok(_managerDiscipline.GetDisciplinesByStudentId(GetUserId(), options, filter));
     }
 }

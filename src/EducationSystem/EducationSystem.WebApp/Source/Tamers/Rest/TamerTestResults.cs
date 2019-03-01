@@ -21,7 +21,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [HttpGet("")]
         public IActionResult GetTestResults(
             [FromQuery] OptionsTestResult options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterTestResult filter)
             => Ok(_managerTestResult.GetTests(options, filter));
 
         [HttpGet("{testResultId:int}")]

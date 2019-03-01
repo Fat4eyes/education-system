@@ -13,10 +13,10 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public RepositoryStudent(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseUser> Students) GetStudents(Filter filter) =>
+        public (int Count, List<DatabaseUser> Students) GetStudents(FilterStudent filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseUser> Students) GetStudentsByGroupId(int groupId, Filter filter)
+        public (int Count, List<DatabaseUser> Students) GetStudentsByGroupId(int groupId, FilterStudent filter)
         {
             return AsQueryable()
                 .Where(x => x.StudentGroup.GroupId == groupId)

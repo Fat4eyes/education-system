@@ -36,7 +36,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public IActionResult GetThemeQuestions(
             [FromRoute] int themeId,
             [FromQuery] OptionsQuestion options,
-            [FromQuery] Filter filter)
+            [FromQuery] FilterQuestion filter)
             => Ok(_managerQuestion.GetQuestionsByThemeId(themeId, options, filter));
 
         [HttpDelete("{themeId:int}")]

@@ -27,14 +27,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             _repositoryUser = repositoryUser;
         }
 
-        public PagedData<User> GetUsers(OptionsUser options, Filter filter)
+        public PagedData<User> GetUsers(OptionsUser options, FilterUser filter)
         {
             var (count, users) = _repositoryUser.GetUsers(filter);
 
             return new PagedData<User>(users.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public PagedData<User> GetUsersByRoleId(int roleId, OptionsUser options, Filter filter)
+        public PagedData<User> GetUsersByRoleId(int roleId, OptionsUser options, FilterUser filter)
         {
             var (count, users) = _repositoryUser.GetUsersByRoleId(roleId, filter);
 

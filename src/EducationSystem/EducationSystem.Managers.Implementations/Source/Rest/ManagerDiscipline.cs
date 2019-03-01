@@ -32,14 +32,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public PagedData<Discipline> GetDisciplines(OptionsDiscipline options, Filter filter)
+        public PagedData<Discipline> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter)
         {
             var (count, disciplines) = _repositoryDiscipline.GetDisciplines(filter);
 
             return new PagedData<Discipline>(disciplines.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public PagedData<Discipline> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, Filter filter)
+        public PagedData<Discipline> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter)
         {
             if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(

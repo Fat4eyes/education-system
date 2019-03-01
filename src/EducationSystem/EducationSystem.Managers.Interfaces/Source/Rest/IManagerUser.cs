@@ -7,8 +7,8 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 {
     public interface IManagerUser
     {
-        PagedData<User> GetUsers(OptionsUser options, Filter filter);
-        PagedData<User> GetUsersByRoleId(int roleId, OptionsUser options, Filter filter);
+        PagedData<User> GetUsers(OptionsUser options, FilterUser filter);
+        PagedData<User> GetUsersByRoleId(int roleId, OptionsUser options, FilterUser filter);
 
         User GetUserById(int id, OptionsUser options);
     }

@@ -6,7 +6,7 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
 {
     public interface IRepositoryTestResult : IRepositoryReadOnly<DatabaseTestResult>
     {
-        (int Count, List<DatabaseTestResult> TestResults) GetTestResults(Filter filter);
-        (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, Filter filter);
+        (int Count, List<DatabaseTestResult> TestResults) GetTestResults(FilterTestResult filter);
+        (int Count, List<DatabaseTestResult> TestResults) GetTestResultsByStudentId(int studentId, FilterTestResult filter);
     }
 }

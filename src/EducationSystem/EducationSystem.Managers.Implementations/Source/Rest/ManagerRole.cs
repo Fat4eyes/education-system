@@ -26,7 +26,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             _repositoryRole = repositoryRole;
         }
 
-        public PagedData<Role> GetRoles(OptionsRole options, Filter filter)
+        public PagedData<Role> GetRoles(OptionsRole options, FilterRole filter)
         {
             var (count, roles) = _repositoryRole.GetRoles(filter);
 

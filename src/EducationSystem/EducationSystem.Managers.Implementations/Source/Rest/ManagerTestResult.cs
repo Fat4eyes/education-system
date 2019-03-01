@@ -31,14 +31,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             _repositoryTestResult = repositoryTestResult;
         }
 
-        public PagedData<TestResult> GetTests(OptionsTestResult options, Filter filter)
+        public PagedData<TestResult> GetTests(OptionsTestResult options, FilterTestResult filter)
         {
             var (count, testResults) = _repositoryTestResult.GetTestResults(filter);
 
             return new PagedData<TestResult>(testResults.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options, Filter filter)
+        public PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options, FilterTestResult filter)
         {
             if (!_userHelper.IsStudent(studentId))
                 throw ExceptionHelper.CreateException(

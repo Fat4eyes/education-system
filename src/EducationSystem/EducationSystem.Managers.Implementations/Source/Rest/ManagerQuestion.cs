@@ -25,7 +25,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             _repositoryQuestion = repositoryQuestion;
         }
 
-        public PagedData<Question> GetQuestionsByThemeId(int themeId, OptionsQuestion options, Filter filter)
+        public PagedData<Question> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter)
         {
             var (count, questions) = _repositoryQuestion.GetQuestionsByThemeId(themeId, filter);
 
