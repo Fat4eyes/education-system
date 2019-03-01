@@ -32,7 +32,8 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public (int Count, List<DatabaseTest> Tests) GetTestsByDisciplineId(int disciplineId, FilterTest filter)
         {
-            var query = AsQueryable().Where(x => x.DisciplineId == disciplineId);
+            var query = AsQueryable()
+                .Where(x => x.DisciplineId == disciplineId);
 
             if (filter.OnlyActive)
                 query = query.Where(x => x.IsActive == 1);

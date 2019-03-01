@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Database.Models.Source;
+using EducationSystem.Enums.Source;
 
 namespace EducationSystem.Tests.Source
 {
@@ -38,6 +39,32 @@ namespace EducationSystem.Tests.Source
             test.IsActive = 1;
 
             return test;
+        }
+
+        public static DatabaseQuestion CreateQuestion(params DatabaseAnswer[] answers)
+        {
+            var question = new DatabaseQuestion {
+                Answers = new List<DatabaseAnswer>()
+            };
+
+            foreach (var answer in answers)
+                question.Answers.Add(answer);
+
+            return question;
+        }
+
+        public static DatabaseAnswer CreateAnswer()
+        {
+            return new DatabaseAnswer();
+        }
+
+        public static DatabaseAnswer CreateRightAnswer()
+        {
+            var answer = CreateAnswer();
+
+            answer.IsRight = 1;
+
+            return answer;
         }
     }
 }

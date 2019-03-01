@@ -17,12 +17,18 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public (int Count, List<DatabaseUser> Users) GetUsers(FilterUser filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, FilterUser filter) =>
-            AsQueryable().Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
+        public (int Count, List<DatabaseUser> Users) GetUsersByRoleId(int roleId, FilterUser filter)
+        {
+            return AsQueryable()
+                .Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
                 .ApplyPaging(filter);
+        }
 
-        public DatabaseUser GetUserByEmail(string email) =>
-            AsQueryable().FirstOrDefault(x => string.Equals(
-                x.Email, email, StringComparison.CurrentCultureIgnoreCase));
+        public DatabaseUser GetUserByEmail(string email)
+        {
+            return AsQueryable()
+                .FirstOrDefault(x => string.Equals(x.Email, email,
+                    StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }

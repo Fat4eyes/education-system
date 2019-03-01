@@ -16,7 +16,11 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
         public (int Count, List<DatabaseRole> Roles) GetRoles(FilterRole filter) =>
             AsQueryable().ApplyPaging(filter);
 
-        public DatabaseRole GetRoleByUserId(int userId) =>
-            AsQueryable().FirstOrDefault(x => x.RoleUsers.Any(y => y.User.Id == userId));
+        public DatabaseRole GetRoleByUserId(int userId)
+        {
+            return AsQueryable()
+                .FirstOrDefault(x => x.RoleUsers
+                    .Any(y => y.User.Id == userId));
+        }
     }
 }

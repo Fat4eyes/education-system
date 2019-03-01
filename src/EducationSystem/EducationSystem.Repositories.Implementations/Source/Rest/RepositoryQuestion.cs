@@ -22,6 +22,8 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId)
         {
+            // TODO: Возможно потребуется оптимизация. Сейчас вытягиваются все вопросы для теста.
+
             return AsQueryable()
                 .Where(x => x.Theme.ThemeTests.Any(y =>
                     y.TestId == testId &&

@@ -24,7 +24,11 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             return query.ApplyPaging(filter);
         }
 
-        public DatabaseGroup GetGroupByStudentId(int studentId) =>
-            AsQueryable().FirstOrDefault(x => x.GroupStudents.Any(y => y.Student.Id == studentId));
+        public DatabaseGroup GetGroupByStudentId(int studentId)
+        {
+            return AsQueryable()
+                .FirstOrDefault(x => x.GroupStudents
+                    .Any(y => y.Student.Id == studentId));
+        }
     }
 }

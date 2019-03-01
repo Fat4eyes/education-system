@@ -12,8 +12,8 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public DatabaseInstitute GetInstituteByStudentId(int studentId)
         {
-            return AsQueryable().FirstOrDefault(
-                a => a.StudyProfiles
+            return AsQueryable()
+                .FirstOrDefault(a => a.StudyProfiles
                     .Any(b => b.StudyPlans
                     .Any(c => c.Groups
                     .Any(d => d.GroupStudents

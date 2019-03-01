@@ -12,8 +12,8 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public DatabaseStudyProfile GetStudyProfileByStudentId(int studentId)
         {
-            return AsQueryable().FirstOrDefault(
-                a => a.StudyPlans
+            return AsQueryable()
+                .FirstOrDefault(a => a.StudyPlans
                     .Any(b => b.Groups
                     .Any(c => c.GroupStudents
                     .Any(d => d.StudentId == studentId))));
