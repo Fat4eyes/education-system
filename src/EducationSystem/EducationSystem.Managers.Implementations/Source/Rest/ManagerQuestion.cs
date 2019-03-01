@@ -80,7 +80,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     d.Program = Mapper.Map<Program>(s.Program);
                     d.Answers = Mapper.Map<List<Answer>>(s.Answers);
 
-                    // Для студента не нужно показывать, как ответ правильный.
+                    // Для студента не нужно показывать, какой ответ правильный.
                     d.Answers.ForEach(y => y.IsRight = null);
                 });
             });
