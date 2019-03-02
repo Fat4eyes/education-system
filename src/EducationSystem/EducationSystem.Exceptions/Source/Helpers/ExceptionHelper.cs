@@ -2,13 +2,17 @@
 {
     public static class ExceptionHelper
     {
-        public static EducationSystemException CreateException(string a, string b)
-            => new EducationSystemException(a, CreatePublicException(b));
+        public static EducationSystemException CreateException(string @private, string @public)
+            => new EducationSystemException(@private, CreatePublicException(@public));
 
-        public static EducationSystemNotFoundException CreateNotFoundException(string a, string b)
-            => new EducationSystemNotFoundException(a, CreatePublicException(b));
+        public static EducationSystemNotFoundException CreateNotFoundException(string @private, string @public)
+            => new EducationSystemNotFoundException(@private, CreatePublicException(@public));
 
-        public static EducationSystemPublicException CreatePublicException(string message)
-            => new EducationSystemPublicException(message);
+        public static EducationSystemPublicException CreatePublicException(string @public)
+            => new EducationSystemPublicException(@public);
+
+        public static EducationSystemException CreateException(string @private)
+            => new EducationSystemException(@private);
+
     }
 }

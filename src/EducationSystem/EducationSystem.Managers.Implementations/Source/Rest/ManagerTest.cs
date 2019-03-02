@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Extensions.Source;
@@ -19,16 +18,19 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
     public sealed class ManagerTest : Manager<ManagerTest>, IManagerTest
     {
         private readonly IUserHelper _userHelper;
+        private readonly ITestHelper _testHelper;
         private readonly IRepositoryTest _repositoryTest;
 
         public ManagerTest(
             IMapper mapper,
             ILogger<ManagerTest> logger,
             IUserHelper userHelper,
+            ITestHelper testHelper,
             IRepositoryTest repositoryTest)
             : base(mapper, logger)
         {
             _userHelper = userHelper;
+            _testHelper = testHelper;
             _repositoryTest = repositoryTest;
         }
 
@@ -48,10 +50,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public PagedData<Test> GetTestsForStudent(int studentId, OptionsTest options, FilterTest filter)
         {
-            if (!_userHelper.IsStudent(studentId))
-                throw ExceptionHelper.CreateException(
-                    Messages.User.NotStudent(studentId),
-                    Messages.User.NotStudentPublic);
+            _userHelper.CheckRoleStudent(studentId);
 
             var (count, tests) = _repositoryTest.GetTestsForStudent(studentId, filter);
 
@@ -62,36 +61,40 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var test = _repositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Test.NotFoundById(id),
-                    Messages.Test.NotFoundPublic);
+                    $"Тест не найден. Идентификатор теста: {id}.",
+                    $"Тест не найден.");
 
             return Map(test, options);
         }
 
         public Test GetTestForStudentById(int id, int studentId, OptionsTest options)
         {
-            if (!_userHelper.IsStudent(studentId))
-                throw ExceptionHelper.CreateException(
-                    Messages.User.NotStudent(studentId),
-                    Messages.User.NotStudentPublic);
+            _userHelper.CheckRoleStudent(studentId);
 
             var test = _repositoryTest.GetTestForStudentById(id, studentId) ??
                throw ExceptionHelper.CreateNotFoundException(
-                   Messages.Test.NotFoundForStudentById(id, studentId),
-                   Messages.Test.NotFoundPublic);
+                   $"Тест не найден. Идентификатор теста: {id}. Идентификатор студента: {studentId}.",
+                   $"Тест не найден.");
 
             return MapForStudent(test, options);
         }
 
         public void DeleteTestById(int id)
         {
-            var test = _repositoryTest.GetById(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Test.NotFoundById(id),
-                    Messages.Test.NotFoundPublic);
-
-            _repositoryTest.Delete(test);
+            _repositoryTest.Delete(id);
             _repositoryTest.SaveChanges();
+        }
+
+        public Test CreateTest(Test test)
+        {
+            _testHelper.ValidateTest(test);
+
+            var model = Mapper.Map<DatabaseTest>(test);
+
+            _repositoryTest.Add(model);
+            _repositoryTest.SaveChanges();
+
+            return Mapper.Map<DatabaseTest, Test>(model);
         }
 
         private Test Map(DatabaseTest test, OptionsTest options)

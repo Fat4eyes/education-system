@@ -29,5 +29,12 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                 .Where(x => x.DisciplineId == disciplineId)
                 .ApplyPaging(filter);
         }
+
+        public bool CheckThemesExistence(List<int> themeIds)
+        {
+            var count = AsQueryable().Count(x => themeIds.Contains(x.Id));
+
+            return count == themeIds.Count;
+        }
     }
 }

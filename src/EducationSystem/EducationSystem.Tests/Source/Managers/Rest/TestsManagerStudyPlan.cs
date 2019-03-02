@@ -30,8 +30,8 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetStudyPlanByStudentId_NotStudent()
         {
             MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(false);
+                .Setup(x => x.CheckRoleStudent(999))
+                .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
                 () => ManagerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));
@@ -40,9 +40,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetStudyPlanByStudentId_Found()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))
@@ -56,9 +54,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetStudyPlanByStudentId_NotFound()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))

@@ -21,7 +21,6 @@ namespace EducationSystem.WebApp.Source.Helpers
 
         public static void ConfigureJson(MvcJsonOptions options)
         {
-            options.SerializerSettings.MaxDepth = 1;
             options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         }

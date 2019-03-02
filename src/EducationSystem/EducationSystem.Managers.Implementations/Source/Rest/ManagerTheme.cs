@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -52,20 +51,15 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var theme = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Theme.NotFoundById(id),
-                    Messages.Theme.NotFoundPublic);
+                    $"Тема не найдена. Идентификатор темы: {id}.",
+                    $"Тема не найдена.");
 
             return Map(theme, options);
         }
 
         public void DeleteThemeById(int id)
         {
-            var theme = _repositoryTheme.GetById(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Theme.NotFoundById(id),
-                    Messages.Theme.NotFoundPublic);
-
-            _repositoryTheme.Delete(theme);
+            _repositoryTheme.Delete(id);
             _repositoryTheme.SaveChanges();
         }
 

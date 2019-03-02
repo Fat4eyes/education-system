@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -45,8 +44,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var user = _repositoryUser.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.User.NotFoundById(id),
-                    Messages.User.NotFoundPublic);
+                    $"Пользователь не найден. Идентификатор пользователя: {id}.",
+                    $"Пользователь не найден.");
 
             return Map(user, options);
         }

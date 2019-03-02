@@ -2,6 +2,7 @@
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Source.Rest;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +26,10 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTest options,
             [FromQuery] FilterTest filter)
             => Ok(_managerTest.GetTests(options, filter));
+
+        [HttpPost("")]
+        public IActionResult CreateTest([FromBody] Test test)
+            => Ok(_managerTest.CreateTest(test));
 
         [HttpGet("{testId:int}")]
         public IActionResult GetTest(

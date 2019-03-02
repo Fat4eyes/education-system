@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -37,8 +36,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var role = _repositoryRole.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Role.NotFoundById(id),
-                    Messages.Role.NotFoundPublic);
+                    $"Роль не найдена. Идентификатор роли: {id}.",
+                    $"Роль не найдена.");
 
             return Map(role);
         }
@@ -47,8 +46,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var role = _repositoryRole.GetRoleByUserId(userId) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Role.NotFoundByUserId(userId),
-                    Messages.Role.NotFoundPublic);
+                    $"Роль не найдена. Идентификатор пользователя: {userId}.",
+                    $"Роль не найдена.");
 
             return Mapper.Map<Role>(Map(role));
         }

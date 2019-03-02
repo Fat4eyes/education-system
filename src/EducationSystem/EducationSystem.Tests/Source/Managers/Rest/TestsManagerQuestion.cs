@@ -31,8 +31,8 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetQuestionsForStudentByTestId_NotStudent()
         {
             MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(false);
+                .Setup(x => x.CheckRoleStudent(999))
+                .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
                 () => ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, 999));
@@ -41,9 +41,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetQuestionsForStudentByTestId_Found()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryQuestion
                 .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
@@ -59,9 +57,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetQuestionsForStudentByTestId_NotFound()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryQuestion
                 .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))

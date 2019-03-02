@@ -46,6 +46,7 @@ namespace EducationSystem.Dependencies.Source
         private static void RegisterHelpers(IServiceCollection services)
         {
             services.AddTransient<IUserHelper, UserHelper>();
+            services.AddTransient<ITestHelper, TestHelper>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)

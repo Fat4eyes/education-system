@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source;
@@ -47,15 +46,12 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Student GetStudentById(int id, OptionsStudent options)
         {
-            if (!_userHelper.IsStudent(id))
-                throw ExceptionHelper.CreateException(
-                    Messages.User.NotStudent(id),
-                    Messages.User.NotStudentPublic);
+            _userHelper.CheckRoleStudent(id);
 
             var student = _repositoryStudent.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Student.NotFoundById(id),
-                    Messages.Student.NotFoundPublic);
+                    $"Студент не найден. Идентификатор студента: {id}.",
+                    $"Студент не найден.");
 
             return Map(student, options);
         }

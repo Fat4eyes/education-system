@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using EducationSystem.Constants.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Models.Source.Responses;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +32,8 @@ namespace EducationSystem.WebApp.Source.Handlers
 
         private static Task HandleExceptionAsync(ILogger logger, HttpContext context, Exception exception)
         {
-            logger.LogError(exception, exception.Message);
+            if (exception is EducationSystemPublicException == false)
+                logger.LogError(exception, exception.Message);
 
             switch (exception)
             {
@@ -54,7 +54,9 @@ namespace EducationSystem.WebApp.Source.Handlers
                 JsonConvert.SerializeObject(new ErrorResponse(exception.Message)));
 
         private static Task CreateErrorResponse(HttpContext context) =>
-            CreateResponse(context, HttpStatusCode.InternalServerError, Messages.InternalServerError);
+            CreateResponse(context, HttpStatusCode.InternalServerError,
+                "Внутренняя ошибка сервера. Попробуйте повторить операцию еще раз. " +
+                "Если ошибка будет повторяться, пожалуйста, обратитесь к администратору.");
 
         private static Task CreateResponse(HttpContext context, HttpStatusCode statusCode, string text)
         {

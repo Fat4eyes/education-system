@@ -55,8 +55,8 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetDisciplinesByStudentId_NotStudent()
         {
             MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(false);
+                .Setup(x => x.CheckRoleStudent(999))
+                .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
                 () => ManagerDiscipline.GetDisciplinesForStudent
@@ -66,9 +66,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetDisciplinesByStudentId_FoundWithTests()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             var disciplines = GetDisciplines();
 
@@ -94,9 +92,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetDisciplinesByStudentId_FoundWithThemes()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             var disciplines = GetDisciplines();
 

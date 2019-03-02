@@ -33,7 +33,23 @@ namespace EducationSystem.Mapping.Source
 
             expression.CreateMap<DatabaseTest, Test>()
                 .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive == 1))
+                .ForMember(d => d.Attempts, o => o.Ignore())
+                .ForMember(d => d.IsRandom, o => o.Ignore())
+                .ForMember(d => d.TotalTime, o => o.Ignore())
                 .ForMember(d => d.Themes, o => o.Ignore());
+
+            expression.CreateMap<Test, DatabaseTest>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Discipline, o => o.Ignore())
+                .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive ? 1 : 0))
+                .ForMember(d => d.TestThemes, o => o.MapFrom(s => s.Themes));
+
+            expression.CreateMap<Theme, DatabaseTestTheme>()
+                .ForMember(d => d.ThemeId, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.TestId, o => o.Ignore())
+                .ForMember(d => d.Theme, o => o.Ignore())
+                .ForMember(d => d.Test, o => o.Ignore())
+                .ForMember(d => d.Id, o => o.Ignore());
 
             expression.CreateMap<DatabaseTheme, Theme>()
                 .ForMember(d => d.Questions, o => o.Ignore());

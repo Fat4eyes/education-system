@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source;
@@ -42,23 +40,20 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var group = _repositoryGroup.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Group.NotFoundById(id),
-                    Messages.Group.NotFoundPublic);
+                    $"Группа не найдена. Идентификатор группы: {id}.",
+                    $"Группа не найдена.");
 
             return Map(group, options);
         }
 
         public Group GetGroupByStudentId(int studentId, OptionsGroup options)
         {
-            if (!_userHelper.IsStudent(studentId))
-                throw ExceptionHelper.CreateException(
-                    Messages.User.NotStudent(studentId),
-                    Messages.User.NotStudentPublic);
+            _userHelper.CheckRoleStudent(studentId);
 
             var group = _repositoryGroup.GetGroupByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.Group.NotFoundByStudentId(studentId),
-                    Messages.Group.NotFoundPublic);
+                    $"Группа не найдена. Идентификатор студента (пользователя): {studentId}.",
+                    $"Группа не найдена.");
 
             return Map(group, options);
         }

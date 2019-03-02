@@ -60,4 +60,6 @@
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}
 
+    [B] POST Tests              Test
+
 Все поля со значением NULL возращены не будут!

@@ -30,8 +30,8 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetStudyProfileByStudentId_NotStudent()
         {
             MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(false);
+                .Setup(x => x.CheckRoleStudent(999))
+                .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
                 () => ManagerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile()));
@@ -40,9 +40,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetStudyProfileByStudentId_Found()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryStudyProfile
                 .Setup(x => x.GetStudyProfileByStudentId(999))
@@ -56,9 +54,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetStudyProfileByStudentId_NotFound()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryStudyProfile
                 .Setup(x => x.GetStudyProfileByStudentId(999))

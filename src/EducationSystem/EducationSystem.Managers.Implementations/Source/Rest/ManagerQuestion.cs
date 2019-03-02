@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
-using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
@@ -41,10 +39,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, int questionsCount)
         {
-            if (!_userHelper.IsStudent(studentId))
-                throw ExceptionHelper.CreateException(
-                    Messages.User.NotStudent(studentId),
-                    Messages.User.NotStudentPublic);
+            _userHelper.CheckRoleStudent(studentId);
 
             var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId);
 

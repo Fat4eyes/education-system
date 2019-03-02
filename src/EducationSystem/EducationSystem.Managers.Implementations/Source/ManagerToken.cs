@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
-using EducationSystem.Exceptions.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Models.Source;
@@ -39,19 +37,19 @@ namespace EducationSystem.Managers.Implementations.Source
                 throw new ArgumentNullException(nameof(request));
 
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
-                throw ExceptionHelper.CreatePublicException(Messages.TokenError);
+                throw ExceptionHelper.CreatePublicException("Неверная электронная почта или пароль.");
 
             var user = _repositoryUser.GetUserByEmail(request.Email) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.User.NotFoundByEmail(request.Email),
-                    Messages.TokenError);
+                    $"Пользователь не найден. Электронная почта: {request.Email}",
+                    $"Неверная электронная почта или пароль.");
 
             if (!Crypt.Verify(request.Password, user.Password))
             {
                 Logger.LogError($"Пользователь найден, но пароль указан неверно. " +
                                 $"Идентификатор пользователя: {user.Id}.");
 
-                throw new EducationSystemPublicException(Messages.TokenError);
+                throw ExceptionHelper.CreatePublicException("Неверная электронная почта или пароль.");
             }
 
             var claims = new List<Claim> {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
+using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Filters;
@@ -17,14 +18,19 @@ namespace EducationSystem.Tests.Source.Managers.Rest
 
         protected Mock<IRepositoryTest> MockRepositoryTest { get; set; }
 
+        protected Mock<ITestHelper> MockTestHelper { get; set; }
+
         public TestsManagerTest()
         {
             MockRepositoryTest = new Mock<IRepositoryTest>();
+
+            MockTestHelper = new Mock<ITestHelper>();
 
             ManagerTest = new ManagerTest(
                 Mapper,
                 LoggerMock.Object,
                 MockUserHelper.Object,
+                MockTestHelper.Object,
                 MockRepositoryTest.Object);
         }
 
@@ -55,8 +61,8 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetDisciplinesByStudentId_NotStudent()
         {
             MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(false);
+                .Setup(x => x.CheckRoleStudent(999))
+                .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
                 () => ManagerTest.GetTestsForStudent(999, new OptionsTest(), new FilterTest()));
@@ -65,9 +71,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetTestsByStudentId_FoundWithThemes()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             var tests = GetTests();
 

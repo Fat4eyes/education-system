@@ -53,8 +53,8 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetGroupByStudentId_NotStudent()
         {
             MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(false);
+                .Setup(x => x.CheckRoleStudent(999))
+                .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
                 () => ManagerGroup.GetGroupByStudentId(999, new OptionsGroup()));
@@ -63,9 +63,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetGroupByStudentId_Found()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryGroup
                 .Setup(x => x.GetGroupByStudentId(999))
@@ -79,9 +77,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetGroupByStudentId_NotFound()
         {
-            MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(true);
+            MockUserHelper.Reset();
 
             MockRepositoryGroup
                 .Setup(x => x.GetGroupByStudentId(999))

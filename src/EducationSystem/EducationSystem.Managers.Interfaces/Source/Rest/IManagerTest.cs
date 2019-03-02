@@ -15,5 +15,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         Test GetTestForStudentById(int id, int studentId, OptionsTest options);
 
         void DeleteTestById(int id);
+
+        Test CreateTest(Test test);
     }
 }

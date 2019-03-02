@@ -31,5 +31,12 @@ namespace EducationSystem.Repositories.Implementations.Source
                 .Set<TModel>()
                 .FirstOrDefault(x => x.Id == id);
         }
+
+        public void Attach(TModel model)
+        {
+            Context
+                .Set<TModel>()
+                .Attach(model);
+        }
     }
 }

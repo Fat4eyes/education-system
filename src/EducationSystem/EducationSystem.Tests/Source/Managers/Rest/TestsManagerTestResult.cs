@@ -30,8 +30,8 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         public void GetTestResultsByStudentId_NotStudent()
         {
             MockUserHelper
-                .Setup(x => x.IsStudent(999))
-                .Returns(false);
+                .Setup(x => x.CheckRoleStudent(999))
+                .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
                 () => ManagerTestResult.GetTestResultsByStudentId(999, new OptionsTestResult(), new FilterTestResult()));

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source;
@@ -40,10 +39,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options, FilterTestResult filter)
         {
-            if (!_userHelper.IsStudent(studentId))
-                throw ExceptionHelper.CreateException(
-                    Messages.User.NotStudent(studentId),
-                    Messages.User.NotStudentPublic);
+            _userHelper.CheckRoleStudent(studentId);
 
             var (count, testResults) = _repositoryTestResult.GetTestResultsByStudentId(studentId, filter);
 
@@ -54,8 +50,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             var testResult = _repositoryTestResult.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    Messages.TestResult.NotFoundById(id),
-                    Messages.TestResult.NotFoundPublic);
+                    $"Результат теста не найден. Идентификатор: {id}.",
+                    $"Результат теста не найден.");
 
             return Map(testResult, options);
         }
