@@ -16,17 +16,17 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerTestResult : Manager<ManagerTestResult>, IManagerTestResult
     {
-        private readonly IUserHelper _userHelper;
+        private readonly IHelperUser _helperUser;
         private readonly IRepositoryTestResult _repositoryTestResult;
 
         public ManagerTestResult(
             IMapper mapper,
             ILogger<ManagerTestResult> logger,
-            IUserHelper userHelper,
+            IHelperUser helperUser,
             IRepositoryTestResult repositoryTestResult)
             : base(mapper, logger)
         {
-            _userHelper = userHelper;
+            _helperUser = helperUser;
             _repositoryTestResult = repositoryTestResult;
         }
 
@@ -39,7 +39,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public PagedData<TestResult> GetTestResultsByStudentId(int studentId, OptionsTestResult options, FilterTestResult filter)
         {
-            _userHelper.CheckRoleStudent(studentId);
+            _helperUser.CheckRoleStudent(studentId);
 
             var (count, testResults) = _repositoryTestResult.GetTestResultsByStudentId(studentId, filter);
 

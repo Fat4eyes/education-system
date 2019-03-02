@@ -2,8 +2,8 @@
 
 namespace EducationSystem.Helpers.Interfaces.Source
 {
-    public interface ITestHelper
+    public interface IHelperTheme
     {
-        void ValidateTest(Test test);
+        void ValidateTheme(Theme theme);
     }
 }

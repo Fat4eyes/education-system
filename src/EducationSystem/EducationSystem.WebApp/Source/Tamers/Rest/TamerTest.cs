@@ -27,6 +27,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] FilterTest filter)
             => Ok(_managerTest.GetTests(options, filter));
 
+        [Transaction]
         [HttpPost("")]
         public IActionResult CreateTest([FromBody] Test test)
             => Ok(_managerTest.CreateTest(test));
@@ -37,6 +38,11 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTest options)
             => Ok(_managerTest.GetTestById(testId, options));
 
+        [Transaction]
+        [HttpPut("{testId:int}")]
+        public IActionResult UpdateTest([FromRoute] int testId, [FromBody] Test test)
+            => Ok(_managerTest.UpdateTest(testId, test));
+
         [HttpGet("{testId:int}/Themes")]
         public IActionResult GetTestThemes(
             [FromRoute] int testId,
@@ -44,6 +50,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] FilterTheme filter)
             => Ok(_managerTheme.GetThemesByTestId(testId, options, filter));
 
+        [Transaction]
         [HttpDelete("{testId:int}")]
         public IActionResult DeleteTest([FromRoute] int testId) =>
             Ok(() => _managerTest.DeleteTestById(testId));

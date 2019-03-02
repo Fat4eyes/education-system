@@ -17,21 +17,25 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerTest : Manager<ManagerTest>, IManagerTest
     {
-        private readonly IUserHelper _userHelper;
-        private readonly ITestHelper _testHelper;
+        private readonly IHelperUser _helperUser;
+        private readonly IHelperTest _helperTest;
+
         private readonly IRepositoryTest _repositoryTest;
+        private readonly IRepositoryTestTheme _repositoryTestTheme;
 
         public ManagerTest(
             IMapper mapper,
             ILogger<ManagerTest> logger,
-            IUserHelper userHelper,
-            ITestHelper testHelper,
-            IRepositoryTest repositoryTest)
+            IHelperUser helperUser,
+            IHelperTest helperTest,
+            IRepositoryTest repositoryTest,
+            IRepositoryTestTheme repositoryTestTheme)
             : base(mapper, logger)
         {
-            _userHelper = userHelper;
-            _testHelper = testHelper;
+            _helperUser = helperUser;
+            _helperTest = helperTest;
             _repositoryTest = repositoryTest;
+            _repositoryTestTheme = repositoryTestTheme;
         }
 
         public PagedData<Test> GetTests(OptionsTest options, FilterTest filter)
@@ -50,7 +54,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public PagedData<Test> GetTestsForStudent(int studentId, OptionsTest options, FilterTest filter)
         {
-            _userHelper.CheckRoleStudent(studentId);
+            _helperUser.CheckRoleStudent(studentId);
 
             var (count, tests) = _repositoryTest.GetTestsForStudent(studentId, filter);
 
@@ -69,7 +73,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Test GetTestForStudentById(int id, int studentId, OptionsTest options)
         {
-            _userHelper.CheckRoleStudent(studentId);
+            _helperUser.CheckRoleStudent(studentId);
 
             var test = _repositoryTest.GetTestForStudentById(id, studentId) ??
                throw ExceptionHelper.CreateNotFoundException(
@@ -81,18 +85,46 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public void DeleteTestById(int id)
         {
-            _repositoryTest.Delete(id);
+            _repositoryTest.Remove(id);
             _repositoryTest.SaveChanges();
         }
 
         public Test CreateTest(Test test)
         {
-            _testHelper.ValidateTest(test);
+            _helperTest.ValidateTest(test);
 
             var model = Mapper.Map<DatabaseTest>(test);
 
             _repositoryTest.Add(model);
             _repositoryTest.SaveChanges();
+
+            return Mapper.Map<DatabaseTest, Test>(model);
+        }
+
+        public Test UpdateTest(int id, Test test)
+        {
+            _helperTest.ValidateTest(test);
+
+            var model = _repositoryTest.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Тест для обновления не найден. Идентификатор теста: {id}.",
+                    $"Тест для обновления не найден.");
+
+            Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
+
+            _repositoryTest.Update(model);
+            _repositoryTest.SaveChanges();
+
+            if (model.TestThemes.Any())
+            {
+                _repositoryTestTheme.RemoveRange(model.TestThemes);
+                _repositoryTestTheme.SaveChanges();
+            }
+
+            model.TestThemes = Mapper.Map<List<DatabaseTestTheme>>(test.Themes);
+
+            _repositoryTestTheme.AddRange(model.TestThemes);
+            _repositoryTestTheme.SaveChanges();
 
             return Mapper.Map<DatabaseTest, Test>(model);
         }

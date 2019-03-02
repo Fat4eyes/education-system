@@ -8,12 +8,12 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Helpers.Implementations.Source
 {
-    public class TestHelper : ITestHelper
+    public class HelperTest : IHelperTest
     {
         private readonly IRepositoryTheme _repositoryTheme;
         private readonly IRepositoryDiscipline _repositoryDiscipline;
 
-        public TestHelper(
+        public HelperTest(
             IRepositoryTheme repositoryTheme,
             IRepositoryDiscipline repositoryDiscipline)
         {

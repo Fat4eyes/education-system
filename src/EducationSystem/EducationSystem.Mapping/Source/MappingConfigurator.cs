@@ -44,6 +44,11 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive ? 1 : 0))
                 .ForMember(d => d.TestThemes, o => o.MapFrom(s => s.Themes));
 
+            expression.CreateMap<DatabaseTest, DatabaseTest>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Discipline, o => o.Ignore())
+                .ForMember(d => d.TestThemes, o => o.Ignore());
+
             expression.CreateMap<Theme, DatabaseTestTheme>()
                 .ForMember(d => d.ThemeId, o => o.MapFrom(s => s.Id))
                 .ForMember(d => d.TestId, o => o.Ignore())
@@ -52,6 +57,18 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Id, o => o.Ignore());
 
             expression.CreateMap<DatabaseTheme, Theme>()
+                .ForMember(d => d.Questions, o => o.Ignore());
+
+            expression.CreateMap<Theme, DatabaseTheme>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Discipline, o => o.Ignore())
+                .ForMember(d => d.ThemeTests, o => o.Ignore())
+                .ForMember(d => d.Questions, o => o.Ignore());
+
+            expression.CreateMap<DatabaseTheme, DatabaseTheme>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Discipline, o => o.Ignore())
+                .ForMember(d => d.ThemeTests, o => o.Ignore())
                 .ForMember(d => d.Questions, o => o.Ignore());
 
             expression.CreateMap<DatabaseTestResult, TestResult>()

@@ -11,7 +11,7 @@ namespace EducationSystem.Tests.Source.Helpers
 {
     public class TestsUserHelper
     {
-        protected IUserHelper UserHelper { get; }
+        protected IHelperUser HelperUser { get; }
 
         protected Mock<IRepositoryRole> MockRepositoryRole { get; }
 
@@ -19,7 +19,7 @@ namespace EducationSystem.Tests.Source.Helpers
         {
             MockRepositoryRole = new Mock<IRepositoryRole>();
 
-            UserHelper = new UserHelper(MockRepositoryRole.Object);
+            HelperUser = new HelperUser(MockRepositoryRole.Object);
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace EducationSystem.Tests.Source.Helpers
                 .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Student });
 
-            UserHelper.CheckRoleStudent(999);
+            HelperUser.CheckRoleStudent(999);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace EducationSystem.Tests.Source.Helpers
                 .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Admin });
 
-            Assert.Throws<EducationSystemException>(() => UserHelper.CheckRoleStudent(999));
+            Assert.Throws<EducationSystemException>(() => HelperUser.CheckRoleStudent(999));
         }
     }
 }

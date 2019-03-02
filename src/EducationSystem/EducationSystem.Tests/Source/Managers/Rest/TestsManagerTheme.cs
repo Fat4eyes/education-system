@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
+using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Options;
@@ -13,15 +14,20 @@ namespace EducationSystem.Tests.Source.Managers.Rest
     {
         protected IManagerTheme ManagerTheme { get; }
 
-        protected Mock<IRepositoryTheme> MockRepositoryTheme { get; set; }
+        protected Mock<IHelperTheme> MockHelperTheme { get; }
+
+        protected Mock<IRepositoryTheme> MockRepositoryTheme { get; }
 
         public TestsManagerTheme()
         {
+            MockHelperTheme = new Mock<IHelperTheme>();
+
             MockRepositoryTheme = new Mock<IRepositoryTheme>();
 
             ManagerTheme = new ManagerTheme(
                 Mapper,
                 LoggerMock.Object,
+                MockHelperTheme.Object,
                 MockRepositoryTheme.Object);
         }
 

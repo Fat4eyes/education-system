@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Database.Models.Source.Base;
 using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Repositories.Interfaces.Source;
-using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Source
 {
@@ -31,20 +31,35 @@ namespace EducationSystem.Repositories.Implementations.Source
             return model;
         }
 
-        public TModel Update(TModel model)
+        public void AddRange(IEnumerable<TModel> models)
         {
             Context
-                .Entry(model)
-                .State = EntityState.Modified;
-
-            Context
                 .Set<TModel>()
-                .Attach(model);
-
-            return model;
+                .AddRange(models);
         }
 
-        public void Delete(int id)
+        public async Task AddRangeAsync(IEnumerable<TModel> models)
+        {
+            await Context
+                .Set<TModel>()
+                .AddRangeAsync(models);
+        }
+
+        public void Update(TModel model)
+        {
+            Context
+                .Set<TModel>()
+                .Update(model);
+        }
+
+        public void UpdateRange(IEnumerable<TModel> models)
+        {
+            Context
+                .Set<TModel>()
+                .UpdateRange(models);
+        }
+
+        public void Remove(int id)
         {
             var model = AsQueryable()
                 .FirstOrDefault(x => x.Id == id);
@@ -57,7 +72,7 @@ namespace EducationSystem.Repositories.Implementations.Source
             }
         }
 
-        public void Delete(TModel model)
+        public void Remove(TModel model)
         {
             var existing = Context
                 .Set<TModel>()
@@ -69,6 +84,13 @@ namespace EducationSystem.Repositories.Implementations.Source
                     .Set<TModel>()
                     .Remove(existing);
             }
+        }
+
+        public void RemoveRange(IEnumerable<TModel> models)
+        {
+            Context
+                .Set<TModel>()
+                .RemoveRange(models);
         }
 
         public void SaveChanges()

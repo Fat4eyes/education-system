@@ -17,5 +17,6 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         void DeleteTestById(int id);
 
         Test CreateTest(Test test);
+        Test UpdateTest(int id, Test test);
     }
 }

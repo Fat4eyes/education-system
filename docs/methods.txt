@@ -61,5 +61,9 @@
     [B] DELETE Themes/{Id}
 
     [B] POST Tests              Test
+    [B] POST Themes             Theme
+
+    [B] PUT Tests/{Id}          Test
+    [B] PUT Themes/{Id}         Theme
 
 Все поля со значением NULL возращены не будут!

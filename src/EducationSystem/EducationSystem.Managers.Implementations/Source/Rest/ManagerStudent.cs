@@ -16,17 +16,17 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerStudent : Manager<ManagerStudent>, IManagerStudent
     {
-        private readonly IUserHelper _userHelper;
+        private readonly IHelperUser _helperUser;
         private readonly IRepositoryStudent _repositoryStudent;
 
         public ManagerStudent(
             IMapper mapper,
             ILogger<ManagerStudent> logger,
-            IUserHelper userHelper,
+            IHelperUser helperUser,
             IRepositoryStudent repositoryStudent)
             : base(mapper, logger)
         {
-            _userHelper = userHelper;
+            _helperUser = helperUser;
             _repositoryStudent = repositoryStudent;
         }
 
@@ -46,7 +46,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public Student GetStudentById(int id, OptionsStudent options)
         {
-            _userHelper.CheckRoleStudent(id);
+            _helperUser.CheckRoleStudent(id);
 
             var student = _repositoryStudent.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

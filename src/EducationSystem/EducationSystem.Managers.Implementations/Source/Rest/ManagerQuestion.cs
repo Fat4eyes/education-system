@@ -16,17 +16,17 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerQuestion : Manager<ManagerQuestion>, IManagerQuestion
     {
-        private readonly IUserHelper _userHelper;
+        private readonly IHelperUser _helperUser;
         private readonly IRepositoryQuestion _repositoryQuestion;
 
         public ManagerQuestion(
             IMapper mapper,
             ILogger<ManagerQuestion> logger,
-            IUserHelper userHelper,
+            IHelperUser helperUser,
             IRepositoryQuestion repositoryQuestion)
             : base(mapper, logger)
         {
-            _userHelper = userHelper;
+            _helperUser = helperUser;
             _repositoryQuestion = repositoryQuestion;
         }
 
@@ -39,7 +39,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, int questionsCount)
         {
-            _userHelper.CheckRoleStudent(studentId);
+            _helperUser.CheckRoleStudent(studentId);
 
             var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId);
 

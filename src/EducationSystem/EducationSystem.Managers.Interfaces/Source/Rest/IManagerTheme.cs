@@ -14,5 +14,8 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         Theme GetThemeById(int id, OptionsTheme options);
 
         void DeleteThemeById(int id);
+
+        Theme CreateTheme(Theme theme);
+        Theme UpdateTheme(int id, Theme theme);
     }
 }

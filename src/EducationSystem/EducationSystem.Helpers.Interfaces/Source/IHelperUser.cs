@@ -1,6 +1,6 @@
 ﻿namespace EducationSystem.Helpers.Interfaces.Source
 {
-    public interface IUserHelper
+    public interface IHelperUser
     {
         void CheckRoleStudent(int userId);
     }

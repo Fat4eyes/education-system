@@ -17,17 +17,17 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerDiscipline : Manager<ManagerDiscipline>, IManagerDiscipline
     {
-        private readonly IUserHelper _userHelper;
+        private readonly IHelperUser _helperUser;
         private readonly IRepositoryDiscipline _repositoryDiscipline;
 
         public ManagerDiscipline(
             IMapper mapper,
             ILogger<ManagerDiscipline> logger,
-            IUserHelper userHelper,
+            IHelperUser helperUser,
             IRepositoryDiscipline repositoryDiscipline)
             : base(mapper, logger)
         {
-            _userHelper = userHelper;
+            _helperUser = helperUser;
             _repositoryDiscipline = repositoryDiscipline;
         }
 
@@ -40,7 +40,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public PagedData<Discipline> GetDisciplinesForStudent(int studentId, OptionsDiscipline options, FilterDiscipline filter)
         {
-            _userHelper.CheckRoleStudent(studentId);
+            _helperUser.CheckRoleStudent(studentId);
 
             var (count, disciplines) = _repositoryDiscipline.GetDisciplinesForStudent(studentId, filter);
 

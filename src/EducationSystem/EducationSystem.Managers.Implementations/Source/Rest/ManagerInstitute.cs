@@ -12,23 +12,23 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerInstitute : Manager<ManagerInstitute>, IManagerInstitute
     {
-        private readonly IUserHelper _userHelper;
+        private readonly IHelperUser _helperUser;
         private readonly IRepositoryInstitute _repositoryInstitute;
 
         public ManagerInstitute(
             IMapper mapper,
             ILogger<ManagerInstitute> logger,
-            IUserHelper userHelper,
+            IHelperUser helperUser,
             IRepositoryInstitute repositoryInstitute)
             : base(mapper, logger)
         {
-            _userHelper = userHelper;
+            _helperUser = helperUser;
             _repositoryInstitute = repositoryInstitute;
         }
 
         public Institute GetInstituteByStudentId(int studentId, OptionsInstitute options)
         {
-            _userHelper.CheckRoleStudent(studentId);
+            _helperUser.CheckRoleStudent(studentId);
 
             var institute = _repositoryInstitute.GetInstituteByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(

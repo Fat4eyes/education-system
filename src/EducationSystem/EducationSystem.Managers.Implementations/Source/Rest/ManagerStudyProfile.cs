@@ -12,23 +12,23 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerStudyProfile : Manager<ManagerStudyProfile>, IManagerStudyProfile
     {
-        private readonly IUserHelper _userHelper;
+        private readonly IHelperUser _helperUser;
         private readonly IRepositoryStudyProfile _repositoryStudyProfile;
 
         public ManagerStudyProfile(
             IMapper mapper,
             ILogger<ManagerStudyProfile> logger,
-            IUserHelper userHelper,
+            IHelperUser helperUser,
             IRepositoryStudyProfile repositoryStudyProfile)
             : base(mapper, logger)
         {
-            _userHelper = userHelper;
+            _helperUser = helperUser;
             _repositoryStudyProfile = repositoryStudyProfile;
         }
 
         public StudyProfile GetStudyProfileByStudentId(int studentId, OptionsStudyProfile options)
         {
-            _userHelper.CheckRoleStudent(studentId);
+            _helperUser.CheckRoleStudent(studentId);
 
             var studyProfile = _repositoryStudyProfile.GetStudyProfileByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(

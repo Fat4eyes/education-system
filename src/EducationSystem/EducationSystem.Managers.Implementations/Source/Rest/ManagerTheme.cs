@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Filters;
@@ -15,14 +16,17 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 {
     public sealed class ManagerTheme : Manager<ManagerTheme>, IManagerTheme
     {
+        private readonly IHelperTheme _helperTheme;
         private readonly IRepositoryTheme _repositoryTheme;
 
         public ManagerTheme(
             IMapper mapper,
             ILogger<ManagerTheme> logger,
+            IHelperTheme helperTheme,
             IRepositoryTheme repositoryTheme)
             : base(mapper, logger)
         {
+            _helperTheme = helperTheme;
             _repositoryTheme = repositoryTheme;
         }
 
@@ -59,8 +63,37 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public void DeleteThemeById(int id)
         {
-            _repositoryTheme.Delete(id);
+            _repositoryTheme.Remove(id);
             _repositoryTheme.SaveChanges();
+        }
+
+        public Theme CreateTheme(Theme theme)
+        {
+            _helperTheme.ValidateTheme(theme);
+
+            var model = Mapper.Map<DatabaseTheme>(theme);
+
+            _repositoryTheme.Add(model);
+            _repositoryTheme.SaveChanges();
+
+            return Mapper.Map<DatabaseTheme, Theme>(model);
+        }
+
+        public Theme UpdateTheme(int id, Theme theme)
+        {
+            _helperTheme.ValidateTheme(theme);
+
+            var model = _repositoryTheme.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Тема для обновления не найдена. Идентификатор темы: {id}.",
+                    $"Тема для обновления не найдена.");
+
+            Mapper.Map(Mapper.Map<DatabaseTheme>(theme), model);
+
+            _repositoryTheme.Update(model);
+            _repositoryTheme.SaveChanges();
+
+            return Mapper.Map<DatabaseTheme, Theme>(model);
         }
 
         private Theme Map(DatabaseTheme theme, OptionsTheme options)

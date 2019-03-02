@@ -16,22 +16,25 @@ namespace EducationSystem.Tests.Source.Managers.Rest
     {
         protected IManagerTest ManagerTest { get; }
 
-        protected Mock<IRepositoryTest> MockRepositoryTest { get; set; }
+        protected Mock<IRepositoryTest> MockRepositoryTest { get; }
+        protected Mock<IRepositoryTestTheme> RepositoryTestTheme { get; }
 
-        protected Mock<ITestHelper> MockTestHelper { get; set; }
+        protected Mock<IHelperTest> MockTestHelper { get; }
 
         public TestsManagerTest()
         {
             MockRepositoryTest = new Mock<IRepositoryTest>();
+            RepositoryTestTheme = new Mock<IRepositoryTestTheme>();
 
-            MockTestHelper = new Mock<ITestHelper>();
+            MockTestHelper = new Mock<IHelperTest>();
 
             ManagerTest = new ManagerTest(
                 Mapper,
                 LoggerMock.Object,
                 MockUserHelper.Object,
                 MockTestHelper.Object,
-                MockRepositoryTest.Object);
+                MockRepositoryTest.Object,
+                RepositoryTestTheme.Object);
         }
 
         [Fact]
