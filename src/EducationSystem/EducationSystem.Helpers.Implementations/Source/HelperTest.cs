@@ -41,6 +41,9 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (test.Themes.IsEmpty())
                 throw ExceptionHelper.CreatePublicException("Тест не содержит темы.");
 
+            if (test.Themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
+                throw ExceptionHelper.CreatePublicException("В списке выбранных тем есть повторяющиеся элементы.");
+
             if (_repositoryTheme.CheckThemesExistence(test.Themes.Select(x => x.Id).ToList()) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
 
