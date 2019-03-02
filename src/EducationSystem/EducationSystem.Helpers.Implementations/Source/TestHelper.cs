@@ -11,10 +11,14 @@ namespace EducationSystem.Helpers.Implementations.Source
     public class TestHelper : ITestHelper
     {
         private readonly IRepositoryTheme _repositoryTheme;
+        private readonly IRepositoryDiscipline _repositoryDiscipline;
 
-        public TestHelper(IRepositoryTheme repositoryTheme)
+        public TestHelper(
+            IRepositoryTheme repositoryTheme,
+            IRepositoryDiscipline repositoryDiscipline)
         {
             _repositoryTheme = repositoryTheme;
+            _repositoryDiscipline = repositoryDiscipline;
         }
 
         public void ValidateTest(Test test)
@@ -39,6 +43,9 @@ namespace EducationSystem.Helpers.Implementations.Source
 
             if (_repositoryTheme.CheckThemesExistence(test.Themes.Select(x => x.Id).ToList()) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
+
+            if (_repositoryDiscipline.GetById(test.DisciplineId) == null)
+                throw ExceptionHelper.CreatePublicException("Выбранная дисциплина не существует.");
         }
     }
 }

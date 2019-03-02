@@ -32,9 +32,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public bool CheckThemesExistence(List<int> themeIds)
         {
-            var count = AsQueryable().Count(x => themeIds.Contains(x.Id));
-
-            return count == themeIds.Count;
+            return AsQueryable().Count(x => themeIds.Contains(x.Id)) == themeIds.Count;
         }
     }
 }
