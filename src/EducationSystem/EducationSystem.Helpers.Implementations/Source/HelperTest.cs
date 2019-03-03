@@ -8,7 +8,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Helpers.Implementations.Source
 {
-    public class HelperTest : IHelperTest
+    public sealed class HelperTest : IHelperTest
     {
         private readonly IRepositoryTheme _repositoryTheme;
         private readonly IRepositoryDiscipline _repositoryDiscipline;
@@ -39,16 +39,16 @@ namespace EducationSystem.Helpers.Implementations.Source
                 throw ExceptionHelper.CreatePublicException("Не указан тип теста.");
 
             if (test.Themes.IsEmpty())
-                throw ExceptionHelper.CreatePublicException("Тест не содержит темы.");
+                throw ExceptionHelper.CreatePublicException("В тесте не указана ни одна тема.");
 
             if (test.Themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
-                throw ExceptionHelper.CreatePublicException("В списке выбранных тем есть повторяющиеся элементы.");
+                throw ExceptionHelper.CreatePublicException("В тесте указаны повторяющиеся темы.");
 
             if (_repositoryTheme.CheckThemesExistence(test.Themes.Select(x => x.Id).ToList()) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
 
             if (_repositoryDiscipline.GetById(test.DisciplineId) == null)
-                throw ExceptionHelper.CreatePublicException("Выбранная дисциплина не существует.");
+                throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
         }
     }
 }

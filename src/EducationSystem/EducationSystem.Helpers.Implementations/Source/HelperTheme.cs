@@ -6,7 +6,7 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Helpers.Implementations.Source
 {
-    public class HelperTheme : IHelperTheme
+    public sealed class HelperTheme : IHelperTheme
     {
         private readonly IRepositoryDiscipline _repositoryDiscipline;
 
@@ -24,7 +24,7 @@ namespace EducationSystem.Helpers.Implementations.Source
                 throw ExceptionHelper.CreatePublicException("Не указано название темы.");
 
             if (_repositoryDiscipline.GetById(theme.DisciplineId) == null)
-                throw ExceptionHelper.CreatePublicException("Выбранная дисциплина не существует.");
+                throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
         }
     }
 }

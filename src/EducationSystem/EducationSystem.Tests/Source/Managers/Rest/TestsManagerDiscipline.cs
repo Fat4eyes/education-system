@@ -24,7 +24,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             ManagerDiscipline = new ManagerDiscipline(
                 Mapper,
                 LoggerMock.Object,
-                MockUserHelper.Object,
+                MockHelperUser.Object,
                 MockRepositoryDiscipline.Object);
         }
 
@@ -54,7 +54,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetDisciplinesByStudentId_NotStudent()
         {
-            MockUserHelper
+            MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
@@ -66,7 +66,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetDisciplinesByStudentId_FoundWithTests()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             var disciplines = GetDisciplines();
 
@@ -92,7 +92,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetDisciplinesByStudentId_FoundWithThemes()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             var disciplines = GetDisciplines();
 

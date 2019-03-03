@@ -8,11 +8,11 @@ namespace EducationSystem.Models.Source.Rest
     {
         public string Text { get; set; }
 
-        public QuestionType Type { get; set; }
+        public QuestionType? Type { get; set; }
 
-        public QuestionComplexityType Complexity { get; set; }
+        public QuestionComplexityType? Complexity { get; set; }
 
-        public int Time { get; set; }
+        public int? Time { get; set; }
 
         public int ThemeId { get; set; }
 

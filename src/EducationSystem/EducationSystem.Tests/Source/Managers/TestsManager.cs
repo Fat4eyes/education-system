@@ -12,7 +12,7 @@ namespace EducationSystem.Tests.Source.Managers
 
         protected Mock<ILogger<TManager>> LoggerMock { get; }
 
-        protected Mock<IHelperUser> MockUserHelper { get; set; }
+        protected Mock<IHelperUser> MockHelperUser { get; set; }
 
         protected TestsManager()
         {
@@ -20,7 +20,7 @@ namespace EducationSystem.Tests.Source.Managers
 
             LoggerMock = new Mock<ILogger<TManager>>();
 
-            MockUserHelper = new Mock<IHelperUser>();
+            MockHelperUser = new Mock<IHelperUser>();
         }
     }
 }

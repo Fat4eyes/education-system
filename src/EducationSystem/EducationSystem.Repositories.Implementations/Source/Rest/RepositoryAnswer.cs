@@ -4,9 +4,9 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public sealed class RepositoryTestTheme : Repository<DatabaseTestTheme>, IRepositoryTestTheme
+    public sealed class RepositoryAnswer : Repository<DatabaseAnswer>, IRepositoryAnswer
     {
-        public RepositoryTestTheme(DatabaseContext context)
+        public RepositoryAnswer(DatabaseContext context)
             : base(context) { }
     }
 }

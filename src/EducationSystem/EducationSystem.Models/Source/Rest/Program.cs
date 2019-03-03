@@ -10,11 +10,11 @@ namespace EducationSystem.Models.Source.Rest
 
         public string Template { get; set; }
 
-        public LanguageType LanguageType { get; set; }
+        public LanguageType? LanguageType { get; set; }
 
-        public int TimeLimit { get; set; }
+        public int? TimeLimit { get; set; }
 
-        public int MemoryLimit { get; set; }
+        public int? MemoryLimit { get; set; }
 
         public List<ProgramData> ProgramDatas { get; set; }
     }

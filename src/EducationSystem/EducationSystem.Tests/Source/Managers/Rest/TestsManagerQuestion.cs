@@ -2,6 +2,7 @@
 using System.Linq;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
+using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
@@ -14,23 +15,37 @@ namespace EducationSystem.Tests.Source.Managers.Rest
     {
         protected IManagerQuestion ManagerQuestion { get; }
 
-        protected Mock<IRepositoryQuestion> MockRepositoryQuestion { get; set; }
+        protected Mock<IHelperQuestion> MockHelperQuestion { get; }
+
+        protected Mock<IRepositoryAnswer> MockRepositoryAnswer { get; }
+        protected Mock<IRepositoryProgram> MockRepositoryProgram { get;  }
+        protected Mock<IRepositoryQuestion> MockRepositoryQuestion { get;  }
+        protected Mock<IRepositoryProgramData> MockRepositoryProgramData { get;  }
 
         public TestsManagerQuestion()
         {
+            MockHelperQuestion = new Mock<IHelperQuestion>();
+
+            MockRepositoryAnswer = new Mock<IRepositoryAnswer>();
+            MockRepositoryProgram = new Mock<IRepositoryProgram>();
             MockRepositoryQuestion = new Mock<IRepositoryQuestion>();
+            MockRepositoryProgramData = new Mock<IRepositoryProgramData>();
 
             ManagerQuestion = new ManagerQuestion(
                 Mapper,
                 LoggerMock.Object,
-                MockUserHelper.Object,
-                MockRepositoryQuestion.Object);
+                MockHelperUser.Object,
+                MockHelperQuestion.Object,
+                MockRepositoryAnswer.Object,
+                MockRepositoryProgram.Object,
+                MockRepositoryQuestion.Object,
+                MockRepositoryProgramData.Object);
         }
 
         [Fact]
         public void GetQuestionsForStudentByTestId_NotStudent()
         {
-            MockUserHelper
+            MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
@@ -41,7 +56,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetQuestionsForStudentByTestId_Found()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             MockRepositoryQuestion
                 .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
@@ -57,7 +72,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetQuestionsForStudentByTestId_NotFound()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             MockRepositoryQuestion
                 .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))

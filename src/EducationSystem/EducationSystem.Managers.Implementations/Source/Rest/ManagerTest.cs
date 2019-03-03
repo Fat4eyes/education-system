@@ -85,7 +85,12 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public void DeleteTestById(int id)
         {
-            _repositoryTest.Remove(id);
+            var test = _repositoryTest.GetById(id) ??
+               throw ExceptionHelper.CreateNotFoundException(
+                   $"Тест для удаления не найден. Идентификатор теста: {id}.",
+                   $"Тест для удаления не найден.");
+
+            _repositoryTest.Remove(test);
             _repositoryTest.SaveChanges();
         }
 

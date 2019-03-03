@@ -22,7 +22,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             ManagerGroup = new ManagerGroup(
                 Mapper,
                 LoggerMock.Object,
-                MockUserHelper.Object,
+                MockHelperUser.Object,
                 MockRepositoryGroup.Object);
         }
 
@@ -52,7 +52,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetGroupByStudentId_NotStudent()
         {
-            MockUserHelper
+            MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
@@ -63,7 +63,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetGroupByStudentId_Found()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             MockRepositoryGroup
                 .Setup(x => x.GetGroupByStudentId(999))
@@ -77,7 +77,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetGroupByStudentId_NotFound()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             MockRepositoryGroup
                 .Setup(x => x.GetGroupByStudentId(999))

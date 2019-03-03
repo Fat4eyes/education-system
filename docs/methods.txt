@@ -45,6 +45,9 @@
 [Options]          [B] GET Tests/{Id}                       Test
 [Options] [Filter] [B] GET Tests/{Id}/Themes                List<Theme>             (PagedData)
 
+[Options] [Filter] [B] GET Questions                        List<Question>          (PagedData)
+[Options]          [B] GET Questions/{Id}                   Question
+
 [Options] [Filter] [B] GET TestResults                      List<TestResult>        (PagedData)
 [Options]          [B] GET TestResults/{Id}                 TestResult
 
@@ -57,13 +60,17 @@
 [Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>              (PagedData)
 [Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
 
+
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}
+    [B] DELETE Questions/{Id}
 
     [B] POST Tests              Test
     [B] POST Themes             Theme
+    [B] POST Questions          Question
 
     [B] PUT Tests/{Id}          Test
     [B] PUT Themes/{Id}         Theme
+    [B] PUT Questions/{Id}      Question
 
 Все поля со значением NULL возращены не будут!

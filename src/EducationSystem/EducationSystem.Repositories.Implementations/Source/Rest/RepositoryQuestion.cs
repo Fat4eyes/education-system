@@ -8,10 +8,15 @@ using EducationSystem.Repositories.Interfaces.Source.Rest;
 
 namespace EducationSystem.Repositories.Implementations.Source.Rest
 {
-    public sealed class RepositoryQuestion : RepositoryReadOnly<DatabaseQuestion>, IRepositoryQuestion
+    public sealed class RepositoryQuestion : Repository<DatabaseQuestion>, IRepositoryQuestion
     {
         public RepositoryQuestion(DatabaseContext context)
             : base(context) { }
+
+        public (int Count, List<DatabaseQuestion> Questions) GetQuestions(FilterQuestion filter)
+        {
+            return AsQueryable().ApplyPaging(filter);
+        }
 
         public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, FilterQuestion filter)
         {

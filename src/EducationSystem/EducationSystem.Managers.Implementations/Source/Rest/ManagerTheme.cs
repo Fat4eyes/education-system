@@ -63,7 +63,12 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
         public void DeleteThemeById(int id)
         {
-            _repositoryTheme.Remove(id);
+            var theme = _repositoryTheme.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Тема для удаления не найдена. Идентификатор темы: {id}.",
+                    $"Тема для удаления не найдена.");
+
+            _repositoryTheme.Remove(theme);
             _repositoryTheme.SaveChanges();
         }
 

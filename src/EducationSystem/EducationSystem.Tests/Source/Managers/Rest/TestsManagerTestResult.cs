@@ -22,14 +22,14 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             ManagerTestResult = new ManagerTestResult(
                 Mapper,
                 LoggerMock.Object,
-                MockUserHelper.Object,
+                MockHelperUser.Object,
                 MockRepositoryTestResult.Object);
         }
 
         [Fact]
         public void GetTestResultsByStudentId_NotStudent()
         {
-            MockUserHelper
+            MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 

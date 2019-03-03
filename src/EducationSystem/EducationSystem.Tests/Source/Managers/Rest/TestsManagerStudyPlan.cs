@@ -22,14 +22,14 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             ManagerStudyPlan = new ManagerStudyPlan(
                 Mapper,
                 LoggerMock.Object,
-                MockUserHelper.Object,
+                MockHelperUser.Object,
                 MockRepositoryStudyPlan.Object);
         }
 
         [Fact]
         public void GetStudyPlanByStudentId_NotStudent()
         {
-            MockUserHelper
+            MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
@@ -40,7 +40,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetStudyPlanByStudentId_Found()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             MockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))
@@ -54,7 +54,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
         [Fact]
         public void GetStudyPlanByStudentId_NotFound()
         {
-            MockUserHelper.Reset();
+            MockHelperUser.Reset();
 
             MockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))

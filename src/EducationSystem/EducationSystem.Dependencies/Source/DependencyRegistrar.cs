@@ -48,6 +48,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IHelperUser, HelperUser>();
             services.AddTransient<IHelperTest, HelperTest>();
             services.AddTransient<IHelperTheme, HelperTheme>();
+            services.AddTransient<IHelperQuestion, HelperQuestion>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)
@@ -57,6 +58,8 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryUser, RepositoryUser>();
             services.AddTransient<IRepositoryGroup, RepositoryGroup>();
             services.AddTransient<IRepositoryTheme, RepositoryTheme>();
+            services.AddTransient<IRepositoryAnswer, RepositoryAnswer>();
+            services.AddTransient<IRepositoryProgram, RepositoryProgram>();
             services.AddTransient<IRepositoryStudent, RepositoryStudent>();
             services.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
             services.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
@@ -64,6 +67,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();
             services.AddTransient<IRepositoryTestResult, RepositoryTestResult>();
             services.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
+            services.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
             services.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
         }
 

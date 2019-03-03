@@ -82,14 +82,55 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore());
 
+            expression.CreateMap<Question, DatabaseQuestion>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Theme, o => o.Ignore())
+                .ForMember(d => d.Answers, o => o.Ignore())
+                .ForMember(d => d.Program, o => o.Ignore())
+                .ForMember(d => d.GivenAnswers, o => o.Ignore());
+
+            expression.CreateMap<DatabaseQuestion, DatabaseQuestion>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Theme, o => o.Ignore())
+                .ForMember(d => d.Answers, o => o.Ignore())
+                .ForMember(d => d.Program, o => o.Ignore())
+                .ForMember(d => d.GivenAnswers, o => o.Ignore());
+
             expression.CreateMap<DatabaseAnswer, Answer>()
                 .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
+
+            expression.CreateMap<Answer, DatabaseAnswer>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Question, o => o.Ignore())
+                .ForMember(d => d.QuestionId, o => o.Ignore());
+
+            expression.CreateMap<DatabaseAnswer, DatabaseAnswer>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Question, o => o.Ignore())
+                .ForMember(d => d.QuestionId, o => o.Ignore());
 
             expression.CreateMap<DatabaseProgram, Program>()
                 .ForMember(d => d.ProgramDatas, o => o.Ignore());
 
-            expression.CreateMap<DatabaseRole, Role>();
+            expression.CreateMap<Program, DatabaseProgram>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Question, o => o.Ignore())
+                .ForMember(d => d.QuestionId, o => o.Ignore());
+
+            expression.CreateMap<DatabaseProgram, DatabaseProgram>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Question, o => o.Ignore())
+                .ForMember(d => d.QuestionId, o => o.Ignore())
+                .ForMember(d => d.ProgramDatas, o => o.Ignore());
+
             expression.CreateMap<DatabaseProgramData, ProgramData>();
+
+            expression.CreateMap<ProgramData, DatabaseProgramData>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Program, o => o.Ignore())
+                .ForMember(d => d.ProgramId, o => o.Ignore());
+
+            expression.CreateMap<DatabaseRole, Role>();
             expression.CreateMap<DatabaseInstitute, Institute>();
 
             expression.CreateMap<User, Student>();
