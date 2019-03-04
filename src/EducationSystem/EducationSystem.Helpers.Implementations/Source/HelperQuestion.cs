@@ -29,6 +29,9 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (question.Time.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано время ответа на вопрос.");
 
+            if (question.Time.Value <= 0 || question.Time.Value > 60 * 60)
+                throw ExceptionHelper.CreatePublicException("Указано некорректное время ответа на вопрос.");
+
             if (question.Type.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указан тип вопроса.");
 
