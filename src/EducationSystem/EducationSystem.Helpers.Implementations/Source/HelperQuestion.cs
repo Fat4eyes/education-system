@@ -56,9 +56,17 @@ namespace EducationSystem.Helpers.Implementations.Source
                     throw ExceptionHelper.CreatePublicException(
                         "Для программы не указано ограничение по времени.");
 
+                if (question.Program.TimeLimit.Value < 1 || question.Program.TimeLimit.Value > 60)
+                    throw ExceptionHelper.CreatePublicException(
+                        "Для программы указано некорректное ограничение по времени.");
+
                 if (question.Program.MemoryLimit.HasValue == false)
                     throw ExceptionHelper.CreatePublicException(
                         "Для программы не указано ограничение по памяти.");
+
+                if (question.Program.MemoryLimit.Value < 1 || question.Program.MemoryLimit.Value > 10000)
+                    throw ExceptionHelper.CreatePublicException(
+                        "Для программы указано некорректное ограничение по памяти.");
 
                 if (question.Program.LanguageType.HasValue == false)
                     throw ExceptionHelper.CreatePublicException(
