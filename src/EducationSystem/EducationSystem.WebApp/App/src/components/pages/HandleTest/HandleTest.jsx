@@ -1,16 +1,15 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {withSnackbar} from 'notistack'
-import {Paper, StepContent, Stepper, Typography, withStyles} from '@material-ui/core'
+import {Paper, Typography, withStyles} from '@material-ui/core'
 import HandleTestStyles from './HandleTestStyles'
 import Grid from '@material-ui/core/Grid'
 import {Snackbar} from './../../../helpers'
 import EditIcon from '@material-ui/icons/EditRounded'
-import StepLabel from '@material-ui/core/StepLabel'
-import TextField from '@material-ui/core/TextField'
-import Step from '@material-ui/core/Step'
 import VTextField from '../../stuff/VTextField'
 import VMaskedField from '../../stuff/VMaskedField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
 
 @withSnackbar
 @withStyles(HandleTestStyles)
@@ -23,7 +22,7 @@ class HandleTest extends Component {
         Name: '',
         Duration: '10:00',
         Attempts: 0,
-        Type: 0,
+        Type: 'other',
         Themes: [],
         Materials: [],
         IsActive: false
@@ -43,9 +42,9 @@ class HandleTest extends Component {
         return this.state.stepsCount
       return number
     }
-    
+
     return this.setState(state => ({
-      activeStep: step !== undefined 
+      activeStep: step !== undefined
         ? step
         : normalize(state.activeStep + (previous ? -1 : 1))
     }))
@@ -86,69 +85,86 @@ class HandleTest extends Component {
       <Grid item xs={12} md={10} lg={8}>
         <Paper className={classes.paper}>
           <Header/>
-          <Stepper activeStep={this.state.activeStep} orientation='vertical' className={classes.stepper}>
-            <Step>
-              <StepLabel onClick={() => this.handleStep()(0)}>Основная информация</StepLabel>
-              <StepContent>
-                <Grid item xs={12} container  spacing={16}>
-                  <Grid item xs={12} container direction='column'>
-                    <VTextField
-                      id='Name' name='Name' label='Название'
-                      value={model.Name} onChange={this.handleModel}
-                      margin='normal' required fullWidth
-                      validators={{
-                        max: {value: 255, message: 'Название не должно привышать 255 символов'},
-                        required: true
-                      }}
-                      className={classes.input}
-                      onKeyDown={this.handleKeyDown}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={4}>
-                    <VMaskedField
-                      id='Duration' name='Duration' label='Длительность теста'
-                      value={model.Duration} onChange={this.handleModel}
-                      required
-                      type='duration'
-                      validators={{
-                        max: {value: 3600, message: 'Тест не может быть больше 60 минут'}
-                      }}
-                      className={classes.input}
-                      onKeyDown={this.handleKeyDown}
-                      mask={[/[0-9]/, /[0-9]/, ':', /[0-5]/, /[0-9]/]}
-                      styles={{
-                        input: {
-                          width: 41,
-                          marginLeft: 8
-                        }
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-
-                  </Grid>
-                </Grid>
-              </StepContent>
-            </Step>
-            <Step>
-              <StepLabel onClick={() => this.handleStep()(1)}>Основная информация</StepLabel>
-              <StepContent>
-                <Grid container item xs={12} spacing={16}>
-                  <VTextField
-                    id='Name' name='Name' label='Название'
-                    value={model.Name} onChange={this.handleModel}
-                    margin='normal' required fullWidth
-                    validators={{
-                      max: {value: 255, message: 'Название не должно привышать 255 символов'},
-                      required: true
-                    }}
-                    className={classes.input}
-                    onKeyDown={this.handleKeyDown}
+          {/*<Stepper activeStep={this.state.activeStep} orientation='vertical' className={classes.stepper}>*/}
+          {/*<Step>*/}
+          {/*<StepLabel onClick={() => this.handleStep()(0)}>Основная информация</StepLabel>*/}
+          {/*<StepContent>*/}
+          <Grid item xs={12} container spacing={16}>
+            <Grid item xs={12} container direction='column'>
+              <VTextField
+                id='Name' name='Name' label='Название'
+                value={model.Name} onChange={this.handleModel}
+                margin='normal' required fullWidth
+                validators={{
+                  max: {value: 255, message: 'Название не должно привышать 255 символов'},
+                  required: true
+                }}
+                className={classes.input}
+                onKeyDown={this.handleKeyDown}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <VMaskedField
+                id='Duration' name='Duration' label='Длительность теста'
+                value={model.Duration} onChange={this.handleModel}
+                required
+                type='duration'
+                validators={{
+                  max: {value: 3600, message: 'Тест не может быть больше 60 минут'}
+                }}
+                className={classes.input}
+                onKeyDown={this.handleKeyDown}
+                mask={[/[0-9]/, /[0-9]/, ':', /[0-5]/, /[0-9]/]}
+                styles={{}}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <VTextField
+                id='Attempts' name='Attempts' label='Колличество попыток'
+                value={model.Attempts} onChange={this.handleModel}
+                margin='normal' required fullWidth
+                validators={{
+                  min: {value: 1, message: ''},
+                  required: true
+                }}
+                className={classes.input}
+                onKeyDown={this.handleKeyDown}
+              />
+            </Grid>
+            <Grid>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={model.Type}
+                    onChange={this.handleModel}
+                    value="checkedA"
                   />
-                </Grid>
-              </StepContent>
-            </Step> 
-          </Stepper>
+                }
+                label="Secondary"
+              />
+            </Grid>
+          </Grid>
+          {/*</StepContent>*/}
+          {/*</Step>*/}
+          {/*<Step>*/}
+          {/*<StepLabel onClick={() => this.handleStep()(1)}>Основная информация</StepLabel>*/}
+          {/*<StepContent>*/}
+          {/*<Grid container item xs={12} spacing={16}>*/}
+          {/*<VTextField*/}
+          {/*id='Name' name='Name' label='Название'*/}
+          {/*value={model.Name} onChange={this.handleModel}*/}
+          {/*margin='normal' required fullWidth*/}
+          {/*validators={{*/}
+          {/*max: {value: 255, message: 'Название не должно привышать 255 символов'},*/}
+          {/*required: true*/}
+          {/*}}*/}
+          {/*className={classes.input}*/}
+          {/*onKeyDown={this.handleKeyDown}*/}
+          {/*/>*/}
+          {/*</Grid>*/}
+          {/*</StepContent>*/}
+          {/*</Step> */}
+          {/*</Stepper>*/}
         </Paper>
       </Grid>
     </Grid>

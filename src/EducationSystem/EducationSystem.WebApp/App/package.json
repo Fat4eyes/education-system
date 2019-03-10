@@ -9,6 +9,10 @@
     "@material-ui/icons": "^3.0.2",
     "@material-ui/styles": "^3.0.0-alpha.10",
     "@svgr/webpack": "2.4.1",
+    "@types/jest": "24.0.9",
+    "@types/node": "11.10.4",
+    "@types/react": "16.8.6",
+    "@types/react-dom": "16.8.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
     "babel-jest": "23.6.0",
@@ -74,6 +78,7 @@
     "resolve": "1.8.1",
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
+    "typescript": "3.3.3333",
     "url-loader": "1.1.1",
     "webpack": "4.19.1",
     "webpack-dev-server": "3.1.14",
@@ -138,5 +143,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^4.3.1"
   }
 }

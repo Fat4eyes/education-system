@@ -5,7 +5,7 @@ import Account from '../pages/Account/Account'
 import SignIn from '../pages/SignIn/SignIn'
 import Home from '../pages/Home/Home'
 import Tests from '../pages/Tests/Tests'
-import HandleTest from '../pages/HandleTest/HandleTest'
+import HandleTest from '../pages/HandleTest/HandleTestTS'
 
 const Routes = () =>
   <Switch>

@@ -1,23 +1,45 @@
 import React from 'react'
 import {If} from '../core'
-import {Typography} from '@material-ui/core'
+import {Typography, withStyles} from '@material-ui/core'
 import VTextField from './VTextField'
 import MaskedInput from 'react-text-mask'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 
+const styles = theme => ({
+  root: {
+    display: 'inline-flex',
+    padding: 0,
+    position: 'relative',
+    flexDirection: 'column',
+    verticalAlign: 'top',
+    marginTop: 16,
+    marginBottom: 8,
+    width: '100%'
+  },
+  label: {
+    fontSize: '0.75rem',
+    height: 16
+  },
+  input: {
+    fontSize: 1
+  }
+})
+
+@withStyles(styles)
 class VMaskedField extends VTextField {
   render() {
-    let {onChange, id, label, required, mask, styles, ...rest} = this.props
+    let {onChange, id, label, required, mask, styles, classes, ...rest} = this.props
 
-    const TextMask = ({inputRef, onChange, ...rest}) => 
+    const TextMask = ({inputRef, onChange, ...rest}) =>
       <MaskedInput {...rest} mask={mask} showMask ref={ref => inputRef(ref ? ref.inputElement : null)}/>
-      
-    return <>
-      <InputLabel 
-        htmlFor={id} 
+
+    return <div className={classes.root}>
+      <InputLabel
+        htmlFor={id}
         required={!!required}
         error={!this.state.isValid}
+        className={classes.label}
         style={{...styles.label}}
       >
         {label}
@@ -38,7 +60,7 @@ class VMaskedField extends VTextField {
           {this.state.error}
         </Typography>
       </If>
-    </>
+    </div>
   }
 }
 
