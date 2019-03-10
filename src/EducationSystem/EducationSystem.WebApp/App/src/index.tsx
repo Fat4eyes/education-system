@@ -9,14 +9,21 @@ import {blue} from './themes'
 import {unregister} from './serviceWorker'
 import './index.less'
 import history from './history'
+import Container from './infrastructure/di/Container'
+import ITestService from './services/abstractions/ITestService'
+import TestService from './services/implementations/TestService'
 
 const Layout = React.lazy(() => {
-  return new Promise(resolve => { //TODO Задержка для дев-тестирования 
+  return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
     setTimeout(() => resolve(import('./components/Layout/Layout')), 500)
   })
 })
 
 unregister()
+
+Container.getContainer()
+  .transient(TestService, TestService.name)
+  .setUp()
 
 const App = () => <Try>
   <Router history={history}>

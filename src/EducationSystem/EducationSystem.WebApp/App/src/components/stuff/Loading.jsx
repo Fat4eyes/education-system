@@ -11,7 +11,7 @@ const styles = () => ({
 });
 
 const Loading = ({classes}) => <div className={classes.root}>
-  <CircularProgress size={100} thickness={1} />;
+  <CircularProgress size={100} thickness={1} />
 </div>;
 
 export default withStyles(styles)(Loading)
