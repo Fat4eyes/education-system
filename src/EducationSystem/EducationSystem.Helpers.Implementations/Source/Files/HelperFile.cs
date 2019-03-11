@@ -55,6 +55,9 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
 
         public bool FileExsists(File file)
         {
+            if (file == null || string.IsNullOrWhiteSpace(file.Path))
+                throw ExceptionHelper.CreateException("Не заполнены нужные параметры для проверки существования файла.");
+
             var path = Path.Combine(
                 _environment.ContentRootPath,
                 file.Path.Replace("/", "\\"));
