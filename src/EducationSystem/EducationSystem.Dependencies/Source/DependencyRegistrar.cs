@@ -1,6 +1,8 @@
 ﻿using EducationSystem.Database.Source;
 using EducationSystem.Helpers.Implementations.Source;
+using EducationSystem.Helpers.Implementations.Source.Files;
 using EducationSystem.Helpers.Interfaces.Source;
+using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Implementations.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source;
@@ -41,6 +43,9 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IManagerTestResult, ManagerTestResult>();
             services.AddTransient<IManagerDiscipline, ManagerDiscipline>();
             services.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
+
+            services.AddTransient<IManagerFileImage, ManagerFileImage>();
+            services.AddTransient<IManagerFileDocument, ManagerFileDocument>();
         }
 
         private static void RegisterHelpers(IServiceCollection services)
@@ -49,6 +54,9 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IHelperTest, HelperTest>();
             services.AddTransient<IHelperTheme, HelperTheme>();
             services.AddTransient<IHelperQuestion, HelperQuestion>();
+
+            services.AddTransient<IHelperFileImage, HelperFileImage>();
+            services.AddTransient<IHelperFileDocument, HelperFileDocument>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)

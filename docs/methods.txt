@@ -60,7 +60,6 @@
 [Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>              (PagedData)
 [Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
 
-
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}
     [B] DELETE Questions/{Id}
@@ -68,6 +67,8 @@
     [B] POST Tests              Test
     [B] POST Themes             Theme
     [B] POST Questions          Question
+    [B] POST Images             File
+    [B] POST Documents          File
 
     [B] PUT Tests/{Id}          Test
     [B] PUT Themes/{Id}         Theme

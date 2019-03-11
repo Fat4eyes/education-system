@@ -1,10 +1,14 @@
-﻿using AutoMapper;
+﻿using System.IO;
+using AutoMapper;
 using EducationSystem.Mapping.Source;
 using EducationSystem.Models.Source;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -15,6 +19,14 @@ namespace EducationSystem.WebApp.Source.Helpers
     {
         public static void ConfigureMapper(IMapperConfigurationExpression expression)
             => MappingConfigurator.Configure(expression);
+
+        public static StaticFileOptions GetStaticFileOptions(IHostingEnvironment environment)
+        {
+            return new StaticFileOptions
+            {
+                FileProvider = environment.ContentRootFileProvider,
+            };
+        }
 
         public static void ConfigureSpaStaticFiles(SpaStaticFilesOptions options) =>
             options.RootPath = "App/build";

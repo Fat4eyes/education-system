@@ -47,16 +47,11 @@ namespace EducationSystem.WebApp.Source
         {
             loggerFactory.AddFile(Configuration.GetSection("LoggingParameters"));
 
-            if (environment.IsDevelopment())
-            {
-                builder.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                builder.UseHsts();
-            }
+            var _ = environment.IsDevelopment()
+                ? builder.UseDeveloperExceptionPage()
+                : builder.UseHsts();
 
-            builder.UseStaticFiles();
+            builder.UseStaticFiles(ConfigurationHelper.GetStaticFileOptions(environment));
             builder.UseSpaStaticFiles();
             builder.UseMiddleware(typeof(ExceptionHandler));
             builder.UseHttpsRedirection();
