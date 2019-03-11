@@ -34,11 +34,11 @@ namespace EducationSystem.Managers.Implementations.Source
             var guid = Guid.NewGuid();
             var name = guid.ToString("N") + Path.GetExtension(file.Name);
 
-            // Data/...
-            // Data/Images
-            // Data/Documents
+            // Files/...
+            // Files/Images
+            // Files/Documents
 
-            var path = Path.Combine(_environment.ContentRootPath, "Data");
+            var path = Path.Combine(_environment.ContentRootPath, "Files");
 
             if (Directory.Exists(path) == false)
                 Directory.CreateDirectory(path);
@@ -54,7 +54,7 @@ namespace EducationSystem.Managers.Implementations.Source
                 file.Stream.CopyTo(stream);
 
             path = Path
-                .Combine("Data", FolderName, name)
+                .Combine("Files", FolderName, name)
                 .Replace("\\", "/");
 
             return new File(guid, path);
