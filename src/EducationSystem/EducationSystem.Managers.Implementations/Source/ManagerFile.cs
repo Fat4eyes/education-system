@@ -27,7 +27,7 @@ namespace EducationSystem.Managers.Implementations.Source
             _environment = environment;
         }
 
-        public virtual File SaveImage(File file)
+        public virtual File SaveFile(File file)
         {
             _helperFile.ValidateFile(file);
 
