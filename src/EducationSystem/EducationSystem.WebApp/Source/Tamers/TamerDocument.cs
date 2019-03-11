@@ -18,9 +18,8 @@ namespace EducationSystem.WebApp.Source.Tamers
             _managerFileDocument = managerFileDocument;
         }
 
-        [Transaction]
         [HttpPost("")]
         public IActionResult SaveDocument(IFormFile file) =>
-            Ok(_managerFileDocument.SaveImage(new File(file.FileName, file.OpenReadStream())));
+            Ok(_managerFileDocument.SaveFile(new File(file.FileName, file.OpenReadStream())));
     }
 }

@@ -4,6 +4,6 @@ namespace EducationSystem.Managers.Interfaces.Source
 {
     public interface IManagerFile
     {
-        File SaveImage(File file);
+        File SaveFile(File file);
     }
 }

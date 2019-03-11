@@ -18,7 +18,6 @@ namespace EducationSystem.WebApp.Source.Tamers
             _managerFileImage = managerFileImage;
         }
 
-        [Transaction]
         [HttpPost("")]
         public IActionResult SaveImage(IFormFile file) =>
             Ok(_managerFileImage.SaveImage(new File(file.FileName, file.OpenReadStream())));
