@@ -20,6 +20,9 @@ namespace EducationSystem.Database.Models.Source
         [Column("text")]
         public virtual string Text { get; set; }
 
+        [Column("image")]
+        public virtual string Image { get; set; }
+
         [Column("complexity")]
         public virtual QuestionComplexityType Complexity { get; set; }
 

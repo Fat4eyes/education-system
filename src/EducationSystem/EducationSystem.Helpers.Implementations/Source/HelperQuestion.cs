@@ -41,6 +41,8 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (_repositoryTheme.GetById(question.ThemeId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
+            // TODO: Проверить существование изображения.
+
             ValidateByQuestionType(question);
         }
 

@@ -23,9 +23,12 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
             if (file?.Stream == null || file.Stream.Length == 0)
                 throw ExceptionHelper.CreatePublicException("Не указан файл.");
 
+            if (string.IsNullOrWhiteSpace(file.Name))
+                throw ExceptionHelper.CreatePublicException("Не указано название файла.");
+
             if (AvailableExtensions.Contains(Path.GetExtension(file.Name)) == false)
                 throw ExceptionHelper.CreatePublicException(
-                    $"Файл имеет неверный расширение. " +
+                    $"Файл имеет неверное расширение. " +
                     $"Доступные расширения файла: {string.Join(", ", AvailableExtensions)}.");
 
             if (file.Stream.Length > MaxiFileSize * 1024 * 1024)

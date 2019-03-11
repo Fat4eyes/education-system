@@ -12,6 +12,8 @@ namespace EducationSystem.Models.Source.Rest
 
         public QuestionComplexityType? Complexity { get; set; }
 
+        public string Image { get; set; }
+
         public int? Time { get; set; }
 
         public int ThemeId { get; set; }
