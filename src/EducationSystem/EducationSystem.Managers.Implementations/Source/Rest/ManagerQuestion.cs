@@ -98,6 +98,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             _helperQuestion.ValidateQuestion(question);
 
+            FormatQuestion(question);
+
             var model = Mapper.Map<DatabaseQuestion>(question);
 
             switch (question.Type)
@@ -126,6 +128,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Вопрос для обновления не найден. Идентификатор вопроса: {id}.",
                     $"Вопрос для обновления не найден.");
+
+            FormatQuestion(question);
 
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);
 
@@ -228,6 +232,28 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     d.Answers.ForEach(y => y.IsRight = null);
                 });
             });
+        }
+
+        private static void FormatQuestion(Question question)
+        {
+            question.Text = question.Text.Trim();
+            question.Image = question.Image?.Trim();
+
+            if (string.IsNullOrWhiteSpace(question.Image))
+                question.Image = null;
+
+            question.Answers?.ForEach(answer =>
+            {
+                answer.Text = answer.Text.Trim();
+            });
+
+            if (question.Program != null)
+            {
+                question.Program.Template = question.Program.Template?.Trim();
+
+                if (string.IsNullOrWhiteSpace(question.Program.Template))
+                    question.Program.Template = null;
+            }
         }
     }
 }

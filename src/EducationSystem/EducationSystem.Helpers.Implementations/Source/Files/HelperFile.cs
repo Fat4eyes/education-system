@@ -1,13 +1,22 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source.Files;
+using Microsoft.AspNetCore.Hosting;
 using File = EducationSystem.Models.Source.Files.File;
+using SystemFile = System.IO.File;
 
 namespace EducationSystem.Helpers.Implementations.Source.Files
 {
     public abstract class HelperFile : IHelperFile
     {
+        private readonly IHostingEnvironment _environment;
+
+        protected HelperFile(IHostingEnvironment environment)
+        {
+            _environment = environment;
+        }
+
         /// <summary>
         /// Максимальный размер файла (в мегабайтах).
         /// </summary>
@@ -16,7 +25,14 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
         /// <summary>
         /// Доступные расширения файла.
         /// </summary>
-        protected abstract List<string> AvailableExtensions { get; }
+        protected abstract string[] AvailableExtensions { get; }
+
+        /// <summary>
+        /// Доступные расширения файла (в верхнем регистре).
+        /// </summary>
+        protected string[] AvailableExtensionsInUpperCase => AvailableExtensions
+            .Select(x => x.ToUpper())
+            .ToArray();
 
         public virtual void ValidateFile(File file)
         {
@@ -26,7 +42,7 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
             if (string.IsNullOrWhiteSpace(file.Name))
                 throw ExceptionHelper.CreatePublicException("Не указано название файла.");
 
-            if (AvailableExtensions.Contains(Path.GetExtension(file.Name)) == false)
+            if (AvailableExtensionsInUpperCase.Contains(Path.GetExtension(file.Name).ToUpper()) == false)
                 throw ExceptionHelper.CreatePublicException(
                     $"Файл имеет неверное расширение. " +
                     $"Доступные расширения файла: {string.Join(", ", AvailableExtensions)}.");
@@ -35,6 +51,15 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
                 throw ExceptionHelper.CreatePublicException(
                     $"Размер файла превышает допустимый размер. " +
                     $"Допустимый размер файла: {MaxiFileSize} MB.");
+        }
+
+        public bool FileExsists(File file)
+        {
+            var path = Path.Combine(
+                _environment.ContentRootPath,
+                file.Path.Replace("/", "\\"));
+
+            return SystemFile.Exists(path);
         }
     }
 }

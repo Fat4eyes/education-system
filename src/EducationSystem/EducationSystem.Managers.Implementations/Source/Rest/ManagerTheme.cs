@@ -76,6 +76,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             _helperTheme.ValidateTheme(theme);
 
+            FormatTheme(theme);
+
             var model = Mapper.Map<DatabaseTheme>(theme);
 
             _repositoryTheme.Add(model);
@@ -92,6 +94,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема для обновления не найдена. Идентификатор темы: {id}.",
                     $"Тема для обновления не найдена.");
+
+            FormatTheme(theme);
 
             Mapper.Map(Mapper.Map<DatabaseTheme>(theme), model);
 
@@ -111,6 +115,11 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                         d.Questions = Mapper.Map<List<Question>>(s.Questions);
                 });
             });
+        }
+
+        private static void FormatTheme(Theme theme)
+        {
+            theme.Name = theme.Name.Trim();
         }
     }
 }

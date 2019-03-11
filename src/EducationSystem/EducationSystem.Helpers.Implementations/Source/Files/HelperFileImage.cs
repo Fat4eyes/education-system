@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EducationSystem.Helpers.Interfaces.Source.Files;
-using EducationSystem.Models.Source.Files;
+using Microsoft.AspNetCore.Hosting;
 
 namespace EducationSystem.Helpers.Implementations.Source.Files
 {
@@ -10,17 +11,16 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
         protected override int MaxiFileSize => 2;
 
         /// <inheritdoc />
-        protected override List<string> AvailableExtensions { get; } = new List<string>
+        protected override string[] AvailableExtensions { get; } =
         {
             ".jpg",
             ".jpeg",
             ".png",
-            ".gif"
+            ".gif",
+            ".bmp"
         };
 
-        public override void ValidateFile(File file)
-        {
-            base.ValidateFile(file);
-        }
+        public HelperFileImage(IHostingEnvironment environment)
+            : base(environment) { }
     }
 }

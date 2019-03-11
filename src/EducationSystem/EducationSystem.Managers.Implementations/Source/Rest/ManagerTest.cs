@@ -98,6 +98,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             _helperTest.ValidateTest(test);
 
+            FormatTest(test);
+
             var model = Mapper.Map<DatabaseTest>(test);
 
             _repositoryTest.Add(model);
@@ -114,6 +116,8 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тест для обновления не найден. Идентификатор теста: {id}.",
                     $"Тест для обновления не найден.");
+
+            FormatTest(test);
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
 
@@ -161,6 +165,11 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     }
                 });
             });
+        }
+
+        private static void FormatTest(Test test)
+        {
+            test.Subject = test.Subject.Trim();
         }
     }
 }

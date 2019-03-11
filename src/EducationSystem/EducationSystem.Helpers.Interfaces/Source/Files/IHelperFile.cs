@@ -5,5 +5,7 @@ namespace EducationSystem.Helpers.Interfaces.Source.Files
     public interface IHelperFile
     {
         void ValidateFile(File file);
+
+        bool FileExsists(File file);
     }
 }

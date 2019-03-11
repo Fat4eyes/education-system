@@ -26,5 +26,10 @@ namespace EducationSystem.Models.Source.Files
             Guid = guid;
             Path = path;
         }
+
+        public File(string path)
+        {
+            Path = path;
+        }
     }
 }

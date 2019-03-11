@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Helpers.Interfaces.Source.Files;
+using Microsoft.AspNetCore.Hosting;
 
 namespace EducationSystem.Helpers.Implementations.Source.Files
 {
@@ -9,9 +10,10 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
         protected override int MaxiFileSize => 25;
 
         /// <inheritdoc />
-        protected override List<string> AvailableExtensions { get; } = new List<string>
+        protected override string[] AvailableExtensions { get; } =
         {
             ".txt",
+            ".dat",
             ".xls",
             ".xlsx",
             ".ppt",
@@ -19,10 +21,15 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
             ".pptx",
             ".zip",
             ".rar",
+            ".dot",
             ".doc",
             ".docm",
             ".docx",
-            ".pdf"
+            ".pdf",
+            ".rtf"
         };
+
+        public HelperFileDocument(IHostingEnvironment environment)
+            : base(environment) { }
     }
 }

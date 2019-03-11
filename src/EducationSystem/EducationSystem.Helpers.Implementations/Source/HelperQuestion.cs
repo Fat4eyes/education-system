@@ -4,6 +4,8 @@ using EducationSystem.Enums.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
+using EducationSystem.Helpers.Interfaces.Source.Files;
+using EducationSystem.Models.Source.Files;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 
@@ -11,10 +13,12 @@ namespace EducationSystem.Helpers.Implementations.Source
 {
     public sealed class HelperQuestion : IHelperQuestion
     {
+        private readonly IHelperFileImage _helperFileImage;
         private readonly IRepositoryTheme _repositoryTheme;
 
-        public HelperQuestion(IRepositoryTheme repositoryTheme)
+        public HelperQuestion(IHelperFileImage helperFileImage, IRepositoryTheme repositoryTheme)
         {
+            _helperFileImage = helperFileImage;
             _repositoryTheme = repositoryTheme;
         }
 
@@ -41,7 +45,9 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (_repositoryTheme.GetById(question.ThemeId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            // TODO: Проверить существование изображения.
+            if (string.IsNullOrWhiteSpace(question.Image) == false)
+                if (_helperFileImage.FileExsists(new File(question.Image)) == false)
+                    throw ExceptionHelper.CreatePublicException("Указанное изображение не найдено.");
 
             ValidateByQuestionType(question);
         }
