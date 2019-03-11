@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Interfaces.Source;
 using Microsoft.AspNetCore.Hosting;
@@ -38,7 +39,7 @@ namespace EducationSystem.Managers.Implementations.Source
             // Files/Images
             // Files/Documents
 
-            var path = Path.Combine(_environment.ContentRootPath, "Files");
+            var path = Path.Combine(_environment.ContentRootPath, Directories.Files);
 
             if (Directory.Exists(path) == false)
                 Directory.CreateDirectory(path);
@@ -54,7 +55,7 @@ namespace EducationSystem.Managers.Implementations.Source
                 file.Stream.CopyTo(stream);
 
             path = Path
-                .Combine("Files", FolderName, name)
+                .Combine(Directories.Files, FolderName, name)
                 .Replace("\\", "/");
 
             return new File(guid, path);

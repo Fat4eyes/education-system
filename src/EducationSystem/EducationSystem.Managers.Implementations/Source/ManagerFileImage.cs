@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Interfaces.Source;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,7 @@ namespace EducationSystem.Managers.Implementations.Source
 {
     public class ManagerFileImage : ManagerFile, IManagerFileImage
     {
-        protected override string FolderName => "Images";
+        protected override string FolderName => Directories.Images;
 
         public ManagerFileImage(
             IMapper mapper,

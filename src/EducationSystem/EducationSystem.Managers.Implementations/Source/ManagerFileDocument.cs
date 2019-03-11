@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationSystem.Constants.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,7 @@ namespace EducationSystem.Managers.Implementations.Source
 {
     public class ManagerFileDocument : ManagerFile, IManagerFileDocument
     {
-        protected override string FolderName => "Documents";
+        protected override string FolderName => Directories.Documents;
 
         public ManagerFileDocument(
             IMapper mapper,
