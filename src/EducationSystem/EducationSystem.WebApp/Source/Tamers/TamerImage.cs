@@ -20,6 +20,6 @@ namespace EducationSystem.WebApp.Source.Tamers
 
         [HttpPost("")]
         public IActionResult SaveImage(IFormFile file) =>
-            Ok(_managerFileImage.SaveImage(new File(file.FileName, file.OpenReadStream())));
+            Ok(_managerFileImage.SaveFile(new File(file.FileName, file.OpenReadStream())));
     }
 }
