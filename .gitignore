@@ -31,6 +31,19 @@ node_modules/
 *.vspscc
 *.vssscc
 *.scc
+*.psess
+*.vsp
+*.vspx
+*.sap
+*.jfm
+*.pfx
+*.mdf
+*.ldf
+*.ndf
+
+*.nupkg
+*.nuget.props
+*.nuget.targets
 
 project.lock.json
 project.fragment.lock.json
