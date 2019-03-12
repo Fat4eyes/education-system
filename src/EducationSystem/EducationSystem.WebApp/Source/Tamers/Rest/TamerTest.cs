@@ -1,4 +1,5 @@
-﻿using EducationSystem.Constants.Source;
+﻿using System.Threading.Tasks;
+using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
@@ -29,8 +30,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPost("")]
-        public IActionResult CreateTest([FromBody] Test test)
-            => Ok(_managerTest.CreateTest(test));
+        public async Task<IActionResult> CreateTest([FromBody] Test test)
+            => Ok(await _managerTest.CreateTestAsync(test));
 
         [HttpGet("{testId:int}")]
         public IActionResult GetTest(
@@ -40,8 +41,10 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPut("{testId:int}")]
-        public IActionResult UpdateTest([FromRoute] int testId, [FromBody] Test test)
-            => Ok(_managerTest.UpdateTest(testId, test));
+        public async Task<IActionResult> UpdateTest(
+            [FromRoute] int testId,
+            [FromBody] Test test)
+            => Ok(await _managerTest.UpdateTestAsync(testId, test));
 
         [HttpGet("{testId:int}/Themes")]
         public IActionResult GetTestThemes(
@@ -53,6 +56,6 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Transaction]
         [HttpDelete("{testId:int}")]
         public IActionResult DeleteTest([FromRoute] int testId) =>
-            Ok(() => _managerTest.DeleteTestById(testId));
+            Ok(async () => await _managerTest.DeleteTestByIdAsync(testId));
     }
 }

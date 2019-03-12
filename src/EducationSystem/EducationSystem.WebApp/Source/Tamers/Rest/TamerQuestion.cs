@@ -1,4 +1,5 @@
-﻿using EducationSystem.Constants.Source;
+﻿using System.Threading.Tasks;
+using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
@@ -27,8 +28,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPost("")]
-        public IActionResult CreateQuestion([FromBody] Question question)
-            => Ok(_managerQuestion.CreateQuestion(question));
+        public async Task<IActionResult> CreateQuestion([FromBody] Question question)
+            => Ok(await _managerQuestion.CreateQuestionAsync(question));
 
         [HttpGet("{questionId:int}")]
         public IActionResult GetQuestion(
@@ -38,12 +39,14 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPut("{questionId:int}")]
-        public IActionResult UpdateQuestion([FromRoute] int questionId, [FromBody] Question question)
-            => Ok(_managerQuestion.UpdateQuestion(questionId, question));
+        public async Task<IActionResult> UpdateQuestion(
+            [FromRoute] int questionId,
+            [FromBody] Question question)
+            => Ok(await _managerQuestion.UpdateQuestionAsync(questionId, question));
 
         [Transaction]
         [HttpDelete("{questionId:int}")]
         public IActionResult DeleteQuestion([FromRoute] int questionId) =>
-            Ok(() => _managerQuestion.DeleteQuestionById(questionId));
+            Ok(async () => await _managerQuestion.DeleteQuestionByIdAsync(questionId));
     }
 }

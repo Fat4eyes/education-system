@@ -1,4 +1,5 @@
-﻿using EducationSystem.Constants.Source;
+﻿using System.Threading.Tasks;
+using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source;
 using EducationSystem.Models.Source.Files;
 using EducationSystem.WebApp.Source.Attributes;
@@ -19,10 +20,15 @@ namespace EducationSystem.WebApp.Source.Tamers
         }
 
         [HttpPost("")]
-        public IActionResult SaveImage(IFormFile file)
+        public async Task<IActionResult> SaveImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
-                return Ok(_managerFileImage.SaveFile(new File(file.FileName, stream)));
+            {
+                var result = await _managerFileImage
+                    .SaveFileAsync(new File(file.FileName, stream));
+
+                return Ok(result);
+            }
         }
     }
 }

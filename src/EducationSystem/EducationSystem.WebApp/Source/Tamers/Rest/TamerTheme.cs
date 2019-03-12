@@ -1,4 +1,5 @@
-﻿using EducationSystem.Constants.Source;
+﻿using System.Threading.Tasks;
+using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
@@ -29,8 +30,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPost("")]
-        public IActionResult CreateTheme([FromBody] Theme theme)
-            => Ok(_managerTheme.CreateTheme(theme));
+        public async Task<IActionResult> CreateTheme([FromBody] Theme theme)
+            => Ok(await _managerTheme.CreateThemeAsync(theme));
 
         [HttpGet("{themeId:int}")]
         public IActionResult GetTheme(
@@ -40,8 +41,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPut("{themeId:int}")]
-        public IActionResult UpdateTheme([FromRoute] int themeId, [FromBody] Theme theme)
-            => Ok(_managerTheme.UpdateTheme(themeId, theme));
+        public async Task<IActionResult> UpdateTheme([FromRoute] int themeId, [FromBody] Theme theme)
+            => Ok(await _managerTheme.UpdateThemeAsync(themeId, theme));
 
         [HttpGet("{themeId:int}/Questions")]
         public IActionResult GetThemeQuestions(
@@ -53,6 +54,6 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Transaction]
         [HttpDelete("{themeId:int}")]
         public IActionResult DeleteTheme([FromRoute] int themeId) =>
-            Ok(() => _managerTheme.DeleteThemeById(themeId));
+            Ok(async () => await _managerTheme.DeleteThemeByIdAsync(themeId));
     }
 }

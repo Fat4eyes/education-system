@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Enums.Source;
@@ -83,18 +84,23 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return Map(question, options);
         }
 
-        public void DeleteQuestionById(int id)
+        public void DeleteQuestionById(int id) =>
+            DeleteQuestionByIdAsync(id).WaitTask();
+
+        public async Task DeleteQuestionByIdAsync(int id)
         {
             var question = _repositoryQuestion.GetById(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Вопрос для удаления не найден. Идентификатор вопроса: {id}.",
                    $"Вопрос для удаления не найден.");
 
-            _repositoryQuestion.Remove(question);
-            _repositoryQuestion.SaveChanges();
+            await _repositoryQuestion.RemoveAsync(question, true);
         }
 
-        public Question CreateQuestion(Question question)
+        public Question CreateQuestion(Question question) =>
+            CreateQuestionAsync(question).WaitTask();
+
+        public async Task<Question> CreateQuestionAsync(Question question)
         {
             _helperQuestion.ValidateQuestion(question);
 
@@ -114,13 +120,15 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                     break;
             }
 
-            _repositoryQuestion.Add(model);
-            _repositoryQuestion.SaveChanges();
+            await _repositoryQuestion.AddAsync(model, true);
 
             return Mapper.Map<DatabaseQuestion, Question>(model);
         }
 
-        public Question UpdateQuestion(int id, Question question)
+        public Question UpdateQuestion(int id, Question question) =>
+            UpdateQuestionAsync(id, question).WaitTask();
+
+        public async Task<Question> UpdateQuestionAsync(int id, Question question)
         {
             _helperQuestion.ValidateQuestion(question);
 
@@ -134,15 +142,11 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);
 
             if (model.Answers.Any())
-            {
-                _repositoryAnswer.RemoveRange(model.Answers);
-                _repositoryAnswer.SaveChanges();
-            }
+                await _repositoryAnswer.RemoveAsync(model.Answers, true);
 
             model.Answers = null;
 
-            _repositoryQuestion.Update(model);
-            _repositoryQuestion.SaveChanges();
+            await _repositoryQuestion.UpdateAsync(model, true);
 
             switch (question.Type)
             {
@@ -150,8 +154,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 {
                     model.Program = null;
 
-                    _repositoryQuestion.Update(model);
-                    _repositoryQuestion.SaveChanges();
+                    await _repositoryQuestion.UpdateAsync(model, true);
 
                     break;
                 }
@@ -161,13 +164,11 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 {
                     model.Program = null;
 
-                    _repositoryQuestion.Update(model);
-                    _repositoryQuestion.SaveChanges();
+                    await _repositoryQuestion.UpdateAsync(model, true);
 
                     model.Answers = Mapper.Map<List<DatabaseAnswer>>(question.Answers);
 
-                    _repositoryAnswer.AddRange(model.Answers);
-                    _repositoryAnswer.SaveChanges();
+                    await _repositoryAnswer.AddAsync(model.Answers, true);
 
                     break;
                 }
@@ -175,8 +176,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 {
                     model.Program = Mapper.Map<DatabaseProgram>(question.Program);
 
-                    _repositoryProgram.Add(model.Program);
-                    _repositoryProgram.SaveChanges();
+                    await _repositoryProgram.AddAsync(model.Program, true);
 
                     break;
                 }
@@ -184,19 +184,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 {
                     Mapper.Map(Mapper.Map<DatabaseProgram>(question.Program), model.Program);
 
-                    _repositoryProgram.Update(model.Program);
-                    _repositoryProgram.SaveChanges();
+                    await _repositoryProgram.UpdateAsync(model.Program, true);
 
                     if (model.Program.ProgramDatas.Any())
-                    {
-                        _repositoryProgramData.RemoveRange(model.Program.ProgramDatas);
-                        _repositoryProgramData.SaveChanges();
-                    }
+                        await _repositoryProgramData.RemoveAsync(model.Program.ProgramDatas, true);
 
                     model.Program.ProgramDatas = Mapper.Map<List<DatabaseProgramData>>(question.Program.ProgramDatas);
 
-                    _repositoryProgramData.AddRange(model.Program.ProgramDatas);
-                    _repositoryProgramData.SaveChanges();
+                    await _repositoryProgramData.AddAsync(model.Program.ProgramDatas, true);
 
                     break;
                 }

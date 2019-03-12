@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
@@ -83,18 +84,23 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return MapForStudent(test, options);
         }
 
-        public void DeleteTestById(int id)
+        public void DeleteTestById(int id) =>
+            DeleteTestByIdAsync(id).WaitTask();
+
+        public async Task DeleteTestByIdAsync(int id)
         {
             var test = _repositoryTest.GetById(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Тест для удаления не найден. Идентификатор теста: {id}.",
                    $"Тест для удаления не найден.");
 
-            _repositoryTest.Remove(test);
-            _repositoryTest.SaveChanges();
+            await _repositoryTest.RemoveAsync(test, true);
         }
 
-        public Test CreateTest(Test test)
+        public Test CreateTest(Test test) =>
+            CreateTestAsync(test).WaitTask();
+
+        public async Task<Test> CreateTestAsync(Test test)
         {
             _helperTest.ValidateTest(test);
 
@@ -102,13 +108,15 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             var model = Mapper.Map<DatabaseTest>(test);
 
-            _repositoryTest.Add(model);
-            _repositoryTest.SaveChanges();
+            await _repositoryTest.AddAsync(model, true);
 
             return Mapper.Map<DatabaseTest, Test>(model);
         }
 
-        public Test UpdateTest(int id, Test test)
+        public Test UpdateTest(int id, Test test) =>
+            UpdateTestAsync(id, test).WaitTask();
+
+        public async Task<Test> UpdateTestAsync(int id, Test test)
         {
             _helperTest.ValidateTest(test);
 
@@ -121,19 +129,14 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
 
-            _repositoryTest.Update(model);
-            _repositoryTest.SaveChanges();
+            await _repositoryTest.UpdateAsync(model, true);
 
             if (model.TestThemes.Any())
-            {
-                _repositoryTestTheme.RemoveRange(model.TestThemes);
-                _repositoryTestTheme.SaveChanges();
-            }
+                await _repositoryTestTheme.RemoveAsync(model.TestThemes, true);
 
             model.TestThemes = Mapper.Map<List<DatabaseTestTheme>>(test.Themes);
 
-            _repositoryTestTheme.AddRange(model.TestThemes);
-            _repositoryTestTheme.SaveChanges();
+            await _repositoryTestTheme.AddAsync(model.TestThemes, true);
 
             return Mapper.Map<DatabaseTest, Test>(model);
         }

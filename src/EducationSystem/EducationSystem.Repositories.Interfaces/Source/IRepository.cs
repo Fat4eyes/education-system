@@ -6,18 +6,26 @@ namespace EducationSystem.Repositories.Interfaces.Source
 {
     public interface IRepository<TModel> : IRepositoryReadOnly<TModel> where TModel : DatabaseModel
     {
-        TModel Add(TModel model);
-        Task<TModel> AddAsync(TModel model);
+        TModel Add(TModel model, bool save = false);
+        Task<TModel> AddAsync(TModel model, bool save = false);
 
-        void AddRange(IEnumerable<TModel> models);
-        Task AddRangeAsync(IEnumerable<TModel> models);
+        void Add(IEnumerable<TModel> models, bool save = false);
+        Task AddAsync(IEnumerable<TModel> models, bool save = false);
 
-        void Update(TModel model);
-        void UpdateRange(IEnumerable<TModel> models);
+        void Update(TModel model, bool save = false);
+        Task UpdateAsync(TModel model, bool save = false);
 
-        void Remove(int id);
-        void Remove(TModel model);
-        void RemoveRange(IEnumerable<TModel> models);
+        void Update(IEnumerable<TModel> models, bool save = false);
+        Task UpdateAsync(IEnumerable<TModel> models, bool save = false);
+
+        void Remove(int id, bool save = false);
+        Task RemoveAsync(int id, bool save = false);
+
+        void Remove(TModel model, bool save = false);
+        Task RemoveAsync(TModel model, bool save = false);
+
+        void Remove(IEnumerable<TModel> models, bool save = false);
+        Task RemoveAsync(IEnumerable<TModel> models, bool save = false);
 
         void SaveChanges();
         Task SaveChangesAsync();

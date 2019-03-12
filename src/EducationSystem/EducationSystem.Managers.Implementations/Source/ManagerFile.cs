@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Constants.Source;
+using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Interfaces.Source;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +30,9 @@ namespace EducationSystem.Managers.Implementations.Source
             _environment = environment;
         }
 
-        public virtual File SaveFile(File file)
+        public File SaveFile(File file) => SaveFileAsync(file).WaitTask();
+
+        public virtual async Task<File> SaveFileAsync(File file)
         {
             _helperFile.ValidateFile(file);
 
@@ -52,7 +56,7 @@ namespace EducationSystem.Managers.Implementations.Source
             path = Path.Combine(path, name);
 
             using (var stream = new FileStream(path, FileMode.Create))
-                file.Stream.CopyTo(stream);
+                await file.Stream.CopyToAsync(stream);
 
             path = Path
                 .Combine(Directories.Files, FolderName, name)
