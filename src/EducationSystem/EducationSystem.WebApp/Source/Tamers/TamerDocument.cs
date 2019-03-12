@@ -19,7 +19,10 @@ namespace EducationSystem.WebApp.Source.Tamers
         }
 
         [HttpPost("")]
-        public IActionResult SaveDocument(IFormFile file) =>
-            Ok(_managerFileDocument.SaveFile(new File(file.FileName, file.OpenReadStream())));
+        public IActionResult SaveDocument(IFormFile file)
+        {
+            using (var stream = file.OpenReadStream())
+                return Ok(_managerFileDocument.SaveFile(new File(file.FileName, stream)));
+        }
     }
 }
