@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using EducationSystem.Constants.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
-using EducationSystem.Managers.Interfaces.Source;
+using EducationSystem.Managers.Interfaces.Source.Files;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.Managers.Implementations.Source
+namespace EducationSystem.Managers.Implementations.Source.Files
 {
     public class ManagerFileImage : ManagerFile, IManagerFileImage
     {

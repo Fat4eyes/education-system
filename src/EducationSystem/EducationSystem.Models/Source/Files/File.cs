@@ -3,7 +3,7 @@ using System.IO;
 
 namespace EducationSystem.Models.Source.Files
 {
-    public class File
+    public class File : IDisposable
     {
         public string Path { get; set; }
 
@@ -30,6 +30,11 @@ namespace EducationSystem.Models.Source.Files
         public File(string path)
         {
             Path = path;
+        }
+
+        public void Dispose()
+        {
+            Stream?.Dispose();
         }
     }
 }

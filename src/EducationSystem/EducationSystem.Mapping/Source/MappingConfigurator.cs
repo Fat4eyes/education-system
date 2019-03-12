@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EducationSystem.Database.Models.Source;
+using EducationSystem.Models.Source.Export;
 using EducationSystem.Models.Source.Rest;
 
 namespace EducationSystem.Mapping.Source
@@ -82,6 +83,8 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore());
 
+            expression.CreateMap<DatabaseQuestion, ExportQuestion>();
+
             expression.CreateMap<Question, DatabaseQuestion>()
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Theme, o => o.Ignore())
@@ -97,6 +100,9 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.GivenAnswers, o => o.Ignore());
 
             expression.CreateMap<DatabaseAnswer, Answer>()
+                .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
+
+            expression.CreateMap<DatabaseAnswer, ExportAnswer>()
                 .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
 
             expression.CreateMap<Answer, DatabaseAnswer>()

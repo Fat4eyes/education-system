@@ -20,7 +20,6 @@
 [Options]          [C] GET Students/Current/Tests/{Id}      Test
 [Options] [Filter] [C] GET Students/Current/Disciplines     List<Discipline>        (PagedData)
 
-
 Возвращает указанное количество (Count) вопросов указанного теста (TestId) для текущего студента.
 Вопросы каждый раз перемешиваются.
 [C] GET Students/Current/Tests/{TestId}/Questions/{Count}
@@ -54,11 +53,14 @@
 [Options] [Filter] [B] GET Themes                           List<Theme>             (PagedData)
 [Options]          [B] GET Themes/{Id}                      Theme
 [Options] [Filter] [B] GET Themes/{Id}/Questions            List<Question>          (PagedData)
+                   [B] GET Themes/{Id}/Exports/Questions    File
 
 [Options] [Filter] [B] GET Disciplines                      List<Discipline>        (PagedData)
 [Options]          [B] GET Disciplines/{Id}                 Discipline
 [Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>              (PagedData)
 [Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
+
+    [B] GET Exports/Themes/{Id}/Questions    File
 
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}

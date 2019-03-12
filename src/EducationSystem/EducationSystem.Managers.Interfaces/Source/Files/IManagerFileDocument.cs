@@ -1,4 +1,4 @@
-﻿namespace EducationSystem.Managers.Interfaces.Source.Rest
+﻿namespace EducationSystem.Managers.Interfaces.Source.Files
 {
     public interface IManagerFileDocument : IManagerFile { }
 }
