@@ -104,8 +104,7 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Program, o => o.Ignore())
                 .ForMember(d => d.GivenAnswers, o => o.Ignore());
 
-            expression.CreateMap<ImportAnswer, Answer>()
-                .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight ? 1 : 0));
+            expression.CreateMap<ImportAnswer, Answer>();
 
             expression.CreateMap<DatabaseAnswer, Answer>()
                 .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
