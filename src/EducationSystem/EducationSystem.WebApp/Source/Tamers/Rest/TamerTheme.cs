@@ -2,6 +2,7 @@
 using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Export;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Exports.Options;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Models.Source.Rest;
@@ -63,7 +64,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             Ok(async () => await _managerTheme.DeleteThemeByIdAsync(themeId));
 
         [HttpGet("{themeId:int}/Exports/Questions")]
-        public IActionResult ExportThemeQuestions([FromRoute] int themeId) =>
-            File(_managerExportQuestion.ExportThemeQuestions(themeId));
+        public IActionResult ExportThemeQuestions(
+            [FromRoute] int themeId,
+            [FromQuery] ExportOptions options) =>
+            File(_managerExportQuestion.ExportThemeQuestions(themeId, options));
     }
 }

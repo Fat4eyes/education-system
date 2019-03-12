@@ -1,5 +1,6 @@
 ﻿using EducationSystem.Constants.Source;
 using EducationSystem.Managers.Interfaces.Source.Export;
+using EducationSystem.Models.Source.Exports.Options;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,9 @@ namespace EducationSystem.WebApp.Source.Tamers
         }
 
         [HttpGet("Themes/{themeId:int}/Questions")]
-        public IActionResult ExportThemeQuestions([FromRoute] int themeId) =>
-            File(_managerExportQuestion.ExportThemeQuestions(themeId));
+        public IActionResult ExportThemeQuestions(
+            [FromRoute] int themeId,
+            [FromQuery] ExportOptions options) =>
+            File(_managerExportQuestion.ExportThemeQuestions(themeId, options));
     }
 }

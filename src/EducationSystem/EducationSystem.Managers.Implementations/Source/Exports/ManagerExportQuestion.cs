@@ -7,13 +7,14 @@ using EducationSystem.Enums.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Managers.Interfaces.Source.Export;
-using EducationSystem.Models.Source.Export;
+using EducationSystem.Models.Source.Exports;
+using EducationSystem.Models.Source.Exports.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using File = EducationSystem.Models.Source.Files.File;
 
-namespace EducationSystem.Managers.Implementations.Source.Export
+namespace EducationSystem.Managers.Implementations.Source.Exports
 {
     public class ManagerExportQuestion : ManagerExport, IManagerExportQuestion
     {
@@ -28,7 +29,7 @@ namespace EducationSystem.Managers.Implementations.Source.Export
             _repositoryTheme = repositoryTheme;
         }
 
-        public File ExportThemeQuestions(int themeId)
+        public File ExportThemeQuestions(int themeId, ExportOptions options)
         {
             var theme = _repositoryTheme.GetById(themeId) ??
                 throw ExceptionHelper.CreateNotFoundException(
@@ -45,8 +46,12 @@ namespace EducationSystem.Managers.Implementations.Source.Export
                 .Where(x => x.Type != QuestionType.WithProgram)
                 .ToList();
 
+            var formatting = options.Indented
+                ? Formatting.Indented
+                : Formatting.None;
+
             var items = Mapper.Map<List<ExportQuestion>>(questions);
-            var json = JsonConvert.SerializeObject(items);
+            var json = JsonConvert.SerializeObject(items, formatting);
             var bytes = Encoding.UTF8.GetBytes(json);
 
             return new File("questions.json", new MemoryStream(bytes));

@@ -1,6 +1,6 @@
-﻿namespace EducationSystem.Models.Source.Export
+﻿namespace EducationSystem.Models.Source.Imports
 {
-    public class ExportAnswer
+    public class ImportAnswer
     {
         public string Text { get; set; }
 

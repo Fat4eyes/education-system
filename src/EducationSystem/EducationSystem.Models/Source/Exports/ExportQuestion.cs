@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Enums.Source;
 
-namespace EducationSystem.Models.Source.Export
+namespace EducationSystem.Models.Source.Exports
 {
     public class ExportQuestion
     {
