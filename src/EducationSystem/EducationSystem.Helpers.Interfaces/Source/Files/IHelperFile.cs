@@ -6,6 +6,6 @@ namespace EducationSystem.Helpers.Interfaces.Source.Files
     {
         void ValidateFile(File file);
 
-        bool FileExsists(File file);
+        bool FileExists(File file);
     }
 }

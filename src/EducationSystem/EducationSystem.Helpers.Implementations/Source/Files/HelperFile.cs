@@ -53,7 +53,7 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
                     $"Допустимый размер файла: {MaxiFileSize} MB.");
         }
 
-        public bool FileExsists(File file)
+        public bool FileExists(File file)
         {
             if (file == null || string.IsNullOrWhiteSpace(file.Path))
                 throw ExceptionHelper.CreateException("Не заполнены нужные параметры для проверки существования файла.");

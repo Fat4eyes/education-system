@@ -46,7 +46,7 @@ namespace EducationSystem.Helpers.Implementations.Source
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
             if (string.IsNullOrWhiteSpace(question.Image) == false)
-                if (_helperFileImage.FileExsists(new File(question.Image)) == false)
+                if (_helperFileImage.FileExists(new File(question.Image)) == false)
                     throw ExceptionHelper.CreatePublicException("Указанное изображение не найдено.");
 
             ValidateByQuestionType(question);
