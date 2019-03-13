@@ -10,6 +10,6 @@ namespace EducationSystem.Repositories.Interfaces.Source.Rest
         (int Count, List<DatabaseTheme> Themes) GetThemesByTestId(int testId, FilterTheme filter);
         (int Count, List<DatabaseTheme> Themes) GetThemesByDisciplineId(int disciplineId, FilterTheme filter);
 
-        bool CheckThemesExistence(List<int> themeIds);
+        bool IsThemesExists(List<int> themeIds);
     }
 }

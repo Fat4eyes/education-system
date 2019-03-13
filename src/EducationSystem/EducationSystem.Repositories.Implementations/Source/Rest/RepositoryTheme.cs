@@ -30,7 +30,7 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                 .ApplyPaging(filter);
         }
 
-        public bool CheckThemesExistence(List<int> themeIds)
+        public bool IsThemesExists(List<int> themeIds)
         {
             return AsQueryable().Count(x => themeIds.Contains(x.Id)) == themeIds.Count;
         }
