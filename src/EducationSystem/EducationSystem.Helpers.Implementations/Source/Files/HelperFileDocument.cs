@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using EducationSystem.Helpers.Interfaces.Source.Files;
+﻿using EducationSystem.Helpers.Interfaces.Source.Files;
 using Microsoft.AspNetCore.Hosting;
 
 namespace EducationSystem.Helpers.Implementations.Source.Files
 {
-    public class HelperFileDocument : HelperFile, IHelperFileDocument
+    public sealed class HelperFileDocument : HelperFile, IHelperFileDocument
     {
         /// <inheritdoc />
         protected override int MaxiFileSize => 25;
