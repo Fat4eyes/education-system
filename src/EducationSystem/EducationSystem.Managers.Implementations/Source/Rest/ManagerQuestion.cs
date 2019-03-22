@@ -211,6 +211,9 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
                     if (options.WithProgram)
                         d.Program = Mapper.Map<Program>(s.Program);
+
+                    if (options.WithMaterial)
+                        d.Material = Mapper.Map<Material>(s.Material);
                 });
             });
         }
@@ -223,6 +226,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 {
                     d.Program = Mapper.Map<Program>(s.Program);
                     d.Answers = Mapper.Map<List<Answer>>(s.Answers);
+                    d.Material = Mapper.Map<Material>(s.Material);
 
                     d.Answers.ForEach(y => y.IsRight = null);
                 });
@@ -232,10 +236,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         private static void FormatQuestion(Question question)
         {
             question.Text = question.Text.Trim();
-            question.Image = question.Image?.Trim();
-
-            if (string.IsNullOrWhiteSpace(question.Image))
-                question.Image = null;
 
             question.Answers?.ForEach(answer =>
             {

@@ -8,10 +8,12 @@ namespace EducationSystem.Database.Source.Contexts
         public DbSet<DatabaseUser> Users { get; set; }
         public DbSet<DatabaseRole> Roles { get; set; }
         public DbSet<DatabaseTest> Tests { get; set; }
+        public DbSet<DatabaseFile> Files { get; set; }
         public DbSet<DatabaseGroup> Groups { get; set; }
         public DbSet<DatabaseAnswer> Answers { get; set; }
         public DbSet<DatabaseProgram> Programs { get; set; }
         public DbSet<DatabaseQuestion> Questions { get; set; }
+        public DbSet<DatabaseMaterial> Materials { get; set; }
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
         public DbSet<DatabaseInstitute> Institutes { get; set; }
         public DbSet<DatabaseDiscipline> Disciplines { get; set; }
@@ -20,6 +22,7 @@ namespace EducationSystem.Database.Source.Contexts
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
         public DbSet<DatabaseExtraAttempt> ExtraAttempts { get; set; }
         public DbSet<DatabaseProgramData> ParametersSets { get; set; }
+        public DbSet<DatabaseMaterialFile> MaterialFiles { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {
@@ -41,6 +44,7 @@ namespace EducationSystem.Database.Source.Contexts
             BuildProgram(builder);
             BuildUser(builder);
             BuildDiscipline(builder);
+            BuildMaterial(builder);
         }
 
         private static void BuildUserRole(ModelBuilder builder)
@@ -206,6 +210,15 @@ namespace EducationSystem.Database.Source.Contexts
                 .HasMany(x => x.TestResults)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId);
+        }
+
+        private static void BuildMaterial(ModelBuilder builder)
+        {
+            builder
+                .Entity<DatabaseMaterial>()
+                .HasMany(x => x.Files)
+                .WithOne(x => x.Material)
+                .HasForeignKey(x => x.MaterialId);
         }
     }
 }

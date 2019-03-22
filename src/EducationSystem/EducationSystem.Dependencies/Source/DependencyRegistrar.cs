@@ -70,12 +70,14 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryRole, RepositoryRole>();
             services.AddTransient<IRepositoryTest, RepositoryTest>();
             services.AddTransient<IRepositoryUser, RepositoryUser>();
+            services.AddTransient<IRepositoryFile, RepositoryFile>();
             services.AddTransient<IRepositoryGroup, RepositoryGroup>();
             services.AddTransient<IRepositoryTheme, RepositoryTheme>();
             services.AddTransient<IRepositoryAnswer, RepositoryAnswer>();
             services.AddTransient<IRepositoryProgram, RepositoryProgram>();
             services.AddTransient<IRepositoryStudent, RepositoryStudent>();
             services.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
+            services.AddTransient<IRepositoryMaterial, RepositoryMaterial>();
             services.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
             services.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
             services.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();

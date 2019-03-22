@@ -9,5 +9,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Files
         Task<File> SaveFileAsync(File file);
 
         bool FileExists(File file);
+
+        string GetFilePath(File file);
     }
 }
