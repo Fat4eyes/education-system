@@ -42,6 +42,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IManagerTheme, ManagerTheme>();
             services.AddTransient<IManagerStudent, ManagerStudent>();
             services.AddTransient<IManagerQuestion, ManagerQuestion>();
+            services.AddTransient<IManagerMaterial, ManagerMaterial>();
             services.AddTransient<IManagerInstitute, ManagerInstitute>();
             services.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
             services.AddTransient<IManagerTestResult, ManagerTestResult>();
@@ -60,6 +61,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IHelperTest, HelperTest>();
             services.AddTransient<IHelperTheme, HelperTheme>();
             services.AddTransient<IHelperQuestion, HelperQuestion>();
+            services.AddTransient<IHelperMaterial, HelperMaterial>();
 
             services.AddTransient<IHelperFileImage, HelperFileImage>();
             services.AddTransient<IHelperFileDocument, HelperFileDocument>();
@@ -85,6 +87,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
             services.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
             services.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
+            services.AddTransient<IRepositoryMaterialFile, RepositoryMaterialFile>();
         }
 
         private static void RegisterDatabases(IServiceCollection services, IConfiguration configuration)

@@ -156,12 +156,20 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Files, o => o.MapFrom(s => s.Files.Select(x => x.File)));
 
             expression.CreateMap<Material, DatabaseMaterial>()
-                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Id, o => o.Ignore());
+
+            expression.CreateMap<DatabaseMaterial, DatabaseMaterial>()
                 .ForMember(d => d.Files, o => o.Ignore());
 
             expression.CreateMap<DatabaseFile, File>()
                 .ForMember(d => d.Path, o => o.Ignore())
                 .ForMember(d => d.Stream, o => o.Ignore());
+
+            expression.CreateMap<File, DatabaseMaterialFile>()
+                .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.MaterialId, o => o.Ignore())
+                .ForMember(d => d.Material, o => o.Ignore())
+                .ForMember(d => d.File, o => o.Ignore());
 
             expression.AllowNullCollections = true;
             expression.ForAllMaps(Configure);

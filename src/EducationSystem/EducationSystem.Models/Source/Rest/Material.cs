@@ -8,7 +8,7 @@ namespace EducationSystem.Models.Source.Rest
     {
         public string Name { get; set; }
 
-        public string Tempalate { get; set; }
+        public string Template { get; set; }
 
         public List<File> Files { get; set; }
     }

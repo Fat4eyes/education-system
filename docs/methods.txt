@@ -62,18 +62,23 @@
 
 [Options]          [B] GET Exports/Themes/{Id}/Questions    File
 
+[Options] [Filter] [B] GET Materials                        List<Material>          (PagedData)
+
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}
     [B] DELETE Questions/{Id}
+    [B] DELETE Materials/{Id}
 
     [B] POST Tests              Test
     [B] POST Themes             Theme
     [B] POST Questions          Question
     [B] POST Images             File
     [B] POST Documents          File
+    [B] POST Materials          Material
 
     [B] PUT Tests/{Id}          Test
     [B] PUT Themes/{Id}         Theme
     [B] PUT Questions/{Id}      Question
+    [B] PUT Materials/{Id}      Material
 
 Все поля со значением NULL возращены не будут!

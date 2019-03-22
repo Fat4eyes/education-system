@@ -11,7 +11,7 @@ namespace EducationSystem.Database.Models.Source
         public virtual string Name { get; set; }
 
         [Column("template")]
-        public virtual string Tempalate { get; set; }
+        public virtual string Template { get; set; }
 
         public virtual List<DatabaseMaterialFile> Files { get; set; }
             = new List<DatabaseMaterialFile>();
