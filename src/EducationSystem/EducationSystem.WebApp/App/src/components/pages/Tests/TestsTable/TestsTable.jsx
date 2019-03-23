@@ -95,30 +95,6 @@ class TestsTable extends TableComponent {
 
   getTableData = this.getTests
 
-  // handleChangePage = async page =>
-  //   this.setState({Page: page, IsLoading: true},
-  //     async () =>
-  //       await this.getTests({
-  //         Skip: page * this.state.CountPerPage,
-  //         Take: this.state.CountPerPage,
-  //         IsLoading: false
-  //       }))
-  //
-  // handleChangeRowsPerPage = (value) => {
-  //   if (value === this.state.CountPerPage) return
-  //   this.setState({
-  //     CountPerPage: value,
-  //     Page: 0,
-  //     IsLoading: true
-  //   }, async () => {
-  //     await this.getTests({
-  //       Skip: 0,
-  //       Take: value,
-  //       IsLoading: false
-  //     })
-  //   })
-  // }
-
   handleDatailsClick = id => {
     if (this.state.IsLoading) return
     this.setState({
@@ -244,7 +220,6 @@ class TestsTable extends TableComponent {
                           {test.Subject}
                         </Typography>
                       </Grid>
-                     0
                       <Collapse timeout={500} in={test.IsDetailsLoaded && test.IsSelected} className={classes.collapse}>
                         <TestDetails test={test} handleDetailsLoad={this.handleDetailsLoad}/>
                       </Collapse>
