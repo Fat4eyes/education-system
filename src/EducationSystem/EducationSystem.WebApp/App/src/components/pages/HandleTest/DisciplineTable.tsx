@@ -109,7 +109,7 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
         onCountPerPageChange={this.handleChangeRowsPerPage}
       />
       {this.state.Items.map((d: Discipline) =>
-        <RowHeader key={d.Id} onClick={() => this.props.handleClick(d.Id)}>
+        <RowHeader key={d.Id} onClick={() => this.props.handleClick(d)}>
           <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
             <Typography noWrap variant='subtitle1'>
               {d.Name}

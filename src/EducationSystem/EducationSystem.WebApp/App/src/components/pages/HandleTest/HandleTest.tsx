@@ -48,15 +48,13 @@ interface IState {
   Model: Test,
   AvailableThemes: Array<Theme>,
   SelectedThemes: Array<number>,
-  step: number,
-  Disciplines: Array<Discipline>
+  step: number
 }
 
 const initState = {
   Model: new Test(),
   AvailableThemes: [],
   SelectedThemes: [],
-  Disciplines: [],
   step: 0
 } as IState
 
@@ -93,9 +91,9 @@ class HandleTest extends Component<IProps, IState> {
     }))
   }
   
-  handleChangeDiscipline = async (id: number) => {
-    if (id !== this.state.Model.DisciplineId) {
-      let result = await this.DisciplineService!.getThemes(id)
+  handleChangeDiscipline = async (discipline: Discipline) => {
+    if (discipline.Id !== this.state.Model.DisciplineId) {
+      let result = await this.DisciplineService!.getThemes(discipline.Id!)
 
       if (result instanceof Exception) {
         return this.props.enqueueSnackbar(result.message, {
@@ -110,7 +108,8 @@ class HandleTest extends Component<IProps, IState> {
       this.setState(state => ({
         Model: {
           ...state.Model,
-          DisciplineId: id
+          DisciplineId: discipline.Id,
+          Discipline: discipline
         },
         AvailableThemes: (result as IPagedData<Theme>).Items,
         SelectedThemes: [],
@@ -171,12 +170,6 @@ class HandleTest extends Component<IProps, IState> {
     } while (from++ < to)
     return attempts
   }
-  
-  getNameSelectedDiscipline = () => {
-    let discipline = this.state.Disciplines.find(d => d.Id === this.state.Model.DisciplineId)
-    
-    return discipline ? discipline.Name : ''
-  }
 
   render() {
     let {classes, isEdit} = this.props
@@ -192,7 +185,6 @@ class HandleTest extends Component<IProps, IState> {
         </Grid>
       </Grid>
     )
-
     return <Grid container justify='center'>
       <Grid item xs={12} md={10} lg={8}>
         <Paper className={classes.paper}>
@@ -201,9 +193,10 @@ class HandleTest extends Component<IProps, IState> {
             <Step>
               <StepLabel>
                 <Typography noWrap variant='subtitle1'>
-                  <If condition={!!this.state.Model.DisciplineId} orElse={'Выбор дисциплины'}>
-                    Дисциплина: {this.getNameSelectedDiscipline()}
-                  </If>
+                  {!!this.state.Model.DisciplineId 
+                    ? `Дисциплина: ${this.state.Model.Discipline!.Name}`
+                    : 'Выбор дисциплины'
+                  }
                 </Typography>
               </StepLabel>
               <StepContent>
