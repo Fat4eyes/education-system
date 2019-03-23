@@ -5,13 +5,14 @@ using AutoMapper;
 using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Enums.Source;
-using EducationSystem.Extensions.Source;
+using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Interfaces.Source.Files;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using File = EducationSystem.Models.Source.Files.File;
+using SystemFile = System.IO.File;
 
 namespace EducationSystem.Managers.Implementations.Source.Files
 {
@@ -36,18 +37,12 @@ namespace EducationSystem.Managers.Implementations.Source.Files
             _repositoryFile = repositoryFile;
         }
 
-        public File SaveFile(File file) => SaveFileAsync(file).WaitTask();
-
-        public virtual async Task<File> SaveFileAsync(File file)
+        public virtual async Task<File> AddFileAsync(File file)
         {
             _helperFile.ValidateFile(file);
 
             var guid = Guid.NewGuid();
-            var name = guid.ToString("N") + Path.GetExtension(file.Name);
-
-            // Files/...
-            // Files/Images
-            // Files/Documents
+            var name = guid + Path.GetExtension(file.Name);
 
             var path = Path.Combine(_environment.ContentRootPath, Directories.Files);
 
@@ -70,17 +65,60 @@ namespace EducationSystem.Managers.Implementations.Source.Files
 
             var model = Mapper.Map<DatabaseFile>(file);
 
-            model.Guid = guid;
+            model.Guid = guid.ToString();
             model.Type = FileType;
             model.Name = file.Name;
 
             await _repositoryFile.AddAsync(model, true);
 
-            return new File(model.Id, guid, path);
+            Mapper.Map(model, file);
+
+            file.Path = path;
+
+            return file;
         }
 
-        public bool FileExists(File file) => _helperFile.FileExists(file);
+        public Task<File> GetFileById(int id)
+        {
+            var model = _repositoryFile.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Файл не найден. Идентификатор файла: {id}.",
+                    $"Файл не найден.");
 
-        public string GetFilePath(File file) => _helperFile.GetFilePath(file);
+            var file = Mapper.Map<File>(model);
+
+            if (_helperFile.FileExists(file) == false)
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Файл не найден. Идентификатор файла: {id}.",
+                    $"Файл не найден.");
+
+            file.Path = _helperFile
+                .GetFilePath(file)
+                .Replace("\\", "/");
+
+            return Task.FromResult(file);
+        }
+
+        public async Task DeleteFileByIdAsync(int id)
+        {
+            var model = _repositoryFile.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Файл для удаления не найден. Идентификатор файла: {id}.",
+                    $"Файл для удаления не найден.");
+
+            var file = Mapper.Map<File>(model);
+
+            await _repositoryFile.RemoveAsync(model);
+
+            if (_helperFile.FileExists(file) == false)
+                return;
+
+            var path = Path.Combine(_environment.ContentRootPath, _helperFile.GetFilePath(file));
+
+            if (SystemFile.Exists(path))
+                SystemFile.Delete(path);
+
+            await _repositoryFile.SaveChangesAsync();
+        }
     }
 }

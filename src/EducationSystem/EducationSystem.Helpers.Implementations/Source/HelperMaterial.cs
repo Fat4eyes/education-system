@@ -34,6 +34,9 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (material.Files.IsEmpty())
                 return;
 
+            if (material.Files.GroupBy(x => x.Id).Any(x => x.Count() > 1))
+                throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся файлы.");
+
             if (material.Files.Any(x => _helperFileDocument.FileExists(x.Id) == false))
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
 

@@ -159,6 +159,7 @@ namespace EducationSystem.Mapping.Source
                 .ForMember(d => d.Id, o => o.Ignore());
 
             expression.CreateMap<DatabaseMaterial, DatabaseMaterial>()
+                .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Files, o => o.Ignore());
 
             expression.CreateMap<DatabaseFile, File>()

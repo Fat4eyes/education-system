@@ -64,10 +64,15 @@
 
 [Options] [Filter] [B] GET Materials                        List<Material>          (PagedData)
 
+    [B] GET Images/{Id}         File
+    [B] GET Documents/{Id}      File
+
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}
     [B] DELETE Questions/{Id}
     [B] DELETE Materials/{Id}
+    [B] DELETE Images/{Id}
+    [B] DELETE Documents/{Id}
 
     [B] POST Tests              Test
     [B] POST Themes             Theme

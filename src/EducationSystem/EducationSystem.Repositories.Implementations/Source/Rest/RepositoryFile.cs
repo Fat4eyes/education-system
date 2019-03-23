@@ -14,11 +14,16 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public DatabaseFile GetByGuid(Guid guid)
         {
-            return AsQueryable().FirstOrDefault(x => x.Guid == guid);
+            return AsQueryable().FirstOrDefault(x => string.Equals(
+                x.Guid, guid.ToString(), StringComparison.CurrentCultureIgnoreCase));
         }
 
         public bool IsFilesExists(List<int> fileIds)
         {
+            fileIds = fileIds
+                .Distinct()
+                .ToList();
+
             return AsQueryable().Count(x => fileIds.Contains(x.Id)) == fileIds.Count;
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using EducationSystem.Database.Models.Source.Base;
 using EducationSystem.Enums.Source;
 
@@ -9,7 +8,7 @@ namespace EducationSystem.Database.Models.Source
     public class DatabaseFile : DatabaseModel
     {
         [Column("guid")]
-        public virtual Guid Guid { get; set; }
+        public virtual string Guid { get; set; }
 
         [Column("name")]
         public virtual string Name { get; set; }

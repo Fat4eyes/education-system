@@ -10,13 +10,10 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
     {
         PagedData<Material> GetMaterials(OptionsMaterial options, FilterMaterial filter);
 
-        void DeleteMaterialById(int id);
         Task DeleteMaterialByIdAsync(int id);
 
-        Material CreateMaterial(Material material);
         Task<Material> CreateMaterialAsync(Material material);
 
-        Material UpdateMaterial(int id, Material material);
         Task<Material> UpdateMaterialAsync(int id, Material material);
     }
 }

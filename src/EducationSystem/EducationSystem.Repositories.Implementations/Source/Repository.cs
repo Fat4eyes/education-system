@@ -108,7 +108,7 @@ namespace EducationSystem.Repositories.Implementations.Source
         {
             var existing = Context
                 .Set<TModel>()
-                .Find(model);
+                .Find(model.Id);
 
             if (existing != null)
             {

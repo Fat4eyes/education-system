@@ -92,7 +92,7 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
                     $"Файл не найден. Идентификатор файла: {file.Id}.",
                     $"Файл не найден.");
 
-            var name = model.Guid.ToString("N") + Path.GetExtension(model.Name);
+            var name = model.Guid + Path.GetExtension(model.Name);
 
             return Path.Combine(Directories.Files, GetFolderName(model.Type), name);
         }

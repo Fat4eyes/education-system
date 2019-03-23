@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EducationSystem.Constants.Source;
 using EducationSystem.Enums.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Interfaces.Source.Files;
@@ -11,7 +10,7 @@ namespace EducationSystem.Managers.Implementations.Source.Files
 {
     public class ManagerFileImage : ManagerFile, IManagerFileImage
     {
-        protected override FileType FileType => FileType.Document;
+        protected override FileType FileType => FileType.Image;
 
         public ManagerFileImage(
             IMapper mapper,

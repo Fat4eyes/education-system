@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
-using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
@@ -42,9 +41,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
         }
 
-        public void DeleteMaterialById(int id)
-            => DeleteMaterialByIdAsync(id).WaitTask();
-
         public async Task DeleteMaterialByIdAsync(int id)
         {
             var material = _repositoryMaterial.GetById(id) ??
@@ -54,9 +50,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             await _repositoryMaterial.RemoveAsync(material, true);
         }
-
-        public Material CreateMaterial(Material material)
-            => CreateMaterialAsync(material).WaitTask();
 
         public async Task<Material> CreateMaterialAsync(Material material)
         {
@@ -70,9 +63,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             return Mapper.Map<DatabaseMaterial, Material>(model);
         }
-
-        public Material UpdateMaterial(int id, Material material)
-            => UpdateMaterialAsync(id, material).WaitTask();
 
         public async Task<Material> UpdateMaterialAsync(int id, Material material)
         {
