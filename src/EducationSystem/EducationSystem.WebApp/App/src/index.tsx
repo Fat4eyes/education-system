@@ -5,7 +5,7 @@ import {MuiThemeProvider} from '@material-ui/core/styles'
 import {SnackbarProvider} from 'notistack'
 import AuthProvider from './providers/AuthProvider/AuthProvider'
 import {Loading, Try} from './components/core'
-import {blue} from './themes'
+import {blue, purpleVaginaForVitya} from './themes'
 import {unregister} from './serviceWorker'
 import './index.less'
 import history from './history'
@@ -30,7 +30,7 @@ Container.getContainer()
 
 const App = () => <Try>
   <Router history={history}>
-    <MuiThemeProvider theme={blue()}>
+    <MuiThemeProvider theme={purpleVaginaForVitya()}>
       <SnackbarProvider maxSnack={3}>
         <AuthProvider>
           <Suspense fallback={

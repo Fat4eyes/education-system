@@ -33,3 +33,15 @@ export const blue = () => createMuiTheme({
     ...pallete
   },
 })
+
+export const purpleVaginaForVitya = () => createMuiTheme({
+  ...base,
+  palette: {
+    primary: {
+      main: '#ff4081',
+    },
+    secondary: {
+      main: '#ff80ab',
+    },
+  },
+})
