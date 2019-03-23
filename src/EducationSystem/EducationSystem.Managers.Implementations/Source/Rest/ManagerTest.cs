@@ -84,9 +84,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return MapForStudent(test, options);
         }
 
-        public void DeleteTestById(int id) =>
-            DeleteTestByIdAsync(id).WaitTask();
-
         public async Task DeleteTestByIdAsync(int id)
         {
             var test = _repositoryTest.GetById(id) ??
@@ -96,9 +93,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             await _repositoryTest.RemoveAsync(test, true);
         }
-
-        public Test CreateTest(Test test) =>
-            CreateTestAsync(test).WaitTask();
 
         public async Task<Test> CreateTestAsync(Test test)
         {
@@ -112,9 +106,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             return Mapper.Map<DatabaseTest, Test>(model);
         }
-
-        public Test UpdateTest(int id, Test test) =>
-            UpdateTestAsync(id, test).WaitTask();
 
         public async Task<Test> UpdateTestAsync(int id, Test test)
         {

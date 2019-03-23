@@ -84,9 +84,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return Map(question, options);
         }
 
-        public void DeleteQuestionById(int id) =>
-            DeleteQuestionByIdAsync(id).WaitTask();
-
         public async Task DeleteQuestionByIdAsync(int id)
         {
             var question = _repositoryQuestion.GetById(id) ??
@@ -96,9 +93,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             await _repositoryQuestion.RemoveAsync(question, true);
         }
-
-        public Question CreateQuestion(Question question) =>
-            CreateQuestionAsync(question).WaitTask();
 
         public async Task<Question> CreateQuestionAsync(Question question)
         {
@@ -124,9 +118,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             return Mapper.Map<DatabaseQuestion, Question>(model);
         }
-
-        public Question UpdateQuestion(int id, Question question) =>
-            UpdateQuestionAsync(id, question).WaitTask();
 
         public async Task<Question> UpdateQuestionAsync(int id, Question question)
         {

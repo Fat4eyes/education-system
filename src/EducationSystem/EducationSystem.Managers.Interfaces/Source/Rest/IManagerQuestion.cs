@@ -16,13 +16,10 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 
         Question GetQuestionById(int id, OptionsQuestion options);
 
-        void DeleteQuestionById(int id);
         Task DeleteQuestionByIdAsync(int id);
 
-        Question CreateQuestion(Question question);
         Task<Question> CreateQuestionAsync(Question question);
 
-        Question UpdateQuestion(int id, Question question);
         Task<Question> UpdateQuestionAsync(int id, Question question);
     }
 }
