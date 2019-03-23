@@ -34,14 +34,38 @@ export const blue = () => createMuiTheme({
   },
 })
 
-export const purpleVaginaForVitya = () => createMuiTheme({
+export const edo = () => createMuiTheme({
   ...base,
   palette: {
     primary: {
-      main: '#ff4081',
+      light: '#07b7b4',
+      main: '#209387',
+      dark: '#036561',
+      contrastText: '#ffffff',
     },
     secondary: {
-      main: '#ff80ab',
+      light: '#e4ffff',
+      main: '#b1ddd9',
+      dark: '#81aba8',
+      contrastText: '#000000',
+    }
+  },
+})
+
+export const grey = () => createMuiTheme({
+  ...base,
+  palette: {
+    primary: {
+      light: '#a7c0cd',
+      main: '#78909c',
+      dark: '#4b636e',
+      contrastText: '#ffffff',
     },
+    secondary: {
+      light: '#efefef',
+      main: '#bdbdbd',
+      dark: '#8d8d8d',
+      contrastText: '#000000',
+    }
   },
 })
