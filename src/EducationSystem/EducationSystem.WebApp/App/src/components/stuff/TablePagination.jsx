@@ -37,6 +37,8 @@ const TablePagination = (props) => {
     </IconButton>
   )
 
+  const handleSelect = ({target: {value}}) => onCountPerPageChange(value)
+  
   return <Grid container alignItems='center' spacing={16} className={classes.root}>
     <If condition={!!count.current} orElse={<Grid item xs/>}>
       <If condition={!showChangeCountPerPageBlock && !isXs}>
@@ -46,8 +48,8 @@ const TablePagination = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Select variant='filled' value={count.perPage} onChange={onCountPerPageChange} className={classes.select}>
-            {[12, 25, 50].map(i => <MenuItem key={i} value={i}>{i}</MenuItem>)}
+          <Select variant='filled' value={count.perPage} onChange={handleSelect} className={classes.select}>
+            {[10, 25, 50].map(i => <MenuItem key={i} value={i}>{i}</MenuItem>)}
           </Select>
         </Grid>
       </If>

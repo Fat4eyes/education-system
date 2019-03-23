@@ -1,3 +1,5 @@
+import Exception from './Exception'
+
 class Fetch {
   static async handleFetch(url, options, onError) {
     try {
@@ -19,7 +21,14 @@ class Fetch {
         if (e[e.length - 1] === '.') {
           e = e.slice(0, -1)
         }
-        onError ? onError(e) : console.log(e)
+        
+        if (onError) {
+          onError(e)
+        } else {
+
+          
+          return new Exception(e)
+        }
       }
 
       switch (typeof Error) {
@@ -33,7 +42,7 @@ class Fetch {
             case 500:
               return handleError(await Error.text())
             default:
-              return console.log(Error)
+              return handleError('')
           }
         case 'string':
         default:

@@ -6,7 +6,7 @@ import MaskedInput from 'react-text-mask'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     display: 'inline-flex',
     padding: 0,
@@ -29,7 +29,7 @@ const styles = theme => ({
 @withStyles(styles)
 class VMaskedField extends VTextField {
   render() {
-    let {onChange, id, label, required, mask, styles, classes, ...rest} = this.props
+    let {onChange, id, label, required, mask, styles = {}, classes, ...rest} = this.props
 
     const TextMask = ({inputRef, onChange, ...rest}) =>
       <MaskedInput {...rest} mask={mask} showMask ref={ref => inputRef(ref ? ref.inputElement : null)}/>

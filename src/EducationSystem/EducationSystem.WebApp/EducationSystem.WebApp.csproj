@@ -26,6 +26,8 @@
     <Content Include="App\src\components\MaterialEditor\SideToolbar\blockTypeSelectStyles.module.less" />
     <Content Include="App\src\components\MaterialEditor\SideToolbar\buttonStyles.module.less" />
     <Content Include="App\src\components\MaterialEditor\SideToolbar\toolbarStyles.module.less" />
+    <Content Include="App\src\components\Table\Row.tsx" />
+    <Content Include="App\src\components\Table\RowBody.tsx" />
     <None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
   </ItemGroup>
 

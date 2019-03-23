@@ -6,8 +6,6 @@ class Mapper {
         ? from.map(item => ({...basedOn, ...item}))
         : {...basedOn, ...from}
     } catch (e) {
-      console.log(e)
-
       return isArray 
         ? [] 
         : basedOn

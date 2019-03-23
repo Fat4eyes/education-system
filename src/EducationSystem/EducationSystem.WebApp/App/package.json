@@ -87,7 +87,8 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js"
+    "build": "node scripts/build.js",
+    "arkit": "arkit -f src/index.tsx -o arkit.svg"
   },
   "eslintConfig": {
     "extends": "react-app"
