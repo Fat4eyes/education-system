@@ -244,11 +244,7 @@ class TestsTable extends TableComponent {
                           {test.Subject}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} className={classes.rowProgress}>
-                        <If condition={test.IsSelected && !test.IsDetailsLoaded}>
-                          <LinearProgress/>
-                        </If>
-                      </Grid>
+                     0
                       <Collapse timeout={500} in={test.IsDetailsLoaded && test.IsSelected} className={classes.collapse}>
                         <TestDetails test={test} handleDetailsLoad={this.handleDetailsLoad}/>
                       </Collapse>

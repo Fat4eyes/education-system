@@ -6,5 +6,5 @@ import INameFilter from '../../models/Filters'
 
 export default interface IDisciplineService {
    getAll(options?: IPagingOptions, filter?: INameFilter): Promise<IPagedData<Discipline> | Exception>
-   getThemes(id: number): Promise<IPagedData<Theme> | Exception>
+   getThemes(id: number, options?: IPagingOptions): Promise<IPagedData<Theme> | Exception>
 }

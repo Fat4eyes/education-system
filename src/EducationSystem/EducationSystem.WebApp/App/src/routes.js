@@ -25,10 +25,15 @@ const testRoutes = {
   add: '/api/tests'
 };
 
+const themeRoutes = {
+  add: '/api/themes'
+}
+
 export {
   authRoutes,
   usersRoutes,
   accountRoutes,
   disciplineRoutes,
-  testRoutes
+  testRoutes,
+  themeRoutes
 }

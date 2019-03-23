@@ -6,14 +6,18 @@ import SignIn from '../pages/SignIn/SignIn'
 import Home from '../pages/Home/Home'
 import Tests from '../pages/Tests/Tests'
 import HandleTest from '../pages/HandleTest/HandleTest'
+import ThemesPage from '../pages/Themes/ThemesPage'
 
 const Routes = () =>
   <Switch>
     <Route exact path='/' component={Home}/>
     <Route path='/signin' component={SignIn}/>
-    <ProtectedRoute exact path='/handletest' component={HandleTest}/>
+    
     <ProtectedRoute path='/account' component={Account}/>
+    
+    <ProtectedRoute path='/handletest' component={HandleTest} userRole='Admin'/>
     <ProtectedRoute path='/tests' component={Tests} userRole='Admin'/>
+    <ProtectedRoute path='/themes' component={ThemesPage} userRole='Admin'/>
   </Switch>
 
 export default Routes

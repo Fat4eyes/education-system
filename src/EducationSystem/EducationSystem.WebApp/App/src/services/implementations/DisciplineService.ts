@@ -9,8 +9,8 @@ export default class DisciplineService implements IDisciplineService {
     return await ProtectedFetch.get(UrlBuilder.Build(disciplineRoutes.getDisciplines, {...options, ...filter}))
   }
   
-  async getThemes(id: number) {
-    return await ProtectedFetch.get(UrlBuilder.Build(disciplineRoutes.getDisciplineThemes(id), {
+  async getThemes(id: number, options?: IPagingOptions) {
+    return await ProtectedFetch.get(UrlBuilder.Build(disciplineRoutes.getDisciplineThemes(id), options || {
       All: true
     }))
   }

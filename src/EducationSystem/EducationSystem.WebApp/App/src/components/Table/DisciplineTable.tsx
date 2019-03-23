@@ -1,16 +1,17 @@
-import TableComponent from '../../Table/TableComponent'
-import Discipline from '../../../models/Discipline'
-import {ITableState} from '../../Table/IHandleTable'
-import IPagedData, {IPagingOptions} from '../../../models/PagedData'
-import {inject} from '../../../infrastructure/di/inject'
-import IDisciplineService from '../../../services/abstractions/IDisciplineService'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
-import {Exception} from '../../../helpers'
+import {ITableState} from './IHandleTable'
 import {Grid, TextField, Typography} from '@material-ui/core'
-import * as React from 'react'
-import {TablePagination} from '../../core'
-import RowHeader from '../../Table/RowHeader'
+import IPagedData, {IPagingOptions} from '../../models/PagedData'
+import RowHeader from './RowHeader'
+import TableComponent from './TableComponent'
+import IDisciplineService from '../../services/abstractions/IDisciplineService'
 import {ChangeEvent} from 'react'
+import Discipline from '../../models/Discipline'
+import {inject} from '../../infrastructure/di/inject'
+import {Exception} from '../../helpers'
+import * as React from 'react'
+import {TablePagination} from '../core'
+
 
 interface IProps extends InjectedNotistackProps {
   handleClick: any
@@ -65,7 +66,7 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
     })
   }
   
-  handleName = ({target: {value}}: ChangeEvent<HTMLInputElement> | any) => {
+  private handleName = ({target: {value}}: ChangeEvent<HTMLInputElement> | any) => {
     const oldValue = this.state.Name
 
     if (value.length >= minLengthForTrigger || (value.length < minLengthForTrigger && oldValue.length >= minLengthForTrigger)) {

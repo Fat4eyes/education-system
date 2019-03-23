@@ -12,6 +12,7 @@ import history from './history'
 import Container from './infrastructure/di/Container'
 import TestService from './services/implementations/TestService'
 import DisciplineService from './services/implementations/DisciplineService'
+import ThemeService from './services/implementations/ThemeService'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -24,6 +25,7 @@ unregister()
 Container.getContainer()
   .transient(TestService, TestService.name)
   .transient(DisciplineService, DisciplineService.name)
+  .transient(ThemeService, ThemeService.name)
   .setUp()
 
 const App = () => <Try>

@@ -33,7 +33,7 @@ import {TestType} from '../../../common/enums'
 import {Exception} from '../../../helpers'
 import IPagedData from '../../../models/PagedData'
 import Discipline from '../../../models/Discipline'
-import DisciplineTable from './DisciplineTable'
+import DisciplineTable from '../../Table/DisciplineTable'
 
 interface IProps extends WithStyles<typeof HandleTestStyles>, InjectedNotistackProps {
   isEdit: boolean,
