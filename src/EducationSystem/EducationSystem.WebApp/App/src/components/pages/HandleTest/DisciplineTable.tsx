@@ -6,18 +6,21 @@ import {inject} from '../../../infrastructure/di/inject'
 import IDisciplineService from '../../../services/abstractions/IDisciplineService'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import {Exception} from '../../../helpers'
-import {Grid, Typography} from '@material-ui/core'
+import {Grid, TextField, Typography} from '@material-ui/core'
 import * as React from 'react'
 import {TablePagination} from '../../core'
 import RowHeader from '../../Table/RowHeader'
+import {ChangeEvent} from 'react'
 
 interface IProps extends InjectedNotistackProps {
   handleClick: any
 }
 
 interface IState extends ITableState<Discipline> {
-
+  Name: string
 }
+
+const minLengthForTrigger = 3
 
 class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
   @inject
@@ -31,7 +34,8 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
       CountPerPage: 10,
       Page: 0,
       Items: [],
-      IsLoading: false
+      IsLoading: false,
+      Name: ''
     }
   }
 
@@ -40,7 +44,9 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
       Skip: 0,
       Take: this.state.CountPerPage,
       ...param
-    })
+    },this.state.Name.length >= minLengthForTrigger ? {
+      Name: this.state.Name
+    } : {})
 
     if (result instanceof Exception) {
       return this.props.enqueueSnackbar(result.message, {
@@ -58,13 +64,40 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
       IsLoading: false
     })
   }
+  
+  handleName = ({target: {value}}: ChangeEvent<HTMLInputElement> | any) => {
+    const oldValue = this.state.Name
+
+    if (value.length >= minLengthForTrigger || (value.length < minLengthForTrigger && oldValue.length >= minLengthForTrigger)) {
+      this.setState({
+        Name: value,
+        IsLoading: true,
+        Page: 0
+      }, () => this.getTableData({Skip: 0, Take: this.state.CountPerPage}))
+    } else {
+      this.setState({
+        Name: value,
+        IsLoading: true,
+        Page: 0
+      })
+    }
+  }
 
   componentDidMount() {
     this.setState({IsLoading: true}, () => this.getTableData({Skip: 0, Take: this.state.CountPerPage}))
   }
 
   render() {
-    return <Grid item xs={12} container>
+    return <Grid item xs={12} container justify='center'>
+      <TextField
+        label='Название дисциплины'
+        placeholder='Название дисциплины (больше 3 символов)'
+        value={this.state.Name}
+        onChange={this.handleName}
+        style={{margin: '0 5px'}}
+        fullWidth
+        margin='none'
+      />
       <TablePagination
         count={{
           all: this.state.Count,

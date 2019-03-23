@@ -73,40 +73,12 @@ class HandleTest extends Component<IProps, IState> {
     this.state = initState
     this.state.Model.TotalTime = 60
   }
-
-  async componentDidMount() {
-    let disciplineResult = await this.DisciplineService!.getAll()
-
-    if (disciplineResult instanceof Exception) {
-      return this.props.enqueueSnackbar(disciplineResult.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-    }
-    
-
-    this.setState({
-      Disciplines: (disciplineResult as IPagedData<Discipline>).Items
-    })
-  }
   
   handleModel = ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) => {
     this.setState(state => ({
       Model: {
         ...state.Model,
         [name]: value
-      }
-    }))
-  }
-  
-  handleSwitch = ({target: {name, checked}}: ChangeEvent<HTMLInputElement> | any) => {
-    this.setState(state => ({
-      Model: {
-        ...state.Model,
-        [name]: checked
       }
     }))
   }
