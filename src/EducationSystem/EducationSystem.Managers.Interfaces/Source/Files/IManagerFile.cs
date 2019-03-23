@@ -5,9 +5,10 @@ namespace EducationSystem.Managers.Interfaces.Source.Files
 {
     public interface IManagerFile
     {
-        File SaveFile(File file);
-        Task<File> SaveFileAsync(File file);
+        Task<File> AddFileAsync(File file);
 
-        bool FileExists(File file);
+        Task<File> GetFileById(int id);
+
+        Task DeleteFileByIdAsync(int id);
     }
 }

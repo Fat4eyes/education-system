@@ -1,6 +1,8 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Models.Source.Exports;
+using EducationSystem.Models.Source.Files;
 using EducationSystem.Models.Source.Imports;
 using EducationSystem.Models.Source.Rest;
 
@@ -93,8 +95,10 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<Question, DatabaseQuestion>()
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Theme, o => o.Ignore())
+                .ForMember(d => d.Image, o => o.Ignore())
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
+                .ForMember(d => d.Material, o => o.Ignore())
                 .ForMember(d => d.GivenAnswers, o => o.Ignore());
 
             expression.CreateMap<DatabaseQuestion, DatabaseQuestion>()
@@ -147,6 +151,26 @@ namespace EducationSystem.Mapping.Source
             expression.CreateMap<DatabaseInstitute, Institute>();
 
             expression.CreateMap<User, Student>();
+
+            expression.CreateMap<DatabaseMaterial, Material>()
+                .ForMember(d => d.Files, o => o.MapFrom(s => s.Files.Select(x => x.File)));
+
+            expression.CreateMap<Material, DatabaseMaterial>()
+                .ForMember(d => d.Id, o => o.Ignore());
+
+            expression.CreateMap<DatabaseMaterial, DatabaseMaterial>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Files, o => o.Ignore());
+
+            expression.CreateMap<DatabaseFile, File>()
+                .ForMember(d => d.Path, o => o.Ignore())
+                .ForMember(d => d.Stream, o => o.Ignore());
+
+            expression.CreateMap<File, DatabaseMaterialFile>()
+                .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.MaterialId, o => o.Ignore())
+                .ForMember(d => d.Material, o => o.Ignore())
+                .ForMember(d => d.File, o => o.Ignore());
 
             expression.AllowNullCollections = true;
             expression.ForAllMaps(Configure);

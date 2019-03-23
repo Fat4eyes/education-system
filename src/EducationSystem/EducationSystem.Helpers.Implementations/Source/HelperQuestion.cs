@@ -5,7 +5,6 @@ using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
-using EducationSystem.Models.Source.Files;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 
@@ -14,12 +13,21 @@ namespace EducationSystem.Helpers.Implementations.Source
     public sealed class HelperQuestion : IHelperQuestion
     {
         private readonly IHelperFileImage _helperFileImage;
-        private readonly IRepositoryTheme _repositoryTheme;
 
-        public HelperQuestion(IHelperFileImage helperFileImage, IRepositoryTheme repositoryTheme)
+        private readonly IRepositoryFile _repositoryFile;
+        private readonly IRepositoryTheme _repositoryTheme;
+        private readonly IRepositoryMaterial _repositoryMaterial;
+
+        public HelperQuestion(
+            IHelperFileImage helperFileImage,
+            IRepositoryFile repositoryFile,
+            IRepositoryTheme repositoryTheme,
+            IRepositoryMaterial repositoryMaterial)
         {
             _helperFileImage = helperFileImage;
+            _repositoryFile = repositoryFile;
             _repositoryTheme = repositoryTheme;
+            _repositoryMaterial = repositoryMaterial;
         }
 
         public void ValidateQuestion(Question question)
@@ -45,9 +53,14 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (_repositoryTheme.GetById(question.ThemeId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            if (string.IsNullOrWhiteSpace(question.Image) == false)
-                if (_helperFileImage.FileExists(new File(question.Image)) == false)
-                    throw ExceptionHelper.CreatePublicException("Указанное изображение не найдено.");
+            if (question.ImageId.HasValue && _repositoryFile.GetById(question.ImageId.Value) == null)
+                throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
+
+            if (question.ImageId.HasValue && _helperFileImage.FileExists(question.ImageId.Value) == false)
+                throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
+
+            if (question.MaterialId.HasValue && _repositoryMaterial.GetById(question.MaterialId.Value) == null)
+                throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
 
             ValidateByQuestionType(question);
         }

@@ -20,8 +20,17 @@ namespace EducationSystem.Database.Models.Source
         [Column("text")]
         public virtual string Text { get; set; }
 
-        [Column("image")]
-        public virtual string Image { get; set; }
+        [Column("image_id")]
+        public virtual int ImageId { get; set; }
+
+        [ForeignKey(nameof(ImageId))]
+        public virtual DatabaseFile Image { get; set; }
+
+        [Column("material_id")]
+        public virtual int MaterialId { get; set; }
+
+        [ForeignKey(nameof(MaterialId))]
+        public virtual DatabaseMaterial Material { get; set; }
 
         [Column("complexity")]
         public virtual QuestionComplexityType Complexity { get; set; }

@@ -1,7 +1,12 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using EducationSystem.Constants.Source;
+using EducationSystem.Database.Models.Source;
+using EducationSystem.Enums.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Helpers.Interfaces.Source.Files;
+using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.AspNetCore.Hosting;
 using File = EducationSystem.Models.Source.Files.File;
 using SystemFile = System.IO.File;
@@ -11,10 +16,12 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
     public abstract class HelperFile : IHelperFile
     {
         private readonly IHostingEnvironment _environment;
+        private readonly IRepositoryFile _repositoryFile;
 
-        protected HelperFile(IHostingEnvironment environment)
+        protected HelperFile(IHostingEnvironment environment, IRepositoryFile repositoryFile)
         {
             _environment = environment;
+            _repositoryFile = repositoryFile;
         }
 
         /// <summary>
@@ -53,16 +60,54 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
                     $"Допустимый размер файла: {MaxiFileSize} MB.");
         }
 
+        public bool FileExists(int id) => FileExists(new File(id));
+
         public bool FileExists(File file)
         {
-            if (file == null || string.IsNullOrWhiteSpace(file.Path))
-                throw ExceptionHelper.CreateException("Не заполнены нужные параметры для проверки существования файла.");
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            if (string.IsNullOrWhiteSpace(file.Path))
+                return SystemFile.Exists(Path.Combine(_environment.ContentRootPath, GetFilePath(file)));
 
             var path = Path.Combine(
                 _environment.ContentRootPath,
                 file.Path.Replace("/", "\\"));
 
             return SystemFile.Exists(path);
+        }
+
+        public string GetFilePath(File file)
+        {
+            if (file == null)
+                throw new ArgumentNullException(nameof(file));
+
+            DatabaseFile model = null;
+
+            if (file.Guid.HasValue)
+                model =_repositoryFile.GetByGuid(file.Guid.Value);
+
+            model = model ?? _repositoryFile.GetById(file.Id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Файл не найден. Идентификатор файла: {file.Id}.",
+                    $"Файл не найден.");
+
+            var name = model.Guid + Path.GetExtension(model.Name);
+
+            return Path.Combine(Directories.Files, GetFolderName(model.Type), name);
+        }
+
+        public string GetFolderName(FileType type)
+        {
+            switch (type)
+            {
+                case FileType.Image:
+                    return Directories.Images;
+                case FileType.Document:
+                    return Directories.Documents;
+                default:
+                    return Directories.Files;
+            }
         }
     }
 }

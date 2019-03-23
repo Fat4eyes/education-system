@@ -14,13 +14,10 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
 
         Theme GetThemeById(int id, OptionsTheme options);
 
-        void DeleteThemeById(int id);
         Task DeleteThemeByIdAsync(int id);
 
-        Theme CreateTheme(Theme theme);
         Task<Theme> CreateThemeAsync(Theme theme);
 
-        Theme UpdateTheme(int id, Theme theme);
         Task<Theme> UpdateThemeAsync(int id, Theme theme);
     }
 }

@@ -32,6 +32,9 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (test.TotalTime.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано общее время теста.");
 
+            if (test.TotalTime.Value <= 0)
+                throw ExceptionHelper.CreatePublicException("Указано некорректное общее время теста.");
+
             if (test.Attempts.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано количество попыток прохождения теста.");
 

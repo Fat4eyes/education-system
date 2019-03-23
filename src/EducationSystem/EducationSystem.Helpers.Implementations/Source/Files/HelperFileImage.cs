@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Helpers.Interfaces.Source.Files;
+using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.AspNetCore.Hosting;
 
 namespace EducationSystem.Helpers.Implementations.Source.Files
@@ -18,7 +19,12 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
             ".bmp"
         };
 
-        public HelperFileImage(IHostingEnvironment environment)
-            : base(environment) { }
+        public HelperFileImage(
+            IHostingEnvironment environment,
+            IRepositoryFile repositoryFile)
+            : base(
+                environment,
+                repositoryFile)
+        { }
     }
 }

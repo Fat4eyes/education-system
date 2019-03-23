@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source.Helpers;
-using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Models.Source;
@@ -63,9 +62,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return Map(theme, options);
         }
 
-        public void DeleteThemeById(int id) =>
-            DeleteThemeByIdAsync(id).WaitTask();
-
         public async Task DeleteThemeByIdAsync(int id)
         {
             var theme = _repositoryTheme.GetById(id) ??
@@ -75,9 +71,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             await _repositoryTheme.RemoveAsync(theme, true);
         }
-
-        public Theme CreateTheme(Theme theme) =>
-            CreateThemeAsync(theme).WaitTask();
 
         public async Task<Theme> CreateThemeAsync(Theme theme)
         {
@@ -91,9 +84,6 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             return Mapper.Map<DatabaseTheme, Theme>(model);
         }
-
-        public Theme UpdateTheme(int id, Theme theme) =>
-            UpdateThemeAsync(id, theme).WaitTask();
 
         public async Task<Theme> UpdateThemeAsync(int id, Theme theme)
         {

@@ -42,6 +42,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IManagerTheme, ManagerTheme>();
             services.AddTransient<IManagerStudent, ManagerStudent>();
             services.AddTransient<IManagerQuestion, ManagerQuestion>();
+            services.AddTransient<IManagerMaterial, ManagerMaterial>();
             services.AddTransient<IManagerInstitute, ManagerInstitute>();
             services.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
             services.AddTransient<IManagerTestResult, ManagerTestResult>();
@@ -60,6 +61,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IHelperTest, HelperTest>();
             services.AddTransient<IHelperTheme, HelperTheme>();
             services.AddTransient<IHelperQuestion, HelperQuestion>();
+            services.AddTransient<IHelperMaterial, HelperMaterial>();
 
             services.AddTransient<IHelperFileImage, HelperFileImage>();
             services.AddTransient<IHelperFileDocument, HelperFileDocument>();
@@ -70,12 +72,14 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryRole, RepositoryRole>();
             services.AddTransient<IRepositoryTest, RepositoryTest>();
             services.AddTransient<IRepositoryUser, RepositoryUser>();
+            services.AddTransient<IRepositoryFile, RepositoryFile>();
             services.AddTransient<IRepositoryGroup, RepositoryGroup>();
             services.AddTransient<IRepositoryTheme, RepositoryTheme>();
             services.AddTransient<IRepositoryAnswer, RepositoryAnswer>();
             services.AddTransient<IRepositoryProgram, RepositoryProgram>();
             services.AddTransient<IRepositoryStudent, RepositoryStudent>();
             services.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
+            services.AddTransient<IRepositoryMaterial, RepositoryMaterial>();
             services.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
             services.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
             services.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();
@@ -83,6 +87,7 @@ namespace EducationSystem.Dependencies.Source
             services.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
             services.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
             services.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
+            services.AddTransient<IRepositoryMaterialFile, RepositoryMaterialFile>();
         }
 
         private static void RegisterDatabases(IServiceCollection services, IConfiguration configuration)

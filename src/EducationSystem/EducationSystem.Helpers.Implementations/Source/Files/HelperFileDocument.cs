@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Helpers.Interfaces.Source.Files;
+using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Microsoft.AspNetCore.Hosting;
 
 namespace EducationSystem.Helpers.Implementations.Source.Files
@@ -28,7 +29,12 @@ namespace EducationSystem.Helpers.Implementations.Source.Files
             ".rtf"
         };
 
-        public HelperFileDocument(IHostingEnvironment environment)
-            : base(environment) { }
+        public HelperFileDocument(
+            IHostingEnvironment environment,
+            IRepositoryFile repositoryFile)
+            : base(
+                environment,
+                repositoryFile)
+        { }
     }
 }
