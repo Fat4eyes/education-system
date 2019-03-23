@@ -71,11 +71,11 @@ namespace EducationSystem.Managers.Implementations.Source.Files
 
             await _repositoryFile.AddAsync(model, true);
 
-            Mapper.Map(model, file);
+            var result = Mapper.Map<File>(model);
 
-            file.Path = path;
+            result.Path = path;
 
-            return file;
+            return result;
         }
 
         public Task<File> GetFileById(int id)
