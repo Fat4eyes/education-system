@@ -5,12 +5,12 @@ using AutoMapper;
 using EducationSystem.Constants.Source;
 using EducationSystem.Extensions.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
-using EducationSystem.Managers.Interfaces.Source;
+using EducationSystem.Managers.Interfaces.Source.Files;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using File = EducationSystem.Models.Source.Files.File;
 
-namespace EducationSystem.Managers.Implementations.Source
+namespace EducationSystem.Managers.Implementations.Source.Files
 {
     public abstract class ManagerFile : Manager<ManagerFile>, IManagerFile
     {
@@ -64,5 +64,7 @@ namespace EducationSystem.Managers.Implementations.Source
 
             return new File(guid, path);
         }
+
+        public bool FileExists(File file) => _helperFile.FileExists(file);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using EducationSystem.Models.Source.Files;
 using EducationSystem.Models.Source.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -30,6 +31,9 @@ namespace EducationSystem.WebApp.Source.Tamers
             action();
             return Ok();
         }
+
+        protected IActionResult File(File file) =>
+            File(file.Stream, "application/octet-stream", file.Name);
 
         private static SuccessResponse CreateResponse(object @object)
             => new SuccessResponse(@object);

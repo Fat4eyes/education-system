@@ -44,7 +44,7 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (test.Themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В тесте указаны повторяющиеся темы.");
 
-            if (_repositoryTheme.CheckThemesExistence(test.Themes.Select(x => x.Id).ToList()) == false)
+            if (_repositoryTheme.IsThemesExists(test.Themes.Select(x => x.Id).ToList()) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
 
             if (_repositoryDiscipline.GetById(test.DisciplineId) == null)
