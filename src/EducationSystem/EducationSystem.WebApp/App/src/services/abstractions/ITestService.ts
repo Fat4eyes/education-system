@@ -1,8 +1,6 @@
 import Test from '../../models/Test'
+import Exception from '../../helpers/Exception'
 
 export default interface ITestService {
-  getAll(): Test[],
-  get(id: number): Promise<Test>,
-  add(test: Test): boolean,
-  test(): number
+  add(test: Test): Promise<Test | Exception>,
 }

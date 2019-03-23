@@ -10,8 +10,8 @@ import {unregister} from './serviceWorker'
 import './index.less'
 import history from './history'
 import Container from './infrastructure/di/Container'
-import ITestService from './services/abstractions/ITestService'
 import TestService from './services/implementations/TestService'
+import DisciplineService from './services/implementations/DisciplineService'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -23,6 +23,7 @@ unregister()
 
 Container.getContainer()
   .transient(TestService, TestService.name)
+  .transient(DisciplineService, DisciplineService.name)
   .setUp()
 
 const App = () => <Try>

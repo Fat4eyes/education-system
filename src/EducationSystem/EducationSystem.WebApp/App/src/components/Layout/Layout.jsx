@@ -16,6 +16,7 @@ import SchoolIcon from '@material-ui/icons/School'
 import AccountIcon from '@material-ui/icons/AccountCircle'
 import QuestionIcon from '@material-ui/icons/QuestionAnswer'
 import HomeIcon from '@material-ui/icons/Home'
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import Grow from '../stuff/Grow'
 import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
@@ -81,9 +82,9 @@ class Layout extends PureComponent {
       <If condition={checkAuth('Admin')}>
         <LeftMenuItem component={SimpleLink} to='/tests' Icon={QuestionIcon} tooltip='Тесты'
                       closeOnClick={closeOnClick}/>
+        <LeftMenuItem component={SimpleLink} to='/handletest' Icon={PlaylistAddIcon} tooltip='Добавить тест'
+                      closeOnClick={closeOnClick}/>
       </If>
-      <LeftMenuItem component={SimpleLink} to='/handletest' Icon={HomeIcon} tooltip='Еуые'
-                    closeOnClick={closeOnClick}/>
     </List>
 
     return <div className={classes.root}>

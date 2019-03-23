@@ -30,6 +30,19 @@ class VTextField extends Component {
           return this.setState({isValid: false, error: ''})
         }
         break
+      case 'number':
+        value = Number(value)
+        
+        if (min && value < Number(min)) {
+          return this.setState({isValid: false, error: min.message})
+        }
+        if (max && value > Number(max)) {
+          return this.setState({isValid: false, error: max.message})
+        }
+        if (required && value !== 0) {
+          return this.setState({isValid: false, error: ''})
+        }
+        break
       default:
         if (min && value.length < min.value) {
           return this.setState({isValid: false, error: min.message})

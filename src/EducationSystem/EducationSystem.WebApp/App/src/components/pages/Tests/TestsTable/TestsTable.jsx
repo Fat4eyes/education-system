@@ -10,6 +10,7 @@ import TestsTableStyles from './TestsTableStyles'
 import classNames from 'classnames'
 import TestDetails from './Details/TestDetails'
 import Collapse from '@material-ui/core/Collapse'
+import TableComponent from '../../../Table/TableComponent'
 
 const TestModel = {
   Subject: '',
@@ -25,7 +26,7 @@ const minLengthForTrigger = 3
 
 @withStyles(TestsTableStyles)
 @withSnackbar
-class TestsTable extends Component {
+class TestsTable extends TableComponent {
   constructor(props) {
     super(props)
 
@@ -92,29 +93,31 @@ class TestsTable extends Component {
     }
   }
 
-  handleChangePage = async page =>
-    this.setState({Page: page, IsLoading: true},
-      async () =>
-        await this.getTests({
-          Skip: page * this.state.CountPerPage,
-          Take: this.state.CountPerPage,
-          IsLoading: false
-        }))
+  getTableData = this.getTests
 
-  handleChangeRowsPerPage = (value) => {
-    if (value === this.state.CountPerPage) return
-    this.setState({
-      CountPerPage: value,
-      Page: 0,
-      IsLoading: true
-    }, async () => {
-      await this.getTests({
-        Skip: 0,
-        Take: value,
-        IsLoading: false
-      })
-    })
-  }
+  // handleChangePage = async page =>
+  //   this.setState({Page: page, IsLoading: true},
+  //     async () =>
+  //       await this.getTests({
+  //         Skip: page * this.state.CountPerPage,
+  //         Take: this.state.CountPerPage,
+  //         IsLoading: false
+  //       }))
+  //
+  // handleChangeRowsPerPage = (value) => {
+  //   if (value === this.state.CountPerPage) return
+  //   this.setState({
+  //     CountPerPage: value,
+  //     Page: 0,
+  //     IsLoading: true
+  //   }, async () => {
+  //     await this.getTests({
+  //       Skip: 0,
+  //       Take: value,
+  //       IsLoading: false
+  //     })
+  //   })
+  // }
 
   handleDatailsClick = id => {
     if (this.state.IsLoading) return
