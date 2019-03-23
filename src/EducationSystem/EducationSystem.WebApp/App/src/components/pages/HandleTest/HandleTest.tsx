@@ -5,7 +5,7 @@ import Test from '../../../models/Test'
 import {
   Button,
   Chip,
-  FormControl,
+  FormControl, FormControlLabel,
   Input,
   InputLabel,
   MenuItem,
@@ -14,7 +14,7 @@ import {
   Step,
   StepContent,
   StepLabel,
-  Stepper,
+  Stepper, Switch,
   Typography,
   WithStyles,
   withStyles
@@ -71,6 +71,7 @@ class HandleTest extends Component<IProps, IState> {
     super(props)
 
     this.state = initState
+    this.state.Model.TotalTime = 60
   }
 
   async componentDidMount() {
@@ -97,6 +98,15 @@ class HandleTest extends Component<IProps, IState> {
       Model: {
         ...state.Model,
         [name]: value
+      }
+    }))
+  }
+  
+  handleSwitch = ({target: {name, checked}}: ChangeEvent<HTMLInputElement> | any) => {
+    this.setState(state => ({
+      Model: {
+        ...state.Model,
+        [name]: checked
       }
     }))
   }
@@ -292,6 +302,29 @@ class HandleTest extends Component<IProps, IState> {
                           </MenuItem>
                           <MenuItem value={TestType.Teaching}>
                             Обучающий
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                      <FormControl fullWidth margin='normal'>
+                        <InputLabel htmlFor='IsActive'>Активный</InputLabel>
+                        <Select
+                          name='IsActive'
+                          value={Number(this.state.Model.IsActive)}
+                          onChange={(e: any) => { 
+                            e.target.value = !!e.target.value;
+                            this.handleModel(e)
+                          }}
+                          input={
+                            <Input id="IsActive"/>
+                          }
+                        >
+                          <MenuItem value={0}>
+                            Нет
+                          </MenuItem>
+                          <MenuItem value={1}>
+                            Да
                           </MenuItem>
                         </Select>
                       </FormControl>
