@@ -29,8 +29,11 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (string.IsNullOrWhiteSpace(test.Subject))
                 throw ExceptionHelper.CreatePublicException("Не указано название теста.");
 
-            if (test.TotalTime.HasValue == false || test.TotalTime.Value == 0)
+            if (test.TotalTime.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано общее время теста.");
+
+            if (test.TotalTime.Value <= 0)
+                throw ExceptionHelper.CreatePublicException("Указано некорректное общее время теста.");
 
             if (test.Attempts.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано количество попыток прохождения теста.");
