@@ -21,13 +21,13 @@ namespace EducationSystem.Database.Models.Source
         public virtual string Text { get; set; }
 
         [Column("image_id")]
-        public virtual int ImageId { get; set; }
+        public virtual int? ImageId { get; set; }
 
         [ForeignKey(nameof(ImageId))]
         public virtual DatabaseFile Image { get; set; }
 
         [Column("material_id")]
-        public virtual int MaterialId { get; set; }
+        public virtual int? MaterialId { get; set; }
 
         [ForeignKey(nameof(MaterialId))]
         public virtual DatabaseMaterial Material { get; set; }
