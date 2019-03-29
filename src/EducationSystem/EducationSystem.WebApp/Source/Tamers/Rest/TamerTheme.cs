@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants.Source;
-using EducationSystem.Managers.Interfaces.Source.Export;
 using EducationSystem.Managers.Interfaces.Source.Rest;
-using EducationSystem.Models.Source.Exports.Options;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Models.Source.Rest;
@@ -17,16 +15,11 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     {
         private readonly IManagerTheme _managerTheme;
         private readonly IManagerQuestion _managerQuestion;
-        private readonly IManagerExportQuestion _managerExportQuestion;
 
-        public TamerTheme(
-            IManagerTheme managerTheme,
-            IManagerQuestion managerQuestion,
-            IManagerExportQuestion managerExportQuestion)
+        public TamerTheme(IManagerTheme managerTheme, IManagerQuestion managerQuestion)
         {
             _managerTheme = managerTheme;
             _managerQuestion = managerQuestion;
-            _managerExportQuestion = managerExportQuestion;
         }
 
         [HttpGet("")]
@@ -62,11 +55,5 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [HttpDelete("{themeId:int}")]
         public IActionResult DeleteTheme([FromRoute] int themeId) =>
             Ok(async () => await _managerTheme.DeleteThemeByIdAsync(themeId));
-
-        [HttpGet("{themeId:int}/Exports/Questions")]
-        public IActionResult ExportThemeQuestions(
-            [FromRoute] int themeId,
-            [FromQuery] ExportOptions options) =>
-            File(_managerExportQuestion.ExportThemeQuestions(themeId, options));
     }
 }

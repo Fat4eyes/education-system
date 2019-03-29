@@ -53,14 +53,11 @@
 [Options] [Filter] [B] GET Themes                           List<Theme>             (PagedData)
 [Options]          [B] GET Themes/{Id}                      Theme
 [Options] [Filter] [B] GET Themes/{Id}/Questions            List<Question>          (PagedData)
-[Options]          [B] GET Themes/{Id}/Exports/Questions    File
 
 [Options] [Filter] [B] GET Disciplines                      List<Discipline>        (PagedData)
 [Options]          [B] GET Disciplines/{Id}                 Discipline
 [Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>              (PagedData)
 [Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
-
-[Options]          [B] GET Exports/Themes/{Id}/Questions    File
 
 [Options] [Filter] [B] GET Materials                        List<Material>          (PagedData)
 

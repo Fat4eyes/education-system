@@ -4,11 +4,9 @@ using EducationSystem.Helpers.Implementations.Source.Files;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Helpers.Interfaces.Source.Files;
 using EducationSystem.Managers.Implementations.Source;
-using EducationSystem.Managers.Implementations.Source.Exports;
 using EducationSystem.Managers.Implementations.Source.Files;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source;
-using EducationSystem.Managers.Interfaces.Source.Export;
 using EducationSystem.Managers.Interfaces.Source.Files;
 using EducationSystem.Managers.Interfaces.Source.Rest;
 using EducationSystem.Repositories.Implementations.Source.Rest;
@@ -51,8 +49,6 @@ namespace EducationSystem.Dependencies.Source
 
             services.AddTransient<IManagerFileImage, ManagerFileImage>();
             services.AddTransient<IManagerFileDocument, ManagerFileDocument>();
-
-            services.AddTransient<IManagerExportQuestion, ManagerExportQuestion>();
         }
 
         private static void RegisterHelpers(IServiceCollection services)
