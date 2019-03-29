@@ -66,6 +66,21 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
 
             var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId, filter);
 
+            var groups = questions
+                .GroupBy(x => x.Type)
+                .ToDictionary(x => x.Key, x => x.ToList())
+                .Select(x => (Type: x.Key, Questions: x.Value.OrderBy(y => y.Complexity).ToList()))
+                .ToList();
+
+            // TODO: Шаблоны.
+            // Разделение вопросов по типам и сортировка по сложности.
+
+            Logger.LogDebug(
+                $"Идентификатор теста: {testId}. " +
+                $"Идентификатор студента: {studentId}. " +
+                $"Количество вопросов: {groups.SelectMany(x => x.Questions).Count()}. " +
+                $"Типы вопросов: {string.Join(", ", groups.Select(x => (int) x.Type).Distinct())}.");
+
             questions = questions
                 .Mix()
                 .Take(filter.Count)
