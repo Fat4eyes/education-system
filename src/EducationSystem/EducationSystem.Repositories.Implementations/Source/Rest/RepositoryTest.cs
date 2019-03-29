@@ -24,6 +24,9 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
             if (filter.OnlyActive)
                 query = query.Where(x => x.IsActive == 1);
 
+            if (filter.TestType.HasValue)
+                query = query.Where(x => x.Type == filter.TestType.Value);
+
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
                 
@@ -37,6 +40,9 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
             if (filter.OnlyActive)
                 query = query.Where(x => x.IsActive == 1);
+
+            if (filter.TestType.HasValue)
+                query = query.Where(x => x.Type == filter.TestType.Value);
 
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
@@ -56,6 +62,9 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
             if (filter.DisciplineId.HasValue)
                 query = query.Where(x => x.DisciplineId == filter.DisciplineId);
+
+            if (filter.TestType.HasValue)
+                query = query.Where(x => x.Type == filter.TestType.Value);
 
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));

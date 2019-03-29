@@ -1,4 +1,6 @@
-﻿namespace EducationSystem.Models.Source.Filters
+﻿using EducationSystem.Enums.Source;
+
+namespace EducationSystem.Models.Source.Filters
 {
     public class FilterTest : Filter
     {
@@ -7,5 +9,7 @@
         public int? DisciplineId { get; set; } = null;
 
         public bool OnlyActive { get; set; } = false;
+
+        public TestType? TestType { get; set; } = null;
     }
 }
