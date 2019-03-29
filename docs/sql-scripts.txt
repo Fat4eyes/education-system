@@ -1,0 +1,37 @@
+-- Один вариант ответа верный.
+-- Несколько вариантов ответа верные.
+-- Программный код.
+select count(*) from question where type in (1, 2, 5);
+
+-- Один вариант ответа верный.
+select count(*) from question where type in (1);
+
+-- Несколько вариантов ответа верные.
+select count(*) from question where type in (2);
+
+-- Программный код.
+select count(*) from question where type in (5);
+
+select
+    discipline.id as 'Discipline Id',
+    test.id as 'Test Id',
+    theme.id as 'Theme Id',
+    question.id as 'Question Id',
+    case
+        when question.type = 1 then "Закрытый вопрос с одним правильным вариантом ответа."
+        when question.type = 2 then "Закрытый вопрос с несколькими вариантами ответа."
+        when question.type = 3 then "Открытый вопрос с однострочным ответом."
+        when question.type = 4 then "Открытый вопрос с многострочным ответом (проверяется вручную)."
+        when question.type = 5 then "Вопрос с программным кодом."
+    end as 'Question Type'
+from question
+    join theme on question.theme_id = theme.id
+    join discipline on theme.discipline_id = discipline.id
+    join test on discipline.id = test.discipline_id
+where
+    question.type in (1, 2, 3, 4, 5)
+    -- and test.id = 111
+    -- and question.id = 1
+    and theme.id = 1
+    -- anddiscipline.id = 1
+;
