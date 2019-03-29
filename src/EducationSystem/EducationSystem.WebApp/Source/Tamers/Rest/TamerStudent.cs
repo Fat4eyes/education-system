@@ -131,14 +131,12 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTest options)
             => Ok(_managerTest.GetTestForStudentById(testId, GetUserId(), options));
 
-        [HttpGet("Current/Tests/{testId:int}/Questions/{questionsCount:int}")]
+        [HttpGet("Current/Tests/{testId:int}/Questions/")]
         [Roles(UserRoles.Student)]
         public IActionResult GetStudentTestQuestions(
             [FromRoute] int testId,
-            [FromRoute] int questionsCount,
-            [FromQuery] OptionsQuestion options,
             [FromQuery] FilterQuestion filter)
-            => Ok(_managerQuestion.GetQuestionsForStudentByTestId(testId, GetUserId(), questionsCount));
+            => Ok(_managerQuestion.GetQuestionsForStudentByTestId(testId, GetUserId(), filter));
 
         [HttpGet("Current/Disciplines")]
         [Roles(UserRoles.Student)]

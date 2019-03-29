@@ -5,6 +5,7 @@ using EducationSystem.Exceptions.Source;
 using EducationSystem.Helpers.Interfaces.Source;
 using EducationSystem.Managers.Implementations.Source.Rest;
 using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Models.Source.Filters;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Moq;
 using Xunit;
@@ -50,7 +51,7 @@ namespace EducationSystem.Tests.Source.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, 999));
+                () => ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion()));
         }
 
         [Fact]
@@ -59,10 +60,11 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             MockHelperUser.Reset();
 
             MockRepositoryQuestion
-                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
+                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
                 .Returns(GetQuestions());
 
-            var questions = ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, 5);
+            var questions = ManagerQuestion.GetQuestionsForStudentByTestId(
+                999, 999, new FilterQuestion { Count = 5 });
 
             Assert.Equal(5, questions.Count);
 
@@ -75,10 +77,10 @@ namespace EducationSystem.Tests.Source.Managers.Rest
             MockHelperUser.Reset();
 
             MockRepositoryQuestion
-                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
+                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
                 .Returns(new List<DatabaseQuestion>());
 
-            var questions = ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, 5);
+            var questions = ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion());
 
             Assert.Empty(questions);
         }

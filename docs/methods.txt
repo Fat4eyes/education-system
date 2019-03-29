@@ -20,10 +20,10 @@
 [Options]          [C] GET Students/Current/Tests/{Id}      Test
 [Options] [Filter] [C] GET Students/Current/Disciplines     List<Discipline>        (PagedData)
 
-Возвращает указанное количество (Count) вопросов указанного теста (TestId) для текущего студента.
-Вопросы каждый раз перемешиваются.
-[C] GET Students/Current/Tests/{TestId}/Questions/{Count}
-        List<Question>
+Возвращает список вопрсоов указанного теста (TestId) для текущего студента.
+    [C] GET Students/Current/Tests/{TestId}/Questions
+    [Filter] : Count (по умолчанию: 10)
+    List<Question>
 
 [Options] [Filter] [A] GET Users                            List<User>              (PagedData)
 [Options]          [A] GET Users/{Id}                       User

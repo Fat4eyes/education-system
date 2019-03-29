@@ -60,18 +60,20 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, int questionsCount)
+        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter)
         {
             _helperUser.CheckRoleStudent(studentId);
 
-            var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId);
+            var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId, filter);
 
             questions = questions
                 .Mix()
-                .Take(questionsCount)
+                .Take(filter.Count)
                 .ToList();
 
-            return questions.Select(MapForStudent).ToList();
+            return questions
+                .Select(MapForStudent)
+                .ToList();
         }
 
         public Question GetQuestionById(int id, OptionsQuestion options)
