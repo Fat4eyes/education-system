@@ -1,9 +1,9 @@
-﻿namespace EducationSystem.Extensions.Source
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using EducationSystem.Models.Source.Filters;
+﻿using System.Collections.Generic;
+using System.Linq;
+using EducationSystem.Models.Source.Filters;
 
+namespace EducationSystem.Extensions.Source
+{
     public static class QueryableExtensions
     {
         public static (int Count, List<T> Items) ApplyPaging<T>(this IQueryable<T> query, Filter filter)

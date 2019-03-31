@@ -12,7 +12,7 @@ namespace EducationSystem.Managers.Interfaces.Source.Rest
         PagedData<Question> GetQuestions(OptionsQuestion options, FilterQuestion filter);
         PagedData<Question> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter);
 
-        List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, int questionsCount);
+        List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter);
 
         Question GetQuestionById(int id, OptionsQuestion options);
 

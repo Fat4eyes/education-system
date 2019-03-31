@@ -16,6 +16,6 @@ namespace EducationSystem.Database.Models.Source
         public virtual string Input { get; set; }
 
         [Column("expected_output")]
-        public virtual string ExptectedOutput { get; set; }
+        public virtual string ExpectedOutput { get; set; }
     }
 }

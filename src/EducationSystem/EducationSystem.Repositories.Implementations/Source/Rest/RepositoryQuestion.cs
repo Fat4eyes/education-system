@@ -15,21 +15,30 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
 
         public (int Count, List<DatabaseQuestion> Questions) GetQuestions(FilterQuestion filter)
         {
-            return AsQueryable().ApplyPaging(filter);
+            var query = AsQueryable();
+
+            if (filter.QuestionTypes.IsNotEmpty())
+                query = query.Where(x => filter.QuestionTypes.Contains(x.Type));
+            
+            return query.ApplyPaging(filter);
         }
 
         public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, FilterQuestion filter)
         {
-            return AsQueryable()
-                .Where(x => x.ThemeId == themeId)
-                .ApplyPaging(filter);
+            var query = AsQueryable()
+                .Where(x => x.ThemeId == themeId);
+
+            if (filter.QuestionTypes.IsNotEmpty())
+                query = query.Where(x => filter.QuestionTypes.Contains(x.Type));
+
+            return query.ApplyPaging(filter);
         }
 
-        public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId)
+        public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter)
         {
             // TODO: Возможно потребуется оптимизация. Сейчас вытягиваются все вопросы для теста.
 
-            return AsQueryable()
+            var query = AsQueryable()
                 .Where(x => x.Theme.ThemeTests.Any(y =>
                     y.TestId == testId &&
                     y.Test.IsActive == 1 &&
@@ -38,8 +47,12 @@ namespace EducationSystem.Repositories.Implementations.Source.Rest
                     .Any(a => a.StudyProfile.StudyPlans
                     .Any(b => b.Groups
                     .Any(c => c.GroupStudents
-                    .Any(d => d.StudentId == studentId)))))
-                .ToList();
+                    .Any(d => d.StudentId == studentId)))));
+
+            if (filter.QuestionTypes.IsNotEmpty())
+                query = query.Where(x => filter.QuestionTypes.Contains(x.Type));
+
+            return query.ToList();
         }
     }
 }

@@ -21,6 +21,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
     {
         private readonly IHelperUser _helperUser;
         private readonly IHelperQuestion _helperQuestion;
+        private readonly IHelperQuestionTemplate _helperQuestionTemplate;
 
         private readonly IRepositoryAnswer _repositoryAnswer;
         private readonly IRepositoryProgram _repositoryProgram;
@@ -32,6 +33,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             ILogger<ManagerQuestion> logger,
             IHelperUser helperUser,
             IHelperQuestion helperQuestion,
+            IHelperQuestionTemplate helperQuestionTemplate,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
             IRepositoryQuestion repositoryQuestion,
@@ -40,6 +42,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             _helperUser = helperUser;
             _helperQuestion = helperQuestion;
+            _helperQuestionTemplate = helperQuestionTemplate;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -60,18 +63,35 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, int questionsCount)
+        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter)
         {
             _helperUser.CheckRoleStudent(studentId);
 
-            var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId);
-
-            questions = questions
+            var questions = _repositoryQuestion
+                .GetQuestionsForStudentByTestId(testId, studentId, filter)
+                .Where(x => x.Type != QuestionType.OpenedManyStrings)
                 .Mix()
-                .Take(questionsCount)
                 .ToList();
 
-            return questions.Select(MapForStudent).ToList();
+            var templates = _helperQuestionTemplate
+                .GetTemplates(filter.TestSize, questions)
+                .ToList();
+
+            Logger.LogDebug(
+                $"Идентификатор теста: {testId}. " +
+                $"Идентификатор студента: {studentId}. " +
+                $"Количество вопросов: {questions.Count}. " +
+                $"Типы вопросов: {string.Join(", ", questions.Select(x => (int) x.Type).Distinct())}. " +
+                $"Шаблоны: {string.Join(", ", templates.Select(x => $"{x.Key} - {x.Value}"))}. " +
+                $"Размер теста: {filter.TestSize}.");
+
+            return templates
+                .SelectMany(x => questions
+                    .Where(y => y.Type == x.Key)
+                    .Take(x.Value))
+                .OrderBy(x => x.Complexity)
+                .Select(MapForStudent)
+                .ToList();
         }
 
         public Question GetQuestionById(int id, OptionsQuestion options)

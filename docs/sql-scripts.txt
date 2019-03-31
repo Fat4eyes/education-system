@@ -1,0 +1,43 @@
+-- Закрытый вопрос с одним правильным вариантом ответа.
+-- Закрытый вопрос с несколькими вариантами ответа.
+-- Вопрос с программным кодом.
+select count(*) from question where type in (1, 2, 5);
+
+-- Количество: 0.
+-- Закрытый вопрос с одним правильным вариантом ответа.
+select count(*) from question where type in (1);
+
+-- Закрытый вопрос с несколькими вариантами ответа.
+select count(*) from question where type in (2);
+
+-- Вопрос с программным кодом.
+select count(*) from question where type in (5);
+
+-- Количество: 0.
+-- Открытый вопрос с однострочным ответом.
+-- Открытый вопрос с многострочным ответом (проверяется вручную).
+select count(*) from question where type in (3, 4);
+
+select
+    discipline.id as 'Discipline Id',
+    test.id as 'Test Id',
+    theme.id as 'Theme Id',
+    question.id as 'Question Id',
+    case
+        when question.type = 1 then "Закрытый вопрос с одним правильным вариантом ответа."
+        when question.type = 2 then "Закрытый вопрос с несколькими вариантами ответа."
+        when question.type = 3 then "Открытый вопрос с однострочным ответом."
+        when question.type = 4 then "Открытый вопрос с многострочным ответом (проверяется вручную)."
+        when question.type = 5 then "Вопрос с программным кодом."
+    end as 'Question Type'
+from question
+    join theme on question.theme_id = theme.id
+    join discipline on theme.discipline_id = discipline.id
+    join test on discipline.id = test.discipline_id
+where
+    question.type in (1, 2, 3, 4, 5)
+    and test.id = 164
+    -- and question.id = 1
+    -- and theme.id = 1
+    -- anddiscipline.id = 1
+;

@@ -8,6 +8,6 @@ namespace EducationSystem.Models.Source.Rest
 
         public bool? IsRight { get; set; }
 
-        public int QuestionId { get; set; }
+        public int? QuestionId { get; set; }
     }
 }

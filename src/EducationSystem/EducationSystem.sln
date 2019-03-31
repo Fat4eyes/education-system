@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Helpers.Imp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Helpers.Interfaces", "EducationSystem.Helpers.Interfaces\EducationSystem.Helpers.Interfaces.csproj", "{4F978F41-EEB1-45DE-8390-276ECF06C075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Enums", "EducationSystem.Enums\EducationSystem.Enums.csproj", "{B32F6CF2-597E-46F1-84C8-485671FD8559}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Enums", "EducationSystem.Enums\EducationSystem.Enums.csproj", "{B32F6CF2-597E-46F1-84C8-485671FD8559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

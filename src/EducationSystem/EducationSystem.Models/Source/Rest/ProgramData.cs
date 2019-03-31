@@ -8,6 +8,6 @@ namespace EducationSystem.Models.Source.Rest
 
         public string Input { get; set; }
 
-        public string ExptectedOutput { get; set; }
+        public string ExpectedOutput { get; set; }
     }
 }
