@@ -69,14 +69,14 @@ namespace EducationSystem.Helpers.Implementations.Source
                 return templates.ToDictionary(x => x.QuestionType, x => x.TargetCount);
 
             // Нормализация шаблонов.
-            foreach (var data in templates
+            foreach (var template in templates
                 .OrderByDescending(x => x.TargetCount)
                 .ThenByDescending(x => x.GetPosition()))
             {
                 if (templates.Sum(x => x.TargetCount) <= (int) testSize)
                     break;
 
-                data.TargetCount--;
+                template.TargetCount--;
             }
 
             return templates.ToDictionary(x => x.QuestionType, x => x.TargetCount);
