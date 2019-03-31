@@ -19,7 +19,7 @@ const Routes = () =>
     <ProtectedRoute path='/handletest' component={HandleTest} userRole='Admin'/>
     <ProtectedRoute path='/tests' component={Tests} userRole='Admin'/>
     <ProtectedRoute path='/themes' component={ThemesPage} userRole='Admin'/>
-    <ProtectedRoute exact path='/question/:themeId' component={QuestionHandling} userRole='Admin'/>
+    <ProtectedRoute exact path='/question/:themeId/:id' component={QuestionHandling} userRole='Admin'/>
   </Switch>
 
 export default Routes

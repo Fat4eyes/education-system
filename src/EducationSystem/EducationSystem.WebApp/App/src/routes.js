@@ -32,6 +32,8 @@ const themeRoutes = {
 
 const questionRoutes = {
   add: '/api/questions',
+  update: id => `/api/questions/${id}`,
+  get: id => `/api/questions/${id}`,
 }
 
 export {

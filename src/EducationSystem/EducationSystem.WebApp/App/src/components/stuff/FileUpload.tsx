@@ -3,7 +3,6 @@ import {Component} from 'react'
 import {createStyles, Grid, IconButton, withStyles, WithStyles} from '@material-ui/core'
 import PhotoCamera from '@material-ui/icons/PhotoCamera'
 import Clear from '@material-ui/icons/Clear'
-import {ProtectedFetch} from '../../helpers'
 import IFileService from '../../services/abstractions/IFileService'
 import {inject} from '../../infrastructure/di/inject'
 
@@ -31,10 +30,7 @@ class FileUpload extends Component<TProps, IState> {
     super(props)
 
     this.state = {
-      fileResult: {
-        name: '',
-        id: undefined
-      }
+      fileResult: null
     } as IState
   }
 

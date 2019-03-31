@@ -23,6 +23,21 @@ class ProtectedFetch extends Fetch {
       : null
   };
 
+  static async put(url, data, onError) {
+    const token = ProtectedFetch.handleToken()
+    return token
+      ? Fetch.handleFetch(url, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: data
+      }, onError)
+      : null
+  };
+
   static async postAndFiles(url, data, onError) {
     const token = ProtectedFetch.handleToken()
     return token

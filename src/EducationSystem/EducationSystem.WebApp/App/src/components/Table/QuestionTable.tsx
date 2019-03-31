@@ -13,7 +13,8 @@ import IThemeService from '../../services/abstractions/IThemeService'
 
 interface IProps extends InjectedNotistackProps {
   themeId: number,
-  loadCallback: any
+  loadCallback: any,
+  handleClick: any
 }
 
 class QuestionTable extends TableComponent<Question, IProps, ITableState<Question>> {
@@ -73,7 +74,7 @@ class QuestionTable extends TableComponent<Question, IProps, ITableState<Questio
         onCountPerPageChange={this.handleChangeRowsPerPage}
       />
       {this.state.Items.map((question: Question) =>
-        <RowHeader key={question.Id}>
+        <RowHeader key={question.Id} onClick={() => this.props.handleClick(question.Id)}>
           <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
             <Typography noWrap variant='subtitle1'>
               {question.Text}

@@ -39,7 +39,8 @@ interface IState extends ITableState<Theme> {
   ShowDisciplinesTable: boolean,
   ShowAddBlock: boolean,
   Theme?: Theme,
-  SelectedTmeheId?: number,
+  SelectedThemeId?: number,
+  SelectedQuestionId?: number,
   ShowQuestionsBlock: boolean,
   NeedRedirect: boolean
 }
@@ -106,7 +107,7 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
     this.setState(state => ({
       ShowDisciplinesTable: !state.ShowDisciplinesTable,
       ShowQuestionsBlock: false,
-      SelectedTmeheId: undefined
+      SelectedThemeId: undefined
     }))
 
   handleTheme = {
@@ -121,12 +122,14 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
         Theme: {
           ...state.Theme,
           Name: value
-        }
+        },
+        SelectedQuestionId: undefined
       }))
     },
     select: (id: number) => {
       this.setState(state => ({
-        SelectedTmeheId: state.SelectedTmeheId === id ? undefined : id,
+        SelectedThemeId: state.SelectedThemeId === id ? undefined : id,
+        SelectedQuestionId: undefined,
         ShowQuestionsBlock: false,
       }))
     },
@@ -167,8 +170,8 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
   render(): React.ReactNode {
     let {classes} = this.props
     
-    if (this.state.NeedRedirect && this.state.SelectedTmeheId) 
-      return <Redirect to={`/question/${this.state.SelectedTmeheId}`}/>
+    if (this.state.NeedRedirect && this.state.SelectedThemeId) 
+      return <Redirect to={`/question/${this.state.SelectedThemeId}` + (this.state.SelectedQuestionId ? `/${this.state.SelectedQuestionId}` : '')}/>
 
     return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
@@ -273,30 +276,32 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
         <Collapse timeout={500} in={this.state.ShowQuestionsBlock}>
           <Paper className={classes.paper}>
             <Grid item xs={12} container justify='space-between'>
-              <Grid item>
+              <Grid item xs>
                 <Typography noWrap variant='subtitle1'>
-                  {this.state.SelectedTmeheId && 
-                    `Тема: ${this.state.Items.find(t => t.Id === this.state.SelectedTmeheId)!.Name}`
+                  {this.state.SelectedThemeId && 
+                    `Тема: ${this.state.Items.find(t => t.Id === this.state.SelectedThemeId)!.Name}`
                   }
                 </Typography>
               </Grid>
               <Grid item>
-                {this.state.SelectedTmeheId && <Button variant='outlined'
-                                                       onClick={() => this.handleTheme.select(this.state.SelectedTmeheId!)}
-                >
-                  Выбрать другую
-                </Button>}
+                {this.state.SelectedThemeId && 
+                  <Button variant='outlined' onClick={() => this.setState({NeedRedirect: true})}>
+                    Добавить вопрос
+                  </Button>
+                }
               </Grid>
               <Grid item>
-                {this.state.SelectedTmeheId && <Button variant='outlined' onClick={() => this.setState({NeedRedirect: true})}
-                >
-                  Добавить вопрос
-                </Button>}
+                {this.state.SelectedThemeId && 
+                  <Button variant='outlined' onClick={() => this.handleTheme.select(this.state.SelectedThemeId!)}>
+                    Выбрать другую
+                  </Button>
+                }
               </Grid>
             </Grid>
-            {this.state.SelectedTmeheId && <QuestionTable 
-              themeId={this.state.SelectedTmeheId} 
+            {this.state.SelectedThemeId && <QuestionTable 
+              themeId={this.state.SelectedThemeId} 
               loadCallback={() => this.setState({ShowQuestionsBlock: true})}
+              handleClick={(id: number) => this.setState({SelectedQuestionId: id, NeedRedirect: true})}
             />
             }
           </Paper>

@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core'
 import QuestionHandlingStyle from './QuestionHandlingStyle'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
-import Question from '../../../models/Question'
+import Question, {QuestionOptions} from '../../../models/Question'
 import TotalTimeInput from '../HandleTest/TotalTimeInput'
 import {QuestionComplexityType, QuestionType} from '../../../common/enums'
 import {AnswersHandling} from './AnswerHandling'
@@ -29,7 +29,8 @@ import IFileService from '../../../services/abstractions/IFileService'
 interface IProps {
   match: {
     params: {
-      themeId: number
+      themeId: number,
+      id: number,
     }
   }
 }
@@ -55,6 +56,34 @@ class QuestionHandling extends Component<TProps, IState> {
       Model: new Question()
     } as IState
     this.state.Model.ThemeId = this.props.match.params.themeId
+  }
+  
+  async componentDidMount(){
+    let {id} = this.props.match.params
+    
+    if (!id) return 
+    
+    let result = await this.QuestionService!.get(id, {
+      WithAnswers: true,
+      WithProgram: true
+    } as QuestionOptions)
+
+    if (result instanceof Exception) {
+      return this.props.enqueueSnackbar(result.message, {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'right'
+        }
+      })
+    }
+    
+    this.setState({
+      Model: {
+        Answers: [],
+        ...result
+      }
+    })
   }
 
   handleModel = ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) => {
@@ -93,7 +122,12 @@ class QuestionHandling extends Component<TProps, IState> {
   handleProgram = (program: Program) => this.handleModel({target: {name: 'Program', value: program}})
 
   handleSubmit = async () => {
-    let result = await this.QuestionService!.add(this.state.Model)
+    let result: Question | Exception;
+    if (this.state.Model.Id) {
+      result = await this.QuestionService!.update(this.state.Model)
+    } else {
+      result = await this.QuestionService!.add(this.state.Model)
+    }
 
     if (result instanceof Exception) {
       return this.props.enqueueSnackbar(result.message, {
@@ -106,16 +140,14 @@ class QuestionHandling extends Component<TProps, IState> {
     }
 
     if ((result as Question).Id) {
-      this.props.enqueueSnackbar(`Вопрос успешно добавлен`, {
+      this.props.enqueueSnackbar(this.props.match.params.id 
+        ? `Вопрос успешно обновлен`
+        : `Вопрос успешно добавлен`, {
         variant: 'success',
         anchorOrigin: {
           vertical: 'bottom',
           horizontal: 'right'
         }
-      })
-
-      this.setState({
-        Model: new Question()
       })
     }
   }
@@ -131,7 +163,7 @@ class QuestionHandling extends Component<TProps, IState> {
 
   componentWillUnmount() {
     let id = this.state.Model.ImageId
-    if (id) {
+    if (id && !this.state.Model.Id) {
       this.FileService!.delete(id)
     }
   }
@@ -203,7 +235,7 @@ class QuestionHandling extends Component<TProps, IState> {
           </Grid>
           <Grid item xs={12} container spacing={16}>
             <Button onClick={this.handleSubmit}>
-              Добавить вопрос
+              {this.state.Model.Id ? 'Обновить вопрос' : 'Добавить вопрос'}
             </Button>
           </Grid>
         </Paper>

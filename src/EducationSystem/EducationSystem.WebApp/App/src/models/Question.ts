@@ -13,3 +13,9 @@ export default class Question extends Model {
   public Program?: Program
   public ImageId?: number
 }
+
+export interface QuestionOptions {
+  WithAnswers?: boolean
+  WithProgram?: boolean
+  WithMaterial?: boolean
+}
