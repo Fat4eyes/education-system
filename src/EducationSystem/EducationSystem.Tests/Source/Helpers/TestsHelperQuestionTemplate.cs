@@ -158,6 +158,8 @@ namespace EducationSystem.Tests.Source.Helpers
             // Не должно быть исключения.
             HelperQuestionTemplate.GetTemplates(testSize, questions);
 
+            questions = new List<DatabaseQuestion>();
+
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(20));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(20));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(20));
@@ -165,6 +167,8 @@ namespace EducationSystem.Tests.Source.Helpers
 
             // Не должно быть исключения.
             HelperQuestionTemplate.GetTemplates(testSize, questions);
+
+            questions = new List<DatabaseQuestion>();
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(30));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(30));
@@ -174,6 +178,8 @@ namespace EducationSystem.Tests.Source.Helpers
             // Не должно быть исключения.
             HelperQuestionTemplate.GetTemplates(testSize, questions);
 
+            questions = new List<DatabaseQuestion>();
+
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(40));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(40));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(40));
@@ -182,6 +188,8 @@ namespace EducationSystem.Tests.Source.Helpers
             // Не должно быть исключения.
             HelperQuestionTemplate.GetTemplates(testSize, questions);
 
+            questions = new List<DatabaseQuestion>();
+
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(50));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(50));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(50));
@@ -189,6 +197,8 @@ namespace EducationSystem.Tests.Source.Helpers
 
             // Не должно быть исключения.
             HelperQuestionTemplate.GetTemplates(testSize, questions);
+
+            questions = new List<DatabaseQuestion>();
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(60));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(60));
