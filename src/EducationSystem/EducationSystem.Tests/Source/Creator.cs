@@ -44,7 +44,8 @@ namespace EducationSystem.Tests.Source
         public static DatabaseQuestion CreateQuestion(params DatabaseAnswer[] answers)
         {
             var question = new DatabaseQuestion {
-                Answers = new List<DatabaseAnswer>()
+                Answers = new List<DatabaseAnswer>(),
+                Type = QuestionType.ClosedManyAnswers
             };
 
             foreach (var answer in answers)

@@ -61,6 +61,8 @@ namespace EducationSystem.Dependencies.Source
 
             services.AddTransient<IHelperFileImage, HelperFileImage>();
             services.AddTransient<IHelperFileDocument, HelperFileDocument>();
+
+            services.AddTransient<IHelperQuestionTemplate, HelperQuestionTemplate>();
         }
 
         private static void RegisterRepositories(IServiceCollection services)

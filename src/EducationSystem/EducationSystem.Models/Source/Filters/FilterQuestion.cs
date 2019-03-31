@@ -9,9 +9,10 @@ namespace EducationSystem.Models.Source.Filters
         {
             QuestionType.ClosedOneAnswer,
             QuestionType.ClosedManyAnswers,
+            QuestionType.OpenedOneString,
             QuestionType.WithProgram
         };
 
-        public int Count { get; set; } = 10;
+        public TestSize TestSize { get; set; } = TestSize.S;
     }
 }

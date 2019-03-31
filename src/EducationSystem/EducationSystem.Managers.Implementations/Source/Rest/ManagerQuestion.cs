@@ -21,6 +21,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
     {
         private readonly IHelperUser _helperUser;
         private readonly IHelperQuestion _helperQuestion;
+        private readonly IHelperQuestionTemplate _helperQuestionTemplate;
 
         private readonly IRepositoryAnswer _repositoryAnswer;
         private readonly IRepositoryProgram _repositoryProgram;
@@ -32,6 +33,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
             ILogger<ManagerQuestion> logger,
             IHelperUser helperUser,
             IHelperQuestion helperQuestion,
+            IHelperQuestionTemplate helperQuestionTemplate,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
             IRepositoryQuestion repositoryQuestion,
@@ -40,6 +42,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             _helperUser = helperUser;
             _helperQuestion = helperQuestion;
+            _helperQuestionTemplate = helperQuestionTemplate;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -64,29 +67,29 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
         {
             _helperUser.CheckRoleStudent(studentId);
 
-            var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId, filter);
-
-            var groups = questions
-                .GroupBy(x => x.Type)
-                .ToDictionary(x => x.Key, x => x.ToList())
-                .Select(x => (Type: x.Key, Questions: x.Value.OrderBy(y => y.Complexity).ToList()))
+            var questions = _repositoryQuestion
+                .GetQuestionsForStudentByTestId(testId, studentId, filter)
+                .Where(x => x.Type != QuestionType.OpenedManyStrings)
+                .Mix()
                 .ToList();
 
-            // TODO: Шаблоны.
-            // Разделение вопросов по типам и сортировка по сложности.
+            var templates = _helperQuestionTemplate
+                .GetTemplates(filter.TestSize, questions)
+                .ToList();
 
             Logger.LogDebug(
                 $"Идентификатор теста: {testId}. " +
                 $"Идентификатор студента: {studentId}. " +
-                $"Количество вопросов: {groups.SelectMany(x => x.Questions).Count()}. " +
-                $"Типы вопросов: {string.Join(", ", groups.Select(x => (int) x.Type).Distinct())}.");
+                $"Количество вопросов: {questions.Count}. " +
+                $"Типы вопросов: {string.Join(", ", questions.Select(x => (int) x.Type).Distinct())}. " +
+                $"Шаблоны: {string.Join(", ", templates.Select(x => $"{x.Key} - {x.Value}"))}. " +
+                $"Размер теста: {filter.TestSize}.");
 
-            questions = questions
-                .Mix()
-                .Take(filter.Count)
-                .ToList();
-
-            return questions
+            return templates
+                .SelectMany(x => questions
+                    .Where(y => y.Type == x.Key)
+                    .Take(x.Value))
+                .OrderBy(x => x.Complexity)
                 .Select(MapForStudent)
                 .ToList();
         }

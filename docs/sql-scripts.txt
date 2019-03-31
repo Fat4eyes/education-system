@@ -3,6 +3,7 @@
 -- Вопрос с программным кодом.
 select count(*) from question where type in (1, 2, 5);
 
+-- Количество: 0.
 -- Закрытый вопрос с одним правильным вариантом ответа.
 select count(*) from question where type in (1);
 
@@ -11,6 +12,11 @@ select count(*) from question where type in (2);
 
 -- Вопрос с программным кодом.
 select count(*) from question where type in (5);
+
+-- Количество: 0.
+-- Открытый вопрос с однострочным ответом.
+-- Открытый вопрос с многострочным ответом (проверяется вручную).
+select count(*) from question where type in (3, 4);
 
 select
     discipline.id as 'Discipline Id',
@@ -30,8 +36,8 @@ from question
     join test on discipline.id = test.discipline_id
 where
     question.type in (1, 2, 3, 4, 5)
-    -- and test.id = 111
+    and test.id = 164
     -- and question.id = 1
-    and theme.id = 1
+    -- and theme.id = 1
     -- anddiscipline.id = 1
 ;

@@ -9,13 +9,13 @@ using Xunit;
 
 namespace EducationSystem.Tests.Source.Helpers
 {
-    public class TestsUserHelper
+    public class TestsHelperUser
     {
         protected IHelperUser HelperUser { get; }
 
         protected Mock<IRepositoryRole> MockRepositoryRole { get; }
 
-        public TestsUserHelper()
+        public TestsHelperUser()
         {
             MockRepositoryRole = new Mock<IRepositoryRole>();
 

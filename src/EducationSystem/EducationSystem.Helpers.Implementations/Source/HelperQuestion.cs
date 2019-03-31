@@ -102,7 +102,7 @@ namespace EducationSystem.Helpers.Implementations.Source
 
                 if (question.Program.ProgramDatas.Any(x =>
                     string.IsNullOrWhiteSpace(x.Input) ||
-                    string.IsNullOrWhiteSpace(x.ExptectedOutput)))
+                    string.IsNullOrWhiteSpace(x.ExpectedOutput)))
                     throw ExceptionHelper.CreatePublicException(
                         "Некоторые входные или выходные параметры имеют неверный формат.");
 
