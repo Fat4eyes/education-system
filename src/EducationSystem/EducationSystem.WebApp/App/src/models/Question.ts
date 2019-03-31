@@ -11,4 +11,5 @@ export default class Question extends Model {
   public ThemeId?: number
   public Answers: Array<Answer> = []
   public Program?: Program
+  public ImageId?: number
 }

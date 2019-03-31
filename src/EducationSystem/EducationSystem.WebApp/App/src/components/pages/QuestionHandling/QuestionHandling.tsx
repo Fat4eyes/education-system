@@ -3,7 +3,7 @@ import {ChangeEvent, Component} from 'react'
 import {
   Button,
   FormControl,
-  Grid,
+  Grid, Input,
   InputLabel,
   MenuItem,
   Paper,
@@ -23,6 +23,8 @@ import Program from '../../../models/Program'
 import IQuestionService from '../../../services/abstractions/IQuestionService'
 import {inject} from '../../../infrastructure/di/inject'
 import {Exception} from '../../../helpers'
+import FileUpload from '../../stuff/FileUpload'
+import IFileService from '../../../services/abstractions/IFileService'
 
 interface IProps {
   match: {
@@ -35,19 +37,23 @@ interface IProps {
 type TProps = WithStyles<typeof QuestionHandlingStyle> & InjectedNotistackProps & IProps
 
 interface IState {
-  Model: Question
+  Model: Question,
+  Image?: File,
 }
 
 class QuestionHandling extends Component<TProps, IState> {
   @inject
   private QuestionService?: IQuestionService
+  
+  @inject
+  private FileService?: IFileService
 
   constructor(props: TProps) {
     super(props)
 
     this.state = {
       Model: new Question()
-    }
+    } as IState
     this.state.Model.ThemeId = this.props.match.params.themeId
   }
 
@@ -79,7 +85,6 @@ class QuestionHandling extends Component<TProps, IState> {
       Model: {
         ...state.Model,
         [name]: value
-
       }
     }))
   }
@@ -112,6 +117,22 @@ class QuestionHandling extends Component<TProps, IState> {
       this.setState({
         Model: new Question()
       })
+    }
+  }
+
+  handleImageLoad = (file?: File, id?: number) => 
+    this.setState(state => ({
+      Image: file,
+      Model: {
+        ...state.Model,
+        ImageId: id
+      }
+    }))
+
+  componentWillUnmount() {
+    let id = this.state.Model.ImageId
+    if (id) {
+      this.FileService!.delete(id)
     }
   }
 
@@ -162,6 +183,16 @@ class QuestionHandling extends Component<TProps, IState> {
               <TextField name='Text' label='Текст вопроса' required multiline fullWidth rows={5}
                          value={this.state.Model.Text} onChange={this.handleModel}/>
             </Grid>
+          </Grid>
+          <Grid item xs={12} container spacing={16}>
+            <Grid item>
+              <FileUpload onLoad={this.handleImageLoad}/>
+            </Grid>
+            {this.state.Image && 
+              <Grid item xs={10}>
+                <img className={classes.image} src={URL.createObjectURL(this.state.Image)} alt={'Foto'}/>
+              </Grid>
+            }
           </Grid>
           <Grid item xs={12} container spacing={16}>
             <AnswersHandling type={this.state.Model.Type}

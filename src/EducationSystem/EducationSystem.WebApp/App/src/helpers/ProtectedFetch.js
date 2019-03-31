@@ -23,6 +23,32 @@ class ProtectedFetch extends Fetch {
       : null
   };
 
+  static async postAndFiles(url, data, onError) {
+    const token = ProtectedFetch.handleToken()
+    return token
+      ? Fetch.handleFetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: data
+      }, onError)
+      : null
+  };
+
+  static async delete(url, data, onError) {
+    const token = ProtectedFetch.handleToken()
+    return token
+      ? Fetch.handleFetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: data
+      }, onError)
+      : null
+  };
+
   static async get(url, onError) {
     const token = ProtectedFetch.handleToken()
     return token
