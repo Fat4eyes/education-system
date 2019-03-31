@@ -19,7 +19,7 @@ namespace EducationSystem.Models.Source.Rest
 
         public int? Time { get; set; }
 
-        public int ThemeId { get; set; }
+        public int? ThemeId { get; set; }
 
         public Program Program { get; set; }
 

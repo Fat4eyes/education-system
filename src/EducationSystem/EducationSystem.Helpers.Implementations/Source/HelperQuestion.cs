@@ -50,7 +50,10 @@ namespace EducationSystem.Helpers.Implementations.Source
             if (question.Complexity.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указана сложность вопроса.");
 
-            if (_repositoryTheme.GetById(question.ThemeId) == null)
+            if (question.ThemeId.HasValue == false)
+                throw ExceptionHelper.CreatePublicException("Не указана тема.");
+
+            if (_repositoryTheme.GetById(question.ThemeId.Value) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
             if (question.ImageId.HasValue && _repositoryFile.GetById(question.ImageId.Value) == null)
