@@ -25,8 +25,6 @@ class Fetch {
         if (onError) {
           onError(e)
         } else {
-
-          
           return new Exception(e)
         }
       }

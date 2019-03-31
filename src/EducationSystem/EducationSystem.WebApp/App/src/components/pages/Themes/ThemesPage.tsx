@@ -28,6 +28,9 @@ import {TablePagination} from '../../core'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import IThemeService from '../../../services/abstractions/IThemeService'
+import QuestionTable from '../../Table/QuestionTable'
+import QuestionHandling from '../QuestionHandling/QuestionHandling'
+import {Redirect} from 'react-router'
 
 type TProps = WithStyles<typeof ThemesPageStyles> & InjectedNotistackProps
 
@@ -35,7 +38,10 @@ interface IState extends ITableState<Theme> {
   Discipline?: Discipline,
   ShowDisciplinesTable: boolean,
   ShowAddBlock: boolean,
-  Theme?: Theme
+  Theme?: Theme,
+  SelectedTmeheId?: number,
+  ShowQuestionsBlock: boolean,
+  NeedRedirect: boolean
 }
 
 class ThemesPage extends TableComponent<Theme, TProps, IState> {
@@ -56,7 +62,9 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
       IsLoading: false,
       ShowDisciplinesTable: true,
       ShowAddBlock: false,
-      Theme: new Theme()
+      ShowQuestionsBlock: false,
+      Theme: new Theme(),
+      NeedRedirect: false
     } as IState
   }
 
@@ -88,13 +96,17 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
       IsLoading: true
     }, async () => {
       await this.getTableData()
-      this.setState({ShowDisciplinesTable: false})
+      this.setState({
+        ShowDisciplinesTable: false
+      })
     })
   }
 
   handleDisciplinesTableVisible = () =>
     this.setState(state => ({
-      ShowDisciplinesTable: !state.ShowDisciplinesTable
+      ShowDisciplinesTable: !state.ShowDisciplinesTable,
+      ShowQuestionsBlock: false,
+      SelectedTmeheId: undefined
     }))
 
   handleTheme = {
@@ -110,6 +122,12 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
           ...state.Theme,
           Name: value
         }
+      }))
+    },
+    select: (id: number) => {
+      this.setState(state => ({
+        SelectedTmeheId: state.SelectedTmeheId === id ? undefined : id,
+        ShowQuestionsBlock: false,
       }))
     },
     submit: async () => {
@@ -134,15 +152,32 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
           }
         })
 
-        this.setState({ShowAddBlock: false, Theme: new Theme()})
+        let themes = this.state.Items
+        themes.push(result)
+        this.setState(state => ({
+          ShowAddBlock: false,
+          Theme: new Theme(),
+          Items: themes,
+          Count: state.Count + 1
+        }))
       }
     }
   }
 
   render(): React.ReactNode {
     let {classes} = this.props
+    
+    if (this.state.NeedRedirect && this.state.SelectedTmeheId) 
+      return <Redirect to={`/question/${this.state.SelectedTmeheId}`}/>
 
-    return <Grid container justify='center'>
+    return <Grid container justify='center' spacing={16}>
+      <Grid item xs={12} md={10} lg={8}>
+        <Paper className={classes.paperSmall}>
+          <Typography noWrap variant='subtitle1'>
+            Администрирование тем
+          </Typography>
+        </Paper>
+      </Grid>
       <Grid item xs={12} md={10} lg={8}>
         <Paper className={classes.paper}>
           <Grid item xs={12} container justify='space-between'>
@@ -162,72 +197,110 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
               </Button>}
             </Grid>
           </Grid>
-          <Grid item xs={12} className={classes.rowProgress}>
-            {this.state.IsLoading && <LinearProgress/>}
-          </Grid>
-          <Grid item xs={12}>
-            <Collapse timeout={500} in={this.state.ShowDisciplinesTable}>
-              <DisciplineTable handleClick={this.handleChangeDiscipline}/>
-            </Collapse>
-          </Grid>
-          <Grid item xs={12}>
-            <Collapse timeout={500} in={!this.state.ShowDisciplinesTable}>
-              <TablePagination
-                count={{
-                  all: this.state.Count,
-                  perPage: this.state.CountPerPage,
-                  current: this.state.Items.length
-                }}
-                page={this.state.Page}
-                onPageChange={this.handleChangePage}
-                onCountPerPageChange={this.handleChangeRowsPerPage}
-              />
-              <Collapse timeout={500} in={!this.state.ShowAddBlock}>
-                <RowHeader onClick={this.handleTheme.open}>
-                  <Grid item xs={12} container alignItems='center' justify='center' wrap='nowrap' zeroMinWidth>
-                    <AddIcon/>
-                    <Typography noWrap variant='subtitle1'>
-                      Добавить
-                    </Typography>
-                  </Grid>
-                </RowHeader>
+          <Collapse timeout={500} in={!this.state.ShowQuestionsBlock}>
+            <Grid item xs={12} className={classes.rowProgress}>
+              {this.state.IsLoading && <LinearProgress/>}
+            </Grid>
+            <Grid item xs={12}>
+              <Collapse timeout={500} in={this.state.ShowDisciplinesTable}>
+                <DisciplineTable handleClick={this.handleChangeDiscipline}/>
               </Collapse>
-              <Collapse timeout={500} in={this.state.ShowAddBlock}>
-                <Grid container>
-                  <Grid item xs>
-                    <TextField
-                      label='Название темы'
-                      placeholder='Название темы'
-                      value={this.state.Theme!.Name}
-                      onChange={this.handleTheme.change}
-                      style={{margin: '0 5px'}}
-                      fullWidth
-                      margin='none'
-                    />
-                  </Grid>
-                  <Grid item>
-                    <IconButton aria-label="Add" onClick={this.handleTheme.submit}>
+            </Grid>
+            <Grid item xs={12}>
+              <Collapse timeout={500} in={!this.state.ShowDisciplinesTable}>
+                <TablePagination
+                  count={{
+                    all: this.state.Count,
+                    perPage: this.state.CountPerPage,
+                    current: this.state.Items.length
+                  }}
+                  page={this.state.Page}
+                  onPageChange={this.handleChangePage}
+                  onCountPerPageChange={this.handleChangeRowsPerPage}
+                />
+                <Collapse timeout={500} in={!this.state.ShowAddBlock}>
+                  <RowHeader onClick={this.handleTheme.open}>
+                    <Grid item xs={12} container alignItems='center' justify='center' wrap='nowrap' zeroMinWidth>
                       <AddIcon/>
-                    </IconButton>
+                      <Typography noWrap variant='subtitle1'>
+                        Добавить
+                      </Typography>
+                    </Grid>
+                  </RowHeader>
+                </Collapse>
+                <Collapse timeout={500} in={this.state.ShowAddBlock}>
+                  <Grid container>
+                    <Grid item xs>
+                      <TextField
+                        label='Название темы'
+                        placeholder='Название темы'
+                        value={this.state.Theme!.Name}
+                        onChange={this.handleTheme.change}
+                        style={{margin: '0 5px'}}
+                        fullWidth
+                        margin='none'
+                      />
+                    </Grid>
+                    <Grid item>
+                      <IconButton aria-label="Add" onClick={this.handleTheme.submit}>
+                        <AddIcon/>
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <IconButton aria-label="Clear" onClick={this.handleTheme.close}>
+                        <ClearIcon/>
+                      </IconButton>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <IconButton aria-label="Clear" onClick={this.handleTheme.close}>
-                      <ClearIcon/>
-                    </IconButton>
-                  </Grid>
-                </Grid>
+                </Collapse>
+                {this.state.Items.map((theme: Theme) =>
+                  <RowHeader key={theme.Id}>
+                    <Grid item xs={12} container wrap='nowrap' zeroMinWidth
+                          onClick={() => this.handleTheme.select(theme.Id!)}
+                    >
+                      <Typography noWrap variant='subtitle1'>
+                        {theme.Name}
+                      </Typography>
+                    </Grid>
+                  </RowHeader>
+                )}
               </Collapse>
-              {this.state.Items.map((theme: Theme) =>
-                <RowHeader key={theme.Id}>
-                  <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
-                    <Typography noWrap variant='subtitle1'>
-                      {theme.Name}
-                    </Typography>
-                  </Grid>
-                </RowHeader>)}
-            </Collapse>
-          </Grid>
+            </Grid>
+          </Collapse>
         </Paper>
+      </Grid>
+      <Grid item xs={12} md={10} lg={8}>
+        <Collapse timeout={500} in={this.state.ShowQuestionsBlock}>
+          <Paper className={classes.paper}>
+            <Grid item xs={12} container justify='space-between'>
+              <Grid item>
+                <Typography noWrap variant='subtitle1'>
+                  {this.state.SelectedTmeheId && 
+                    `Тема: ${this.state.Items.find(t => t.Id === this.state.SelectedTmeheId)!.Name}`
+                  }
+                </Typography>
+              </Grid>
+              <Grid item>
+                {this.state.SelectedTmeheId && <Button variant='outlined'
+                                                       onClick={() => this.handleTheme.select(this.state.SelectedTmeheId!)}
+                >
+                  Выбрать другую
+                </Button>}
+              </Grid>
+              <Grid item>
+                {this.state.SelectedTmeheId && <Button variant='outlined' onClick={() => this.setState({NeedRedirect: true})}
+                >
+                  Добавить вопрос
+                </Button>}
+              </Grid>
+            </Grid>
+            {this.state.SelectedTmeheId && <QuestionTable 
+              themeId={this.state.SelectedTmeheId} 
+              loadCallback={() => this.setState({ShowQuestionsBlock: true})}
+            />
+            }
+          </Paper>
+        </Collapse>
       </Grid>
     </Grid>
   }

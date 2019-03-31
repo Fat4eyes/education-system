@@ -21,18 +21,16 @@ export default class TotalTimeInput extends Component<IProps> {
       }
     })
   }
-
-  handleTimeValue = (seconds: number = 0): string => {
+  
+  handleTimeValue = (): string => {
     let normalize = (value: number) => value < 10 ? '0' + value : value
-    return `${normalize(~~((seconds % 3600) / 60))}:${normalize(~~seconds % 60)}`
+    return `${normalize(~~((this.props.value % 3600) / 60))}:${normalize(~~this.props.value % 60)}`
   }
 
   render() {
-    let {value, ...rest} = this.props
-    
     return <VMaskedField
-      {...rest}
-      value={this.handleTimeValue(value)}
+      {...this.props}
+      value={this.handleTimeValue()}
       onChange={this.handleChange}
     />
   }

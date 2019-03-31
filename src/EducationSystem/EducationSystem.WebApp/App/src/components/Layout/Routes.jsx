@@ -7,6 +7,7 @@ import Home from '../pages/Home/Home'
 import Tests from '../pages/Tests/Tests'
 import HandleTest from '../pages/HandleTest/HandleTest'
 import ThemesPage from '../pages/Themes/ThemesPage'
+import QuestionHandling from '../pages/QuestionHandling/QuestionHandling'
 
 const Routes = () =>
   <Switch>
@@ -18,6 +19,7 @@ const Routes = () =>
     <ProtectedRoute path='/handletest' component={HandleTest} userRole='Admin'/>
     <ProtectedRoute path='/tests' component={Tests} userRole='Admin'/>
     <ProtectedRoute path='/themes' component={ThemesPage} userRole='Admin'/>
+    <ProtectedRoute exact path='/question/:themeId' component={QuestionHandling} userRole='Admin'/>
   </Switch>
 
 export default Routes

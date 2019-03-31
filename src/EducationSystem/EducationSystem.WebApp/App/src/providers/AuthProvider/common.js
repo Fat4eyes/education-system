@@ -10,13 +10,9 @@ export const ValidateAuthModel = ({Email, Password}) => {
 }
 
 export const handleAuthData = {
-  get: () => {
-    return {
-      Token: Cookies.get(TokenCookieName)
-    }
-  },
+  get: () => ({Token: Cookies.get(TokenCookieName)}),
   set: ({Token}) => {
-    if (!Token) throw new Exception('')
+    if (!Token) throw new Exception('Token not found')
     Cookies.set(TokenCookieName, Token)
   },
   clear: () => Cookies.remove(TokenCookieName),

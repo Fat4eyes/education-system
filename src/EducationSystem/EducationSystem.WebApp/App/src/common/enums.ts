@@ -16,3 +16,12 @@ export enum QuestionComplexityType {
   Medium,
   High
 }
+
+export enum LanguageType {
+  C = 1,
+  PHP,
+  Pascal,
+  CP,
+  CPP,
+  JavaScript,
+}

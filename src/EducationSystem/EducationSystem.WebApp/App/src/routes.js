@@ -26,7 +26,12 @@ const testRoutes = {
 };
 
 const themeRoutes = {
-  add: '/api/themes'
+  add: '/api/themes',
+  getQuestions: id => `/api/themes/${id}/questions`,
+}
+
+const questionRoutes = {
+  add: '/api/questions',
 }
 
 export {
@@ -35,5 +40,6 @@ export {
   accountRoutes,
   disciplineRoutes,
   testRoutes,
-  themeRoutes
+  themeRoutes,
+  questionRoutes
 }
