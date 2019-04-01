@@ -1,29 +1,29 @@
 ﻿using System;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Interfaces.Helpers;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 
-namespace EducationSystem.Implementations.Helpers
+namespace EducationSystem.Implementations.Validators
 {
-    public sealed class HelperTheme : IHelperTheme
+    public sealed class ValidatorTheme : IValidator<Theme>
     {
         private readonly IRepositoryDiscipline _repositoryDiscipline;
 
-        public HelperTheme(IRepositoryDiscipline repositoryDiscipline)
+        public ValidatorTheme(IRepositoryDiscipline repositoryDiscipline)
         {
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public void ValidateTheme(Theme theme)
+        public void Check(Theme model)
         {
-            if (theme == null)
-                throw new ArgumentNullException(nameof(theme));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            if (string.IsNullOrWhiteSpace(theme.Name))
+            if (string.IsNullOrWhiteSpace(model.Name))
                 throw ExceptionHelper.CreatePublicException("Не указано название темы.");
 
-            if (_repositoryDiscipline.GetById(theme.DisciplineId) == null)
+            if (_repositoryDiscipline.GetById(model.DisciplineId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
         }
     }

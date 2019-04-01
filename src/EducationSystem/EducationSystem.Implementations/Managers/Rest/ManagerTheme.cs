@@ -6,6 +6,7 @@ using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
@@ -18,17 +19,17 @@ namespace EducationSystem.Implementations.Managers.Rest
 {
     public sealed class ManagerTheme : Manager<ManagerTheme>, IManagerTheme
     {
-        private readonly IHelperTheme _helperTheme;
+        private readonly IValidator<Theme> _validatorTheme;
         private readonly IRepositoryTheme _repositoryTheme;
 
         public ManagerTheme(
             IMapper mapper,
             ILogger<ManagerTheme> logger,
-            IHelperTheme helperTheme,
+            IValidator<Theme> validatorTheme,
             IRepositoryTheme repositoryTheme)
             : base(mapper, logger)
         {
-            _helperTheme = helperTheme;
+            _validatorTheme = validatorTheme;
             _repositoryTheme = repositoryTheme;
         }
 
@@ -75,7 +76,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Theme> CreateThemeAsync(Theme theme)
         {
-            _helperTheme.ValidateTheme(theme);
+            _validatorTheme.Check(theme);
 
             FormatTheme(theme);
 
@@ -88,7 +89,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Theme> UpdateThemeAsync(int id, Theme theme)
         {
-            _helperTheme.ValidateTheme(theme);
+            _validatorTheme.Check(theme);
 
             var model = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

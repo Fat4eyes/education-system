@@ -12,7 +12,7 @@ namespace EducationSystem.Tests.Managers
 
         protected Mock<ILogger<TManager>> LoggerMock { get; }
 
-        protected Mock<IHelperUser> MockHelperUser { get; set; }
+        protected Mock<IHelperUser> MockHelperUser { get; }
 
         protected TestsManager()
         {

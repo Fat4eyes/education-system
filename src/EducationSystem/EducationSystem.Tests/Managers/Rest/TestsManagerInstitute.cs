@@ -11,19 +11,18 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerInstitute : TestsManager<ManagerInstitute>
     {
-        protected IManagerInstitute ManagerInstitute { get; }
+        private readonly IManagerInstitute _managerInstitute;
 
-        protected Mock<IRepositoryInstitute> MockRepositoryInstitute { get; set; }
+        private readonly Mock<IRepositoryInstitute> _mockRepositoryInstitute
+            = new Mock<IRepositoryInstitute>();
 
         public TestsManagerInstitute()
         {
-            MockRepositoryInstitute = new Mock<IRepositoryInstitute>();
-
-            ManagerInstitute = new ManagerInstitute(
+            _managerInstitute = new ManagerInstitute(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockRepositoryInstitute.Object);
+                _mockRepositoryInstitute.Object);
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerInstitute.GetInstituteByStudentId(999, new OptionsInstitute()));
+                () => _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute()));
         }
 
         [Fact]
@@ -42,11 +41,11 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryInstitute
+            _mockRepositoryInstitute
                 .Setup(x => x.GetInstituteByStudentId(999))
                 .Returns(new DatabaseInstitute { Name = "ИИТиУвТС" });
 
-            var institute = ManagerInstitute.GetInstituteByStudentId(999, new OptionsInstitute());
+            var institute = _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute());
 
             Assert.Equal("ИИТиУвТС", institute.Name);
         }
@@ -56,12 +55,12 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryInstitute
+            _mockRepositoryInstitute
                 .Setup(x => x.GetInstituteByStudentId(999))
                 .Returns((DatabaseInstitute) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerInstitute.GetInstituteByStudentId(999, new OptionsInstitute()));
+                () => _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute()));
         }
     }
 }

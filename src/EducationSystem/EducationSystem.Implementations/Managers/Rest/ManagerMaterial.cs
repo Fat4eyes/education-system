@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
-using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -18,19 +17,19 @@ namespace EducationSystem.Implementations.Managers.Rest
 {
     public class ManagerMaterial : Manager<ManagerMaterial>, IManagerMaterial
     {
-        private readonly IHelperMaterial _helperMaterial;
+        private readonly IValidator<Material> _validatorMaterial;
         private readonly IRepositoryMaterial _repositoryMaterial;
         private readonly IRepositoryMaterialFile _repositoryMaterialFile;
 
         public ManagerMaterial(
             IMapper mapper,
             ILogger<ManagerMaterial> logger,
-            IHelperMaterial helperMaterial,
+            IValidator<Material> validatorMaterial,
             IRepositoryMaterial repositoryMaterial,
             IRepositoryMaterialFile repositoryMaterialFile)
             : base(mapper, logger)
         {
-            _helperMaterial = helperMaterial;
+            _validatorMaterial = validatorMaterial;
             _repositoryMaterial = repositoryMaterial;
             _repositoryMaterialFile = repositoryMaterialFile;
         }
@@ -54,7 +53,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Material> CreateMaterialAsync(Material material)
         {
-            _helperMaterial.ValidateMaterial(material);
+            _validatorMaterial.Check(material);
 
             FormatMaterial(material);
 
@@ -67,7 +66,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Material> UpdateMaterialAsync(int id, Material material)
         {
-            _helperMaterial.ValidateMaterial(material);
+            _validatorMaterial.Check(material);
 
             var model = _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

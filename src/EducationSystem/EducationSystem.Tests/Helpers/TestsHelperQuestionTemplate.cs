@@ -12,11 +12,11 @@ namespace EducationSystem.Tests.Helpers
     {
         protected readonly Random Random = new Random();
 
-        protected IHelperQuestionTemplate HelperQuestionTemplate { get; }
+        private readonly IHelperQuestionTemplate _helperQuestionTemplate;
 
         public TestsHelperQuestionTemplate()
         {
-            HelperQuestionTemplate = new HelperQuestionTemplate();
+            _helperQuestionTemplate = new HelperQuestionTemplate();
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 7);
             questions = AppendTo(questions, QuestionType.WithProgram, 2);
 
-            var templates = HelperQuestionTemplate.GetTemplates(TestSize.XS, questions);
+            var templates = _helperQuestionTemplate.GetTemplates(TestSize.XS, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.WithProgram));
@@ -44,7 +44,7 @@ namespace EducationSystem.Tests.Helpers
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 15);
 
-            var templates = HelperQuestionTemplate.GetTemplates(TestSize.XS, questions);
+            var templates = _helperQuestionTemplate.GetTemplates(TestSize.XS, questions);
 
             Assert.Single(templates);
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
@@ -59,7 +59,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 11);
             questions = AppendTo(questions, QuestionType.WithProgram, 2);
 
-            var templates = HelperQuestionTemplate.GetTemplates(TestSize.XS, questions);
+            var templates = _helperQuestionTemplate.GetTemplates(TestSize.XS, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.WithProgram));
@@ -70,21 +70,21 @@ namespace EducationSystem.Tests.Helpers
 
             questions = AppendTo(questions, QuestionType.WithProgram, 3);
 
-            templates = HelperQuestionTemplate.GetTemplates(TestSize.XS, questions);
+            templates = _helperQuestionTemplate.GetTemplates(TestSize.XS, questions);
 
             Assert.Equal(05, templates[QuestionType.WithProgram]);
             Assert.Equal(07, templates[QuestionType.ClosedManyAnswers]);
 
             questions = AppendTo(questions, QuestionType.WithProgram, 1);
 
-            templates = HelperQuestionTemplate.GetTemplates(TestSize.XS, questions);
+            templates = _helperQuestionTemplate.GetTemplates(TestSize.XS, questions);
 
             Assert.Equal(06, templates[QuestionType.WithProgram]);
             Assert.Equal(06, templates[QuestionType.ClosedManyAnswers]);
 
             questions = AppendTo(questions, QuestionType.WithProgram, 1);
 
-            templates = HelperQuestionTemplate.GetTemplates(TestSize.XS, questions);
+            templates = _helperQuestionTemplate.GetTemplates(TestSize.XS, questions);
 
             Assert.Equal(02, templates.Count);
             Assert.Equal(06, templates[QuestionType.WithProgram]);
@@ -100,7 +100,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, 5);
             questions = AppendTo(questions, QuestionType.WithProgram, 3);
 
-            var templates = HelperQuestionTemplate.GetTemplates(TestSize.S, questions);
+            var templates = _helperQuestionTemplate.GetTemplates(TestSize.S, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.ClosedOneAnswer));
@@ -114,7 +114,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, 10);
             questions = AppendTo(questions, QuestionType.WithProgram, 12);
 
-            templates = HelperQuestionTemplate.GetTemplates(TestSize.S, questions);
+            templates = _helperQuestionTemplate.GetTemplates(TestSize.S, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.ClosedOneAnswer));
@@ -127,7 +127,7 @@ namespace EducationSystem.Tests.Helpers
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 1);
 
-            templates = HelperQuestionTemplate.GetTemplates(TestSize.S, questions);
+            templates = _helperQuestionTemplate.GetTemplates(TestSize.S, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.ClosedOneAnswer));
@@ -156,7 +156,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(10));
 
             // Не должно быть исключения.
-            HelperQuestionTemplate.GetTemplates(testSize, questions);
+            _helperQuestionTemplate.GetTemplates(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
@@ -166,7 +166,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(20));
 
             // Не должно быть исключения.
-            HelperQuestionTemplate.GetTemplates(testSize, questions);
+            _helperQuestionTemplate.GetTemplates(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
@@ -176,7 +176,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(30));
 
             // Не должно быть исключения.
-            HelperQuestionTemplate.GetTemplates(testSize, questions);
+            _helperQuestionTemplate.GetTemplates(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
@@ -186,7 +186,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(40));
 
             // Не должно быть исключения.
-            HelperQuestionTemplate.GetTemplates(testSize, questions);
+            _helperQuestionTemplate.GetTemplates(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
@@ -196,7 +196,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(50));
 
             // Не должно быть исключения.
-            HelperQuestionTemplate.GetTemplates(testSize, questions);
+            _helperQuestionTemplate.GetTemplates(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
@@ -206,7 +206,7 @@ namespace EducationSystem.Tests.Helpers
             questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(60));
 
             // Не должно быть исключения.
-            HelperQuestionTemplate.GetTemplates(testSize, questions);
+            _helperQuestionTemplate.GetTemplates(testSize, questions);
         }
 
         private static List<DatabaseQuestion> AppendTo(List<DatabaseQuestion> questions, QuestionType type, int count)

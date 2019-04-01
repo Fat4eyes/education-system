@@ -7,10 +7,10 @@ using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
-using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,7 @@ namespace EducationSystem.Implementations.Managers.Rest
     public sealed class ManagerTest : Manager<ManagerTest>, IManagerTest
     {
         private readonly IHelperUser _helperUser;
-        private readonly IHelperTest _helperTest;
+        private readonly IValidator<Test> _chekerTest;
 
         private readonly IRepositoryTest _repositoryTest;
         private readonly IRepositoryTestTheme _repositoryTestTheme;
@@ -29,13 +29,13 @@ namespace EducationSystem.Implementations.Managers.Rest
             IMapper mapper,
             ILogger<ManagerTest> logger,
             IHelperUser helperUser,
-            IHelperTest helperTest,
+            IValidator<Test> chekerTest,
             IRepositoryTest repositoryTest,
             IRepositoryTestTheme repositoryTestTheme)
             : base(mapper, logger)
         {
             _helperUser = helperUser;
-            _helperTest = helperTest;
+            _chekerTest = chekerTest;
             _repositoryTest = repositoryTest;
             _repositoryTestTheme = repositoryTestTheme;
         }
@@ -97,7 +97,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Test> CreateTestAsync(Test test)
         {
-            _helperTest.ValidateTest(test);
+            _chekerTest.Check(test);
 
             FormatTest(test);
 
@@ -110,7 +110,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Test> UpdateTestAsync(int id, Test test)
         {
-            _helperTest.ValidateTest(test);
+            _chekerTest.Check(test);
 
             var model = _repositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

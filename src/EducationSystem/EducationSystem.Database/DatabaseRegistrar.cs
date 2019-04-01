@@ -9,7 +9,7 @@ namespace EducationSystem.Database
 {
     public static class DatabaseRegistrar
     {
-        public static void Register(IServiceCollection services, IConfiguration configuration)
+        public static void Register(IServiceCollection collection, IConfiguration configuration)
         {
             var database = configuration
                 .GetSection(nameof(DatabaseParameters))
@@ -22,7 +22,7 @@ namespace EducationSystem.Database
                 .Append($" USER ID  = {database.UserName}; ")
                 .Append($" PASSWORD = {database.UserPassword}; ");
 
-            services.AddDbContext<DatabaseContext>(x => x
+            collection.AddDbContext<DatabaseContext>(x => x
                 .UseLazyLoadingProxies()
                 .UseMySQL(builder.ToString()));
         }

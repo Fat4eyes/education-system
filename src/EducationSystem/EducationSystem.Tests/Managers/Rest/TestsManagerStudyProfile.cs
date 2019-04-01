@@ -11,19 +11,18 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerStudyProfile : TestsManager<ManagerStudyProfile>
     {
-        protected IManagerStudyProfile ManagerStudyProfile { get; }
+        private readonly IManagerStudyProfile _managerStudyProfile;
 
-        protected Mock<IRepositoryStudyProfile> MockRepositoryStudyProfile { get; set; }
+        private readonly Mock<IRepositoryStudyProfile> _mockRepositoryStudyProfile
+            = new Mock<IRepositoryStudyProfile>();
 
         public TestsManagerStudyProfile()
         {
-            MockRepositoryStudyProfile = new Mock<IRepositoryStudyProfile>();
-
-            ManagerStudyProfile = new ManagerStudyProfile(
+            _managerStudyProfile = new ManagerStudyProfile(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockRepositoryStudyProfile.Object);
+                _mockRepositoryStudyProfile.Object);
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile()));
+                () => _managerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile()));
         }
 
         [Fact]
@@ -42,11 +41,11 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryStudyProfile
+            _mockRepositoryStudyProfile
                 .Setup(x => x.GetStudyProfileByStudentId(999))
                 .Returns(new DatabaseStudyProfile { Name = "Study Profile" });
 
-            var studyProfile = ManagerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile());
+            var studyProfile = _managerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile());
 
             Assert.Equal("Study Profile", studyProfile.Name);
         }
@@ -56,12 +55,12 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryStudyProfile
+            _mockRepositoryStudyProfile
                 .Setup(x => x.GetStudyProfileByStudentId(999))
                 .Returns((DatabaseStudyProfile) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile()));
+                () => _managerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile()));
         }
     }
 }

@@ -11,19 +11,18 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerStudyPlan : TestsManager<ManagerStudyPlan>
     {
-        protected IManagerStudyPlan ManagerStudyPlan { get; }
+        private readonly IManagerStudyPlan _managerStudyPlan;
 
-        protected Mock<IRepositoryStudyPlan> MockRepositoryStudyPlan { get; set; }
+        private readonly Mock<IRepositoryStudyPlan> _mockRepositoryStudyPlan
+            = new Mock<IRepositoryStudyPlan>();
 
         public TestsManagerStudyPlan()
         {
-            MockRepositoryStudyPlan = new Mock<IRepositoryStudyPlan>();
-
-            ManagerStudyPlan = new ManagerStudyPlan(
+            _managerStudyPlan = new ManagerStudyPlan(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockRepositoryStudyPlan.Object);
+                _mockRepositoryStudyPlan.Object);
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));
+                () => _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));
         }
 
         [Fact]
@@ -42,11 +41,11 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryStudyPlan
+            _mockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))
                 .Returns(new DatabaseStudyPlan { Name = "Study Plan" });
 
-            var studyPlan = ManagerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan());
+            var studyPlan = _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan());
 
             Assert.Equal("Study Plan", studyPlan.Name);
         }
@@ -56,12 +55,12 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryStudyPlan
+            _mockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))
                 .Returns((DatabaseStudyPlan) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));
+                () => _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));
         }
     }
 }

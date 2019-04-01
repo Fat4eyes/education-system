@@ -3,14 +3,14 @@ using System.Linq;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Helpers.Files;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 
-namespace EducationSystem.Implementations.Helpers
+namespace EducationSystem.Implementations.Validators
 {
-    public sealed class HelperQuestion : IHelperQuestion
+    public sealed class ValidatorQuestion : IValidator<Question>
     {
         private readonly IHelperFileImage _helperFileImage;
 
@@ -18,7 +18,7 @@ namespace EducationSystem.Implementations.Helpers
         private readonly IRepositoryTheme _repositoryTheme;
         private readonly IRepositoryMaterial _repositoryMaterial;
 
-        public HelperQuestion(
+        public ValidatorQuestion(
             IHelperFileImage helperFileImage,
             IRepositoryFile repositoryFile,
             IRepositoryTheme repositoryTheme,
@@ -30,42 +30,42 @@ namespace EducationSystem.Implementations.Helpers
             _repositoryMaterial = repositoryMaterial;
         }
 
-        public void ValidateQuestion(Question question)
+        public void Check(Question model)
         {
-            if (question == null)
-                throw new ArgumentNullException(nameof(question));
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
 
-            if (string.IsNullOrWhiteSpace(question.Text))
+            if (string.IsNullOrWhiteSpace(model.Text))
                 throw ExceptionHelper.CreatePublicException("Не указан текст вопроса.");
 
-            if (question.Time.HasValue == false)
+            if (model.Time.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано время ответа на вопрос.");
 
-            if (question.Time.Value <= 0 || question.Time.Value > 60 * 60)
+            if (model.Time.Value <= 0 || model.Time.Value > 60 * 60)
                 throw ExceptionHelper.CreatePublicException("Указано некорректное время ответа на вопрос.");
 
-            if (question.Type.HasValue == false)
+            if (model.Type.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указан тип вопроса.");
 
-            if (question.Complexity.HasValue == false)
+            if (model.Complexity.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указана сложность вопроса.");
 
-            if (question.ThemeId.HasValue == false)
+            if (model.ThemeId.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указана тема.");
 
-            if (_repositoryTheme.GetById(question.ThemeId.Value) == null)
+            if (_repositoryTheme.GetById(model.ThemeId.Value) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            if (question.ImageId.HasValue && _repositoryFile.GetById(question.ImageId.Value) == null)
+            if (model.ImageId.HasValue && _repositoryFile.GetById(model.ImageId.Value) == null)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (question.ImageId.HasValue && _helperFileImage.FileExists(question.ImageId.Value) == false)
+            if (model.ImageId.HasValue && _helperFileImage.FileExists(model.ImageId.Value) == false)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (question.MaterialId.HasValue && _repositoryMaterial.GetById(question.MaterialId.Value) == null)
+            if (model.MaterialId.HasValue && _repositoryMaterial.GetById(model.MaterialId.Value) == null)
                 throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
 
-            ValidateByQuestionType(question);
+            ValidateByQuestionType(model);
         }
 
         private static void ValidateByQuestionType(Question question)
@@ -117,7 +117,7 @@ namespace EducationSystem.Implementations.Helpers
                 if (question.Answers.IsEmpty())
                     throw ExceptionHelper.CreatePublicException(
                         "Для вопроса не указано ни одного варианта ответа.");
-                
+
                 if (question.Answers.Any(x => string.IsNullOrWhiteSpace(x.Text)))
                     throw ExceptionHelper.CreatePublicException(
                         "Один или несколько вариантов ответа имеют неверный формат.");

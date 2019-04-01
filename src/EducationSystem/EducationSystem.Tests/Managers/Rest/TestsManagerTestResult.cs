@@ -11,19 +11,18 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerTestResult : TestsManager<ManagerTestResult>
     {
-        protected IManagerTestResult ManagerTestResult { get; }
+        private readonly IManagerTestResult _managerTestResult;
 
-        protected Mock<IRepositoryTestResult> MockRepositoryTestResult { get; set; }
+        private readonly Mock<IRepositoryTestResult> _mockRepositoryTestResult
+            = new Mock<IRepositoryTestResult>();
 
         public TestsManagerTestResult()
         {
-            MockRepositoryTestResult = new Mock<IRepositoryTestResult>();
-
-            ManagerTestResult = new ManagerTestResult(
+            _managerTestResult = new ManagerTestResult(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockRepositoryTestResult.Object);
+                _mockRepositoryTestResult.Object);
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerTestResult.GetTestResultsByStudentId(999, new OptionsTestResult(), new FilterTestResult()));
+                () => _managerTestResult.GetTestResultsByStudentId(999, new OptionsTestResult(), new FilterTestResult()));
         }
     }
 }

@@ -11,28 +11,27 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerRole : TestsManager<ManagerRole>
     {
-        protected IManagerRole ManagerRole { get; }
+        private readonly IManagerRole _managerRole;
 
-        protected Mock<IRepositoryRole> MockRepositoryRole { get; set; }
+        private readonly Mock<IRepositoryRole> _mockRepositoryRole
+            = new Mock<IRepositoryRole>();
 
         public TestsManagerRole()
         {
-            MockRepositoryRole = new Mock<IRepositoryRole>();
-
-            ManagerRole = new ManagerRole(
+            _managerRole = new ManagerRole(
                 Mapper,
                 LoggerMock.Object,
-                MockRepositoryRole.Object);
+                _mockRepositoryRole.Object);
         }
 
         [Fact]
         public void GetRoleById_Found()
         {
-            MockRepositoryRole
+            _mockRepositoryRole
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseRole { Name = "Student" });
 
-            var role = ManagerRole.GetRoleById(999, new OptionsRole());
+            var role = _managerRole.GetRoleById(999, new OptionsRole());
 
             Assert.Equal("Student", role.Name);
         }
@@ -40,22 +39,22 @@ namespace EducationSystem.Tests.Managers.Rest
         [Fact]
         public void GetRoleById_NotFound()
         {
-            MockRepositoryRole
+            _mockRepositoryRole
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseRole) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerRole.GetRoleById(999, new OptionsRole()));
+                () => _managerRole.GetRoleById(999, new OptionsRole()));
         }
 
         [Fact]
         public void GetRoleByUserId_Found()
         {
-            MockRepositoryRole
+            _mockRepositoryRole
                 .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = "Student" });
 
-            var role = ManagerRole.GetRoleByUserId(999, new OptionsRole());
+            var role = _managerRole.GetRoleByUserId(999, new OptionsRole());
 
             Assert.Equal("Student", role.Name);
         }
@@ -63,12 +62,12 @@ namespace EducationSystem.Tests.Managers.Rest
         [Fact]
         public void GetRoleByUserId_NotFound()
         {
-            MockRepositoryRole
+            _mockRepositoryRole
                 .Setup(x => x.GetRoleByUserId(999))
                 .Returns((DatabaseRole) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerRole.GetRoleByUserId(999, new OptionsRole()));
+                () => _managerRole.GetRoleByUserId(999, new OptionsRole()));
         }
     }
 }

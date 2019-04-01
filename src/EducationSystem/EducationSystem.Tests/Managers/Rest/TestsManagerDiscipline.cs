@@ -13,29 +13,28 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerDiscipline : TestsManager<ManagerDiscipline>
     {
-        private readonly IManagerDiscipline ManagerDiscipline;
+        private readonly IManagerDiscipline _managerDiscipline;
 
-        private readonly Mock<IRepositoryDiscipline> MockRepositoryDiscipline;
+        private readonly Mock<IRepositoryDiscipline> _mockRepositoryDiscipline
+            = new Mock<IRepositoryDiscipline>();
 
         public TestsManagerDiscipline()
         {
-            MockRepositoryDiscipline = new Mock<IRepositoryDiscipline>();
-
-            ManagerDiscipline = new ManagerDiscipline(
+            _managerDiscipline = new ManagerDiscipline(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockRepositoryDiscipline.Object);
+                _mockRepositoryDiscipline.Object);
         }
 
         [Fact]
         public void GetDisciplineById_Found()
         {
-            MockRepositoryDiscipline
+            _mockRepositoryDiscipline
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseDiscipline { Name = "WEB" });
 
-            var discipline = ManagerDiscipline.GetDisciplineById(999, new OptionsDiscipline());
+            var discipline = _managerDiscipline.GetDisciplineById(999, new OptionsDiscipline());
 
             Assert.Equal("WEB", discipline.Name);
         }
@@ -43,12 +42,12 @@ namespace EducationSystem.Tests.Managers.Rest
         [Fact]
         public void GetDisciplineById_NotFound()
         {
-            MockRepositoryDiscipline
+            _mockRepositoryDiscipline
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseDiscipline) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerDiscipline.GetDisciplineById(999, new OptionsDiscipline()));
+                () => _managerDiscipline.GetDisciplineById(999, new OptionsDiscipline()));
         }
 
         [Fact]
@@ -59,7 +58,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerDiscipline.GetDisciplinesForStudent
+                () => _managerDiscipline.GetDisciplinesForStudent
                     (999, new OptionsDiscipline(), new FilterDiscipline()));
         }
 
@@ -70,11 +69,11 @@ namespace EducationSystem.Tests.Managers.Rest
 
             var disciplines = GetDisciplines();
 
-            MockRepositoryDiscipline
+            _mockRepositoryDiscipline
                 .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
                 .Returns((disciplines.Count, disciplines));
 
-            var data = ManagerDiscipline.GetDisciplinesForStudent
+            var data = _managerDiscipline.GetDisciplinesForStudent
                 (999, new OptionsDiscipline { WithTests = true }, new FilterDiscipline());
 
             Assert.Equal(2, data.Count);
@@ -96,11 +95,11 @@ namespace EducationSystem.Tests.Managers.Rest
 
             var disciplines = GetDisciplines();
 
-            MockRepositoryDiscipline
+            _mockRepositoryDiscipline
                 .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
                 .Returns((disciplines.Count, disciplines));
 
-            var data = ManagerDiscipline.GetDisciplinesForStudent
+            var data = _managerDiscipline.GetDisciplinesForStudent
                 (999, new OptionsDiscipline { WithThemes = true }, new FilterDiscipline());
 
             Assert.Equal(2, data.Count);

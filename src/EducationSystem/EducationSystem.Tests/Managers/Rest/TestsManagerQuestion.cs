@@ -6,7 +6,9 @@ using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers.Rest;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Filters;
+using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
@@ -15,36 +17,38 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerQuestion : TestsManager<ManagerQuestion>
     {
-        protected IManagerQuestion ManagerQuestion { get; }
+        private readonly IManagerQuestion _managerQuestion;
 
-        protected Mock<IHelperQuestion> MockHelperQuestion { get; }
-        protected Mock<IHelperQuestionTemplate> MockHelperQuestionTemplate { get; }
+        private readonly Mock<IValidator<Question>> _mockHelperQuestion
+            = new Mock<IValidator<Question>>();
 
-        protected Mock<IRepositoryAnswer> MockRepositoryAnswer { get; }
-        protected Mock<IRepositoryProgram> MockRepositoryProgram { get;  }
-        protected Mock<IRepositoryQuestion> MockRepositoryQuestion { get;  }
-        protected Mock<IRepositoryProgramData> MockRepositoryProgramData { get;  }
+        private readonly Mock<IHelperQuestionTemplate> _mockHelperQuestionTemplate
+            = new Mock<IHelperQuestionTemplate>();
+
+        private readonly Mock<IRepositoryAnswer> _mockRepositoryAnswer
+            = new Mock<IRepositoryAnswer>();
+
+        private readonly Mock<IRepositoryProgram> _mockRepositoryProgram
+            = new Mock<IRepositoryProgram>();
+
+        private readonly Mock<IRepositoryQuestion> _mockRepositoryQuestion
+            = new Mock<IRepositoryQuestion>();
+
+        private readonly Mock<IRepositoryProgramData> _mockRepositoryProgramData
+            = new Mock<IRepositoryProgramData>();
 
         public TestsManagerQuestion()
         {
-            MockHelperQuestion = new Mock<IHelperQuestion>();
-            MockHelperQuestionTemplate = new Mock<IHelperQuestionTemplate>();
-
-            MockRepositoryAnswer = new Mock<IRepositoryAnswer>();
-            MockRepositoryProgram = new Mock<IRepositoryProgram>();
-            MockRepositoryQuestion = new Mock<IRepositoryQuestion>();
-            MockRepositoryProgramData = new Mock<IRepositoryProgramData>();
-
-            ManagerQuestion = new ManagerQuestion(
+            _managerQuestion = new ManagerQuestion(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockHelperQuestion.Object,
-                MockHelperQuestionTemplate.Object,
-                MockRepositoryAnswer.Object,
-                MockRepositoryProgram.Object,
-                MockRepositoryQuestion.Object,
-                MockRepositoryProgramData.Object);
+                _mockHelperQuestion.Object,
+                _mockHelperQuestionTemplate.Object,
+                _mockRepositoryAnswer.Object,
+                _mockRepositoryProgram.Object,
+                _mockRepositoryQuestion.Object,
+                _mockRepositoryProgramData.Object);
         }
 
         [Fact]
@@ -55,7 +59,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion()));
+                () => _managerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion()));
         }
 
         [Fact]
@@ -63,7 +67,7 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryQuestion
+            _mockRepositoryQuestion
                 .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
                 .Returns(GetQuestions());
 
@@ -74,11 +78,11 @@ namespace EducationSystem.Tests.Managers.Rest
                 { QuestionType.ClosedManyAnswers, count }
             };
 
-            MockHelperQuestionTemplate
+            _mockHelperQuestionTemplate
                 .Setup(x => x.GetTemplates(TestSize.XS, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(templates);
 
-            var questions = ManagerQuestion.GetQuestionsForStudentByTestId(
+            var questions = _managerQuestion.GetQuestionsForStudentByTestId(
                 999, 999, new FilterQuestion { TestSize = TestSize.XS });
 
             Assert.Equal(count, questions.Count);
@@ -91,15 +95,15 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryQuestion
+            _mockRepositoryQuestion
                 .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
                 .Returns(new List<DatabaseQuestion>());
 
-            MockHelperQuestionTemplate
+            _mockHelperQuestionTemplate
                 .Setup(x => x.GetTemplates(TestSize.S, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(new Dictionary<QuestionType, int>());
 
-            var questions = ManagerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion());
+            var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion());
 
             Assert.Empty(questions);
         }

@@ -11,29 +11,28 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerGroup : TestsManager<ManagerGroup>
     {
-        protected IManagerGroup ManagerGroup { get; }
+        private readonly IManagerGroup _managerGroup;
 
-        protected Mock<IRepositoryGroup> MockRepositoryGroup { get; set; }
+        private readonly Mock<IRepositoryGroup> _mockRepositoryGroup
+            = new Mock<IRepositoryGroup>();
 
         public TestsManagerGroup()
         {
-            MockRepositoryGroup = new Mock<IRepositoryGroup>();
-
-            ManagerGroup = new ManagerGroup(
+            _managerGroup = new ManagerGroup(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockRepositoryGroup.Object);
+                _mockRepositoryGroup.Object);
         }
 
         [Fact]
         public void GetGroupById_Found()
         {
-            MockRepositoryGroup
+            _mockRepositoryGroup
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseGroup { Name = "ИС-42" });
 
-            var group = ManagerGroup.GetGroupById(999, new OptionsGroup());
+            var group = _managerGroup.GetGroupById(999, new OptionsGroup());
 
             Assert.Equal("ИС-42", group.Name);
         }
@@ -41,12 +40,12 @@ namespace EducationSystem.Tests.Managers.Rest
         [Fact]
         public void GetGroupById_NotFound()
         {
-            MockRepositoryGroup
+            _mockRepositoryGroup
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseGroup) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerGroup.GetGroupById(999, new OptionsGroup()));
+                () => _managerGroup.GetGroupById(999, new OptionsGroup()));
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerGroup.GetGroupByStudentId(999, new OptionsGroup()));
+                () => _managerGroup.GetGroupByStudentId(999, new OptionsGroup()));
         }
 
         [Fact]
@@ -65,11 +64,11 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryGroup
+            _mockRepositoryGroup
                 .Setup(x => x.GetGroupByStudentId(999))
                 .Returns(new DatabaseGroup { Name = "ИС-42" });
 
-            var group = ManagerGroup.GetGroupByStudentId(999, new OptionsGroup());
+            var group = _managerGroup.GetGroupByStudentId(999, new OptionsGroup());
 
             Assert.Equal("ИС-42", group.Name);
         }
@@ -79,12 +78,12 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryGroup
+            _mockRepositoryGroup
                 .Setup(x => x.GetGroupByStudentId(999))
                 .Returns((DatabaseGroup) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerGroup.GetGroupByStudentId(999, new OptionsGroup()));
+                () => _managerGroup.GetGroupByStudentId(999, new OptionsGroup()));
         }
     }
 }

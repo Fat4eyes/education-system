@@ -11,19 +11,18 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerStudent : TestsManager<ManagerStudent>
     {
-        protected IManagerStudent ManagerStudent { get; }
+        private readonly IManagerStudent _managerStudent;
 
-        protected Mock<IRepositoryStudent> MockRepositoryStudent { get; set; }
+        private readonly Mock<IRepositoryStudent> _mockRepositoryStudent
+            = new Mock<IRepositoryStudent>();
 
         public TestsManagerStudent()
         {
-            MockRepositoryStudent = new Mock<IRepositoryStudent>();
-
-            ManagerStudent = new ManagerStudent(
+            _managerStudent = new ManagerStudent(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockRepositoryStudent.Object);
+                _mockRepositoryStudent.Object);
         }
 
         [Fact]
@@ -34,7 +33,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerStudent.GetStudentById(999, new OptionsStudent()));
+                () => _managerStudent.GetStudentById(999, new OptionsStudent()));
         }
 
         [Fact]
@@ -42,11 +41,11 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryStudent
+            _mockRepositoryStudent
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseUser { FirstName = "Victor" });
 
-            var student = ManagerStudent.GetStudentById(999, new OptionsStudent());
+            var student = _managerStudent.GetStudentById(999, new OptionsStudent());
 
             Assert.Equal("Victor", student.FirstName);
         }
@@ -56,12 +55,12 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             MockHelperUser.Reset();
 
-            MockRepositoryStudent
+            _mockRepositoryStudent
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseUser) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerStudent.GetStudentById(999, new OptionsStudent()));
+                () => _managerStudent.GetStudentById(999, new OptionsStudent()));
         }
     }
 }

@@ -4,11 +4,14 @@ using EducationSystem.Implementations.Helpers.Files;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
 using EducationSystem.Implementations.Managers.Rest;
+using EducationSystem.Implementations.Validators;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Helpers.Files;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Validators;
+using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Implementations;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -18,79 +21,84 @@ namespace EducationSystem.Dependencies
 {
     public static class DependencyRegistrar
     {
-        public static void Register(IServiceCollection services, IConfiguration configuration)
+        public static void Register(IServiceCollection collection, IConfiguration configuration)
         {
-            services.AddTransient(x => configuration);
+            collection.AddTransient(x => configuration);
 
-            RegisterDatabases(services, configuration);
+            RegisterDatabases(collection, configuration);
 
-            RegisterHelpers(services);
-            RegisterManagers(services);
-            RegisterRepositories(services);
+            RegisterHelpers(collection);
+            RegisterValidators(collection);
+            RegisterManagers(collection);
+            RegisterRepositories(collection);
         }
 
-        private static void RegisterManagers(IServiceCollection services)
+        private static void RegisterManagers(IServiceCollection collection)
         {
-            services.AddTransient<IManagerToken, ManagerToken>();
+            collection.AddTransient<IManagerToken, ManagerToken>();
 
-            services.AddTransient<IManagerRole, ManagerRole>();
-            services.AddTransient<IManagerTest, ManagerTest>();
-            services.AddTransient<IManagerUser, ManagerUser>();
-            services.AddTransient<IManagerGroup, ManagerGroup>();
-            services.AddTransient<IManagerTheme, ManagerTheme>();
-            services.AddTransient<IManagerStudent, ManagerStudent>();
-            services.AddTransient<IManagerQuestion, ManagerQuestion>();
-            services.AddTransient<IManagerMaterial, ManagerMaterial>();
-            services.AddTransient<IManagerInstitute, ManagerInstitute>();
-            services.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
-            services.AddTransient<IManagerTestResult, ManagerTestResult>();
-            services.AddTransient<IManagerDiscipline, ManagerDiscipline>();
-            services.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
+            collection.AddTransient<IManagerRole, ManagerRole>();
+            collection.AddTransient<IManagerTest, ManagerTest>();
+            collection.AddTransient<IManagerUser, ManagerUser>();
+            collection.AddTransient<IManagerGroup, ManagerGroup>();
+            collection.AddTransient<IManagerTheme, ManagerTheme>();
+            collection.AddTransient<IManagerStudent, ManagerStudent>();
+            collection.AddTransient<IManagerQuestion, ManagerQuestion>();
+            collection.AddTransient<IManagerMaterial, ManagerMaterial>();
+            collection.AddTransient<IManagerInstitute, ManagerInstitute>();
+            collection.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
+            collection.AddTransient<IManagerTestResult, ManagerTestResult>();
+            collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
+            collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
 
-            services.AddTransient<IManagerFileImage, ManagerFileImage>();
-            services.AddTransient<IManagerFileDocument, ManagerFileDocument>();
+            collection.AddTransient<IManagerFileImage, ManagerFileImage>();
+            collection.AddTransient<IManagerFileDocument, ManagerFileDocument>();
         }
 
-        private static void RegisterHelpers(IServiceCollection services)
+        private static void RegisterHelpers(IServiceCollection collection)
         {
-            services.AddTransient<IHelperUser, HelperUser>();
-            services.AddTransient<IHelperTest, HelperTest>();
-            services.AddTransient<IHelperTheme, HelperTheme>();
-            services.AddTransient<IHelperQuestion, HelperQuestion>();
-            services.AddTransient<IHelperMaterial, HelperMaterial>();
+            collection.AddTransient<IHelperUser, HelperUser>();
 
-            services.AddTransient<IHelperFileImage, HelperFileImage>();
-            services.AddTransient<IHelperFileDocument, HelperFileDocument>();
+            collection.AddTransient<IHelperFileImage, HelperFileImage>();
+            collection.AddTransient<IHelperFileDocument, HelperFileDocument>();
 
-            services.AddTransient<IHelperQuestionTemplate, HelperQuestionTemplate>();
+            collection.AddTransient<IHelperQuestionTemplate, HelperQuestionTemplate>();
         }
 
-        private static void RegisterRepositories(IServiceCollection services)
+        private static void RegisterValidators(IServiceCollection collection)
         {
-            services.AddTransient<IRepositoryRole, RepositoryRole>();
-            services.AddTransient<IRepositoryTest, RepositoryTest>();
-            services.AddTransient<IRepositoryUser, RepositoryUser>();
-            services.AddTransient<IRepositoryFile, RepositoryFile>();
-            services.AddTransient<IRepositoryGroup, RepositoryGroup>();
-            services.AddTransient<IRepositoryTheme, RepositoryTheme>();
-            services.AddTransient<IRepositoryAnswer, RepositoryAnswer>();
-            services.AddTransient<IRepositoryProgram, RepositoryProgram>();
-            services.AddTransient<IRepositoryStudent, RepositoryStudent>();
-            services.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
-            services.AddTransient<IRepositoryMaterial, RepositoryMaterial>();
-            services.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
-            services.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
-            services.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();
-            services.AddTransient<IRepositoryTestResult, RepositoryTestResult>();
-            services.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
-            services.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
-            services.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
-            services.AddTransient<IRepositoryMaterialFile, RepositoryMaterialFile>();
+            collection.AddTransient<IValidator<Test>, ValidatorTest>();
+            collection.AddTransient<IValidator<Theme>, ValidatorTheme>();
+            collection.AddTransient<IValidator<Question>, ValidatorQuestion>();
+            collection.AddTransient<IValidator<Material>, ValidatorMaterial>();
         }
 
-        private static void RegisterDatabases(IServiceCollection services, IConfiguration configuration)
+        private static void RegisterRepositories(IServiceCollection collection)
         {
-            DatabaseRegistrar.Register(services, configuration);
+            collection.AddTransient<IRepositoryRole, RepositoryRole>();
+            collection.AddTransient<IRepositoryTest, RepositoryTest>();
+            collection.AddTransient<IRepositoryUser, RepositoryUser>();
+            collection.AddTransient<IRepositoryFile, RepositoryFile>();
+            collection.AddTransient<IRepositoryGroup, RepositoryGroup>();
+            collection.AddTransient<IRepositoryTheme, RepositoryTheme>();
+            collection.AddTransient<IRepositoryAnswer, RepositoryAnswer>();
+            collection.AddTransient<IRepositoryProgram, RepositoryProgram>();
+            collection.AddTransient<IRepositoryStudent, RepositoryStudent>();
+            collection.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
+            collection.AddTransient<IRepositoryMaterial, RepositoryMaterial>();
+            collection.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
+            collection.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
+            collection.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();
+            collection.AddTransient<IRepositoryTestResult, RepositoryTestResult>();
+            collection.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
+            collection.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
+            collection.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
+            collection.AddTransient<IRepositoryMaterialFile, RepositoryMaterialFile>();
+        }
+
+        private static void RegisterDatabases(IServiceCollection collection, IConfiguration configuration)
+        {
+            DatabaseRegistrar.Register(collection, configuration);
         }
     }
 }

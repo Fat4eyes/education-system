@@ -8,6 +8,7 @@ using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
@@ -21,7 +22,7 @@ namespace EducationSystem.Implementations.Managers.Rest
     public sealed class ManagerQuestion : Manager<ManagerQuestion>, IManagerQuestion
     {
         private readonly IHelperUser _helperUser;
-        private readonly IHelperQuestion _helperQuestion;
+        private readonly IValidator<Question> _validatorQuestion;
         private readonly IHelperQuestionTemplate _helperQuestionTemplate;
 
         private readonly IRepositoryAnswer _repositoryAnswer;
@@ -33,7 +34,7 @@ namespace EducationSystem.Implementations.Managers.Rest
             IMapper mapper,
             ILogger<ManagerQuestion> logger,
             IHelperUser helperUser,
-            IHelperQuestion helperQuestion,
+            IValidator<Question> validatorQuestion,
             IHelperQuestionTemplate helperQuestionTemplate,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
@@ -42,7 +43,7 @@ namespace EducationSystem.Implementations.Managers.Rest
             : base(mapper, logger)
         {
             _helperUser = helperUser;
-            _helperQuestion = helperQuestion;
+            _validatorQuestion = validatorQuestion;
             _helperQuestionTemplate = helperQuestionTemplate;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
@@ -117,7 +118,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Question> CreateQuestionAsync(Question question)
         {
-            _helperQuestion.ValidateQuestion(question);
+            _validatorQuestion.Check(question);
 
             FormatQuestion(question);
 
@@ -142,7 +143,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Question> UpdateQuestionAsync(int id, Question question)
         {
-            _helperQuestion.ValidateQuestion(question);
+            _validatorQuestion.Check(question);
 
             var model = _repositoryQuestion.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

@@ -11,28 +11,27 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerUser : TestsManager<ManagerUser>
     {
-        protected IManagerUser ManagerUser { get; }
+        private readonly IManagerUser _managerUser;
 
-        protected Mock<IRepositoryUser> MockRepositoryUser { get; set; }
+        private readonly Mock<IRepositoryUser> _mockRepositoryUser
+            = new Mock<IRepositoryUser>();
 
         public TestsManagerUser()
         {
-            MockRepositoryUser = new Mock<IRepositoryUser>();
-
-            ManagerUser = new ManagerUser(
+            _managerUser = new ManagerUser(
                 Mapper,
                 LoggerMock.Object,
-                MockRepositoryUser.Object);
+                _mockRepositoryUser.Object);
         }
 
         [Fact]
         public void GetUserById_Found()
         {
-            MockRepositoryUser
+            _mockRepositoryUser
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseUser { FirstName = "Victor" });
 
-            var user = ManagerUser.GetUserById(999, new OptionsUser());
+            var user = _managerUser.GetUserById(999, new OptionsUser());
 
             Assert.Equal("Victor", user.FirstName);
         }
@@ -40,12 +39,12 @@ namespace EducationSystem.Tests.Managers.Rest
         [Fact]
         public void GetUserById_NotFound()
         {
-            MockRepositoryUser
+            _mockRepositoryUser
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseUser) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerUser.GetUserById(999, new OptionsUser()));
+                () => _managerUser.GetUserById(999, new OptionsUser()));
         }
     }
 }

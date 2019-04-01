@@ -2,10 +2,11 @@
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers.Rest;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
+using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
@@ -14,37 +15,36 @@ namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerTest : TestsManager<ManagerTest>
     {
-        protected IManagerTest ManagerTest { get; }
+        private readonly IManagerTest _managerTest;
 
-        protected Mock<IRepositoryTest> MockRepositoryTest { get; }
-        protected Mock<IRepositoryTestTheme> RepositoryTestTheme { get; }
+        private readonly Mock<IRepositoryTest> _mockRepositoryTest
+            = new Mock<IRepositoryTest>();
 
-        protected Mock<IHelperTest> MockTestHelper { get; }
+        private readonly Mock<IRepositoryTestTheme> _mockRepositoryTestTheme
+            = new Mock<IRepositoryTestTheme>();
+
+        private readonly Mock<IValidator<Test>> _mockCheckerTest
+            = new Mock<IValidator<Test>>();
 
         public TestsManagerTest()
         {
-            MockRepositoryTest = new Mock<IRepositoryTest>();
-            RepositoryTestTheme = new Mock<IRepositoryTestTheme>();
-
-            MockTestHelper = new Mock<IHelperTest>();
-
-            ManagerTest = new ManagerTest(
+            _managerTest = new ManagerTest(
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
-                MockTestHelper.Object,
-                MockRepositoryTest.Object,
-                RepositoryTestTheme.Object);
+                _mockCheckerTest.Object,
+                _mockRepositoryTest.Object,
+                _mockRepositoryTestTheme.Object);
         }
 
         [Fact]
         public void GetTestById_Found()
         {
-            MockRepositoryTest
+            _mockRepositoryTest
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseTest { Subject = "Subject" });
 
-            var test = ManagerTest.GetTestById(999, new OptionsTest());
+            var test = _managerTest.GetTestById(999, new OptionsTest());
 
             Assert.Equal("Subject", test.Subject);
         }
@@ -52,12 +52,12 @@ namespace EducationSystem.Tests.Managers.Rest
         [Fact]
         public void GetTetsById_NotFound()
         {
-            MockRepositoryTest
+            _mockRepositoryTest
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseTest) null);
 
             Assert.Throws<EducationSystemNotFoundException>(
-                () => ManagerTest.GetTestById(999, new OptionsTest()));
+                () => _managerTest.GetTestById(999, new OptionsTest()));
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => ManagerTest.GetTestsForStudent(999, new OptionsTest(), new FilterTest()));
+                () => _managerTest.GetTestsForStudent(999, new OptionsTest(), new FilterTest()));
         }
 
         [Fact]
@@ -78,11 +78,11 @@ namespace EducationSystem.Tests.Managers.Rest
 
             var tests = GetTests();
 
-            MockRepositoryTest
+            _mockRepositoryTest
                 .Setup(x => x.GetTestsForStudent(999, It.IsAny<FilterTest>()))
                 .Returns((tests.Count, tests));
 
-            var data = ManagerTest.GetTestsForStudent
+            var data = _managerTest.GetTestsForStudent
                 (999, new OptionsTest { WithThemes = true }, new FilterTest());
 
             Assert.Equal(3, data.Count);
