@@ -2,7 +2,7 @@
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 
-namespace EducationSystem.Tests.Source
+namespace EducationSystem.Tests
 {
     internal static class Creator
     {

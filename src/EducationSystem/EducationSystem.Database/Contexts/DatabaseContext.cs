@@ -1,7 +1,7 @@
 ﻿using EducationSystem.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace EducationSystem.Database.Source.Contexts
+namespace EducationSystem.Database.Contexts
 {
     public sealed class DatabaseContext : DbContext
     {

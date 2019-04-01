@@ -1,11 +1,11 @@
 ﻿using System.Text;
-using EducationSystem.Database.Source.Contexts;
-using EducationSystem.Database.Source.Models;
+using EducationSystem.Database.Contexts;
+using EducationSystem.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EducationSystem.Database.Source
+namespace EducationSystem.Database
 {
     public static class DatabaseRegistrar
     {

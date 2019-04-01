@@ -7,7 +7,7 @@ using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
 
-namespace EducationSystem.Tests.Source.Helpers
+namespace EducationSystem.Tests.Helpers
 {
     public class TestsHelperUser
     {

@@ -1,4 +1,4 @@
-﻿namespace EducationSystem.Database.Source.Models
+﻿namespace EducationSystem.Database.Models
 {
     public class DatabaseParameters
     {

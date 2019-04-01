@@ -4,7 +4,7 @@ using EducationSystem.Mapping;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace EducationSystem.Tests.Source.Managers
+namespace EducationSystem.Tests.Managers
 {
     public abstract class TestsManager<TManager> where TManager : class
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using EducationSystem.Database.Source.Contexts;
+using EducationSystem.Database.Contexts;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;

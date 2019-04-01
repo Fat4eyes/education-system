@@ -1,5 +1,5 @@
-﻿using EducationSystem.Database.Models;
-using EducationSystem.Database.Source.Contexts;
+﻿using EducationSystem.Database.Contexts;
+using EducationSystem.Database.Models;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
 

@@ -6,7 +6,7 @@ using EducationSystem.Implementations.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using Xunit;
 
-namespace EducationSystem.Tests.Source.Helpers
+namespace EducationSystem.Tests.Helpers
 {
     public class TestsHelperQuestionTemplate
     {

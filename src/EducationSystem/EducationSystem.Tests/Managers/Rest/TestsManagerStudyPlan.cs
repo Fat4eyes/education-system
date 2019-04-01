@@ -7,7 +7,7 @@ using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
 
-namespace EducationSystem.Tests.Source.Managers.Rest
+namespace EducationSystem.Tests.Managers.Rest
 {
     public class TestsManagerStudyPlan : TestsManager<ManagerStudyPlan>
     {
