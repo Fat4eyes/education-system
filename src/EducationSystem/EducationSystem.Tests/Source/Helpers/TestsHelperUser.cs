@@ -3,7 +3,7 @@ using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Interfaces.Helpers;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
 

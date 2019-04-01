@@ -9,7 +9,7 @@ using EducationSystem.Models.Source;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Models.Source.Rest;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Managers.Rest

@@ -2,7 +2,7 @@
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Models.Source.Rest;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 
 namespace EducationSystem.Implementations.Helpers
 {

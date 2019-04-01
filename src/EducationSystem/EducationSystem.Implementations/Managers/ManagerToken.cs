@@ -7,7 +7,7 @@ using AutoMapper;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Source;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;

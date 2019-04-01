@@ -9,8 +9,8 @@ using EducationSystem.Interfaces.Helpers.Files;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Interfaces.Managers.Rest;
-using EducationSystem.Repositories.Implementations.Source.Rest;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Implementations;
+using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

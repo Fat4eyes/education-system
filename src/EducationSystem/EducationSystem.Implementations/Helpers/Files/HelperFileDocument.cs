@@ -1,5 +1,5 @@
 ﻿using EducationSystem.Interfaces.Helpers.Files;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 
 namespace EducationSystem.Implementations.Helpers.Files

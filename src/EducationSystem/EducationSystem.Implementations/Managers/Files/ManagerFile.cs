@@ -8,7 +8,7 @@ using EducationSystem.Enums.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Interfaces.Helpers.Files;
 using EducationSystem.Interfaces.Managers.Files;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using File = EducationSystem.Models.Source.Files.File;

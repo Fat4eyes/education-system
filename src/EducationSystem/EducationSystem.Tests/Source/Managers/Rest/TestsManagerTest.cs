@@ -6,7 +6,7 @@ using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
 

@@ -6,7 +6,7 @@ using EducationSystem.Database.Models.Source;
 using EducationSystem.Enums.Source;
 using EducationSystem.Exceptions.Source.Helpers;
 using EducationSystem.Interfaces.Helpers.Files;
-using EducationSystem.Repositories.Interfaces.Source.Rest;
+using EducationSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using File = EducationSystem.Models.Source.Files.File;
 using SystemFile = System.IO.File;
