@@ -1,5 +1,5 @@
 ﻿using EducationSystem.Constants.Source;
-using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Models.Source.Filters;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.WebApp.Source.Attributes;

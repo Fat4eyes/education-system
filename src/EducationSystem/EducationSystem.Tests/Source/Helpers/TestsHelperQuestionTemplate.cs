@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Enums.Source;
-using EducationSystem.Helpers.Implementations.Source;
-using EducationSystem.Helpers.Interfaces.Source;
+using EducationSystem.Implementations.Helpers;
+using EducationSystem.Interfaces.Helpers;
 using Xunit;
 
 namespace EducationSystem.Tests.Source.Helpers

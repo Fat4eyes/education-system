@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <SpaRoot>App</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)\node_modules\**</DefaultItemExcludes>
+    <RuntimeIdentifiers>ubuntu.18.04-x64</RuntimeIdentifiers>
   </PropertyGroup>
   
   <ItemGroup>
@@ -16,8 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
     <ProjectReference Include="..\EducationSystem.Dependencies\EducationSystem.Dependencies.csproj" />
-    <ProjectReference Include="..\EducationSystem.Managers.Implementations\EducationSystem.Managers.Implementations.csproj" />
-    <ProjectReference Include="..\EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Mapping\EducationSystem.Mapping.csproj" />
   </ItemGroup>
 

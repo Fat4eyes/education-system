@@ -1,7 +1,7 @@
 ﻿using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
-using EducationSystem.Managers.Implementations.Source.Rest;
-using EducationSystem.Managers.Interfaces.Source.Rest;
+using EducationSystem.Implementations.Managers.Rest;
+using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Models.Source.Options;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Moq;

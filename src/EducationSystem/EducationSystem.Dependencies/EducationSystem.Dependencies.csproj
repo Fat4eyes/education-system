@@ -10,9 +10,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Database\EducationSystem.Database.csproj" />
-    <ProjectReference Include="..\EducationSystem.Helpers.Implementations\EducationSystem.Helpers.Implementations.csproj" />
-    <ProjectReference Include="..\EducationSystem.Managers.Implementations\EducationSystem.Managers.Implementations.csproj" />
-    <ProjectReference Include="..\EducationSystem.Managers.Interfaces\EducationSystem.Managers.Interfaces.csproj" />
+    <ProjectReference Include="..\EducationSystem.Implementations\EducationSystem.Implementations.csproj" />
+    <ProjectReference Include="..\EducationSystem.Interfaces\EducationSystem.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Repositories.Implementations\EducationSystem.Repositories.Implementations.csproj" />
     <ProjectReference Include="..\EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj" />
   </ItemGroup>

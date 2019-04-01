@@ -1,8 +1,8 @@
 ﻿using EducationSystem.Constants.Source;
 using EducationSystem.Database.Models.Source;
 using EducationSystem.Exceptions.Source;
-using EducationSystem.Helpers.Implementations.Source;
-using EducationSystem.Helpers.Interfaces.Source;
+using EducationSystem.Implementations.Helpers;
+using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Repositories.Interfaces.Source.Rest;
 using Moq;
 using Xunit;

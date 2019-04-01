@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants.Source;
-using EducationSystem.Managers.Interfaces.Source.Files;
+using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Models.Source.Files;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Http;

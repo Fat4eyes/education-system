@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+    <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
+    <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Enums\EducationSystem.Enums.csproj" />
+    <ProjectReference Include="..\EducationSystem.Exceptions\EducationSystem.Exceptions.csproj" />
+    <ProjectReference Include="..\EducationSystem.Interfaces\EducationSystem.Interfaces.csproj" />
+    <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Repositories.Implementations\EducationSystem.Repositories.Implementations.csproj" />
+  </ItemGroup>
+
+</Project>

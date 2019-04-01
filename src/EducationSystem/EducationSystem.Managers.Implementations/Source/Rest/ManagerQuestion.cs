@@ -77,7 +77,7 @@ namespace EducationSystem.Managers.Implementations.Source.Rest
                 .GetTemplates(filter.TestSize, questions)
                 .ToList();
 
-            Logger.LogDebug(
+            Logger.LogInformation(
                 $"Идентификатор теста: {testId}. " +
                 $"Идентификатор студента: {studentId}. " +
                 $"Количество вопросов: {questions.Count}. " +

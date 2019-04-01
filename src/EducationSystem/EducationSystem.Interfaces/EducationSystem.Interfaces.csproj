@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Enums\EducationSystem.Enums.csproj" />
+    <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+  </ItemGroup>
+
+</Project>
