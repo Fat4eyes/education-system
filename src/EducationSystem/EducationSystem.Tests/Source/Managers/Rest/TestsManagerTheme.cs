@@ -1,9 +1,9 @@
-﻿using EducationSystem.Database.Models.Source;
-using EducationSystem.Exceptions.Source;
+﻿using EducationSystem.Database.Models;
+using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers.Rest;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
-using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Options;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;

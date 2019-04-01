@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using EducationSystem.Database.Models.Source;
-using EducationSystem.Enums.Source;
+using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 
 namespace EducationSystem.Tests.Source
 {

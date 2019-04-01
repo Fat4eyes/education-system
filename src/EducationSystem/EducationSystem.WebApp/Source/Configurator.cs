@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EducationSystem.Dependencies.Source;
+using EducationSystem.Dependencies;
 using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

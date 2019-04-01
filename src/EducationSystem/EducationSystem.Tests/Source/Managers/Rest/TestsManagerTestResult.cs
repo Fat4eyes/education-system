@@ -1,8 +1,8 @@
-﻿using EducationSystem.Exceptions.Source;
+﻿using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers.Rest;
 using EducationSystem.Interfaces.Managers.Rest;
-using EducationSystem.Models.Source.Filters;
-using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Filters;
+using EducationSystem.Models.Options;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;

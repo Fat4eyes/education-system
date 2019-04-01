@@ -1,6 +1,6 @@
 ﻿using System;
-using EducationSystem.Constants.Source;
-using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Constants;
+using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Repositories.Interfaces;
 

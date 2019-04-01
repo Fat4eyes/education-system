@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using EducationSystem.Constants.Source;
-using EducationSystem.Database.Models.Source;
-using EducationSystem.Enums.Source;
-using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Constants;
+using EducationSystem.Database.Models;
+using EducationSystem.Enums;
+using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers.Files;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Hosting;
-using File = EducationSystem.Models.Source.Files.File;
+using File = EducationSystem.Models.File;
 using SystemFile = System.IO.File;
 
 namespace EducationSystem.Implementations.Helpers.Files

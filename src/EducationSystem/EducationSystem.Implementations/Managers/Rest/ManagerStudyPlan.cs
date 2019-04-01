@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using EducationSystem.Database.Models.Source;
-using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Database.Models;
+using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
-using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Options;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;

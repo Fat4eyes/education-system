@@ -1,4 +1,4 @@
-﻿using EducationSystem.Database.Models.Source.Base;
+﻿using EducationSystem.Database.Models.Basics;
 
 namespace EducationSystem.Repositories.Interfaces.Basics
 {

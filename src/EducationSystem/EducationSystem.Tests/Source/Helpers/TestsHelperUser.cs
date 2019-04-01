@@ -1,6 +1,6 @@
-﻿using EducationSystem.Constants.Source;
-using EducationSystem.Database.Models.Source;
-using EducationSystem.Exceptions.Source;
+﻿using EducationSystem.Constants;
+using EducationSystem.Database.Models;
+using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Repositories.Interfaces;

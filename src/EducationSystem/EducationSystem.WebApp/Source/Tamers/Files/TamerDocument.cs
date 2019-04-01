@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using EducationSystem.Constants.Source;
+using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers.Files;
-using EducationSystem.Models.Source.Files;
+using EducationSystem.Models;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

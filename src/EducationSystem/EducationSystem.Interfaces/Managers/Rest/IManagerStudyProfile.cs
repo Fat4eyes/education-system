@@ -1,4 +1,4 @@
-﻿using EducationSystem.Models.Source.Options;
+﻿using EducationSystem.Models.Options;
 using EducationSystem.Models.Source.Rest;
 
 namespace EducationSystem.Interfaces.Managers.Rest

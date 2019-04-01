@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using EducationSystem.Constants.Source;
+using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers.Rest;
-using EducationSystem.Models.Source.Filters;
-using EducationSystem.Models.Source.Options;
+using EducationSystem.Models.Filters;
+using EducationSystem.Models.Options;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;

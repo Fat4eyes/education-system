@@ -1,4 +1,4 @@
-﻿using EducationSystem.Database.Models.Source;
+﻿using EducationSystem.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Database.Source.Contexts

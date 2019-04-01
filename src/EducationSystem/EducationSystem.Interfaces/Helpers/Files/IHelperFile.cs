@@ -1,5 +1,5 @@
-﻿using EducationSystem.Enums.Source;
-using EducationSystem.Models.Source.Files;
+﻿using EducationSystem.Enums;
+using EducationSystem.Models;
 
 namespace EducationSystem.Interfaces.Helpers.Files
 {

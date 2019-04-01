@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using AutoMapper;
-using EducationSystem.Database.Models.Source;
-using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Database.Models;
+using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Models;
+using EducationSystem.Models.Filters;
+using EducationSystem.Models.Options;
 using EducationSystem.Models.Source;
-using EducationSystem.Models.Source.Filters;
-using EducationSystem.Models.Source.Options;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;

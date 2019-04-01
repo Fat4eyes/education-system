@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using EducationSystem.Database.Models.Source.Base;
+using EducationSystem.Database.Models.Basics;
 using EducationSystem.Database.Source.Contexts;
-using EducationSystem.Extensions.Source;
+using EducationSystem.Extensions;
 using EducationSystem.Repositories.Interfaces.Basics;
 
 namespace EducationSystem.Repositories.Implementations.Basics

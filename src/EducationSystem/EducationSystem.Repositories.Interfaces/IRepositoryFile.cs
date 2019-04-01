@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EducationSystem.Database.Models.Source;
+using EducationSystem.Database.Models;
 using EducationSystem.Repositories.Interfaces.Basics;
 
 namespace EducationSystem.Repositories.Interfaces

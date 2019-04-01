@@ -1,5 +1,5 @@
 ﻿using System;
-using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Models.Source.Rest;
 using EducationSystem.Repositories.Interfaces;

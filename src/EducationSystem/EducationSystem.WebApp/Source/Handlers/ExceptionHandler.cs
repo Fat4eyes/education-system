@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using EducationSystem.Exceptions.Source;
-using EducationSystem.Models.Source.Responses;
+using EducationSystem.Exceptions;
+using EducationSystem.Models.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EducationSystem.Database.Models.Source;
+using EducationSystem.Database.Models;
 using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;

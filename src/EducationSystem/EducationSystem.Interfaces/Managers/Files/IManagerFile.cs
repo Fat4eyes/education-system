@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using EducationSystem.Models.Source.Files;
+using EducationSystem.Models;
 
 namespace EducationSystem.Interfaces.Managers.Files
 {

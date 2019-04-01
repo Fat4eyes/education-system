@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using EducationSystem.Exceptions.Source.Helpers;
-using EducationSystem.Extensions.Source;
+using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Helpers.Files;
 using EducationSystem.Models.Source.Rest;

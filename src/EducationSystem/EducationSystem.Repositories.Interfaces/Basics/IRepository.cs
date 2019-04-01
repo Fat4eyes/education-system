@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using EducationSystem.Database.Models.Source.Base;
+using EducationSystem.Database.Models.Basics;
 
 namespace EducationSystem.Repositories.Interfaces.Basics
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using EducationSystem.Models.Source.Files;
-using EducationSystem.Models.Source.Responses;
+using EducationSystem.Models;
+using EducationSystem.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

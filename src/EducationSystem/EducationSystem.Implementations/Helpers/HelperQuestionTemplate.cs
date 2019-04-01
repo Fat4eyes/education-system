@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EducationSystem.Database.Models.Source;
-using EducationSystem.Enums.Source;
-using EducationSystem.Exceptions.Source.Helpers;
+using EducationSystem.Database.Models;
+using EducationSystem.Enums;
+using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 
 namespace EducationSystem.Implementations.Helpers

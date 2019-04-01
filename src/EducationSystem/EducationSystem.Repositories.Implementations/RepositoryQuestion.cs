@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EducationSystem.Database.Models.Source;
+using EducationSystem.Database.Models;
 using EducationSystem.Database.Source.Contexts;
-using EducationSystem.Extensions.Source;
-using EducationSystem.Models.Source.Filters;
+using EducationSystem.Extensions;
+using EducationSystem.Models.Filters;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
 

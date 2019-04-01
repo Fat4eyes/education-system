@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using EducationSystem.Mapping.Source;
+using EducationSystem.Mapping;
+using EducationSystem.Models;
 using EducationSystem.Models.Source;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using EducationSystem.Database.Models.Source.Base;
+using EducationSystem.Database.Models.Basics;
 using EducationSystem.Database.Source.Contexts;
 using EducationSystem.Repositories.Interfaces.Basics;
 

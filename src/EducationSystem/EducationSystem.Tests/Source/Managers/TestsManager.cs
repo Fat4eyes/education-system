@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EducationSystem.Interfaces.Helpers;
-using EducationSystem.Mapping.Source;
+using EducationSystem.Mapping;
 using Microsoft.Extensions.Logging;
 using Moq;
 

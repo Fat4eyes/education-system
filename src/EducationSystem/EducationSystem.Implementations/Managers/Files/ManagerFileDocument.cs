@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EducationSystem.Enums.Source;
+using EducationSystem.Enums;
 using EducationSystem.Interfaces.Helpers.Files;
 using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Repositories.Interfaces;
