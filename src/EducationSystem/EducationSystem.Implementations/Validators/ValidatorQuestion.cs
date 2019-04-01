@@ -30,7 +30,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryMaterial = repositoryMaterial;
         }
 
-        public void Check(Question model)
+        public void Validate(Question model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));

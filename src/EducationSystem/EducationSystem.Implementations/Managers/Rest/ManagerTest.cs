@@ -97,7 +97,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Test> CreateTestAsync(Test test)
         {
-            _chekerTest.Check(test);
+            _chekerTest.Validate(test);
 
             FormatTest(test);
 
@@ -110,7 +110,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Test> UpdateTestAsync(int id, Test test)
         {
-            _chekerTest.Check(test);
+            _chekerTest.Validate(test);
 
             var model = _repositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

@@ -15,7 +15,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public void Check(Theme model)
+        public void Validate(Theme model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));

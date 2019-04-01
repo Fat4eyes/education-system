@@ -76,7 +76,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Theme> CreateThemeAsync(Theme theme)
         {
-            _validatorTheme.Check(theme);
+            _validatorTheme.Validate(theme);
 
             FormatTheme(theme);
 
@@ -89,7 +89,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Theme> UpdateThemeAsync(int id, Theme theme)
         {
-            _validatorTheme.Check(theme);
+            _validatorTheme.Validate(theme);
 
             var model = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

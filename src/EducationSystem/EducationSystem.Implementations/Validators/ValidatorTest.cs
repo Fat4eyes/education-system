@@ -19,7 +19,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public void Check(Test model)
+        public void Validate(Test model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));

@@ -20,7 +20,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryFile = repositoryFile;
         }
 
-        public void Check(Material model)
+        public void Validate(Material model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));

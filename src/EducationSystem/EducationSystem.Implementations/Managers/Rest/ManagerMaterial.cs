@@ -53,7 +53,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Material> CreateMaterialAsync(Material material)
         {
-            _validatorMaterial.Check(material);
+            _validatorMaterial.Validate(material);
 
             FormatMaterial(material);
 
@@ -66,7 +66,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Material> UpdateMaterialAsync(int id, Material material)
         {
-            _validatorMaterial.Check(material);
+            _validatorMaterial.Validate(material);
 
             var model = _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

@@ -118,7 +118,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Question> CreateQuestionAsync(Question question)
         {
-            _validatorQuestion.Check(question);
+            _validatorQuestion.Validate(question);
 
             FormatQuestion(question);
 
@@ -143,7 +143,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public async Task<Question> UpdateQuestionAsync(int id, Question question)
         {
-            _validatorQuestion.Check(question);
+            _validatorQuestion.Validate(question);
 
             var model = _repositoryQuestion.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(

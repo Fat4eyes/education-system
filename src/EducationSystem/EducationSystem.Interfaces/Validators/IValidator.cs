@@ -2,6 +2,6 @@
 {
     public interface IValidator<in TModel> where TModel : class
     {
-        void Check(TModel model);
+        void Validate(TModel model);
     }
 }
