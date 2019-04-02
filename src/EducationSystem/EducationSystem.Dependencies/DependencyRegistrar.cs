@@ -35,6 +35,9 @@ namespace EducationSystem.Dependencies
 
         private static void RegisterManagers(IServiceCollection collection)
         {
+            collection.AddTransient<IManagerImage, ManagerImage>();
+            collection.AddTransient<IManagerDocument, ManagerDocument>();
+
             collection.AddTransient<IManagerToken, ManagerToken>();
             collection.AddTransient<IManagerRole, ManagerRole>();
             collection.AddTransient<IManagerTest, ManagerTest>();
@@ -49,8 +52,8 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerTestResult, ManagerTestResult>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
             collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
-            collection.AddTransient<IManagerImage, ManagerImage>();
-            collection.AddTransient<IManagerDocument, ManagerDocument>();
+
+            collection.AddTransient<IManagerQuestionTemplate, ManagerQuestionTemplate>();
         }
 
         private static void RegisterHelpers(IServiceCollection collection)
@@ -60,8 +63,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IHelperFile, HelperFile>();
             collection.AddTransient<IHelperPath, HelperPath>();
             collection.AddTransient<IHelperFolder, HelperFolder>();
-
-            collection.AddTransient<IManagerQuestionTemplate, ManagerQuestionTemplate>();
         }
 
         private static void RegisterValidators(IServiceCollection collection)
