@@ -4,13 +4,13 @@ using System.Linq;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Interfaces.Helpers;
+using EducationSystem.Interfaces.Managers;
 
-namespace EducationSystem.Implementations.Helpers
+namespace EducationSystem.Implementations.Managers
 {
-    public class HelperQuestionTemplate : IHelperQuestionTemplate
+    public class ManagerQuestionTemplate : IManagerQuestionTemplate
     {
-        public Dictionary<QuestionType, int> GetTemplates(TestSize testSize, List<DatabaseQuestion> questions)
+        public Dictionary<QuestionType, int> CreateTemplates(TestSize testSize, List<DatabaseQuestion> questions)
         {
             if (questions.Any(x => x.Type == QuestionType.OpenedManyStrings))
                 throw ExceptionHelper.CreateException($"Вопросы с типом '{QuestionType.OpenedManyStrings}' не поддерживаются.");

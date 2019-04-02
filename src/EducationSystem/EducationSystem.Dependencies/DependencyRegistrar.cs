@@ -61,7 +61,7 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IHelperPath, HelperPath>();
             collection.AddTransient<IHelperFolder, HelperFolder>();
 
-            collection.AddTransient<IHelperQuestionTemplate, HelperQuestionTemplate>();
+            collection.AddTransient<IManagerQuestionTemplate, ManagerQuestionTemplate>();
         }
 
         private static void RegisterValidators(IServiceCollection collection)

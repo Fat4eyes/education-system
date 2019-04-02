@@ -5,6 +5,7 @@ using EducationSystem.Enums;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers.Rest;
 using EducationSystem.Interfaces.Helpers;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Filters;
@@ -22,8 +23,8 @@ namespace EducationSystem.Tests.Managers.Rest
         private readonly Mock<IValidator<Question>> _mockHelperQuestion
             = new Mock<IValidator<Question>>();
 
-        private readonly Mock<IHelperQuestionTemplate> _mockHelperQuestionTemplate
-            = new Mock<IHelperQuestionTemplate>();
+        private readonly Mock<IManagerQuestionTemplate> _mockHelperQuestionTemplate
+            = new Mock<IManagerQuestionTemplate>();
 
         private readonly Mock<IRepositoryAnswer> _mockRepositoryAnswer
             = new Mock<IRepositoryAnswer>();
@@ -79,7 +80,7 @@ namespace EducationSystem.Tests.Managers.Rest
             };
 
             _mockHelperQuestionTemplate
-                .Setup(x => x.GetTemplates(TestSize.XS, It.IsAny<List<DatabaseQuestion>>()))
+                .Setup(x => x.CreateTemplates(TestSize.XS, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(templates);
 
             var questions = _managerQuestion.GetQuestionsForStudentByTestId(
@@ -100,7 +101,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Returns(new List<DatabaseQuestion>());
 
             _mockHelperQuestionTemplate
-                .Setup(x => x.GetTemplates(TestSize.S, It.IsAny<List<DatabaseQuestion>>()))
+                .Setup(x => x.CreateTemplates(TestSize.S, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(new Dictionary<QuestionType, int>());
 
             var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion());

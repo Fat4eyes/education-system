@@ -7,6 +7,7 @@ using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
@@ -22,7 +23,7 @@ namespace EducationSystem.Implementations.Managers.Rest
     {
         private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
-        private readonly IHelperQuestionTemplate _helperQuestionTemplate;
+        private readonly IManagerQuestionTemplate _managerQuestionTemplate;
 
         private readonly IRepositoryAnswer _repositoryAnswer;
         private readonly IRepositoryProgram _repositoryProgram;
@@ -34,7 +35,7 @@ namespace EducationSystem.Implementations.Managers.Rest
             ILogger<ManagerQuestion> logger,
             IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
-            IHelperQuestionTemplate helperQuestionTemplate,
+            IManagerQuestionTemplate managerQuestionTemplate,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
             IRepositoryQuestion repositoryQuestion,
@@ -43,7 +44,7 @@ namespace EducationSystem.Implementations.Managers.Rest
         {
             _helperUserRole = helperUserRole;
             _validatorQuestion = validatorQuestion;
-            _helperQuestionTemplate = helperQuestionTemplate;
+            _managerQuestionTemplate = managerQuestionTemplate;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -74,8 +75,8 @@ namespace EducationSystem.Implementations.Managers.Rest
                 .Mix()
                 .ToList();
 
-            var templates = _helperQuestionTemplate
-                .GetTemplates(filter.TestSize, questions)
+            var templates = _managerQuestionTemplate
+                .CreateTemplates(filter.TestSize, questions)
                 .ToList();
 
             Logger.LogInformation(
