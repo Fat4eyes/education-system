@@ -4,7 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import {EditorState, Modifier, RichUtils} from 'draft-js'
 import Editor from 'draft-js-plugins-editor'
 import {Paper} from '@material-ui/core'
-import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
+import withWidth from '@material-ui/core/withWidth'
 import Grid from '@material-ui/core/Grid'
 import {StaticToolbar, staticToolbarPlugin} from './StaticToolbar/StaticToolbar'
 
@@ -52,11 +52,10 @@ class MaterialEditor extends Component {
         console.log(this.toolbarRef.current.clientWidth)
 
         return this.toolbarRef.current.clientWidth
-      }
-      else
+      } else
         return 52
     }
-    
+
     return <>
       <Grid item>
         <div style={{width: getToolbarWidth()}}/>

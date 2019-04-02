@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {CircularProgress, Grid, Paper, Typography, withStyles} from '@material-ui/core'
 import {If, TablePagination} from '../../../core'
 import {disciplineRoutes, testRoutes} from '../../../../routes'

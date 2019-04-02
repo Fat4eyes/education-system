@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import {Component} from 'react'
 import PropTypes from 'prop-types'
-import {ProtectedFetch, Snackbar, Fetch as NotProtectedFetch} from '../../helpers'
+import {Fetch as NotProtectedFetch, ProtectedFetch, Snackbar} from '../../helpers'
 import {withSnackbar} from 'notistack'
 
 @withSnackbar
@@ -21,7 +21,7 @@ class Fetch extends Component {
     this.setState({isLoading: true}, async () => {
       const {url, type, params, withToken} = this.props
       const {post, get} = withToken ? ProtectedFetch : NotProtectedFetch
-      
+
       try {
         const data = await (type === 'POST' ? post(url, JSON.stringify(params)) : get(url))
         this.setState({data, isLoading: false})

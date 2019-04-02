@@ -162,7 +162,6 @@ class QuestionHandling extends Component<TProps, IState> {
 
   async componentWillUnmount() {
     const {Image} = this.state.Model
-
     Image && Image.Id && !this.state.Model.Id && await this.FileService!.deleteImage(Image.Id)
   }
 
@@ -171,13 +170,13 @@ class QuestionHandling extends Component<TProps, IState> {
 
     let imageSrc = ((): string | false => {
       const {Image} = this.state.Model
-      
+
       if (Image && Image.Path)
         return `${window.location.origin}/${Image.Path}`
-      
+
       return false
     })()
-    
+
     let HandledInputs = () => <>
       <Grid item xs={12} sm={6} md={4} lg={2}>
         <TotalTimeInput name='Time' label='Длительность теста'
