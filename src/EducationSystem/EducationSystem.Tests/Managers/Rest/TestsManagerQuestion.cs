@@ -20,6 +20,9 @@ namespace EducationSystem.Tests.Managers.Rest
     {
         private readonly IManagerQuestion _managerQuestion;
 
+        private readonly Mock<IHelperPath> _mockHelperPath
+            = new Mock<IHelperPath>();
+
         private readonly Mock<IValidator<Question>> _mockHelperQuestion
             = new Mock<IValidator<Question>>();
 
@@ -43,6 +46,7 @@ namespace EducationSystem.Tests.Managers.Rest
             _managerQuestion = new ManagerQuestion(
                 Mapper,
                 LoggerMock.Object,
+                _mockHelperPath.Object,
                 MockHelperUser.Object,
                 _mockHelperQuestion.Object,
                 _mockHelperQuestionTemplate.Object,

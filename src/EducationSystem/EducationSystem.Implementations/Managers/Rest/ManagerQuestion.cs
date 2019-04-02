@@ -11,6 +11,7 @@ using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
+using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
@@ -21,6 +22,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 {
     public sealed class ManagerQuestion : Manager<ManagerQuestion>, IManagerQuestion
     {
+        private readonly IHelperPath _helperPath;
         private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
         private readonly IManagerQuestionTemplate _managerQuestionTemplate;
@@ -33,6 +35,7 @@ namespace EducationSystem.Implementations.Managers.Rest
         public ManagerQuestion(
             IMapper mapper,
             ILogger<ManagerQuestion> logger,
+            IHelperPath helperPath,
             IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
             IManagerQuestionTemplate managerQuestionTemplate,
@@ -49,6 +52,7 @@ namespace EducationSystem.Implementations.Managers.Rest
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
             _repositoryProgramData = repositoryProgramData;
+            _helperPath = helperPath;
         }
 
         public PagedData<Question> GetQuestions(OptionsQuestion options, FilterQuestion filter)
@@ -227,6 +231,9 @@ namespace EducationSystem.Implementations.Managers.Rest
 
                     if (options.WithMaterial)
                         d.Material = Mapper.Map<Material>(s.Material);
+
+                    if (d.Image != null)
+                        d.Image.Path = GetFilePath(s.Image);
                 });
             });
         }
@@ -240,10 +247,20 @@ namespace EducationSystem.Implementations.Managers.Rest
                     d.Program = Mapper.Map<Program>(s.Program);
                     d.Answers = Mapper.Map<List<Answer>>(s.Answers);
                     d.Material = Mapper.Map<Material>(s.Material);
+                    
+                    if (d.Image != null)
+                        d.Image.Path = GetFilePath(s.Image);
 
                     d.Answers.ForEach(y => y.IsRight = null);
                 });
             });
+        }
+
+        private string GetFilePath(DatabaseFile file)
+        {
+            return _helperPath
+                .GetRelativeFilePath(file)
+                .Replace("\\", "/");
         }
 
         private static void FormatQuestion(Question question)

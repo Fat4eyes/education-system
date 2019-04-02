@@ -46,9 +46,14 @@ namespace EducationSystem.Implementations.Helpers
                     $"Файл не найден. Идентификатор файла: {file.Id}.",
                     $"Файл не найден.");
 
-            var name = model.Guid + Path.GetExtension(model.Name);
+            return GetRelativeFilePath(model);
+        }
 
-            return Path.Combine(Directories.Files, _helperFolder.GetFolderName(model.Type), name);
+        public string GetRelativeFilePath(DatabaseFile file)
+        {
+            var name = file.Guid + Path.GetExtension(file.Name);
+
+            return Path.Combine(Directories.Files, _helperFolder.GetFolderName(file.Type), name);
         }
     }
 }

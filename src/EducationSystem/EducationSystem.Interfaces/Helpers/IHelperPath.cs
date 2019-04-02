@@ -1,4 +1,5 @@
-﻿using EducationSystem.Models.Files.Basics;
+﻿using EducationSystem.Database.Models;
+using EducationSystem.Models.Files.Basics;
 
 namespace EducationSystem.Interfaces.Helpers
 {
@@ -9,5 +10,7 @@ namespace EducationSystem.Interfaces.Helpers
         string GetAbsoluteFilePath(File file);
 
         string GetRelativeFilePath(File file);
+
+        string GetRelativeFilePath(DatabaseFile file);
     }
 }
