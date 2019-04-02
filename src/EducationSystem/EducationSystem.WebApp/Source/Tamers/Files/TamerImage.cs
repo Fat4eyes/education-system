@@ -1,48 +1,28 @@
 ﻿using System.Threading.Tasks;
-using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Models.Files;
 using EducationSystem.WebApp.Source.Attributes;
+using EducationSystem.WebApp.Source.Tamers.Files.Basics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers.Files
 {
     [Route("api/Images")]
-    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-    public class TamerImage : Tamer
+    public class TamerImage : TamerFile<Image>
     {
-        private readonly IManagerImage _managerImage;
-
         public TamerImage(IManagerImage managerImage)
-        {
-            _managerImage = managerImage;
-        }
+            : base(managerImage)
+        { }
 
-        [HttpGet("{imageId:int}")]
-        public async Task<IActionResult> GetImage([FromRoute] int imageId)
-            => Ok(await _managerImage.GetFileById(imageId));
-
-        [HttpGet("Extensions")]
-        public IActionResult GetAvailableExtensions()
-            => Ok(_managerImage.GetAvailableExtensions());
-
+        [Authorize]
         [Transaction]
         [HttpPost("")]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
-            {
-                var result = await _managerImage
-                    .UploadFile(new Image(file.FileName, stream));
-
-                return Ok(result);
-            }
+                return Ok(await ManagerFile.UploadFile(new Image(file.FileName, stream)));
         }
-
-        [Transaction]
-        [HttpDelete("{imageId:int}")]
-        public IActionResult DeleteDocument([FromRoute] int imageId)
-            => Ok(async () => await _managerImage.DeleteFileByIdAsync(imageId));
     }
 }
