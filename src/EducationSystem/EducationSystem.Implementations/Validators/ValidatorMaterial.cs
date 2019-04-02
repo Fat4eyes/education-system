@@ -2,21 +2,21 @@
 using System.Linq;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
-using EducationSystem.Interfaces.Helpers.Files;
+using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Validators;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 
 namespace EducationSystem.Implementations.Validators
 {
     public sealed class ValidatorMaterial : IValidator<Material>
     {
-        private readonly IHelperFileDocument _helperFileDocument;
+        private readonly IHelperFile _helperFile;
         private readonly IRepositoryFile _repositoryFile;
 
-        public ValidatorMaterial(IHelperFileDocument helperFileDocument, IRepositoryFile repositoryFile)
+        public ValidatorMaterial(IHelperFile helperFile, IRepositoryFile repositoryFile)
         {
-            _helperFileDocument = helperFileDocument;
+            _helperFile = helperFile;
             _repositoryFile = repositoryFile;
         }
 
@@ -37,7 +37,7 @@ namespace EducationSystem.Implementations.Validators
             if (model.Files.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся файлы.");
 
-            if (model.Files.Any(x => _helperFileDocument.FileExists(x.Id) == false))
+            if (model.Files.Any(x => _helperFile.FileExists(x.Id) == false))
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
 
             if (_repositoryFile.IsFilesExists(model.Files.Select(x => x.Id).ToList()) == false)

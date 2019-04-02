@@ -3,7 +3,7 @@ using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 

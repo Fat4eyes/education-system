@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
-using EducationSystem.Models.Source;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Interfaces.Managers.Rest
 {

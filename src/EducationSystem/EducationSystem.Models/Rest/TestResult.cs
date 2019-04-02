@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using EducationSystem.Models.Source.Rest.Base;
+using EducationSystem.Models.Rest.Basics;
 
-namespace EducationSystem.Models.Source.Rest
+namespace EducationSystem.Models.Rest
 {
     public class TestResult : Model
     {

@@ -1,17 +1,17 @@
 ﻿using EducationSystem.Database;
 using EducationSystem.Implementations.Helpers;
-using EducationSystem.Implementations.Helpers.Files;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
 using EducationSystem.Implementations.Managers.Rest;
 using EducationSystem.Implementations.Validators;
+using EducationSystem.Implementations.Validators.Files;
 using EducationSystem.Interfaces.Helpers;
-using EducationSystem.Interfaces.Helpers.Files;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Files;
+using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Implementations;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +36,6 @@ namespace EducationSystem.Dependencies
         private static void RegisterManagers(IServiceCollection collection)
         {
             collection.AddTransient<IManagerToken, ManagerToken>();
-
             collection.AddTransient<IManagerRole, ManagerRole>();
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
@@ -50,17 +49,17 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerTestResult, ManagerTestResult>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
             collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
-
-            collection.AddTransient<IManagerFileImage, ManagerFileImage>();
-            collection.AddTransient<IManagerFileDocument, ManagerFileDocument>();
+            collection.AddTransient<IManagerImage, ManagerImage>();
+            collection.AddTransient<IManagerDocument, ManagerDocument>();
         }
 
         private static void RegisterHelpers(IServiceCollection collection)
         {
             collection.AddTransient<IHelperUser, HelperUser>();
 
-            collection.AddTransient<IHelperFileImage, HelperFileImage>();
-            collection.AddTransient<IHelperFileDocument, HelperFileDocument>();
+            collection.AddTransient<IHelperFile, HelperFile>();
+            collection.AddTransient<IHelperPath, HelperPath>();
+            collection.AddTransient<IHelperFolder, HelperFolder>();
 
             collection.AddTransient<IHelperQuestionTemplate, HelperQuestionTemplate>();
         }
@@ -71,6 +70,9 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IValidator<Theme>, ValidatorTheme>();
             collection.AddTransient<IValidator<Question>, ValidatorQuestion>();
             collection.AddTransient<IValidator<Material>, ValidatorMaterial>();
+
+            collection.AddTransient<IValidator<Image>, ValidatorImage>();
+            collection.AddTransient<IValidator<Document>, ValidatorDocument>();
         }
 
         private static void RegisterRepositories(IServiceCollection collection)

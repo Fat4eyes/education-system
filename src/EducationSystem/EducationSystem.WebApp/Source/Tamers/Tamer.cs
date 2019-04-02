@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using EducationSystem.Models;
+using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

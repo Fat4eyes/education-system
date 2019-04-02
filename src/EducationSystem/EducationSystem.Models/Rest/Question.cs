@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Enums;
-using EducationSystem.Models.Source.Rest.Base;
+using EducationSystem.Models.Files;
+using EducationSystem.Models.Rest.Basics;
 
-namespace EducationSystem.Models.Source.Rest
+namespace EducationSystem.Models.Rest
 {
     public class Question : Model
     {
@@ -14,7 +15,7 @@ namespace EducationSystem.Models.Source.Rest
 
         public int? ImageId { get; set; }
 
-        public File Image { get; set; }
+        public Image Image { get; set; }
 
         public int? Time { get; set; }
 

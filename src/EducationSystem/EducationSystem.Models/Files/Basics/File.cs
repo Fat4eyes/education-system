@@ -2,7 +2,7 @@
 using System.IO;
 using EducationSystem.Enums;
 
-namespace EducationSystem.Models
+namespace EducationSystem.Models.Files.Basics
 {
     public class File : IDisposable
     {
@@ -14,7 +14,7 @@ namespace EducationSystem.Models
 
         public string Name { get; set; }
 
-        public FileType? Type { get; set; }
+        public FileType Type { get; set; } = FileType.Any;
 
         public Stream Stream { get; set; }
 
@@ -32,6 +32,13 @@ namespace EducationSystem.Models
 
         public File(string name, Stream stream)
         {
+            Name = name;
+            Stream = stream;
+        }
+
+        public File(FileType type, string name, Stream stream)
+        {
+            Type = type;
             Name = name;
             Stream = stream;
         }

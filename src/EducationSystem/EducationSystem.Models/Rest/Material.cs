@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using EducationSystem.Models.Source.Rest.Base;
+using EducationSystem.Models.Files;
+using EducationSystem.Models.Rest.Basics;
 
-namespace EducationSystem.Models.Source.Rest
+namespace EducationSystem.Models.Rest
 {
     public class Material : Model
     {
@@ -9,6 +10,6 @@ namespace EducationSystem.Models.Source.Rest
 
         public string Template { get; set; }
 
-        public List<File> Files { get; set; }
+        public List<Document> Files { get; set; }
     }
 }

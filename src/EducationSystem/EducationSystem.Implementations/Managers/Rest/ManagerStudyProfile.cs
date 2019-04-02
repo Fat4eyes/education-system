@@ -4,7 +4,7 @@ using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Models.Options;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 

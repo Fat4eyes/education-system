@@ -1,10 +1,9 @@
-﻿using EducationSystem.Interfaces.Helpers.Files;
-using EducationSystem.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
+﻿using EducationSystem.Implementations.Validators.Files.Basics;
+using EducationSystem.Models.Files;
 
-namespace EducationSystem.Implementations.Helpers.Files
+namespace EducationSystem.Implementations.Validators.Files
 {
-    public sealed class HelperFileDocument : HelperFile, IHelperFileDocument
+    public sealed class ValidatorDocument : ValidatorFile<Document>
     {
         /// <inheritdoc />
         protected override int MaxiFileSize => 25;
@@ -28,13 +27,5 @@ namespace EducationSystem.Implementations.Helpers.Files
             ".pdf",
             ".rtf"
         };
-
-        public HelperFileDocument(
-            IHostingEnvironment environment,
-            IRepositoryFile repositoryFile)
-            : base(
-                environment,
-                repositoryFile)
-        { }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Validators;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 
 namespace EducationSystem.Implementations.Validators

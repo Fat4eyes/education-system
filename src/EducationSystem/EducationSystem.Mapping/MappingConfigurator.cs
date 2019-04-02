@@ -1,8 +1,9 @@
 ﻿using System.Linq;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Models;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Files;
+using EducationSystem.Models.Files.Basics;
+using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Mapping
 {
@@ -153,7 +154,21 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Path, o => o.Ignore())
                 .ForMember(d => d.Stream, o => o.Ignore());
 
+            expression.CreateMap<DatabaseFile, Image>()
+                .ForMember(d => d.Path, o => o.Ignore())
+                .ForMember(d => d.Stream, o => o.Ignore());
+
+            expression.CreateMap<DatabaseFile, Document>()
+                .ForMember(d => d.Path, o => o.Ignore())
+                .ForMember(d => d.Stream, o => o.Ignore());
+
             expression.CreateMap<File, DatabaseMaterialFile>()
+                .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.MaterialId, o => o.Ignore())
+                .ForMember(d => d.Material, o => o.Ignore())
+                .ForMember(d => d.File, o => o.Ignore());
+
+            expression.CreateMap<Document, DatabaseMaterialFile>()
                 .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))
                 .ForMember(d => d.MaterialId, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())

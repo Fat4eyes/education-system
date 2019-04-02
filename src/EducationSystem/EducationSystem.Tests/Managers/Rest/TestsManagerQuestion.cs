@@ -8,7 +8,7 @@ using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;

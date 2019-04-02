@@ -3,28 +3,28 @@ using System.Linq;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
-using EducationSystem.Interfaces.Helpers.Files;
+using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Validators;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 
 namespace EducationSystem.Implementations.Validators
 {
     public sealed class ValidatorQuestion : IValidator<Question>
     {
-        private readonly IHelperFileImage _helperFileImage;
+        private readonly IHelperFile _helperFile;
 
         private readonly IRepositoryFile _repositoryFile;
         private readonly IRepositoryTheme _repositoryTheme;
         private readonly IRepositoryMaterial _repositoryMaterial;
 
         public ValidatorQuestion(
-            IHelperFileImage helperFileImage,
+            IHelperFile helperFile,
             IRepositoryFile repositoryFile,
             IRepositoryTheme repositoryTheme,
             IRepositoryMaterial repositoryMaterial)
         {
-            _helperFileImage = helperFileImage;
+            _helperFile = helperFile;
             _repositoryFile = repositoryFile;
             _repositoryTheme = repositoryTheme;
             _repositoryMaterial = repositoryMaterial;
@@ -59,7 +59,7 @@ namespace EducationSystem.Implementations.Validators
             if (model.ImageId.HasValue && _repositoryFile.GetById(model.ImageId.Value) == null)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.ImageId.HasValue && _helperFileImage.FileExists(model.ImageId.Value) == false)
+            if (model.ImageId.HasValue && _helperFile.FileExists(model.ImageId.Value) == false)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
             if (model.MaterialId.HasValue && _repositoryMaterial.GetById(model.MaterialId.Value) == null)

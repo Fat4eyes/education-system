@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers.Files;
-using EducationSystem.Models;
+using EducationSystem.Models.Files;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,25 +12,25 @@ namespace EducationSystem.WebApp.Source.Tamers.Files
     [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
     public class TamerImage : Tamer
     {
-        private readonly IManagerFileImage _managerFileImage;
+        private readonly IManagerImage _managerImage;
 
-        public TamerImage(IManagerFileImage managerFileImage)
+        public TamerImage(IManagerImage managerImage)
         {
-            _managerFileImage = managerFileImage;
+            _managerImage = managerImage;
         }
 
         [HttpGet("{imageId:int}")]
         public async Task<IActionResult> GetImage([FromRoute] int imageId)
-            => Ok(await _managerFileImage.GetFileById(imageId));
+            => Ok(await _managerImage.GetFileById(imageId));
 
         [Transaction]
         [HttpPost("")]
-        public async Task<IActionResult> AddImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
             {
-                var result = await _managerFileImage
-                    .AddFileAsync(new File(file.FileName, stream));
+                var result = await _managerImage
+                    .UploadFile(new Image(file.FileName, stream));
 
                 return Ok(result);
             }
@@ -39,6 +39,6 @@ namespace EducationSystem.WebApp.Source.Tamers.Files
         [Transaction]
         [HttpDelete("{imageId:int}")]
         public IActionResult DeleteDocument([FromRoute] int imageId)
-            => Ok(async () => await _managerFileImage.DeleteFileByIdAsync(imageId));
+            => Ok(async () => await _managerImage.DeleteFileByIdAsync(imageId));
     }
 }

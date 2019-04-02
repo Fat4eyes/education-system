@@ -1,4 +1,4 @@
-﻿namespace EducationSystem.Models.Source.Rest.Base
+﻿namespace EducationSystem.Models.Rest.Basics
 {
     public class Model
     {

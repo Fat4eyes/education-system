@@ -1,5 +1,5 @@
 ﻿using EducationSystem.Models.Options;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Interfaces.Managers.Rest
 {

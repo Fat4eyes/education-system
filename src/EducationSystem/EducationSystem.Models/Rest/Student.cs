@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EducationSystem.Models.Source.Rest
+namespace EducationSystem.Models.Rest
 {
     public class Student : User
     {

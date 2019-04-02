@@ -9,8 +9,7 @@ using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
-using EducationSystem.Models.Source;
-using EducationSystem.Models.Source.Rest;
+using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 

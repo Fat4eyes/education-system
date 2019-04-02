@@ -4,52 +4,56 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
-using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Interfaces.Helpers.Files;
-using EducationSystem.Interfaces.Managers.Files;
+using EducationSystem.Interfaces.Helpers;
+using EducationSystem.Interfaces.Managers.Files.Basics;
+using EducationSystem.Interfaces.Validators;
 using EducationSystem.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using File = EducationSystem.Models.File;
+using File = EducationSystem.Models.Files.Basics.File;
 using SystemFile = System.IO.File;
 
-namespace EducationSystem.Implementations.Managers.Files
+namespace EducationSystem.Implementations.Managers.Files.Basics
 {
-    public abstract class ManagerFile : Manager<ManagerFile>, IManagerFile
+    public abstract class ManagerFile<TFile> : Manager<ManagerFile<TFile>>, IManagerFile<TFile>
+        where TFile : File
     {
-        protected abstract FileType FileType { get; }
-
+        private readonly IHelperPath _helperPath;
         private readonly IHelperFile _helperFile;
-        private readonly IHostingEnvironment _environment;
+        private readonly IHelperFolder _helperFolder;
+        private readonly IValidator<TFile> _validatorFile;
         private readonly IRepositoryFile _repositoryFile;
 
         protected ManagerFile(
             IMapper mapper,
-            ILogger<ManagerFile> logger,
+            ILogger<ManagerFile<TFile>> logger,
+            IHelperPath helperPath,
             IHelperFile helperFile,
-            IHostingEnvironment environment,
+            IHelperFolder helperFolder,
+            IValidator<TFile> validatorFile,
             IRepositoryFile repositoryFile)
             : base(mapper, logger)
         {
+            _helperPath = helperPath;
             _helperFile = helperFile;
-            _environment = environment;
+            _helperFolder = helperFolder;
+            _validatorFile = validatorFile;
             _repositoryFile = repositoryFile;
         }
 
-        public virtual async Task<File> AddFileAsync(File file)
+        public virtual async Task<File> UploadFile(TFile file)
         {
-            _helperFile.ValidateFile(file);
+            _validatorFile.Validate(file);
 
             var guid = Guid.NewGuid();
             var name = guid + Path.GetExtension(file.Name);
 
-            var path = Path.Combine(_environment.ContentRootPath, Directories.Files);
+            var path = Path.Combine(_helperPath.GetContentPath(), Directories.Files);
 
             if (Directory.Exists(path) == false)
                 Directory.CreateDirectory(path);
 
-            path = Path.Combine(path, _helperFile.GetFolderName(FileType));
+            path = Path.Combine(path, _helperFolder.GetFolderName(file.Type));
 
             if (Directory.Exists(path) == false)
                 Directory.CreateDirectory(path);
@@ -60,13 +64,13 @@ namespace EducationSystem.Implementations.Managers.Files
                 await file.Stream.CopyToAsync(stream);
 
             path = Path
-                .Combine(Directories.Files, _helperFile.GetFolderName(FileType), name)
+                .Combine(Directories.Files, _helperFolder.GetFolderName(file.Type), name)
                 .Replace("\\", "/");
 
             var model = Mapper.Map<DatabaseFile>(file);
 
             model.Guid = guid.ToString();
-            model.Type = FileType;
+            model.Type = file.Type;
             model.Name = file.Name;
 
             await _repositoryFile.AddAsync(model, true);
@@ -92,8 +96,8 @@ namespace EducationSystem.Implementations.Managers.Files
                     $"Файл не найден. Идентификатор файла: {id}.",
                     $"Файл не найден.");
 
-            file.Path = _helperFile
-                .GetFilePath(file)
+            file.Path = _helperPath
+                .GetRelativeFilePath(file)
                 .Replace("\\", "/");
 
             return Task.FromResult(file);
@@ -113,7 +117,7 @@ namespace EducationSystem.Implementations.Managers.Files
             if (_helperFile.FileExists(file) == false)
                 return;
 
-            var path = Path.Combine(_environment.ContentRootPath, _helperFile.GetFilePath(file));
+            var path = _helperPath.GetAbsoluteFilePath(file);
 
             if (SystemFile.Exists(path))
                 SystemFile.Delete(path);
