@@ -58,6 +58,10 @@ class BaseAnswers<IState extends IClosedManyAnswersState> extends Component<TAns
     } as IState
   }
 
+  componentWillReceiveProps(nextProps: Readonly<TAnswersHandlingProps>) {
+    this.setState(state => ({Answers: [...nextProps.incomingAnswers]}))
+  }
+
   protected handleAnswers = (answers: Array<Answer>, needRefreshText: boolean = false) =>
     this.setState((needRefreshText
       ? {Answers: answers, Text: ''}

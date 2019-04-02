@@ -25,3 +25,9 @@ export enum LanguageType {
   CPP,
   JavaScript,
 }
+
+export enum FileType {
+  Any = 1,
+  Image = 2,
+  Document = 3
+}

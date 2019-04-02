@@ -9,7 +9,7 @@ export default class QuestionService implements IQuestionService {
   }
 
   async update(question: Question): Promise<Question | Exception> {
-    return await ProtectedFetch.put(UrlBuilder.Build(questionRoutes.update(question.Id)), JSON.stringify(question))
+    return await ProtectedFetch.put(UrlBuilder.Build(questionRoutes.update(question.Id!)), JSON.stringify(question))
   }
 
   async get(id: number, questionOptions?: QuestionOptions): Promise<Question | Exception> {

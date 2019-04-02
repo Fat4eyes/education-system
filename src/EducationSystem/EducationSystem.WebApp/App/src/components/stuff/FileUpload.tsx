@@ -5,6 +5,10 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera'
 import Clear from '@material-ui/icons/Clear'
 import IFileService from '../../services/abstractions/IFileService'
 import {inject} from '../../infrastructure/di/inject'
+import FileModel from '../../models/FileModel'
+import {InjectedNotistackProps, withSnackbar} from 'notistack'
+import {Exception} from '../../helpers'
+import {If} from '../core'
 
 const styles = () => createStyles({
   input: {
@@ -13,13 +17,15 @@ const styles = () => createStyles({
 })
 
 interface IProps {
-  onLoad: (file?: File, id?: number) => any
+  onLoad: (fileModel?: FileModel) => any
+  fileModel?: FileModel
+  file?: File
 }
 
-type TProps = WithStyles<typeof styles> & IProps
+type TProps = WithStyles<typeof styles> & IProps & InjectedNotistackProps
 
 interface IState {
-  fileResult: any
+  fileModel?: FileModel
 }
 
 class FileUpload extends Component<TProps, IState> {
@@ -30,53 +36,73 @@ class FileUpload extends Component<TProps, IState> {
     super(props)
 
     this.state = {
-      fileResult: null
+      fileModel: props.fileModel
     } as IState
   }
+  
+  componentWillReceiveProps(nextProps: Readonly<TProps>) {
+    this.setState({
+      fileModel: nextProps.fileModel
+    })
+  }
 
-  handleAdd = async ({target}: any) => {
+  handleAdd = async ({target: {files: [file]}}: any) => {
     let form = new FormData()
-    let file = target.files[0]
     form.append('file', file)
-    let result = await this.FileService!.add(form)
-
-    this.setState({fileResult: result}, () => this.props.onLoad(file, result.Id))
+    
+    let result = await this.FileService!.addImage(form)
+    if (result instanceof Exception) {
+      return this.props.enqueueSnackbar(result.message, {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'right'
+        }
+      })
+    }
+    
+    this.setState({fileModel: result}, () => this.props.onLoad((result as FileModel)))
   }
 
   handleDelete = async () => {
-    await this.FileService!.delete(this.state.fileResult.Id)
-    this.setState({fileResult: null}, () => this.props.onLoad())
+    const {fileModel} = this.state
+    
+    if (fileModel && fileModel.Id) {
+      await this.FileService!.deleteImage(fileModel.Id)
+      this.setState({}, this.props.onLoad)
+    }
   }
 
   render() {
     const {classes} = this.props
-
+    
     return (
       <Grid item xs={12} container>
-        <Grid item xs={6}>
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="icon-button-photo"
-            onChange={this.handleAdd}
-            type="file"
-          />
-          <label htmlFor="icon-button-photo">
-            <IconButton color="primary" component="span">
-              <PhotoCamera/>
+        <If condition={this.state.fileModel} orElse={
+          <Grid item xs={6}>
+            <input
+              accept="image/*"
+              className={classes.input}
+              id="icon-button-photo"
+              onChange={this.handleAdd}
+              type="file"
+            />
+            <label htmlFor="icon-button-photo">
+              <IconButton color="primary" component="span">
+                <PhotoCamera/>
+              </IconButton>
+            </label>
+          </Grid>
+        }>
+          <Grid item xs={6}>
+            <IconButton color="primary" component="span" onClick={this.handleDelete}>
+              <Clear/>
             </IconButton>
-          </label>
-        </Grid>
-        {this.state.fileResult &&
-        <Grid item xs={6}>
-          <IconButton color="primary" component="span" onClick={this.handleDelete}>
-            <Clear/>
-          </IconButton>
-        </Grid>
-        }
+          </Grid>
+        </If>
       </Grid>
     )
   }
 }
 
-export default withStyles(styles)(FileUpload) as any
+export default withSnackbar(withStyles(styles)(FileUpload)) as any

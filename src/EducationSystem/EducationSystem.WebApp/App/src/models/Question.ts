@@ -2,6 +2,7 @@ import Model from './Model'
 import {QuestionComplexityType, QuestionType} from '../common/enums'
 import Answer from './Answer'
 import Program from './Program'
+import ImageFile from './ImageFile'
 
 export default class Question extends Model {
   public Text: string = ''
@@ -11,7 +12,7 @@ export default class Question extends Model {
   public ThemeId?: number
   public Answers: Array<Answer> = []
   public Program?: Program
-  public ImageId?: number
+  public Image?: ImageFile
 }
 
 export interface QuestionOptions {

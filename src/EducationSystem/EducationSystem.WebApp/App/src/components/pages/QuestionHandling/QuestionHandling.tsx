@@ -3,7 +3,7 @@ import {ChangeEvent, Component} from 'react'
 import {
   Button,
   FormControl,
-  Grid, Input,
+  Grid,
   InputLabel,
   MenuItem,
   Paper,
@@ -25,6 +25,7 @@ import {inject} from '../../../infrastructure/di/inject'
 import {Exception} from '../../../helpers'
 import FileUpload from '../../stuff/FileUpload'
 import IFileService from '../../../services/abstractions/IFileService'
+import FileModel from '../../../models/FileModel'
 
 interface IProps {
   match: {
@@ -38,14 +39,13 @@ interface IProps {
 type TProps = WithStyles<typeof QuestionHandlingStyle> & InjectedNotistackProps & IProps
 
 interface IState {
-  Model: Question,
-  Image?: File,
+  Model: Question
 }
 
 class QuestionHandling extends Component<TProps, IState> {
   @inject
   private QuestionService?: IQuestionService
-  
+
   @inject
   private FileService?: IFileService
 
@@ -57,12 +57,12 @@ class QuestionHandling extends Component<TProps, IState> {
     } as IState
     this.state.Model.ThemeId = this.props.match.params.themeId
   }
-  
-  async componentDidMount(){
+
+  async componentDidMount() {
     let {id} = this.props.match.params
-    
-    if (!id) return 
-    
+
+    if (!id) return
+
     let result = await this.QuestionService!.get(id, {
       WithAnswers: true,
       WithProgram: true
@@ -77,7 +77,7 @@ class QuestionHandling extends Component<TProps, IState> {
         }
       })
     }
-    
+
     this.setState({
       Model: {
         Answers: [],
@@ -122,7 +122,7 @@ class QuestionHandling extends Component<TProps, IState> {
   handleProgram = (program: Program) => this.handleModel({target: {name: 'Program', value: program}})
 
   handleSubmit = async () => {
-    let result: Question | Exception;
+    let result: Question | Exception
     if (this.state.Model.Id) {
       result = await this.QuestionService!.update(this.state.Model)
     } else {
@@ -140,7 +140,7 @@ class QuestionHandling extends Component<TProps, IState> {
     }
 
     if ((result as Question).Id) {
-      this.props.enqueueSnackbar(this.props.match.params.id 
+      this.props.enqueueSnackbar(this.props.match.params.id
         ? `Вопрос успешно обновлен`
         : `Вопрос успешно добавлен`, {
         variant: 'success',
@@ -152,25 +152,32 @@ class QuestionHandling extends Component<TProps, IState> {
     }
   }
 
-  handleImageLoad = (file?: File, id?: number) => 
+  handleImageLoad = (fileModel?: FileModel) =>
     this.setState(state => ({
-      Image: file,
       Model: {
         ...state.Model,
-        ImageId: id
+        Image: fileModel
       }
     }))
 
-  componentWillUnmount() {
-    let id = this.state.Model.ImageId
-    if (id && !this.state.Model.Id) {
-      this.FileService!.delete(id)
-    }
+  async componentWillUnmount() {
+    const {Image} = this.state.Model
+
+    Image && Image.Id && !this.state.Model.Id && await this.FileService!.deleteImage(Image.Id)
   }
 
   render(): React.ReactNode {
     let {classes} = this.props
 
+    let imageSrc = ((): string | false => {
+      const {Image} = this.state.Model
+      
+      if (Image && Image.Path)
+        return `${window.location.origin}/${Image.Path}`
+      
+      return false
+    })()
+    
     let HandledInputs = () => <>
       <Grid item xs={12} sm={6} md={4} lg={2}>
         <TotalTimeInput name='Time' label='Длительность теста'
@@ -218,13 +225,9 @@ class QuestionHandling extends Component<TProps, IState> {
           </Grid>
           <Grid item xs={12} container spacing={16}>
             <Grid item>
-              <FileUpload onLoad={this.handleImageLoad}/>
+              <FileUpload onLoad={this.handleImageLoad} fileModel={this.state.Model.Image}/>
             </Grid>
-            {this.state.Image && 
-              <Grid item xs={10}>
-                <img className={classes.image} src={URL.createObjectURL(this.state.Image)} alt={'Foto'}/>
-              </Grid>
-            }
+            {imageSrc && <Grid item xs={10}><img className={classes.image} src={imageSrc} alt={'Foto'}/></Grid>}
           </Grid>
           <Grid item xs={12} container spacing={16}>
             <AnswersHandling type={this.state.Model.Type}

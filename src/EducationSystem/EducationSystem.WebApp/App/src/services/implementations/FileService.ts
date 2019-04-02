@@ -1,12 +1,14 @@
 import {Exception, ProtectedFetch} from '../../helpers'
 import IFileService from '../abstractions/IFileService'
+import ImageFile from '../../models/ImageFile'
+import {imageRoutes} from '../../routes'
 
 export default class FileService implements IFileService {
-  async add(form: FormData): Promise<any | Exception> {
-    return await ProtectedFetch.postAndFiles('/api/images', form)
+  async addImage(form: FormData): Promise<ImageFile | Exception> {
+    return await ProtectedFetch.postAndFiles(imageRoutes.add(), form)
   }
 
-  async delete(id: number): Promise<any | Exception> {
-    return await ProtectedFetch.delete('/api/images/' + id)
+  async deleteImage(id: number): Promise<any | Exception> {
+    return await ProtectedFetch.delete(imageRoutes.delete(id))
   }
 }
