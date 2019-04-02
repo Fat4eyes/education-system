@@ -22,6 +22,6 @@ namespace EducationSystem.Implementations.Helpers
         }
 
         public string GetFolderName(File file) =>
-            GetFolderName(file?.Type ?? throw new ArgumentException(nameof(file)));
+            GetFolderName(file?.Type ?? throw new ArgumentNullException(nameof(file)));
     }
 }

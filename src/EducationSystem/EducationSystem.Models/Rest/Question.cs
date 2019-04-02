@@ -13,8 +13,6 @@ namespace EducationSystem.Models.Rest
 
         public QuestionComplexityType? Complexity { get; set; }
 
-        public int? ImageId { get; set; }
-
         public Image Image { get; set; }
 
         public int? Time { get; set; }

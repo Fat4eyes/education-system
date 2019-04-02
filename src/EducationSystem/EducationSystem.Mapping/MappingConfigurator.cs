@@ -2,7 +2,6 @@
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Models.Files;
-using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Mapping
@@ -89,6 +88,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Theme, o => o.Ignore())
                 .ForMember(d => d.Image, o => o.Ignore())
+                .ForMember(d => d.ImageId, o => o.MapFrom(d => d.Image.Id))
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())
@@ -150,10 +150,6 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Files, o => o.Ignore());
 
-            expression.CreateMap<DatabaseFile, File>()
-                .ForMember(d => d.Path, o => o.Ignore())
-                .ForMember(d => d.Stream, o => o.Ignore());
-
             expression.CreateMap<DatabaseFile, Image>()
                 .ForMember(d => d.Path, o => o.Ignore())
                 .ForMember(d => d.Stream, o => o.Ignore());
@@ -161,12 +157,6 @@ namespace EducationSystem.Mapping
             expression.CreateMap<DatabaseFile, Document>()
                 .ForMember(d => d.Path, o => o.Ignore())
                 .ForMember(d => d.Stream, o => o.Ignore());
-
-            expression.CreateMap<File, DatabaseMaterialFile>()
-                .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))
-                .ForMember(d => d.MaterialId, o => o.Ignore())
-                .ForMember(d => d.Material, o => o.Ignore())
-                .ForMember(d => d.File, o => o.Ignore());
 
             expression.CreateMap<Document, DatabaseMaterialFile>()
                 .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))

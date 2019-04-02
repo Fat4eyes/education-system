@@ -4,7 +4,7 @@ using EducationSystem.Enums;
 
 namespace EducationSystem.Models.Files.Basics
 {
-    public class File : IDisposable
+    public abstract class File : IDisposable
     {
         public int Id { get; set; }
 
@@ -14,51 +14,25 @@ namespace EducationSystem.Models.Files.Basics
 
         public string Name { get; set; }
 
-        public FileType Type { get; set; } = FileType.Any;
+        public FileType Type { get; set; }
 
         public Stream Stream { get; set; }
 
-        public File() { }
-
-        public File(FileType type)
+        protected File(FileType type)
         {
             Type = type;
         }
 
-        public File(int id)
+        protected File(FileType type, int id) : this(type)
         {
             Id = id;
         }
 
-        public File(string name, Stream stream)
-        {
-            Name = name;
-            Stream = stream;
-        }
-
-        public File(FileType type, string name, Stream stream)
+        protected File(FileType type, string name, Stream stream)
         {
             Type = type;
             Name = name;
             Stream = stream;
-        }
-
-        public File(Guid guid, string path)
-        {
-            Guid = guid;
-            Path = path;
-        }
-
-        public File(int id, Guid guid, string path)
-        {
-            Id = id;
-            Guid = guid;
-            Path = path;
-        }
-
-        public File(string path)
-        {
-            Path = path;
         }
 
         public void Dispose()

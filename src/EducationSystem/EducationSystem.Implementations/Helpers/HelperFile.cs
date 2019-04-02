@@ -15,8 +15,6 @@ namespace EducationSystem.Implementations.Helpers
             _helperPath = helperPath;
         }
 
-        public bool FileExists(int id) => FileExists(new File(id));
-
         public bool FileExists(File file)
         {
             if (file == null)

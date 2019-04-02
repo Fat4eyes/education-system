@@ -9,6 +9,9 @@ namespace EducationSystem.Models.Files
         public Document()
             : base(FileType.Document) { }
 
+        public Document(int id)
+            : base(FileType.Image, id) { }
+
         public Document(string name, Stream stream)
             : base(FileType.Document, name, stream) { }
     }

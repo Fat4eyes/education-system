@@ -41,7 +41,7 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
             _repositoryFile = repositoryFile;
         }
 
-        public virtual async Task<File> UploadFile(TFile file)
+        public virtual async Task<TFile> UploadFile(TFile file)
         {
             _validatorFile.Validate(file);
 
@@ -75,21 +75,21 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
             await _repositoryFile.AddAsync(model, true);
 
-            var result = Mapper.Map<File>(model);
+            var result = Mapper.Map<TFile>(model);
 
             result.Path = path;
 
             return result;
         }
 
-        public Task<File> GetFileById(int id)
+        public Task<TFile> GetFileById(int id)
         {
             var model = _repositoryFile.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Файл не найден. Идентификатор файла: {id}.",
                     $"Файл не найден.");
 
-            var file = Mapper.Map<File>(model);
+            var file = Mapper.Map<TFile>(model);
 
             if (_helperFile.FileExists(file) == false)
                 throw ExceptionHelper.CreateNotFoundException(
@@ -110,7 +110,7 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
                     $"Файл для удаления не найден. Идентификатор файла: {id}.",
                     $"Файл для удаления не найден.");
 
-            var file = Mapper.Map<File>(model);
+            var file = Mapper.Map<TFile>(model);
 
             await _repositoryFile.RemoveAsync(model);
 

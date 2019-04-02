@@ -4,6 +4,7 @@ using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Validators;
+using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 
@@ -37,7 +38,7 @@ namespace EducationSystem.Implementations.Validators
             if (model.Files.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся файлы.");
 
-            if (model.Files.Any(x => _helperFile.FileExists(x.Id) == false))
+            if (model.Files.Any(x => _helperFile.FileExists(x) == false))
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
 
             if (_repositoryFile.IsFilesExists(model.Files.Select(x => x.Id).ToList()) == false)
