@@ -15,17 +15,17 @@ namespace EducationSystem.Implementations.Managers.Rest
 {
     public sealed class ManagerGroup : Manager<ManagerGroup>, IManagerGroup
     {
-        private readonly IHelperUser _helperUser;
+        private readonly IHelperUserRole _helperUserRole;
         private readonly IRepositoryGroup _repositoryGroup;
 
         public ManagerGroup(
             IMapper mapper,
             ILogger<ManagerGroup> logger,
-            IHelperUser helperUser,
+            IHelperUserRole helperUserRole,
             IRepositoryGroup repositoryGroup)
             : base(mapper, logger)
         {
-            _helperUser = helperUser;
+            _helperUserRole = helperUserRole;
             _repositoryGroup = repositoryGroup;
         }
 
@@ -48,7 +48,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public Group GetGroupByStudentId(int studentId, OptionsGroup options)
         {
-            _helperUser.CheckRoleStudent(studentId);
+            _helperUserRole.CheckRoleStudent(studentId);
 
             var group = _repositoryGroup.GetGroupByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(

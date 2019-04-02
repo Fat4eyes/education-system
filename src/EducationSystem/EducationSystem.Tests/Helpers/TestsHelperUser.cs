@@ -11,14 +11,14 @@ namespace EducationSystem.Tests.Helpers
 {
     public class TestsHelperUser
     {
-        private readonly IHelperUser _helperUser;
+        private readonly IHelperUserRole _helperUserRole;
 
         private readonly Mock<IRepositoryRole> _mockRepositoryRole
             = new Mock<IRepositoryRole>();
 
         public TestsHelperUser()
         {
-            _helperUser = new HelperUser(_mockRepositoryRole.Object);
+            _helperUserRole = new HelperUserRole(_mockRepositoryRole.Object);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace EducationSystem.Tests.Helpers
                 .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Student });
 
-            _helperUser.CheckRoleStudent(999);
+            _helperUserRole.CheckRoleStudent(999);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace EducationSystem.Tests.Helpers
                 .Setup(x => x.GetRoleByUserId(999))
                 .Returns(new DatabaseRole { Name = UserRoles.Admin });
 
-            Assert.Throws<EducationSystemException>(() => _helperUser.CheckRoleStudent(999));
+            Assert.Throws<EducationSystemException>(() => _helperUserRole.CheckRoleStudent(999));
         }
     }
 }

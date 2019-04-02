@@ -55,7 +55,7 @@ namespace EducationSystem.Dependencies
 
         private static void RegisterHelpers(IServiceCollection collection)
         {
-            collection.AddTransient<IHelperUser, HelperUser>();
+            collection.AddTransient<IHelperUserRole, HelperUserRole>();
 
             collection.AddTransient<IHelperFile, HelperFile>();
             collection.AddTransient<IHelperPath, HelperPath>();

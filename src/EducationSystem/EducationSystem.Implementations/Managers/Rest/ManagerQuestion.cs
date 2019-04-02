@@ -20,7 +20,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 {
     public sealed class ManagerQuestion : Manager<ManagerQuestion>, IManagerQuestion
     {
-        private readonly IHelperUser _helperUser;
+        private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
         private readonly IHelperQuestionTemplate _helperQuestionTemplate;
 
@@ -32,7 +32,7 @@ namespace EducationSystem.Implementations.Managers.Rest
         public ManagerQuestion(
             IMapper mapper,
             ILogger<ManagerQuestion> logger,
-            IHelperUser helperUser,
+            IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
             IHelperQuestionTemplate helperQuestionTemplate,
             IRepositoryAnswer repositoryAnswer,
@@ -41,7 +41,7 @@ namespace EducationSystem.Implementations.Managers.Rest
             IRepositoryProgramData repositoryProgramData)
             : base(mapper, logger)
         {
-            _helperUser = helperUser;
+            _helperUserRole = helperUserRole;
             _validatorQuestion = validatorQuestion;
             _helperQuestionTemplate = helperQuestionTemplate;
             _repositoryAnswer = repositoryAnswer;
@@ -66,7 +66,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter)
         {
-            _helperUser.CheckRoleStudent(studentId);
+            _helperUserRole.CheckRoleStudent(studentId);
 
             var questions = _repositoryQuestion
                 .GetQuestionsForStudentByTestId(testId, studentId, filter)

@@ -19,7 +19,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 {
     public sealed class ManagerTest : Manager<ManagerTest>, IManagerTest
     {
-        private readonly IHelperUser _helperUser;
+        private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Test> _chekerTest;
 
         private readonly IRepositoryTest _repositoryTest;
@@ -28,13 +28,13 @@ namespace EducationSystem.Implementations.Managers.Rest
         public ManagerTest(
             IMapper mapper,
             ILogger<ManagerTest> logger,
-            IHelperUser helperUser,
+            IHelperUserRole helperUserRole,
             IValidator<Test> chekerTest,
             IRepositoryTest repositoryTest,
             IRepositoryTestTheme repositoryTestTheme)
             : base(mapper, logger)
         {
-            _helperUser = helperUser;
+            _helperUserRole = helperUserRole;
             _chekerTest = chekerTest;
             _repositoryTest = repositoryTest;
             _repositoryTestTheme = repositoryTestTheme;
@@ -56,7 +56,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public PagedData<Test> GetTestsForStudent(int studentId, OptionsTest options, FilterTest filter)
         {
-            _helperUser.CheckRoleStudent(studentId);
+            _helperUserRole.CheckRoleStudent(studentId);
 
             var (count, tests) = _repositoryTest.GetTestsForStudent(studentId, filter);
 
@@ -75,7 +75,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         public Test GetTestForStudentById(int id, int studentId, OptionsTest options)
         {
-            _helperUser.CheckRoleStudent(studentId);
+            _helperUserRole.CheckRoleStudent(studentId);
 
             var test = _repositoryTest.GetTestForStudentById(id, studentId) ??
                throw ExceptionHelper.CreateNotFoundException(

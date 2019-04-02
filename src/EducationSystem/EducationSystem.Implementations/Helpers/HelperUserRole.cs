@@ -6,11 +6,11 @@ using EducationSystem.Repositories.Interfaces;
 
 namespace EducationSystem.Implementations.Helpers
 {
-    public sealed class HelperUser : IHelperUser
+    public sealed class HelperUserRole : IHelperUserRole
     {
         private readonly IRepositoryRole _repositoryRole;
 
-        public HelperUser(IRepositoryRole repositoryRole)
+        public HelperUserRole(IRepositoryRole repositoryRole)
         {
             _repositoryRole = repositoryRole;
         }
