@@ -1,4 +1,5 @@
-﻿using EducationSystem.Implementations.Validators.Files.Basics;
+﻿using EducationSystem.Constants;
+using EducationSystem.Implementations.Validators.Files.Basics;
 using EducationSystem.Models.Files;
 
 namespace EducationSystem.Implementations.Validators.Files
@@ -9,23 +10,6 @@ namespace EducationSystem.Implementations.Validators.Files
         protected override int MaxiFileSize => 25;
 
         /// <inheritdoc />
-        protected override string[] AvailableExtensions { get; } =
-        {
-            ".txt",
-            ".dat",
-            ".xls",
-            ".xlsx",
-            ".ppt",
-            ".pptm",
-            ".pptx",
-            ".zip",
-            ".rar",
-            ".dot",
-            ".doc",
-            ".docm",
-            ".docx",
-            ".pdf",
-            ".rtf"
-        };
+        protected override string[] AvailableExtensions { get; } = FileExtensions.AvailableDocumentExtensions;
     }
 }

@@ -1,4 +1,5 @@
-﻿using EducationSystem.Implementations.Validators.Files.Basics;
+﻿using EducationSystem.Constants;
+using EducationSystem.Implementations.Validators.Files.Basics;
 using EducationSystem.Models.Files;
 
 namespace EducationSystem.Implementations.Validators.Files
@@ -9,13 +10,6 @@ namespace EducationSystem.Implementations.Validators.Files
         protected override int MaxiFileSize => 2;
 
         /// <inheritdoc />
-        protected override string[] AvailableExtensions { get; } =
-        {
-            ".jpg",
-            ".jpeg",
-            ".png",
-            ".gif",
-            ".bmp"
-        };
+        protected override string[] AvailableExtensions { get; } = FileExtensions.AvailableImageExtensions;
     }
 }

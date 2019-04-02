@@ -61,8 +61,11 @@
 
 [Options] [Filter] [B] GET Materials                        List<Material>          (PagedData)
 
-    [B] GET Images/{Id}         File
-    [B] GET Documents/{Id}      File
+    [B] GET Images/{Id}             File
+    [B] GET Images/Extensions       []
+
+    [B] GET Documents/{Id}          File
+    [B] GET Documents/Extensions    []
 
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}

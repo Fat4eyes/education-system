@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationSystem.Constants;
 using EducationSystem.Implementations.Managers.Files.Basics;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Files;
@@ -28,5 +29,7 @@ namespace EducationSystem.Implementations.Managers.Files
                 validatorFile,
                 repositoryFile)
         { }
+
+        public override string[] GetAvailableExtensions() => FileExtensions.AvailableImageExtensions;
     }
 }

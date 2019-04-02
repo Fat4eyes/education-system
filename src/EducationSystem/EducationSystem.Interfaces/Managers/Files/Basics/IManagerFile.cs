@@ -10,5 +10,7 @@ namespace EducationSystem.Interfaces.Managers.Files.Basics
         Task<TFile> GetFileById(int id);
 
         Task DeleteFileByIdAsync(int id);
+
+        string[] GetAvailableExtensions();
     }
 }

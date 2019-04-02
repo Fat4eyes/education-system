@@ -124,5 +124,7 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
             await _repositoryFile.SaveChangesAsync();
         }
+
+        public abstract string[] GetAvailableExtensions();
     }
 }

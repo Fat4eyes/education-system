@@ -23,6 +23,10 @@ namespace EducationSystem.WebApp.Source.Tamers.Files
         public async Task<IActionResult> GetImage([FromRoute] int imageId)
             => Ok(await _managerImage.GetFileById(imageId));
 
+        [HttpGet("Extensions")]
+        public IActionResult GetAvailableExtensions()
+            => Ok(_managerImage.GetAvailableExtensions());
+
         [Transaction]
         [HttpPost("")]
         public async Task<IActionResult> UploadImage(IFormFile file)

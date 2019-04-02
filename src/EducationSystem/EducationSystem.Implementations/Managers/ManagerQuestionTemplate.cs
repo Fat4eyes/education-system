@@ -8,7 +8,7 @@ using EducationSystem.Interfaces.Managers;
 
 namespace EducationSystem.Implementations.Managers
 {
-    public class ManagerQuestionTemplate : IManagerQuestionTemplate
+    public sealed class ManagerQuestionTemplate : IManagerQuestionTemplate
     {
         public Dictionary<QuestionType, int> CreateTemplates(TestSize testSize, List<DatabaseQuestion> questions)
         {
