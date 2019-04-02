@@ -11,7 +11,6 @@ using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
-using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
@@ -258,6 +257,8 @@ namespace EducationSystem.Implementations.Managers.Rest
 
         private string GetFilePath(DatabaseFile file)
         {
+            if (file == null) return null;
+
             return _helperPath
                 .GetRelativeFilePath(file)
                 .Replace("\\", "/");
