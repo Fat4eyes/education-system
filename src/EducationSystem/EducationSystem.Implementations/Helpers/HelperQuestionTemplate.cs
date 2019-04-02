@@ -32,16 +32,13 @@ namespace EducationSystem.Implementations.Helpers
             // Шаблоны.
             var templates = questions
                 .GroupBy(x => x.Type)
-                .Select(x => new QuestionTemplate(rate, x.Key, x.Count()))
+                .Select(x => new QuestionTemplate(x, rate))
                 .ToList();
 
             while (true)
             {
-                foreach (var template in templates)
-                {
-                    // Для каждого из шаблонов вычисляем количество вопросов (целевых).
-                    template.TargetCount = (int) Math.Round(template.Rate * (int) testSize, MidpointRounding.AwayFromZero);
-                }
+                // Для каждого из шаблонов вычисляем количество вопросов (целевых).
+                templates.ForEach(x => x.TargetCount = GetTargetCount(x, testSize));
 
                 // Если все шаблоны удовлетворяют условиям, тогда выходим.
                 if (templates.All(x => x.Success)) break;
@@ -51,12 +48,13 @@ namespace EducationSystem.Implementations.Helpers
                 var success = templates
                     .OrderByDescending(x => x.Difference)
                     .ThenBy(x => x.Rate)
-                    .FirstOrDefault(x => x.Success && x.Rate + step < 1) ??
-                        throw ExceptionHelper.CreatePublicException("Не удалось сформировать шаблоны для выборки вопросов.");
+                    .FirstOrDefault(x => x.Success && x.Rate + step < 1);
 
                 // Находим шаблон, который не удовлетворяет условиям.
                 // Он должен быть обязательно (если таких нет, то ошибка в алгоритме).
-                var failure = templates.FirstOrDefault(x => x.Success == false && x.Rate - step > 0) ??
+                var failure = templates.FirstOrDefault(x => x.Success == false && x.Rate - step > 0);
+
+                if (success == null || failure == null)
                     throw ExceptionHelper.CreatePublicException("Не удалось сформировать шаблоны для выборки вопросов.");
 
                 // Пересчитываем коэффициенты.
@@ -66,12 +64,12 @@ namespace EducationSystem.Implementations.Helpers
 
             // Проверка шаблонов на необходимость нормализации.
             if (templates.Sum(x => x.TargetCount) <= (int) testSize)
-                return templates.ToDictionary(x => x.QuestionType, x => x.TargetCount);
+                return templates.ToDictionary(x => x.Type, x => x.TargetCount);
 
             // Нормализация шаблонов.
             foreach (var template in templates
                 .OrderByDescending(x => x.TargetCount)
-                .ThenByDescending(x => x.GetPosition()))
+                .ThenByDescending(x => x.Type))
             {
                 if (templates.Sum(x => x.TargetCount) <= (int) testSize)
                     break;
@@ -79,14 +77,19 @@ namespace EducationSystem.Implementations.Helpers
                 template.TargetCount--;
             }
 
-            return templates.ToDictionary(x => x.QuestionType, x => x.TargetCount);
+            return templates.ToDictionary(x => x.Type, x => x.TargetCount);
         }
 
-        private sealed class QuestionTemplate
+        private static int GetTargetCount(QuestionTemplate template, TestSize testSize)
+        {
+            return (int) Math.Round(template.Rate * (int) testSize, MidpointRounding.AwayFromZero);
+        }
+
+        private class QuestionTemplate
         {
             private int SourceCount { get; }
 
-            public QuestionType QuestionType { get; }
+            public QuestionType Type { get; }
 
             public int TargetCount { get; set; }
 
@@ -96,28 +99,12 @@ namespace EducationSystem.Implementations.Helpers
 
             public int Difference => SourceCount - TargetCount;
 
-            public QuestionTemplate(double rate, QuestionType questionType, int sourceCount)
+            public QuestionTemplate(IGrouping<QuestionType, DatabaseQuestion> group, double rate)
             {
+                Type = group.Key;
+                SourceCount = group.Count();
+
                 Rate = rate;
-                QuestionType = questionType;
-                SourceCount = sourceCount;
-            }
-
-            public int GetPosition()
-            {
-                switch (QuestionType)
-                {
-                    case QuestionType.ClosedOneAnswer:
-                        return 1;
-                    case QuestionType.ClosedManyAnswers:
-                        return 2;
-                    case QuestionType.WithProgram:
-                        return 3;
-                    case QuestionType.OpenedOneString:
-                        return 4;
-                }
-
-                throw ExceptionHelper.CreatePublicException("Не удалось сформировать шаблоны для выборки вопросов.");
             }
         }
     }
