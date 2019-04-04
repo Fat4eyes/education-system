@@ -4,6 +4,7 @@ using EducationSystem.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.StaticFiles;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,14 @@ namespace EducationSystem.WebApp.Source.Helpers
 
         public static void ConfigureSpaStaticFiles(SpaStaticFilesOptions options) =>
             options.RootPath = "App/build";
+
+        public static ForwardedHeadersOptions GetForwardedHeadersOptions()
+        {
+            return new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+        }
 
         public static void ConfigureJson(MvcJsonOptions options)
         {

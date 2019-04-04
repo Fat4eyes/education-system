@@ -20,15 +20,15 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerMaterial = managerMaterial;
         }
 
-        [HttpGet("")]
         [Authorize]
+        [HttpGet("")]
         public IActionResult GetMaterials(
             [FromQuery] OptionsMaterial options,
             [FromQuery] FilterMaterial filter)
             => Ok(_managerMaterial.GetMaterials(options, filter));
 
-        [HttpGet("{materialId:int}")]
         [Authorize]
+        [HttpGet("{materialId:int}")]
         public IActionResult GetMaterial(
             [FromRoute] int materialId,
             [FromQuery] OptionsMaterial options)
