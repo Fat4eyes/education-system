@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Extensions;
+using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
@@ -17,6 +19,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 {
     public class ManagerMaterial : Manager<ManagerMaterial>, IManagerMaterial
     {
+        private readonly IHelperPath _helperPath;
         private readonly IValidator<Material> _validatorMaterial;
         private readonly IRepositoryMaterial _repositoryMaterial;
         private readonly IRepositoryMaterialFile _repositoryMaterialFile;
@@ -24,11 +27,13 @@ namespace EducationSystem.Implementations.Managers.Rest
         public ManagerMaterial(
             IMapper mapper,
             ILogger<ManagerMaterial> logger,
+            IHelperPath helperPath,
             IValidator<Material> validatorMaterial,
             IRepositoryMaterial repositoryMaterial,
             IRepositoryMaterialFile repositoryMaterialFile)
             : base(mapper, logger)
         {
+            _helperPath = helperPath;
             _validatorMaterial = validatorMaterial;
             _repositoryMaterial = repositoryMaterial;
             _repositoryMaterialFile = repositoryMaterialFile;
@@ -38,7 +43,7 @@ namespace EducationSystem.Implementations.Managers.Rest
         {
             var (count, materials) = _repositoryMaterial.GetMaterials(filter);
 
-            return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
+            return new PagedData<Material>(materials.Select(Map).ToList(), count);
         }
 
         public async Task DeleteMaterialByIdAsync(int id)
@@ -61,7 +66,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
             await _repositoryMaterial.AddAsync(model, true);
 
-            return Mapper.Map<DatabaseMaterial, Material>(model);
+            return Map(model);
         }
 
         public async Task<Material> UpdateMaterialAsync(int id, Material material)
@@ -86,7 +91,41 @@ namespace EducationSystem.Implementations.Managers.Rest
 
             await _repositoryMaterialFile.AddAsync(model.Files, true);
 
-            return Mapper.Map<DatabaseMaterial, Material>(model);
+            return Map(model);
+        }
+
+        private Material Map(DatabaseMaterial material)
+        {
+            return Mapper.Map<DatabaseMaterial, Material>(material, x =>
+            {
+                x.AfterMap((s, d) =>
+                {
+                    if (d.Files.IsNotEmpty() && s.Files.IsNotEmpty())
+                    {
+                        d.Files.ForEach(y =>
+                        {
+                            var file = s.Files
+                               .Select(z => z.File)
+                               .FirstOrDefault(z => z.Id == y.Id) ??
+                                    throw ExceptionHelper.CreateException(
+                                        $"Не удалось получить документ материала. Идентификатор материала: {material.Id}.",
+                                        $"Не удалось получить документ материала.");
+
+                            y.Path = GetFilePath(file);
+                        });
+                    }
+                });
+            });
+        }
+
+        private string GetFilePath(DatabaseFile file)
+        {
+            if (file == null)
+                return null;
+
+            return _helperPath
+                .GetRelativeFilePath(file)
+                .Replace("\\", "/");
         }
 
         private static void FormatMaterial(Material material)
