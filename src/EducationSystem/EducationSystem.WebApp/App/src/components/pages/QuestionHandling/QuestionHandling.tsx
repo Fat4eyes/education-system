@@ -16,7 +16,7 @@ import QuestionHandlingStyle from './QuestionHandlingStyle'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import Question, {QuestionOptions} from '../../../models/Question'
 import TotalTimeInput from '../HandleTest/TotalTimeInput'
-import {QuestionComplexityType, QuestionType} from '../../../common/enums'
+import {FileType, QuestionComplexityType, QuestionType} from '../../../common/enums'
 import {AnswersHandling} from './AnswerHandling'
 import Answer from '../../../models/Answer'
 import Program from '../../../models/Program'
@@ -162,7 +162,7 @@ class QuestionHandling extends Component<TProps, IState> {
 
   async componentWillUnmount() {
     const {Image} = this.state.Model
-    Image && Image.Id && !this.state.Model.Id && await this.FileService!.deleteImage(Image.Id)
+    Image && Image.Id && !this.state.Model.Id && await this.FileService!.delete(Image.Id, FileType.Image)
   }
 
   render(): React.ReactNode {
@@ -224,7 +224,7 @@ class QuestionHandling extends Component<TProps, IState> {
           </Grid>
           <Grid item xs={12} container spacing={16}>
             <Grid item>
-              <FileUpload onLoad={this.handleImageLoad} fileModel={this.state.Model.Image}/>
+              <FileUpload onLoad={this.handleImageLoad} fileModel={this.state.Model.Image} type={FileType.Image}/>
             </Grid>
             {imageSrc && <Grid item xs={10}><img className={classes.image} src={imageSrc} alt={'Foto'}/></Grid>}
           </Grid>

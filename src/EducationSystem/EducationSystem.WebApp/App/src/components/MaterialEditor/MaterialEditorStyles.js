@@ -1,8 +1,8 @@
 const MaterialEditorStyles = theme => ({
   toolbar: {
-    position: 'fixed',
-    top: '50%',
-    transform: 'translateY(-50%)'
+    // position: 'fixed',
+    // top: '50%',
+    // transform: 'translateY(-50%)'
   },
   toolbarPaper: {
     padding: theme.spacing.unit

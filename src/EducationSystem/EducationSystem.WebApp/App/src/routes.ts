@@ -33,10 +33,18 @@ export const questionRoutes = {
 
 export const imageRoutes = {
   add: () => `/api/images`,
-  delete: (id: number) => `/api/images/${id}`
+  delete: (id: number) => `/api/images/${id}`,
+  extensions: () => `/api/images/extensions`,
 }
 
 export const documentRoutes = {
   add: () => `/api/documents`,
-  delete: (id: number) => `/api/documents/${id}`
+  delete: (id: number) => `/api/documents/${id}`,
+  extensions: () => `/api/documents/extensions`,
+}
+
+export const materialRoutes = {
+  add: () => '/api/materials',
+  update: (id: number) => `/api/materials/${id}`,
+  get: (id: number) => `/api/materials/${id}`
 }

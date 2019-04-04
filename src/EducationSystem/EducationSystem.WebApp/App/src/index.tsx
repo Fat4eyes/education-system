@@ -15,6 +15,7 @@ import DisciplineService from './services/implementations/DisciplineService'
 import ThemeService from './services/implementations/ThemeService'
 import QuestionService from './services/implementations/QuestionService'
 import FileService from './services/implementations/FileService'
+import MaterialService from './services/implementations/MaterialService'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -30,6 +31,7 @@ Container.getContainer()
   .transient(ThemeService, ThemeService.name)
   .transient(QuestionService, QuestionService.name)
   .transient(FileService, FileService.name)
+  .transient(MaterialService, MaterialService.name)
   .setUp()
 
 let themes = [blue(), edo(), grey()]

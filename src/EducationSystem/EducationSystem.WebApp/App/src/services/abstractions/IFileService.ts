@@ -1,7 +1,9 @@
 import Exception from '../../helpers/Exception'
-import ImageFile from '../../models/ImageFile'
+import {FileType} from '../../common/enums'
+import FileModel from '../../models/FileModel'
 
 export default interface IFileService {
-  addImage(form: FormData): Promise<ImageFile | Exception>,
-  deleteImage(id: number): Promise<any | Exception>
+  add(form: FormData, type: FileType): Promise<FileModel | Exception>,
+  delete(id: number, type: FileType): Promise<any | Exception>,
+  getExtensions(type: FileType): Promise<Array<string> | Exception>
 }

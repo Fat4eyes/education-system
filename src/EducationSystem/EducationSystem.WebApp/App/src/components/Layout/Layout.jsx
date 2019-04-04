@@ -86,6 +86,8 @@ class Layout extends PureComponent {
                       closeOnClick={closeOnClick}/>
         <LeftMenuItem component={SimpleLink} to='/themes' Icon={PlaylistAddIcon} tooltip='Темы'
                       closeOnClick={closeOnClick}/>
+        <LeftMenuItem component={SimpleLink} to='/materials' Icon={PlaylistAddIcon} tooltip='Темы'
+                      closeOnClick={closeOnClick}/>
       </If>
     </List>
 

@@ -7,21 +7,36 @@ import {Paper} from '@material-ui/core'
 import withWidth from '@material-ui/core/withWidth'
 import Grid from '@material-ui/core/Grid'
 import {StaticToolbar, staticToolbarPlugin} from './StaticToolbar/StaticToolbar'
+import {stateToHTML} from 'draft-js-export-html'
+import {stateFromHTML} from 'draft-js-import-html'
 
+const EmptyHtmlString = '<p><br></p>'
+  
 @withWidth()
 @withStyles(MaterialEditorStyles)
 class MaterialEditor extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      editorState: EditorState.createEmpty()
+      editorState: !this.props.import 
+        ? EditorState.createEmpty()
+        : EditorState.createWithContent(stateFromHTML(this.props.import))
     }
     this.toolbarRef = React.createRef()
   }
+  
+  componentWillReceiveProps(nextProps) {
+    this.setState()
+  }
 
-  handleChange = editorState => this.setState({editorState})
+  handleChange = editorState => this.setState({editorState}, () => {
+    if (this.props.export) {
+      let html = stateToHTML(this.state.editorState.getCurrentContent())
 
+      this.props.export(html === EmptyHtmlString ? '' : html)
+    }
+  })
+    
   handleFocus = () => this.editor.focus()
 
   handleTab = e => {
