@@ -59,13 +59,14 @@
 [Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>              (PagedData)
 [Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
 
-[Options] [Filter] [B] GET Materials                        List<Material>          (PagedData)
+[Options] [Filter] [*] GET Materials                        List<Material>          (PagedData)
+                   [*] GET Materials/{Id}                   Material
 
-    [B] GET Images/{Id}             File
-    [B] GET Images/Extensions       []
+    [*] GET Images/{Id}             File
+    [*] GET Images/Extensions       []
 
-    [B] GET Documents/{Id}          File
-    [B] GET Documents/Extensions    []
+    [*] GET Documents/{Id}          File
+    [*] GET Documents/Extensions    []
 
     [B] DELETE Tests/{Id}
     [B] DELETE Themes/{Id}

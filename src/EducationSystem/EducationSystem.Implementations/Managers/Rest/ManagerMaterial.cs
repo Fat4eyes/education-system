@@ -56,6 +56,16 @@ namespace EducationSystem.Implementations.Managers.Rest
             await _repositoryMaterial.RemoveAsync(material, true);
         }
 
+        public Material GetMaterialById(int id)
+        {
+            var material = _repositoryMaterial.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Материал не найден. Идентификатор материала: {id}.",
+                    $"Материал не найден.");
+
+            return Map(material);
+        }
+
         public async Task<Material> CreateMaterialAsync(Material material)
         {
             _validatorMaterial.Validate(material);

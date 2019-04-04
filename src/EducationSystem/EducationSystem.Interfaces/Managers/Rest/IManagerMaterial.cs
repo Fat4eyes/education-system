@@ -12,6 +12,8 @@ namespace EducationSystem.Interfaces.Managers.Rest
 
         Task DeleteMaterialByIdAsync(int id);
 
+        Material GetMaterialById(int id);
+
         Task<Material> CreateMaterialAsync(Material material);
 
         Task<Material> UpdateMaterialAsync(int id, Material material);

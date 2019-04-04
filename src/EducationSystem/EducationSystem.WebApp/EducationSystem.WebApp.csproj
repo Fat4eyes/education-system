@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <SpaRoot>App</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)\node_modules\**</DefaultItemExcludes>
-    <RuntimeIdentifiers>ubuntu.18.04-x64</RuntimeIdentifiers>
   </PropertyGroup>
   
   <ItemGroup>
