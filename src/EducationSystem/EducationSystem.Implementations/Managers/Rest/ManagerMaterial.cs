@@ -45,7 +45,7 @@ namespace EducationSystem.Implementations.Managers.Rest
         {
             var (count, materials) = _repositoryMaterial.GetMaterials(filter);
 
-            return new PagedData<Material>(materials.Select(Map).ToList(), count);
+            return new PagedData<Material>(materials.Select(x => Map(x, options)).ToList(), count);
         }
 
         public async Task DeleteMaterialByIdAsync(int id)
@@ -58,14 +58,14 @@ namespace EducationSystem.Implementations.Managers.Rest
             await _repositoryMaterial.RemoveAsync(material, true);
         }
 
-        public Material GetMaterialById(int id)
+        public Material GetMaterialById(int id, OptionsMaterial options)
         {
             var material = _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал не найден. Идентификатор материала: {id}.",
                     $"Материал не найден.");
 
-            return Map(material);
+            return Map(material, options);
         }
 
         public async Task<Material> CreateMaterialAsync(Material material)
@@ -78,7 +78,7 @@ namespace EducationSystem.Implementations.Managers.Rest
 
             await _repositoryMaterial.AddAsync(model, true);
 
-            return Map(model);
+            return Mapper.Map<DatabaseMaterial, Material>(model);
         }
 
         public async Task<Material> UpdateMaterialAsync(int id, Material material)
@@ -103,16 +103,23 @@ namespace EducationSystem.Implementations.Managers.Rest
 
             await _repositoryMaterialFile.AddAsync(model.Files, true);
 
-            return Map(model);
+            return Mapper.Map<DatabaseMaterial, Material>(model);
         }
 
-        private Material Map(DatabaseMaterial material)
+        private Material Map(DatabaseMaterial material, OptionsMaterial options)
         {
             return Mapper.Map<DatabaseMaterial, Material>(material, x =>
             {
                 x.AfterMap((s, d) =>
                 {
-                    d.Files?.ForEach(y => y.Path = GetDocumentPath(d, y));
+                    if (options.WithFiles)
+                    {
+                        var files = s.Files?.Select(y => y.File).ToList();
+
+                        d.Files = Mapper.Map<List<Document>>(files);
+
+                        d.Files?.ForEach(y => y.Path = GetDocumentPath(d, y));
+                    }
                 });
             });
         }

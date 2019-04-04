@@ -141,7 +141,7 @@ namespace EducationSystem.Mapping
             expression.CreateMap<User, Student>();
 
             expression.CreateMap<DatabaseMaterial, Material>()
-                .ForMember(d => d.Files, o => o.MapFrom(s => s.Files.Select(x => x.File)));
+                .ForMember(d => d.Files, o => o.Ignore());
 
             expression.CreateMap<Material, DatabaseMaterial>()
                 .ForMember(d => d.Id, o => o.Ignore());

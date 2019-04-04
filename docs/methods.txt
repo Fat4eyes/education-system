@@ -60,7 +60,7 @@
 [Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
 
 [Options] [Filter] [*] GET Materials                        List<Material>          (PagedData)
-                   [*] GET Materials/{Id}                   Material
+[Options]          [*] GET Materials/{Id}                   Material
 
     [*] GET Images/{Id}             File
     [*] GET Images/Extensions       []

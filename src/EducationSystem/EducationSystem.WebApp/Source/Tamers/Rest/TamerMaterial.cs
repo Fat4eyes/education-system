@@ -29,8 +29,10 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("{materialId:int}")]
         [Authorize]
-        public IActionResult GetMaterial([FromRoute] int materialId)
-            => Ok(_managerMaterial.GetMaterialById(materialId));
+        public IActionResult GetMaterial(
+            [FromRoute] int materialId,
+            [FromQuery] OptionsMaterial options)
+            => Ok(_managerMaterial.GetMaterialById(materialId, options));
 
         [Transaction]
         [HttpPost("")]
