@@ -159,6 +159,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Stream, o => o.Ignore());
 
             expression.CreateMap<Document, DatabaseMaterialFile>()
+                .ForMember(d => d.Id, d => d.Ignore())
                 .ForMember(d => d.FileId, o => o.MapFrom(s => s.Id))
                 .ForMember(d => d.MaterialId, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())
