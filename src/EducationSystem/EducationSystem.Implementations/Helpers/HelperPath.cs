@@ -2,6 +2,7 @@
 using System.IO;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Repositories.Interfaces;
@@ -51,9 +52,12 @@ namespace EducationSystem.Implementations.Helpers
 
         public string GetRelativeFilePath(DatabaseFile file)
         {
-            var name = file.Guid + Path.GetExtension(file.Name);
+            return GetRelativeFilePath(file.Type, new Guid(file.Guid), file.Name);
+        }
 
-            return Path.Combine(Directories.Files, _helperFolder.GetFolderName(file.Type), name);
+        public string GetRelativeFilePath(FileType type, Guid guid, string name)
+        {
+            return Path.Combine(Directories.Files, _helperFolder.GetFolderName(type), guid + Path.GetExtension(name));
         }
     }
 }

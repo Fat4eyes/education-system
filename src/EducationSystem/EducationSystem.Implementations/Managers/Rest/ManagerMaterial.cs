@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
+using EducationSystem.Models.Files;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
+using EducationSystem.Models.Rest.Basics;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -110,31 +112,25 @@ namespace EducationSystem.Implementations.Managers.Rest
             {
                 x.AfterMap((s, d) =>
                 {
-                    if (d.Files.IsNotEmpty() && s.Files.IsNotEmpty())
-                    {
-                        d.Files.ForEach(y =>
-                        {
-                            var file = s.Files
-                               .Select(z => z.File)
-                               .FirstOrDefault(z => z.Id == y.Id) ??
-                                    throw ExceptionHelper.CreateException(
-                                        $"Не удалось получить документ материала. Идентификатор материала: {material.Id}.",
-                                        $"Не удалось получить документ материала.");
-
-                            y.Path = GetFilePath(file);
-                        });
-                    }
+                    d.Files?.ForEach(y => y.Path = GetDocumentPath(d, y));
                 });
             });
         }
 
-        private string GetFilePath(DatabaseFile file)
+        private string GetDocumentPath(Model material, Document document)
         {
-            if (file == null)
-                return null;
+            if (document == null)
+                throw new ArgumentNullException(nameof(document));
+
+            if (document.Guid.HasValue == false)
+                throw ExceptionHelper.CreateException(
+                    $"Не удалось получить документ материала. " +
+                        $"Идентификатор материала: {material.Id}. " +
+                        $"Идентификатор документа: {document.Id}.",
+                    $"Не удалось получить документ материала.");
 
             return _helperPath
-                .GetRelativeFilePath(file)
+                .GetRelativeFilePath(document.Type, document.Guid.Value, document.Name)
                 .Replace("\\", "/");
         }
 

@@ -1,4 +1,6 @@
-﻿using EducationSystem.Database.Models;
+﻿using System;
+using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 using EducationSystem.Models.Files.Basics;
 
 namespace EducationSystem.Interfaces.Helpers
@@ -12,5 +14,7 @@ namespace EducationSystem.Interfaces.Helpers
         string GetRelativeFilePath(File file);
 
         string GetRelativeFilePath(DatabaseFile file);
+
+        string GetRelativeFilePath(FileType type, Guid guid, string name);
     }
 }
