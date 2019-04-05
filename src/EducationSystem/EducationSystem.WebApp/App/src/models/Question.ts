@@ -13,6 +13,12 @@ export default class Question extends Model {
   public Answers: Array<Answer> = []
   public Program?: Program
   public Image?: ImageFile
+  
+  constructor(themeId?: number){
+    super()
+    
+    this.ThemeId = themeId
+  }
 }
 
 export interface QuestionOptions {

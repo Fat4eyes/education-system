@@ -19,8 +19,8 @@ const TestsTableStyles = theme => {
 
     },
     paper: {
-      padding: theme.spacing.unit * 3,
-      backgroundColor: theme.palette.grey['50']
+      padding: theme.spacing.unit * 4.5,
+      // backgroundColor: theme.palette.grey['50']
     },
     loading: {
       width: 100,
@@ -40,7 +40,7 @@ const TestsTableStyles = theme => {
     rowHeader: {
       ...userSelectNone,
       cursor: 'pointer',
-      padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px ${theme.spacing.unit / 2}px`,
+      padding: `${theme.spacing.unit + 4}px ${theme.spacing.unit * 2}px ${theme.spacing.unit / 2 + 4}px`,
       backgroundColor: theme.palette.grey['200'],
       '&:hover': {
         backgroundColor: theme.palette.grey['300']
@@ -57,6 +57,9 @@ const TestsTableStyles = theme => {
     },
     collapse: {
       width: '100%'
+    },
+    content: {
+      margin: `${theme.spacing.unit * 3}px 0`
     }
   })
 }

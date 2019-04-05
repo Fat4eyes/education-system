@@ -26,6 +26,7 @@ import {Exception} from '../../../helpers'
 import FileUpload from '../../stuff/FileUpload'
 import IFileService from '../../../services/abstractions/IFileService'
 import FileModel from '../../../models/FileModel'
+import EventDispatcher, {EventType, IEvent, IEventDispatcher} from '../../../helpers/EventDispatcher'
 
 interface IProps {
   match: {
@@ -38,44 +39,38 @@ interface IProps {
 
 type TProps = WithStyles<typeof QuestionHandlingStyle> & InjectedNotistackProps & IProps
 
-interface IState {
-  Model: Question
-}
+interface IState {Model: Question}
 
 class QuestionHandling extends Component<TProps, IState> {
-  @inject
-  private QuestionService?: IQuestionService
-
-  @inject
-  private FileService?: IFileService
+  @inject private QuestionService?: IQuestionService
+  @inject private FileService?: IFileService
+  private EventDispatcher: IEventDispatcher
 
   constructor(props: TProps) {
     super(props)
 
     this.state = {
-      Model: new Question()
+      Model: new Question(this.props.match.params.themeId)
     } as IState
-    this.state.Model.ThemeId = this.props.match.params.themeId
+    
+    this.EventDispatcher = new EventDispatcher(props.enqueueSnackbar)
   }
 
   async componentDidMount() {
     let {id} = this.props.match.params
-
+    
     if (!id) return
-
+    
     let result = await this.QuestionService!.get(id, {
       WithAnswers: true,
       WithProgram: true
     } as QuestionOptions)
 
     if (result instanceof Exception) {
-      return this.props.enqueueSnackbar(result.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
+      return this.EventDispatcher.send({
+        message: result.message,
+        type: EventType.error
+      } as IEvent)
     }
 
     this.setState({
@@ -122,33 +117,21 @@ class QuestionHandling extends Component<TProps, IState> {
   handleProgram = (program: Program) => this.handleModel({target: {name: 'Program', value: program}})
 
   handleSubmit = async () => {
-    let result: Question | Exception
-    if (this.state.Model.Id) {
-      result = await this.QuestionService!.update(this.state.Model)
-    } else {
-      result = await this.QuestionService!.add(this.state.Model)
-    }
+    let result = await (this.state.Model.Id 
+      ? this.QuestionService!.update 
+      : this.QuestionService!.add)
+    (this.state.Model)
 
     if (result instanceof Exception) {
-      return this.props.enqueueSnackbar(result.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
+      return this.EventDispatcher.send({
+        message: result.message,
+        type: EventType.error
+      } as IEvent)
     }
 
     if ((result as Question).Id) {
-      this.props.enqueueSnackbar(this.props.match.params.id
-        ? `Вопрос успешно обновлен`
-        : `Вопрос успешно добавлен`, {
-        variant: 'success',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
+      const message = 'Вопрос успешно ' + this.props.match.params.id ? `обновлен` : `добавлен`
+      return this.EventDispatcher.send({message, type: EventType.success} as IEvent)
     }
   }
 

@@ -1,12 +1,14 @@
 import React from 'react'
-import {Grid, IconButton, Select, Typography} from '@material-ui/core'
+import {Button, Grid, IconButton, Select, Typography} from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeftOutlined'
+import ChevronRightIcon from '@material-ui/icons/ChevronRightOutlined'
 import {If} from '../core'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import Fab from '@material-ui/core/Fab'
 
 const TablePagination = (props) => {
   const {
@@ -23,45 +25,49 @@ const TablePagination = (props) => {
 
   const leftPage = page > 0 ? page - 1 : 0
   const PreviousPage = () => (
-    <IconButton disabled={count.perPage > count.all || page === 0}
-                onClick={() => page !== leftPage && onPageChange(leftPage)}>
+    <Button size='large' variant='outlined' className={classes.fab} disabled={count.perPage > count.all || page === 0}
+         onClick={() => page !== leftPage && onPageChange(leftPage)}>
       <ChevronLeftIcon/>
-    </IconButton>
+      {/*<Typography variant='subtitle1'>*/}
+        {/*Левее*/}
+      {/*</Typography>*/}
+    </Button>
   )
 
   const rightPage = page + 1 < count.all / count.perPage ? page + 1 : page
   const NextPage = () => (
-    <IconButton disabled={count.perPage > count.all || page >= (count.all / count.perPage - 1)}
-                onClick={() => page !== rightPage && onPageChange(rightPage)}>
+    <Button size='large' variant='outlined' disabled={count.perPage > count.all || page >= (count.all / count.perPage - 1)}
+         onClick={() => page !== rightPage && onPageChange(rightPage)}>
       <ChevronRightIcon/>
-    </IconButton>
-  )
+      {/*<Typography variant='subtitle1'>*/}
+        {/*Правее*/}
+      {/*</Typography>*/}
+    </Button>
+  ) 
 
   const handleSelect = ({target: {value}}) => onCountPerPageChange(value)
   
   return <Grid container alignItems='center' spacing={16} className={classes.root}>
     <If condition={!!count.current} orElse={<Grid item xs/>}>
-      <If condition={!showChangeCountPerPageBlock && !isXs}>
-        <Grid item>
-          <Typography variant='subtitle1' className={classes.typography}>
-            Количество записей на странице
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Select variant='filled' value={count.perPage} onChange={handleSelect} className={classes.select}>
-            {[10, 25, 50].map(i => <MenuItem key={i} value={i}>{i}</MenuItem>)}
-          </Select>
-        </Grid>
-      </If>
-      <Grid item xs/>
-      <Grid item>
-        <Typography variant='subtitle1' className={classes.typography}>
-          {`${(page * count.perPage + 1)}-${(page * count.perPage + count.current)} из ${count.all}`}
-        </Typography>
-      </Grid>
       <Grid item>
         <PreviousPage/>
         <NextPage/>
+      </Grid>
+      <Grid item xs/>
+      <Grid item>
+        <Typography variant='body1' className={classes.typography}>
+          {`${page + 1} из ${Math.round(count.all / count.perPage)}`}
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Select
+          input={
+            <OutlinedInput margin='dense' labelWidth={0} name="age" id="outlined-age-simple" />
+          }
+          value={count.perPage} onChange={handleSelect} 
+          className={classes.select}>
+          {[10, 25, 50].map(i => <MenuItem key={i} value={i}>{i}</MenuItem>)}
+        </Select>
       </Grid>
     </If>
   </Grid>
@@ -85,7 +91,7 @@ TablePagination.propTypes = {
 
 const styles = theme => ({
   root: {
-    padding: `0 ${theme.spacing.unit}px`
+    // padding: `0 ${theme.spacing.unit}px`
   },
   typography: {
     color: theme.palette.secondary.dark
@@ -93,7 +99,12 @@ const styles = theme => ({
   select: {
     '&::before': {
       borderBottom: 'none'
-    }
+    },
+    // paddingTop: 14,
+    // paddingBottom: 13 
+  },
+  fab: {
+    marginRight: theme.spacing.unit * 1.5
   }
 })
 

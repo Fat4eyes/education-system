@@ -1,8 +1,4 @@
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    margin: `${theme.spacing.unit}px auto`,
-  },
   grid: {},
   icon: {
     verticalAlign: 'middle',
@@ -20,6 +16,18 @@ const styles = theme => ({
   },
   text: {
     fontSize: '12pt'
+  },
+  header: {
+    backgroundColor: theme.palette.primary.main,
+    padding: `${theme.spacing.unit}px 0 !important`,
+    color: theme.palette.primary.contrastText
+  },
+  body: {
+    backgroundColor: theme.palette.grey['50'],
+    padding: `${theme.spacing.unit}px 0 !important`
+  },
+  mt2Unit: {
+    marginTop: theme.spacing.unit * 2
   }
 });
 

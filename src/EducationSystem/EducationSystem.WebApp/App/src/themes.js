@@ -2,7 +2,8 @@ import {createMuiTheme} from '@material-ui/core'
 
 const base = {
   typography: {
-    useNextVariants: true
+    useNextVariants: true,
+    fontFamily: '"Noto Sans", sans-serif',
   },
   mixins: {
     toolbar: {

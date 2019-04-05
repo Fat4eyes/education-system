@@ -12,7 +12,8 @@ import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 import {Search} from '../../../core'
 import Grid from '@material-ui/core/Grid'
 import Collapse from '@material-ui/core/Collapse'
-import Paper from '@material-ui/core/Paper'
+import classNames from 'classnames'
+import Block from '../../../Blocks/Block'
 
 class TestsFilter extends Component {
   constructor(props) {
@@ -25,13 +26,15 @@ class TestsFilter extends Component {
 
   render() {
     let {classes, Disciplines, DisciplineId, Name, IsActive, handleInput, handleSearch} = this.props
-    return <Paper className={classes.root}>
+    return <Block>
       <Grid item xs={12} container justify='center' spacing={8}>
         <Grid item xs={12} container wrap='nowrap' zeroMinWidth justify='center'
-              onClick={this.handleCollapse} className={classes.cursor}>
-          <Typography noWrap variant='subtitle1'>Фильтр</Typography>
+              onClick={this.handleCollapse} className={classNames(classes.cursor, classes.header)}
+              alignItems='center'
+        >
+          <Typography noWrap variant='subtitle1' align='center'>ФИЛЬТР</Typography>
         </Grid>
-        <Collapse in={this.state.Open} className={classes.collapse}>
+        <Collapse in={this.state.Open}>
           <Grid item container xs={12}>
             <Grid item xs={12} className={classes.control}>
               <Search name='Name' value={Name} onChange={handleSearch}/>
@@ -57,7 +60,7 @@ class TestsFilter extends Component {
           </Grid>
         </Collapse>
       </Grid>
-    </Paper>
+    </Block>
   }
 }
 
@@ -71,18 +74,14 @@ TestsFilter.propTypes = {
 }
 
 const styles = theme => ({
-  root: {
-    backgroundColor: theme.palette.grey['50'],
-    padding: theme.spacing.unit * 3
-  },
-  collapse: {
-    width: '100%'
-  },
   control: {
-    margin: `${theme.spacing.unit}px 0`
+    margin: `${theme.spacing.unit * 2}px 0`
   },
   cursor: {
     cursor: 'pointer'
+  },
+  header: {
+    height: 65
   }
 })
 

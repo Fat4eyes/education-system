@@ -5,7 +5,7 @@ const styles = theme => {
   } = theme
   
   let drawerWidth = 48
-  let contentBasePadding = spacingUnit * 2
+  let contentBasePadding = spacingUnit * 3
 
   return ({
     root: {
@@ -28,11 +28,12 @@ const styles = theme => {
       padding: '0'
     },
     content: {
-      padding: contentBasePadding,
+      padding: contentBasePadding * 2,
       paddingLeft: contentBasePadding + drawerWidth + 10,
       minHeight: `calc(100vh - ${contentBasePadding * 2 + toolbar.minHeight  + 10}px)`,
       backgroundColor: theme.palette.grey['200'],
       [theme.breakpoints.down('xs')]: {
+        padding: contentBasePadding,
         paddingLeft: contentBasePadding
       },
     },

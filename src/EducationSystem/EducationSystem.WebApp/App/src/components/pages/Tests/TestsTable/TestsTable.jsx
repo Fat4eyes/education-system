@@ -11,6 +11,8 @@ import classNames from 'classnames'
 import TestDetails from './Details/TestDetails'
 import Collapse from '@material-ui/core/Collapse'
 import TableComponent from '../../../Table/TableComponent'
+import Block from '../../../Blocks/Block'
+import BlockContent from '../../../Blocks/BlockContent'
 
 const TestModel = {
   Subject: '',
@@ -176,7 +178,7 @@ class TestsTable extends TableComponent {
         />
       </Grid>
       <Grid item xs={12} md={8} lg={9}>
-        <Paper className={classes.paper}>
+        <Block>
           <TablePagination
             count={{
               all: this.state.Count,
@@ -187,47 +189,49 @@ class TestsTable extends TableComponent {
             onPageChange={this.handleChangePage}
             onCountPerPageChange={this.handleChangeRowsPerPage}
           />
-          <If condition={!this.state.IsFirstLoad} orElse={
-            <div style={{height: getTableHeight()}}>
-              <div className={classes.loading}>
-                <CircularProgress size={100} thickness={1}/>
+          <BlockContent top bottom>
+            <If condition={!this.state.IsFirstLoad} orElse={
+              <div style={{height: getTableHeight()}}>
+                <div className={classes.loading}>
+                  <CircularProgress size={100} thickness={1}/>
+                </div>
               </div>
-            </div>
-          }>
-            <div className={classes.loadingBlock}>
-              <If condition={this.state.IsLoading}>
-                <LinearProgress/>
-              </If>
-            </div>
-            <div ref={this.tableRef}>
-              <Grid container ref={this.tableRef}>
-                <If condition={!!this.state.Items.length} orElse={
-                  <Grid item xs={12} color='primary'>
-                    <Typography variant='subtitle1' className={classes.titleNotSelected}>
-                      {'Не найдено'}
-                    </Typography>
-                  </Grid>
-                }>
-                  {this.state.Items.map((test, index) =>
-                    <Grid container key={index} className={classes.row}>
-                      <Grid item xs={12} container wrap='nowrap' zeroMinWidth
-                            className={classNames(classes.rowHeader, {
-                              [classes.rowHeaderSelected]: test.IsSelected && test.IsDetailsLoaded
-                            })}
-                            onClick={() => this.handleDatailsClick(test.Id)}
-                      >
-                        <Typography noWrap variant='subtitle1'>
-                          {test.Subject}
-                        </Typography>
-                      </Grid>
-                      <Collapse timeout={500} in={test.IsDetailsLoaded && test.IsSelected} className={classes.collapse}>
-                        <TestDetails test={test} handleDetailsLoad={this.handleDetailsLoad}/>
-                      </Collapse>
-                    </Grid>)}
-                </If>
-              </Grid>
-            </div>
-          </If>
+            }>
+              <div className={classes.loadingBlock}>
+                {/*<If condition={this.state.IsLoading}>*/}
+                {/*<LinearProgress/>*/}
+                {/*</If>*/}
+              </div>
+              <div ref={this.tableRef}>
+                <Grid container ref={this.tableRef}>
+                  <If condition={!!this.state.Items.length} orElse={
+                    <Grid item xs={12} color='primary'>
+                      <Typography variant='subtitle1' className={classes.titleNotSelected}>
+                        {'Не найдено'}
+                      </Typography>
+                    </Grid>
+                  }>
+                    {this.state.Items.map((test, index) =>
+                      <Grid container key={index} className={classes.row}>
+                        <Grid item xs={12} container wrap='nowrap' zeroMinWidth
+                              className={classNames(classes.rowHeader, {
+                                [classes.rowHeaderSelected]: test.IsSelected && test.IsDetailsLoaded
+                              })}
+                              onClick={() => this.handleDatailsClick(test.Id)}
+                        >
+                          <Typography noWrap variant='subtitle1'>
+                            {test.Subject}
+                          </Typography>
+                        </Grid>
+                        <Collapse timeout={500} in={test.IsDetailsLoaded && test.IsSelected} className={classes.collapse}>
+                          <TestDetails test={test} handleDetailsLoad={this.handleDetailsLoad}/>
+                        </Collapse>
+                      </Grid>)}
+                  </If>
+                </Grid>
+              </div>
+            </If>
+          </BlockContent>
           <TablePagination
             count={{
               all: this.state.Count,
@@ -239,7 +243,7 @@ class TestsTable extends TableComponent {
             onCountPerPageChange={this.handleChangeRowsPerPage}
             showChangeCountPerPageBlock={true}
           />
-        </Paper>
+        </Block>
       </Grid>
     </Grid>
   }
