@@ -72,18 +72,8 @@ class Account extends Component {
                 {User.Email}
               </Typography>
             </Grid>
-            <Grid item xs={12} className={classes.mt2Unit}/>
-            <Grid item xs={12} className={classes.header}>
-              <Typography className={classes.text} align='center' noWrap color='inherit'>
-                Электронная почта
-              </Typography>
-            </Grid>
-            <Grid item xs={12} className={classes.body}>
-              <Typography align='center' noWrap color='inherit'>
-                {User.Email}
-              </Typography>
-            </Grid>
             {User.Group && <>
+              <Grid item xs={12} className={classes.mt2Unit}/>
               <Grid item xs={12} className={classes.header}>
                 <Typography className={classes.text} align='center' noWrap color='inherit'>
                   Группа
