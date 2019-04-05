@@ -21,7 +21,7 @@ Create configuration file with name "essevsu.conf" and content:
 
     </VirtualHost>
 
-Exucute:
+Execute:
 
     sudo a2ensite essevsu.conf
     sudo a2enmod proxy
