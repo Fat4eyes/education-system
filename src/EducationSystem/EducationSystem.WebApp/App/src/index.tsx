@@ -26,12 +26,12 @@ const Layout = React.lazy(() => {
 unregister()
 
 Container.getContainer()
-  .transient(TestService, TestService.name)
-  .transient(DisciplineService, DisciplineService.name)
-  .transient(ThemeService, ThemeService.name)
-  .transient(QuestionService, QuestionService.name)
-  .transient(FileService, FileService.name)
-  .transient(MaterialService, MaterialService.name)
+  .transient(TestService, 'TestService')
+  .transient(DisciplineService, 'DisciplineService')
+  .transient(ThemeService, 'ThemeService')
+  .transient(QuestionService, 'QuestionService')
+  .transient(FileService, 'FileService')
+  .transient(MaterialService, 'MaterialService')
   .setUp()
 
 let themes = [blue(), edo(), grey()]
