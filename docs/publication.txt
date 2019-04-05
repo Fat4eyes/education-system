@@ -1,0 +1,46 @@
+Execute:
+
+    cd EducationSystem/EducationSystem.WebApp
+    dotnet publish -c release -r linux-x64 -f netcoreapp2.1 --self-contained=false
+
+Remarks: Install .NET Core SDK for Linux.
+
+Copy all files from "src/EducationSystem/EducationSystem.WebApp/bin/Release/netcoreapp2.1/publish" to server folder.
+
+Create configuration file with name "essevsu.conf" and content:
+
+    <VirtualHost *:80>
+
+        ProxyPreserveHost On
+
+        ProxyPass / http://127.0.0.1:5000/
+        ProxyPassReverse / http://127.0.0.1:5000/
+
+        ServerName www.essevsu.com
+        ServerAlias *.essevsu.com
+
+    </VirtualHost>
+
+Execute:
+
+    sudo a2ensite essevsu.conf
+    sudo a2enmod proxy
+    sudo a2enmod proxy_http
+    sudo a2enmod proxy_html
+    sudo a2enmod deflate
+    sudo a2enmod rewrite
+    sudo a2enmod headers
+    sudo service apache2 restart
+
+Move to server folder with project.
+
+Execute:
+
+    dotnet EducationSystem.WebApp.dll
+
+Kestrel (App) will start listening on "127.0.0.1:5000".
+
+Try:
+
+    www.essevsu.com
+        Proxy => 127.0.0.1:5000

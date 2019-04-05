@@ -5,6 +5,7 @@ using EducationSystem.WebApp.Source.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
@@ -55,7 +56,10 @@ namespace EducationSystem.WebApp.Source
             builder.UseSpaStaticFiles();
             builder.UseMiddleware(typeof(ExceptionHandler));
             builder.UseHttpsRedirection();
+
+            builder.UseForwardedHeaders(ConfigurationHelper.GetForwardedHeadersOptions());
             builder.UseAuthentication();
+
             builder.UseMvc();
 
             builder.UseSpa(spa =>
