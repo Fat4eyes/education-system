@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using EducationSystem.Enums;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Interfaces.Managers.Rest
+namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerQuestion
     {
         PagedData<Question> GetQuestions(OptionsQuestion options, FilterQuestion filter);
         PagedData<Question> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter);
 
-        List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter);
+        List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, TestSize testSize);
 
         Question GetQuestionById(int id, OptionsQuestion options);
 

@@ -12,8 +12,7 @@ namespace EducationSystem.Implementations.Managers
     {
         public Dictionary<QuestionType, int> CreateTemplates(TestSize testSize, List<DatabaseQuestion> questions)
         {
-            if (questions.Any(x => x.Type == QuestionType.OpenedManyStrings))
-                throw ExceptionHelper.CreateException($"Вопросы с типом '{QuestionType.OpenedManyStrings}' не поддерживаются.");
+            // TODO: Переписать логику.
 
             if (questions.Count <= (int) testSize)
             {

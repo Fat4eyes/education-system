@@ -4,7 +4,7 @@ using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Interfaces.Managers.Rest
+namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerMaterial
     {

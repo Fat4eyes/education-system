@@ -1,5 +1,5 @@
 ﻿using EducationSystem.Constants;
-using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.WebApp.Source.Attributes;
@@ -13,33 +13,37 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         private readonly IManagerTest _managerTest;
         private readonly IManagerGroup _managerGroup;
         private readonly IManagerStudent _managerStudent;
-        private readonly IManagerQuestion _managerQuestion;
+        private readonly IManagerTestData _managerTestData;
         private readonly IManagerStudyPlan _managerStudyPlan;
         private readonly IManagerInstitute _managerInstitute;
         private readonly IManagerTestResult _managerTestResult;
         private readonly IManagerDiscipline _managerDiscipline;
         private readonly IManagerStudyProfile _managerStudyProfile;
+        private readonly IManagerTestExecution _managerTestExecution;
 
         public TamerStudent(
             IManagerTest managerTest,
             IManagerGroup managerGroup,
             IManagerStudent managerStudent,
+            IManagerTestData managerTestData,
             IManagerQuestion managerQuestion,
             IManagerStudyPlan managerStudyPlan,
             IManagerInstitute managerInstitute,
             IManagerTestResult managerTestResult,
             IManagerDiscipline managerDiscipline,
-            IManagerStudyProfile managerStudyProfile)
+            IManagerStudyProfile managerStudyProfile,
+            IManagerTestExecution managerTestExecution)
         {
             _managerTest = managerTest;
             _managerGroup = managerGroup;
             _managerStudent = managerStudent;
-            _managerQuestion = managerQuestion;
+            _managerTestData = managerTestData;
             _managerStudyPlan = managerStudyPlan;
             _managerInstitute = managerInstitute;
             _managerTestResult = managerTestResult;
             _managerDiscipline = managerDiscipline;
             _managerStudyProfile = managerStudyProfile;
+            _managerTestExecution = managerTestExecution;
         }
 
         [HttpGet("")]
@@ -131,12 +135,17 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTest options)
             => Ok(_managerTest.GetTestForStudentById(testId, GetUserId(), options));
 
-        [HttpGet("Current/Tests/{testId:int}/Questions/")]
+        [HttpGet("Current/Tests/{testId:int}/Data")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentTestQuestions(
+        public IActionResult GetStudentTestData([FromRoute] int testId)
+            => Ok(_managerTestData.GetTestDataForStudentByTestId(testId, GetUserId()));
+
+        [HttpGet("Current/Tests/{testId:int}/Execution")]
+        [Roles(UserRoles.Student)]
+        public IActionResult GetStudentTestExecution(
             [FromRoute] int testId,
-            [FromQuery] FilterQuestion filter)
-            => Ok(_managerQuestion.GetQuestionsForStudentByTestId(testId, GetUserId(), filter));
+            [FromQuery] OptionsTestExecution options)
+            => Ok(_managerTestExecution.GetStudentTestExecution(testId, GetUserId(), options));
 
         [HttpGet("Current/Disciplines")]
         [Roles(UserRoles.Student)]

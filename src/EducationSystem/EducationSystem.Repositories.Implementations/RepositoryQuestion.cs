@@ -2,6 +2,7 @@
 using System.Linq;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 using EducationSystem.Extensions;
 using EducationSystem.Models.Filters;
 using EducationSystem.Repositories.Implementations.Basics;
@@ -16,44 +17,37 @@ namespace EducationSystem.Repositories.Implementations
 
         public (int Count, List<DatabaseQuestion> Questions) GetQuestions(FilterQuestion filter)
         {
-            var query = AsQueryable();
-
-            if (filter.QuestionTypes.IsNotEmpty())
-                query = query.Where(x => filter.QuestionTypes.Contains(x.Type));
-            
-            return query.ApplyPaging(filter);
+            return AsQueryable().ApplyPaging(filter);
         }
 
         public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, FilterQuestion filter)
         {
-            var query = AsQueryable()
-                .Where(x => x.ThemeId == themeId);
-
-            if (filter.QuestionTypes.IsNotEmpty())
-                query = query.Where(x => filter.QuestionTypes.Contains(x.Type));
-
-            return query.ApplyPaging(filter);
+            return AsQueryable()
+                .Where(x => x.ThemeId == themeId)
+                .ApplyPaging(filter);
         }
 
-        public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter)
+        public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId)
         {
-            // TODO: Возможно потребуется оптимизация. Сейчас вытягиваются все вопросы для теста.
+            var questionTypes = new List<QuestionType>
+            {
+                QuestionType.ClosedOneAnswer,
+                QuestionType.ClosedManyAnswers,
+                QuestionType.WithProgram
+            };
 
-            var query = AsQueryable()
+            return AsQueryable()
                 .Where(x => x.Theme.ThemeTests.Any(y =>
                     y.TestId == testId &&
                     y.Test.IsActive == 1 &&
                     y.Test.TestThemes.Any(z => z.Theme.Questions.Any())))
+                .Where(x => questionTypes.Contains(x.Type))
                 .Where(x => x.Theme.Discipline.StudyProfiles
                     .Any(a => a.StudyProfile.StudyPlans
                     .Any(b => b.Groups
                     .Any(c => c.GroupStudents
-                    .Any(d => d.StudentId == studentId)))));
-
-            if (filter.QuestionTypes.IsNotEmpty())
-                query = query.Where(x => filter.QuestionTypes.Contains(x.Type));
-
-            return query.ToList();
+                    .Any(d => d.StudentId == studentId)))))
+                .ToList();
         }
     }
 }

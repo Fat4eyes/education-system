@@ -2,7 +2,7 @@
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
@@ -10,7 +10,7 @@ using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.Implementations.Managers.Rest
+namespace EducationSystem.Implementations.Managers
 {
     public sealed class ManagerRole : Manager<ManagerRole>, IManagerRole
     {

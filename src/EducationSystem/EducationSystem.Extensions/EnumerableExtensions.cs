@@ -20,7 +20,7 @@ namespace EducationSystem.Extensions
         public static bool IsNotEmpty<T>(this IEnumerable<T> items, Func<T, bool> predicate)
             => items?.Any(predicate) == true;
 
-        public static IEnumerable<T> Mix<T>(this IEnumerable<T> items)
+        public static IEnumerable<T> MixItems<T>(this IEnumerable<T> items)
         {
             var elements = items.ToList();
 

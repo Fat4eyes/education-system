@@ -3,10 +3,9 @@ using System.Linq;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions;
-using EducationSystem.Implementations.Managers.Rest;
+using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
@@ -64,7 +63,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => _managerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion()));
+                () => _managerQuestion.GetQuestionsForStudentByTestId(999, 999, TestSize.S));
         }
 
         [Fact]
@@ -73,7 +72,7 @@ namespace EducationSystem.Tests.Managers.Rest
             MockHelperUser.Reset();
 
             _mockRepositoryQuestion
-                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
+                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
                 .Returns(GetQuestions());
 
             var count = GetQuestions().Count;
@@ -87,8 +86,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.CreateTemplates(TestSize.XS, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(templates);
 
-            var questions = _managerQuestion.GetQuestionsForStudentByTestId(
-                999, 999, new FilterQuestion { TestSize = TestSize.XS });
+            var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, TestSize.XS);
 
             Assert.Equal(count, questions.Count);
 
@@ -101,14 +99,14 @@ namespace EducationSystem.Tests.Managers.Rest
             MockHelperUser.Reset();
 
             _mockRepositoryQuestion
-                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
+                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
                 .Returns(new List<DatabaseQuestion>());
 
             _mockHelperQuestionTemplate
                 .Setup(x => x.CreateTemplates(TestSize.S, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(new Dictionary<QuestionType, int>());
 
-            var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion());
+            var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, TestSize.S);
 
             Assert.Empty(questions);
         }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
-using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;

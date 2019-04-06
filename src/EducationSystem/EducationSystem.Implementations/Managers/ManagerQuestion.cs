@@ -8,7 +8,6 @@ using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
@@ -17,7 +16,7 @@ using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.Implementations.Managers.Rest
+namespace EducationSystem.Implementations.Managers
 {
     public sealed class ManagerQuestion : Manager<ManagerQuestion>, IManagerQuestion
     {
@@ -68,18 +67,16 @@ namespace EducationSystem.Implementations.Managers.Rest
             return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, FilterQuestion filter)
+        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, TestSize testSize)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var questions = _repositoryQuestion
-                .GetQuestionsForStudentByTestId(testId, studentId, filter)
-                .Where(x => x.Type != QuestionType.OpenedManyStrings)
-                .Mix()
+            var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId)
+                .MixItems()
                 .ToList();
 
             var templates = _managerQuestionTemplate
-                .CreateTemplates(filter.TestSize, questions)
+                .CreateTemplates(testSize, questions)
                 .ToList();
 
             Logger.LogInformation(
@@ -88,7 +85,7 @@ namespace EducationSystem.Implementations.Managers.Rest
                 $"Количество вопросов: {questions.Count}. " +
                 $"Типы вопросов: {string.Join(", ", questions.Select(x => (int) x.Type).Distinct())}. " +
                 $"Шаблоны: {string.Join(", ", templates.Select(x => $"{x.Key} - {x.Value}"))}. " +
-                $"Размер теста: {filter.TestSize}.");
+                $"Размер теста: {testSize}.");
 
             return templates
                 .SelectMany(x => questions

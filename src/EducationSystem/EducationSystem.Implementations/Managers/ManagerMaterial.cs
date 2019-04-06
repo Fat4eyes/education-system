@@ -6,7 +6,7 @@ using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
-using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Files;
@@ -17,7 +17,7 @@ using EducationSystem.Models.Rest.Basics;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.Implementations.Managers.Rest
+namespace EducationSystem.Implementations.Managers
 {
     public class ManagerMaterial : Manager<ManagerMaterial>, IManagerMaterial
     {

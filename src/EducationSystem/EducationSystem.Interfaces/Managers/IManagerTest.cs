@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Models;
+using EducationSystem.Models.Datas;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Interfaces.Managers.Rest
+namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerTest
     {

@@ -2,13 +2,11 @@
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
-using EducationSystem.Implementations.Managers.Rest;
 using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
-using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest;
@@ -39,12 +37,14 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerDocument, ManagerDocument>();
 
             collection.AddTransient<IManagerToken, ManagerToken>();
+
             collection.AddTransient<IManagerRole, ManagerRole>();
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
             collection.AddTransient<IManagerGroup, ManagerGroup>();
             collection.AddTransient<IManagerTheme, ManagerTheme>();
             collection.AddTransient<IManagerStudent, ManagerStudent>();
+            collection.AddTransient<IManagerTestData, ManagerTestData>();
             collection.AddTransient<IManagerQuestion, ManagerQuestion>();
             collection.AddTransient<IManagerMaterial, ManagerMaterial>();
             collection.AddTransient<IManagerInstitute, ManagerInstitute>();
@@ -52,7 +52,7 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerTestResult, ManagerTestResult>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
             collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
-
+            collection.AddTransient<IManagerTestExecution, ManagerTestExecution>();
             collection.AddTransient<IManagerQuestionTemplate, ManagerQuestionTemplate>();
         }
 
