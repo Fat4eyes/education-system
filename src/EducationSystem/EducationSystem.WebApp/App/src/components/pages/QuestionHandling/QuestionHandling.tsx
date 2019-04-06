@@ -52,15 +52,15 @@ class QuestionHandling extends Component<TProps, IState> {
     this.state = {
       Model: new Question(this.props.match.params.themeId)
     } as IState
-    
+
     this.EventDispatcher = new EventDispatcher(props.enqueueSnackbar)
   }
 
   async componentDidMount() {
     let {id} = this.props.match.params
-    
+
     if (!id) return
-    
+
     let result = await this.QuestionService!.get(id, {
       WithAnswers: true,
       WithProgram: true
@@ -117,8 +117,8 @@ class QuestionHandling extends Component<TProps, IState> {
   handleProgram = (program: Program) => this.handleModel({target: {name: 'Program', value: program}})
 
   handleSubmit = async () => {
-    let result = await (this.state.Model.Id 
-      ? this.QuestionService!.update 
+    let result = await (this.state.Model.Id
+      ? this.QuestionService!.update
       : this.QuestionService!.add)
     (this.state.Model)
 

@@ -46,5 +46,6 @@ export const documentRoutes = {
 export const materialRoutes = {
   add: () => '/api/materials',
   update: (id: number) => `/api/materials/${id}`,
-  get: (id: number) => `/api/materials/${id}`
+  get: (id: number) => `/api/materials/${id}`,
+  getAll: () => `/api/materials`
 }

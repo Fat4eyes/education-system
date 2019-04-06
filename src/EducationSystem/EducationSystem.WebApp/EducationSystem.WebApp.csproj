@@ -26,13 +26,10 @@
     <Content Include="App\src\components\MaterialEditor\SideToolbar\buttonStyles.module.less" />
     <Content Include="App\src\components\MaterialEditor\SideToolbar\toolbarStyles.module.less" />
     <Content Include="App\src\components\pages\QuestionHandling\QuestionHandling.tsx" />
+    <Content Include="App\src\components\Table\MaterialSelect.tsx" />
     <Content Include="App\src\components\Table\Row.tsx" />
     <Content Include="App\src\components\Table\RowBody.tsx" />
     <None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="App\src\providers" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)\node_modules')">

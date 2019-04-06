@@ -15,11 +15,15 @@ export interface IEvent {
   message: string
 }
 
-export interface INotifierProps {
+interface INotifierProps {
   notify: (event: IEvent) => void
   error: (message: string) => void
   success: (message: string) => void
   info: (message: string) => void
+}
+
+export type TNotifierProps = {
+  notifier: INotifierProps
 }
 
 const NullNotifier: INotifierProps = {
@@ -31,7 +35,7 @@ const NullNotifier: INotifierProps = {
 
 const {Provider, Consumer} = createContext(NullNotifier)
 
-class NotificationProvider extends Component<InjectedNotistackProps & {notifier: INotifierProps}> {
+class NotificationProvider extends Component<InjectedNotistackProps & {notifier?: INotifierProps}> {
   private _baseNotifier: INotifierProps = {
     notify: (event: IEvent): void => {
       this.props.enqueueSnackbar({
