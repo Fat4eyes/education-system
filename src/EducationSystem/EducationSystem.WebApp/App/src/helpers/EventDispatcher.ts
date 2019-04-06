@@ -2,7 +2,7 @@ import * as React from 'react'
 import {OptionsObject, VariantType} from 'notistack'
 import {SnackbarOrigin} from '@material-ui/core/Snackbar'
 
-type THandler = (message: string | React.ReactNode, options?: OptionsObject) => string | number
+type THandler = ((message: string | React.ReactNode, options?: OptionsObject) => any) | any
 
 export enum EventType {
   default,
