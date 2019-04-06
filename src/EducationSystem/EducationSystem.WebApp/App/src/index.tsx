@@ -16,6 +16,7 @@ import ThemeService from './services/implementations/ThemeService'
 import QuestionService from './services/implementations/QuestionService'
 import FileService from './services/implementations/FileService'
 import MaterialService from './services/implementations/MaterialService'
+import NotificationProvider from './providers/NotificationProvider'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -40,13 +41,15 @@ const App = () => <Try>
   <Router history={history}>
     <MuiThemeProvider theme={themes[Math.floor(Math.random() * themes.length)]}>
       <SnackbarProvider maxSnack={3}>
-        <AuthProvider>
-          <Suspense fallback={
-            <Loading/>
-          }>
-            <Layout/>
-          </Suspense>
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider>
+            <Suspense fallback={
+              <Loading/>
+            }>
+              <Layout/>
+            </Suspense>
+          </AuthProvider>
+        </NotificationProvider>
       </SnackbarProvider>
     </MuiThemeProvider>
   </Router>
