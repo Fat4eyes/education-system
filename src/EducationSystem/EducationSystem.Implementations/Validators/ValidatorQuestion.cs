@@ -63,7 +63,7 @@ namespace EducationSystem.Implementations.Validators
             if (model.Image != null && _helperFile.FileExists(model.Image) == false)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.MaterialId.HasValue && _repositoryMaterial.GetById(model.MaterialId.Value) == null)
+            if (model.Material != null && _repositoryMaterial.GetById(model.Material.Id) == null)
                 throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
 
             ValidateByQuestionType(model);
