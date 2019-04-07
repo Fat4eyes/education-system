@@ -1,10 +1,10 @@
 ﻿{
   "DatabaseParameters": {
-    "Name": "",
-    "Host": "127.0.0.1",
+    "Name": "db_a474a6_web",
+    "Host": "mysql6001.site4now.net",
     "Port": "3306",
-    "UserName": "",
-    "UserPassword": ""
+    "UserName": "a474a6_web",
+    "UserPassword": "qwerty123"
   },
   "LoggingParameters": {
     "PathFormat": "Logs/Log-{Date}.log",
