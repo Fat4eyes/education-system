@@ -11,6 +11,7 @@ import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import {Exception} from '../../helpers'
 import {If} from '../core'
 import {FileType} from '../../common/enums'
+import {Guid} from '../../helpers/guid'
 
 const styles = () => createStyles({
   input: {
@@ -38,7 +39,7 @@ class FileUpload extends Component<TProps, IState> {
 
   constructor(props: TProps) {
     super(props)
-
+    
     this.state = {
       fileModel: props.fileModel,
       extensions: []
@@ -98,6 +99,8 @@ class FileUpload extends Component<TProps, IState> {
   render() {
     const {classes} = this.props
     
+    const id = Guid.create()
+    
     return (
       <Grid item xs={12} container>
         <If condition={this.state.extensions.length > 0 || this.props.fileModel} orElse={<></>}>
@@ -106,11 +109,11 @@ class FileUpload extends Component<TProps, IState> {
               <input
                 accept={this.state.extensions.join(', ')}
                 className={classes.input}
-                id="icon-button-photo"
+                id={id}
                 onChange={this.handleAdd}
                 type="file"
               />
-              <label htmlFor="icon-button-photo">
+              <label htmlFor={id}>
                 <IconButton color="primary" component="span">
                   {this.props.type == FileType.Image && <PhotoCameraIcon/> || <NoteAddIcon/>}
                 </IconButton>
