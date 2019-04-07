@@ -6,7 +6,7 @@ const HandleTestStyles = (theme: Theme) => createStyles({
     backgroundColor: theme.palette.grey['50']
   },
   stepper: {
-    backgroundColor: theme.palette.grey['50']
+    backgroundColor: theme.palette.grey['100']
   },
   buttonBlock: {
     marginTop: theme.spacing.unit * 3,

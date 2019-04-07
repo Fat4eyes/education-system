@@ -5,8 +5,8 @@ import classNames from 'classnames'
 
 interface IRowProps {
   children?: ReactNode,
-  top: boolean,
-  bottom: boolean
+  top?: boolean,
+  bottom?: boolean
 }
 
 const styles = (theme: Theme) => createStyles({

@@ -1,5 +1,6 @@
 .buttonWrapper {
-  display: block;
+  display: inline-block;
+  margin-left: 6px;
 }
 
 .button {
@@ -7,11 +8,10 @@
   color: #6e6e6e;
   font-size: 18px;
   border: 0;
-  padding-top: 5px;
   vertical-align: bottom;
-  height: 34px;
-  width: 36px;
-  border-radius: 4px;
+  height: 48px;
+  width: 48px;
+  border-radius: 100%;
 }
 
 .button svg {
@@ -19,14 +19,18 @@
 }
 
 .button:hover, .button:focus {
-  background: #e0e0e0;
-  outline: 0; 
+  outline: 0;
+}
+
+.button:active {
+  background: #d8d8d8;
+  transition: background-color 500ms ease-out;
 }
 
 .active {
-  color: #2c5f7f;
+  color: #000000;
 }
 
 .active svg {
-  fill: #2c5f7f;
+  fill: #000000;
 }

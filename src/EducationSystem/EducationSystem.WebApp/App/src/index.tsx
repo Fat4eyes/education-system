@@ -5,7 +5,7 @@ import {MuiThemeProvider} from '@material-ui/core/styles'
 import {SnackbarProvider} from 'notistack'
 import AuthProvider from './providers/AuthProvider/AuthProvider'
 import {Loading, Try} from './components/core'
-import {blue, edo, grey} from './themes'
+import {blue, edo, grey, purpure} from './themes'
 import {unregister} from './serviceWorker'
 import './index.less'
 import history from './history'
@@ -35,7 +35,7 @@ Container.getContainer()
   .transient(MaterialService, 'MaterialService')
   .setUp()
 
-let themes = [blue(), edo(), grey()]
+let themes = [purpure(), blue(), edo(), grey()]
 
 const App = () => <Try>
   <Router history={history}>

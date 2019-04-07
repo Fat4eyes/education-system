@@ -7,6 +7,13 @@ const styles = (theme: Theme) => {
   const padding = theme.spacing.unit * 4.5
   
   return createStyles({
+    root: {
+      border: '1px solid',
+      borderColor: theme.palette.grey['400'],
+      borderRadius: 4,
+      backgroundColor: theme.palette.grey['100'],
+      boxShadow: 'inset 0px 0px 3px rgba(0, 0, 0, 0.1)'
+    },
     partial: {
       padding: `${padding}px 0`,
       '&>div': {
@@ -25,11 +32,11 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 const Block = ({classes, children, partial = false}: IProps) => 
-  <Paper className={classNames({
+  <div className={classNames(classes.root, {
     [classes.full]: !partial,
     [classes.partial]: partial
   })}>
     {children}
-  </Paper>
+  </div>
 
 export default withStyles(styles)(Block)

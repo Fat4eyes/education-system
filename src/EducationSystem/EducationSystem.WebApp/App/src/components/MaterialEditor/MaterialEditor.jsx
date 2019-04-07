@@ -30,18 +30,12 @@ class MaterialEditor extends Component {
     this.toolbarRef = React.createRef()
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState()
-  }
-
   handleChange = editorState => this.setState({editorState}, () => {
     if (this.props.export) {
       let html = stateToHTML(this.state.editorState.getCurrentContent())
-
       this.props.export(html === EmptyHtmlString ? '' : html)
     }
   })
-  handleFocus = () => this.editor.focus()
   handleTab = e => {
     e.preventDefault()
 
@@ -60,7 +54,6 @@ class MaterialEditor extends Component {
       this.handleChange(EditorState.push(currentState, newContentState, 'insert-characters'))
     }
   }
-
   handleLoadImage = (fileModel) => {
     if (!fileModel || !fileModel.Path) return
 
@@ -79,36 +72,29 @@ class MaterialEditor extends Component {
 
   render() {
     const {classes} = this.props
-
-    const getToolbarWidth = () => {
-      if (this.toolbarRef.current) {
-        return this.toolbarRef.current.clientWidth
-      } else
-        return 52
-    }
+    const plugins = [staticToolbarPlugin, ...imagePlugins]
 
     return <>
-      <Grid item>
-        <div style={{width: getToolbarWidth()}}/>
-        <div className={classes.toolbar} ref={this.toolbarRef}>
-          <Paper className={classes.toolbarPaper}>
-            <StaticToolbar/>
-            <FileUpload type={FileType.Image} onLoad={this.handleLoadImage}/>
-          </Paper>
-        </div>
+      <Grid item xs={12}>
+        <Paper className={classes.toolbarPaper}>
+          <Grid container justify='center' alignItems='center'>
+            <Grid item>
+              <StaticToolbar/>
+            </Grid>
+            <Grid item xs>
+              <FileUpload type={FileType.Image} onLoad={this.handleLoadImage}/>
+            </Grid>
+          </Grid>
+        </Paper>
       </Grid>
-      <Grid item xs container wrap='nowrap' zeroMinWidth>
-        <Paper className={classes.root} onClick={this.handleFocus}>
+      <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
+        <Paper className={classes.root} onClick={() => this.editor.focus()}>
           <AlignmentTool/>
           <Editor
             onTab={this.handleTab}
-            handleKeyCommand={this.handleKeyCommand}
-            keyBindingFn={this.keyBinding}
             editorState={this.state.editorState}
             onChange={this.handleChange}
-            plugins={[
-              staticToolbarPlugin, ...imagePlugins
-            ]}
+            plugins={plugins}
             ref={element => this.editor = element}
           />
         </Paper>
@@ -116,9 +102,5 @@ class MaterialEditor extends Component {
     </>
   }
 }
-
-MaterialEditor.defaultProps = {}
-
-MaterialEditor.propTypes = {}
 
 export default MaterialEditor

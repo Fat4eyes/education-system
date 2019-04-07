@@ -6,7 +6,6 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   TextField,
   withStyles,
@@ -29,7 +28,7 @@ import FileModel from '../../../models/FileModel'
 import EventDispatcher, {EventType, IEvent, IEventDispatcher} from '../../../helpers/EventDispatcher'
 import MaterialSelect from '../../Table/MaterialSelect'
 import Material from '../../../models/Material'
-import MaterialHandling from '../Material/MaterialHandling'
+import Block from '../../Blocks/Block'
 
 interface IProps {
   match: {
@@ -207,7 +206,7 @@ class QuestionHandling extends Component<TProps, IState> {
 
     return <Grid container justify='center'>
       <Grid item xs={12} md={10} lg={8}>
-        <Paper className={classes.paper}>
+        <Block>
           <Grid item xs={12} container spacing={16}>
             <HandledInputs/>
             <Grid item xs={12}>
@@ -239,7 +238,7 @@ class QuestionHandling extends Component<TProps, IState> {
               {this.state.Model.Id ? 'Обновить вопрос' : 'Добавить вопрос'}
             </Button>
           </Grid>
-        </Paper>
+        </Block>
       </Grid>
     </Grid>
   }

@@ -29,7 +29,7 @@ const buttons = [
 const {Toolbar} = staticToolbarPlugin
 export const StaticToolbar = ({...props}) => <Toolbar {...props}>
   {externalProps => <>{
-    buttons.map((Button, index) => <Button  key={index} {...externalProps}/>)
+    buttons.map((Button, index) => <Button key={index} {...externalProps}/>)
   }</>}
 </Toolbar>
 

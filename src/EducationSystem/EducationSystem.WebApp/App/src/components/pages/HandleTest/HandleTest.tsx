@@ -34,6 +34,7 @@ import {Exception} from '../../../helpers'
 import IPagedData from '../../../models/PagedData'
 import Discipline from '../../../models/Discipline'
 import DisciplineTable from '../../Table/DisciplineTable'
+import Block from '../../Blocks/Block'
 
 interface IProps extends WithStyles<typeof HandleTestStyles>, InjectedNotistackProps {
   isEdit: boolean,
@@ -187,7 +188,7 @@ class HandleTest extends Component<IProps, IState> {
     )
     return <Grid container justify='center'>
       <Grid item xs={12} md={10} lg={8}>
-        <Paper className={classes.paper}>
+        <Block>
           <Header/>
           <Stepper activeStep={this.state.step} orientation='vertical' className={classes.stepper}>
             <Step>
@@ -332,7 +333,7 @@ class HandleTest extends Component<IProps, IState> {
               </StepContent>
             </Step>
           </Stepper>
-        </Paper>
+        </Block>
       </Grid>
     </Grid>
   }

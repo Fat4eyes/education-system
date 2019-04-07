@@ -31,6 +31,7 @@ import IThemeService from '../../../services/abstractions/IThemeService'
 import QuestionTable from '../../Table/QuestionTable'
 import QuestionHandling from '../QuestionHandling/QuestionHandling'
 import {Redirect} from 'react-router'
+import Block from '../../Blocks/Block'
 
 type TProps = WithStyles<typeof ThemesPageStyles> & InjectedNotistackProps
 
@@ -175,14 +176,14 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
 
     return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
-        <Paper className={classes.paperSmall}>
+        <Block>
           <Typography noWrap variant='subtitle1'>
             Администрирование тем
           </Typography>
-        </Paper>
+        </Block>
       </Grid>
       <Grid item xs={12} md={10} lg={8}>
-        <Paper className={classes.paper}>
+        <Block>
           <Grid item xs={12} container justify='space-between'>
             <Grid item>
               <Typography noWrap variant='subtitle1'>
@@ -270,11 +271,11 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
               </Collapse>
             </Grid>
           </Collapse>
-        </Paper>
+        </Block>
       </Grid>
       <Grid item xs={12} md={10} lg={8}>
         <Collapse timeout={500} in={this.state.ShowQuestionsBlock}>
-          <Paper className={classes.paper}>
+          <Block>
             <Grid item xs={12} container justify='space-between'>
               <Grid item xs>
                 <Typography noWrap variant='subtitle1'>
@@ -304,7 +305,7 @@ class ThemesPage extends TableComponent<Theme, TProps, IState> {
               handleClick={(id: number) => this.setState({SelectedQuestionId: id, NeedRedirect: true})}
             />
             }
-          </Paper>
+          </Block>
         </Collapse>
       </Grid>
     </Grid>

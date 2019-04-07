@@ -39,16 +39,16 @@ class FileUpload extends Component<TProps, IState> {
 
   constructor(props: TProps) {
     super(props)
-    
+
     this.state = {
       fileModel: props.fileModel,
       extensions: []
     } as IState
   }
-  
+
   async componentDidMount() {
     if (this.props.fileModel) return
-    
+
     let result = await this.FileService!.getExtensions(this.props.type)
     if (result instanceof Exception) {
       return this.props.enqueueSnackbar(result.message, {
@@ -72,7 +72,7 @@ class FileUpload extends Component<TProps, IState> {
   handleAdd = async ({target: {files: [file]}}: any) => {
     let form = new FormData()
     form.append('file', file)
-    
+
     let result = await this.FileService!.add(form, this.props.type)
     if (result instanceof Exception) {
       return this.props.enqueueSnackbar(result.message, {
@@ -83,13 +83,13 @@ class FileUpload extends Component<TProps, IState> {
         }
       })
     }
-    
+
     this.setState({fileModel: result}, () => this.props.onLoad((result as FileModel)))
   }
 
   handleDelete = async () => {
     const {fileModel} = this.state
-    
+
     if (fileModel && fileModel.Id) {
       await this.FileService!.delete(fileModel.Id, this.props.type)
       this.setState({}, this.props.onLoad)
@@ -98,37 +98,35 @@ class FileUpload extends Component<TProps, IState> {
 
   render() {
     const {classes} = this.props
-    
+
     const id = Guid.create()
-    
-    return (
-      <Grid item xs={12} container>
-        <If condition={this.state.extensions.length > 0 || this.props.fileModel} orElse={<></>}>
-          <If condition={this.state.fileModel} orElse={
-            <Grid item xs={6}>
-              <input
-                accept={this.state.extensions.join(', ')}
-                className={classes.input}
-                id={id}
-                onChange={this.handleAdd}
-                type="file"
-              />
-              <label htmlFor={id}>
-                <IconButton color="primary" component="span">
-                  {this.props.type == FileType.Image && <PhotoCameraIcon/> || <NoteAddIcon/>}
-                </IconButton>
-              </label>
-            </Grid>
-          }>
-            <Grid item xs={6}>
-              <IconButton color="primary" component="span" onClick={this.handleDelete}>
-                <Clear/>
+
+    return <Grid item xs={12} container>
+      <If condition={this.state.extensions.length > 0 || this.props.fileModel} orElse={<></>}>
+        <If condition={this.state.fileModel} orElse={
+          <Grid item xs={6}>
+            <input
+              accept={this.state.extensions.join(', ')}
+              className={classes.input}
+              id={id}
+              onChange={this.handleAdd}
+              type="file"
+            />
+            <label htmlFor={id}>
+              <IconButton component="span">
+                {this.props.type == FileType.Image && <PhotoCameraIcon/> || <NoteAddIcon/>}
               </IconButton>
-            </Grid>
-          </If>
+            </label>
+          </Grid>
+        }>
+          <Grid item xs={6}>
+            <IconButton component="span" onClick={this.handleDelete}>
+              <Clear/>
+            </IconButton>
+          </Grid>
         </If>
-      </Grid>
-    )
+      </If>
+    </Grid>
   }
 }
 

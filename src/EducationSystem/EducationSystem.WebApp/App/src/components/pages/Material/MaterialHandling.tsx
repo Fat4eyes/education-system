@@ -12,6 +12,7 @@ import {FileType} from '../../../common/enums'
 import MaterialEditor from '../../MaterialEditor/MaterialEditor'
 import IMaterialService from '../../../services/abstractions/IMaterialService'
 import {Exception} from '../../../helpers'
+import Block from '../../Blocks/Block'
 
 interface IProps {
   match?: {
@@ -143,7 +144,7 @@ class MaterialHandling extends Component<TProps, IState> {
 
     return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
-        <Paper className={classes.paper}>
+        <Block>
           <Grid item xs={12} container spacing={16}>
             <TextField fullWidth
                        label='Название'
@@ -201,7 +202,7 @@ class MaterialHandling extends Component<TProps, IState> {
               </Button>
             </Grid>
           </Grid>
-        </Paper>
+        </Block>
       </Grid>
     </Grid>
   }

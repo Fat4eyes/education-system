@@ -11,7 +11,7 @@ import {inject} from '../../infrastructure/di/inject'
 import {Exception} from '../../helpers'
 import * as React from 'react'
 import {TablePagination} from '../core'
-
+import BlockContent from '../Blocks/BlockContent'
 
 interface IProps extends InjectedNotistackProps {
   handleClick: any
@@ -90,34 +90,45 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
 
   render() {
     return <Grid item xs={12} container justify='center'>
-      <TextField
-        label='Название дисциплины'
-        placeholder='Название дисциплины (больше 3 символов)'
-        value={this.state.Name}
-        onChange={this.handleName}
-        style={{margin: '0 5px'}}
-        fullWidth
-        margin='none'
-      />
-      <TablePagination
-        count={{
-          all: this.state.Count,
-          perPage: this.state.CountPerPage,
-          current: this.state.Items.length
-        }}
-        page={this.state.Page}
-        onPageChange={this.handleChangePage}
-        onCountPerPageChange={this.handleChangeRowsPerPage}
-      />
-      {this.state.Items.map((d: Discipline) =>
-        <RowHeader key={d.Id} onClick={() => this.props.handleClick(d)}>
-          <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
-            <Typography noWrap variant='subtitle1'>
-              {d.Name}
-            </Typography>
-          </Grid>
-        </RowHeader>
-      )}
+      <Grid item xs={12}>
+        <BlockContent bottom>
+          <TextField
+            label='Название дисциплины'
+            placeholder='Название дисциплины (больше 3 символов)'
+            value={this.state.Name}
+            onChange={this.handleName}
+            fullWidth
+            margin='none'
+          />
+        </BlockContent>
+      </Grid>
+      <Grid item xs={12}>
+        <BlockContent bottom>
+          <TablePagination
+            count={{
+              all: this.state.Count,
+              perPage: this.state.CountPerPage,
+              current: this.state.Items.length
+            }}
+            page={this.state.Page}
+            onPageChange={this.handleChangePage}
+            onCountPerPageChange={this.handleChangeRowsPerPage}
+          />
+        </BlockContent>
+      </Grid>
+      <Grid item xs={12}>
+        <BlockContent bottom>
+          {this.state.Items.map((d: Discipline) =>
+            <RowHeader key={d.Id} onClick={() => this.props.handleClick(d)}>
+              <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
+                <Typography noWrap variant='subtitle1'>
+                  {d.Name}
+                </Typography>
+              </Grid>
+            </RowHeader>
+          )}
+        </BlockContent>
+      </Grid>
     </Grid>
   }
 }

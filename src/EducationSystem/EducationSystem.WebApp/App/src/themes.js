@@ -53,6 +53,24 @@ export const edo = () => createMuiTheme({
   },
 })
 
+export const purpure = () => createMuiTheme({
+  ...base,
+  palette: {
+    primary: {
+      light: '#b48ddf',
+      main: '#835fad',
+      dark: '#54347d',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      light: '#fff7ff',
+      main: '#d1c4e9',
+      dark: '#a094b7',
+      contrastText: '#000000',
+    }
+  },
+})
+
 export const grey = () => createMuiTheme({
   ...base,
   palette: {
