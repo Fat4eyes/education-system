@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest;
@@ -92,6 +91,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())
+                .ForMember(d => d.MaterialId, o => o.MapFrom(d => d.Material.Id))
                 .ForMember(d => d.GivenAnswers, o => o.Ignore());
 
             expression.CreateMap<DatabaseQuestion, DatabaseQuestion>()
