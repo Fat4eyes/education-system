@@ -68,7 +68,7 @@ class MaterialEditor extends Component {
     const contentStateWithEntity = contentState.createEntity(
       'image',
       'IMMUTABLE',
-      {src: `${window.location.origin}/${fileModel.Path}`, 'sdsds': "dsdds"} )
+      {src: `${window.location.origin}/${fileModel.Path}`} )
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
     const newEditorState = EditorState.set(
       this.state.editorState,
