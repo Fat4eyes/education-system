@@ -27,6 +27,9 @@ import FileUpload from '../../stuff/FileUpload'
 import IFileService from '../../../services/abstractions/IFileService'
 import FileModel from '../../../models/FileModel'
 import EventDispatcher, {EventType, IEvent, IEventDispatcher} from '../../../helpers/EventDispatcher'
+import MaterialSelect from '../../Table/MaterialSelect'
+import Material from '../../../models/Material'
+import MaterialHandling from '../Material/MaterialHandling'
 
 interface IProps {
   match: {
@@ -148,6 +151,15 @@ class QuestionHandling extends Component<TProps, IState> {
     Image && Image.Id && !this.state.Model.Id && await this.FileService!.delete(Image.Id, FileType.Image)
   }
 
+  handleMaterialSelect = (material?: Material) => {
+    this.setState(state => ({
+      Model: {
+        ...state.Model,
+        Material: material
+      }
+    }))
+  }
+
   render(): React.ReactNode {
     let {classes} = this.props
 
@@ -198,6 +210,10 @@ class QuestionHandling extends Component<TProps, IState> {
         <Paper className={classes.paper}>
           <Grid item xs={12} container spacing={16}>
             <HandledInputs/>
+            <Grid item xs={12}>
+              <MaterialSelect onSelectMaterial={this.handleMaterialSelect}
+                              selectedMaterial={this.state.Model.Material}/>
+            </Grid>
           </Grid>
           <Grid item xs={12} container spacing={16}>
             <Grid item xs={12}>

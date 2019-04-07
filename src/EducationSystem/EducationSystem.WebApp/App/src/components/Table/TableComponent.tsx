@@ -10,6 +10,9 @@ export default abstract class TableComponent<TItem, TProps, TState extends ITabl
   abstract async getTableData(param: IPagingOptions): Promise<any>
   
   getNameFilter = (value: string): INameFilter => (value.length >= this.minLengthForTrigger ? {Name: value} : {})
+  isNeedToReloadData = (newValue: string, oldValue: string) =>
+    newValue.length >= this.minLengthForTrigger || 
+    (newValue.length < this.minLengthForTrigger && oldValue.length >= this.minLengthForTrigger)
   
   handleChangePage = async (page: number) =>
     this.setState({Page: page, IsLoading: true},

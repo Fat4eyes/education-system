@@ -5,7 +5,11 @@ import {TokenCookieName} from '../constants'
 
 class ProtectedFetch extends Fetch {
   static handleToken(onError) {
-    return Cookies.get(TokenCookieName) || (onError && onError()) || false
+    let token = Cookies.get(TokenCookieName) || (onError && onError()) || false
+    
+    if (!token) return window.location = window.location.origin + '/signin' 
+    
+    return token
   }
 
   static async post(url, data, onError) {

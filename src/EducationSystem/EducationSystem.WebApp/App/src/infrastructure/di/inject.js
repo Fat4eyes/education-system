@@ -6,3 +6,10 @@ export const inject = (target, key, descriptor) => {
   }
   return descriptor
 }
+
+export const injectByName = name => (target, key, descriptor) => {
+  descriptor.initializer = () => {
+    return Container.getContainer().getService(name || key)
+  }
+  return descriptor
+}

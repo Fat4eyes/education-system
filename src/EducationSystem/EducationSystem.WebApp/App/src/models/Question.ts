@@ -3,6 +3,7 @@ import {QuestionComplexityType, QuestionType} from '../common/enums'
 import Answer from './Answer'
 import Program from './Program'
 import ImageFile from './ImageFile'
+import Material from './Material'
 
 export default class Question extends Model {
   public Text: string = ''
@@ -13,6 +14,7 @@ export default class Question extends Model {
   public Answers: Array<Answer> = []
   public Program?: Program
   public Image?: ImageFile
+  public Material?: Material
   
   constructor(themeId?: number){
     super()

@@ -28,6 +28,8 @@ class Fetch {
           return new Exception(e)
         }
       }
+      
+      console.log(Error)
 
       switch (typeof Error) {
         case 'object':

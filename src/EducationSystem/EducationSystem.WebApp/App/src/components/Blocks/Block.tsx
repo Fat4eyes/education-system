@@ -21,7 +21,7 @@ const styles = (theme: Theme) => {
 
 interface IProps extends WithStyles<typeof styles> {
   children?: ReactNode,
-  partial: boolean
+  partial?: boolean
 }
 
 const Block = ({classes, children, partial = false}: IProps) => 

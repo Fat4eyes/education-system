@@ -14,11 +14,12 @@ import IMaterialService from '../../../services/abstractions/IMaterialService'
 import {Exception} from '../../../helpers'
 
 interface IProps {
-  match: {
+  match?: {
     params: {
       id?: number,
     }
-  }
+  },
+  onMaterialSave: (material?: Material) => void
 }
 
 type TProps = WithStyles<typeof MaterialStyles> & InjectedNotistackProps & IProps
@@ -48,12 +49,10 @@ class MaterialHandling extends Component<TProps, IState> {
   }
 
   componentDidMount() {
-    let {id} = this.props.match.params
-
-    if (!id) return
+    if (!this.props.match || !this.props.match.params.id) return
 
     this.setState({IsLoading: true}, async () => {
-      let result = await this.MaterialService!.get(id!)
+      let result = await this.MaterialService!.get(this.props.match!.params.id!)
 
       if (result instanceof Exception) {
         return this.props.enqueueSnackbar(result.message, {
@@ -125,7 +124,7 @@ class MaterialHandling extends Component<TProps, IState> {
     }
 
     if ((result as Material).Id) {
-      this.props.enqueueSnackbar(this.props.match.params.id
+      this.props.enqueueSnackbar(this.props.match && this.props.match.params.id
         ? `Материал успешно обновлен`
         : `Материал успешно добавлен`, {
         variant: 'success',
@@ -134,6 +133,8 @@ class MaterialHandling extends Component<TProps, IState> {
           horizontal: 'right'
         }
       })
+      
+      this.props.onMaterialSave && this.props.onMaterialSave(result)
     }
   }
 
