@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
-using EducationSystem.Implementations.Managers;
-using EducationSystem.Interfaces.Managers;
+using EducationSystem.Implementations.Builders;
+using EducationSystem.Interfaces.Builders;
 using Xunit;
 
 namespace EducationSystem.Tests.Managers
@@ -12,11 +12,11 @@ namespace EducationSystem.Tests.Managers
     {
         protected readonly Random Random = new Random();
 
-        private readonly IManagerQuestionTemplate _managerQuestionTemplate;
+        private readonly IQuestionTemplateBuilder _questionTemplateBuilder;
 
         public TestsManagerQuestionTemplate()
         {
-            _managerQuestionTemplate = new ManagerQuestionTemplate();
+            _questionTemplateBuilder = new QuestionTemplateBuilder();
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace EducationSystem.Tests.Managers
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 7);
             questions = AppendTo(questions, QuestionType.WithProgram, 2);
 
-            var templates = _managerQuestionTemplate.CreateTemplates(TestSize.XS, questions);
+            var templates = _questionTemplateBuilder.Build(TestSize.XS, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.WithProgram));
@@ -44,7 +44,7 @@ namespace EducationSystem.Tests.Managers
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 15);
 
-            var templates = _managerQuestionTemplate.CreateTemplates(TestSize.XS, questions);
+            var templates = _questionTemplateBuilder.Build(TestSize.XS, questions);
 
             Assert.Single(templates);
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
@@ -59,7 +59,7 @@ namespace EducationSystem.Tests.Managers
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 11);
             questions = AppendTo(questions, QuestionType.WithProgram, 2);
 
-            var templates = _managerQuestionTemplate.CreateTemplates(TestSize.XS, questions);
+            var templates = _questionTemplateBuilder.Build(TestSize.XS, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.WithProgram));
@@ -70,21 +70,21 @@ namespace EducationSystem.Tests.Managers
 
             questions = AppendTo(questions, QuestionType.WithProgram, 3);
 
-            templates = _managerQuestionTemplate.CreateTemplates(TestSize.XS, questions);
+            templates = _questionTemplateBuilder.Build(TestSize.XS, questions);
 
             Assert.Equal(05, templates[QuestionType.WithProgram]);
             Assert.Equal(07, templates[QuestionType.ClosedManyAnswers]);
 
             questions = AppendTo(questions, QuestionType.WithProgram, 1);
 
-            templates = _managerQuestionTemplate.CreateTemplates(TestSize.XS, questions);
+            templates = _questionTemplateBuilder.Build(TestSize.XS, questions);
 
             Assert.Equal(06, templates[QuestionType.WithProgram]);
             Assert.Equal(06, templates[QuestionType.ClosedManyAnswers]);
 
             questions = AppendTo(questions, QuestionType.WithProgram, 1);
 
-            templates = _managerQuestionTemplate.CreateTemplates(TestSize.XS, questions);
+            templates = _questionTemplateBuilder.Build(TestSize.XS, questions);
 
             Assert.Equal(02, templates.Count);
             Assert.Equal(06, templates[QuestionType.WithProgram]);
@@ -100,7 +100,7 @@ namespace EducationSystem.Tests.Managers
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, 5);
             questions = AppendTo(questions, QuestionType.WithProgram, 3);
 
-            var templates = _managerQuestionTemplate.CreateTemplates(TestSize.S, questions);
+            var templates = _questionTemplateBuilder.Build(TestSize.S, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.ClosedOneAnswer));
@@ -108,13 +108,13 @@ namespace EducationSystem.Tests.Managers
 
             Assert.Equal(03, templates.Count);
             Assert.Equal(03, templates[QuestionType.WithProgram]);
-            Assert.Equal(12, templates[QuestionType.ClosedManyAnswers]);
+            Assert.Equal(10, templates[QuestionType.ClosedManyAnswers]);
             Assert.Equal(05, templates[QuestionType.ClosedOneAnswer]);
 
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, 10);
             questions = AppendTo(questions, QuestionType.WithProgram, 12);
 
-            templates = _managerQuestionTemplate.CreateTemplates(TestSize.S, questions);
+            templates = _questionTemplateBuilder.Build(TestSize.S, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.ClosedOneAnswer));
@@ -122,12 +122,12 @@ namespace EducationSystem.Tests.Managers
 
             Assert.Equal(03, templates.Count);
             Assert.Equal(06, templates[QuestionType.WithProgram]);
-            Assert.Equal(07, templates[QuestionType.ClosedManyAnswers]);
-            Assert.Equal(07, templates[QuestionType.ClosedOneAnswer]);
+            Assert.Equal(06, templates[QuestionType.ClosedManyAnswers]);
+            Assert.Equal(06, templates[QuestionType.ClosedOneAnswer]);
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, 1);
 
-            templates = _managerQuestionTemplate.CreateTemplates(TestSize.S, questions);
+            templates = _questionTemplateBuilder.Build(TestSize.S, questions);
 
             Assert.True(templates.ContainsKey(QuestionType.ClosedManyAnswers));
             Assert.True(templates.ContainsKey(QuestionType.ClosedOneAnswer));
@@ -135,8 +135,8 @@ namespace EducationSystem.Tests.Managers
 
             Assert.Equal(03, templates.Count);
             Assert.Equal(06, templates[QuestionType.WithProgram]);
-            Assert.Equal(07, templates[QuestionType.ClosedManyAnswers]);
-            Assert.Equal(07, templates[QuestionType.ClosedOneAnswer]);
+            Assert.Equal(06, templates[QuestionType.ClosedManyAnswers]);
+            Assert.Equal(06, templates[QuestionType.ClosedOneAnswer]);
         }
 
         [Theory]
@@ -153,60 +153,54 @@ namespace EducationSystem.Tests.Managers
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(10));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(10));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(10));
-            questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(10));
 
             // Не должно быть исключения.
-            _managerQuestionTemplate.CreateTemplates(testSize, questions);
+            _questionTemplateBuilder.Build(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(20));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(20));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(20));
-            questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(20));
 
             // Не должно быть исключения.
-            _managerQuestionTemplate.CreateTemplates(testSize, questions);
+            _questionTemplateBuilder.Build(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(30));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(30));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(30));
-            questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(30));
 
             // Не должно быть исключения.
-            _managerQuestionTemplate.CreateTemplates(testSize, questions);
+            _questionTemplateBuilder.Build(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(40));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(40));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(40));
-            questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(40));
 
             // Не должно быть исключения.
-            _managerQuestionTemplate.CreateTemplates(testSize, questions);
+            _questionTemplateBuilder.Build(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(50));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(50));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(50));
-            questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(50));
 
             // Не должно быть исключения.
-            _managerQuestionTemplate.CreateTemplates(testSize, questions);
+            _questionTemplateBuilder.Build(testSize, questions);
 
             questions = new List<DatabaseQuestion>();
 
             questions = AppendTo(questions, QuestionType.ClosedManyAnswers, Random.Next(60));
             questions = AppendTo(questions, QuestionType.ClosedOneAnswer, Random.Next(60));
             questions = AppendTo(questions, QuestionType.WithProgram, Random.Next(60));
-            questions = AppendTo(questions, QuestionType.OpenedOneString, Random.Next(60));
 
             // Не должно быть исключения.
-            _managerQuestionTemplate.CreateTemplates(testSize, questions);
+            _questionTemplateBuilder.Build(testSize, questions);
         }
 
         private static List<DatabaseQuestion> AppendTo(List<DatabaseQuestion> questions, QuestionType type, int count)

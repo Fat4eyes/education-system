@@ -6,6 +6,7 @@ using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Interfaces.Builders;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
@@ -23,7 +24,7 @@ namespace EducationSystem.Implementations.Managers
         private readonly IHelperPath _helperPath;
         private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
-        private readonly IManagerQuestionTemplate _managerQuestionTemplate;
+        private readonly IQuestionTemplateBuilder _questionTemplateBuilder;
 
         private readonly IRepositoryAnswer _repositoryAnswer;
         private readonly IRepositoryProgram _repositoryProgram;
@@ -36,7 +37,7 @@ namespace EducationSystem.Implementations.Managers
             IHelperPath helperPath,
             IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
-            IManagerQuestionTemplate managerQuestionTemplate,
+            IQuestionTemplateBuilder questionTemplateBuilder,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
             IRepositoryQuestion repositoryQuestion,
@@ -45,7 +46,7 @@ namespace EducationSystem.Implementations.Managers
         {
             _helperUserRole = helperUserRole;
             _validatorQuestion = validatorQuestion;
-            _managerQuestionTemplate = managerQuestionTemplate;
+            _questionTemplateBuilder = questionTemplateBuilder;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -75,8 +76,8 @@ namespace EducationSystem.Implementations.Managers
                 .MixItems()
                 .ToList();
 
-            var templates = _managerQuestionTemplate
-                .CreateTemplates(testSize, questions)
+            var templates = _questionTemplateBuilder
+                .Build(testSize, questions)
                 .ToList();
 
             Logger.LogInformation(
