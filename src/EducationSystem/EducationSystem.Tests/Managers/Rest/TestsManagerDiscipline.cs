@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
-using EducationSystem.Implementations.Managers.Rest;
-using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Implementations.Managers;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Repositories.Interfaces;

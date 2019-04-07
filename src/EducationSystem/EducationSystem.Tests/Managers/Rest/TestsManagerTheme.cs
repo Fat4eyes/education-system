@@ -1,7 +1,7 @@
 ﻿using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
-using EducationSystem.Implementations.Managers.Rest;
-using EducationSystem.Interfaces.Managers.Rest;
+using EducationSystem.Implementations.Managers;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;

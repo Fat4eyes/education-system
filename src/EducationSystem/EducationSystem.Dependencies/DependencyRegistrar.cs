@@ -1,14 +1,14 @@
 ﻿using EducationSystem.Database;
+using EducationSystem.Implementations.Builders;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
-using EducationSystem.Implementations.Managers.Rest;
 using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
+using EducationSystem.Interfaces.Builders;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
-using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest;
@@ -30,6 +30,7 @@ namespace EducationSystem.Dependencies
             RegisterHelpers(collection);
             RegisterValidators(collection);
             RegisterManagers(collection);
+            RegisterBuilders(collection);
             RegisterRepositories(collection);
         }
 
@@ -39,12 +40,14 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerDocument, ManagerDocument>();
 
             collection.AddTransient<IManagerToken, ManagerToken>();
+
             collection.AddTransient<IManagerRole, ManagerRole>();
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
             collection.AddTransient<IManagerGroup, ManagerGroup>();
             collection.AddTransient<IManagerTheme, ManagerTheme>();
             collection.AddTransient<IManagerStudent, ManagerStudent>();
+            collection.AddTransient<IManagerTestData, ManagerTestData>();
             collection.AddTransient<IManagerQuestion, ManagerQuestion>();
             collection.AddTransient<IManagerMaterial, ManagerMaterial>();
             collection.AddTransient<IManagerInstitute, ManagerInstitute>();
@@ -52,8 +55,7 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerTestResult, ManagerTestResult>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
             collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
-
-            collection.AddTransient<IManagerQuestionTemplate, ManagerQuestionTemplate>();
+            collection.AddTransient<IManagerTestExecution, ManagerTestExecution>();
         }
 
         private static void RegisterHelpers(IServiceCollection collection)
@@ -74,6 +76,11 @@ namespace EducationSystem.Dependencies
 
             collection.AddTransient<IValidator<Image>, ValidatorImage>();
             collection.AddTransient<IValidator<Document>, ValidatorDocument>();
+        }
+
+        private static void RegisterBuilders(IServiceCollection collection)
+        {
+            collection.AddTransient<IQuestionTemplateBuilder, QuestionTemplateBuilder>();
         }
 
         private static void RegisterRepositories(IServiceCollection collection)

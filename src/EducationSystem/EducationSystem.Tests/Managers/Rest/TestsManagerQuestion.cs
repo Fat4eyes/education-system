@@ -3,12 +3,11 @@ using System.Linq;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions;
-using EducationSystem.Implementations.Managers.Rest;
+using EducationSystem.Implementations.Managers;
+using EducationSystem.Interfaces.Builders;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Interfaces.Managers.Rest;
 using EducationSystem.Interfaces.Validators;
-using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
@@ -26,8 +25,8 @@ namespace EducationSystem.Tests.Managers.Rest
         private readonly Mock<IValidator<Question>> _mockHelperQuestion
             = new Mock<IValidator<Question>>();
 
-        private readonly Mock<IManagerQuestionTemplate> _mockHelperQuestionTemplate
-            = new Mock<IManagerQuestionTemplate>();
+        private readonly Mock<IQuestionTemplateBuilder> _mockQuestionTemplateBuilder
+            = new Mock<IQuestionTemplateBuilder>();
 
         private readonly Mock<IRepositoryAnswer> _mockRepositoryAnswer
             = new Mock<IRepositoryAnswer>();
@@ -49,7 +48,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 _mockHelperPath.Object,
                 MockHelperUser.Object,
                 _mockHelperQuestion.Object,
-                _mockHelperQuestionTemplate.Object,
+                _mockQuestionTemplateBuilder.Object,
                 _mockRepositoryAnswer.Object,
                 _mockRepositoryProgram.Object,
                 _mockRepositoryQuestion.Object,
@@ -64,7 +63,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Throws<EducationSystemException>();
 
             Assert.Throws<EducationSystemException>(
-                () => _managerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion()));
+                () => _managerQuestion.GetQuestionsForStudentByTestId(999, 999, TestSize.S));
         }
 
         [Fact]
@@ -73,7 +72,7 @@ namespace EducationSystem.Tests.Managers.Rest
             MockHelperUser.Reset();
 
             _mockRepositoryQuestion
-                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
+                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
                 .Returns(GetQuestions());
 
             var count = GetQuestions().Count;
@@ -83,12 +82,11 @@ namespace EducationSystem.Tests.Managers.Rest
                 { QuestionType.ClosedManyAnswers, count }
             };
 
-            _mockHelperQuestionTemplate
-                .Setup(x => x.CreateTemplates(TestSize.XS, It.IsAny<List<DatabaseQuestion>>()))
+            _mockQuestionTemplateBuilder
+                .Setup(x => x.Build(TestSize.XS, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(templates);
 
-            var questions = _managerQuestion.GetQuestionsForStudentByTestId(
-                999, 999, new FilterQuestion { TestSize = TestSize.XS });
+            var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, TestSize.XS);
 
             Assert.Equal(count, questions.Count);
 
@@ -101,14 +99,14 @@ namespace EducationSystem.Tests.Managers.Rest
             MockHelperUser.Reset();
 
             _mockRepositoryQuestion
-                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999, It.IsAny<FilterQuestion>()))
+                .Setup(x => x.GetQuestionsForStudentByTestId(999, 999))
                 .Returns(new List<DatabaseQuestion>());
 
-            _mockHelperQuestionTemplate
-                .Setup(x => x.CreateTemplates(TestSize.S, It.IsAny<List<DatabaseQuestion>>()))
+            _mockQuestionTemplateBuilder
+                .Setup(x => x.Build(TestSize.S, It.IsAny<List<DatabaseQuestion>>()))
                 .Returns(new Dictionary<QuestionType, int>());
 
-            var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, new FilterQuestion());
+            var questions = _managerQuestion.GetQuestionsForStudentByTestId(999, 999, TestSize.S);
 
             Assert.Empty(questions);
         }
