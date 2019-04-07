@@ -38,7 +38,7 @@ const {Provider, Consumer} = createContext(NullNotifier)
 class NotificationProvider extends Component<InjectedNotistackProps & {notifier?: INotifierProps}> {
   private _baseNotifier: INotifierProps = {
     notify: (event: IEvent): void => {
-      this.props.enqueueSnackbar({
+      this.props.enqueueSnackbar(event.message, {
         variant: EventType[event.type] as VariantType,
         anchorOrigin: {
           vertical: 'bottom',
