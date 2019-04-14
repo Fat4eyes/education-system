@@ -7,7 +7,7 @@ import INameFilter from '../../models/Filters'
 export default abstract class TableComponent<TItem, TProps, TState extends ITableState<TItem>> extends Component<TProps, TState> {
   protected minLengthForTrigger: number = 3
   
-  abstract async getTableData(param: IPagingOptions): Promise<any>
+  abstract async getTableData(param?: IPagingOptions): Promise<any>
   
   getNameFilter = (value: string): INameFilter => (value.length >= this.minLengthForTrigger ? {Name: value} : {})
   isNeedToReloadData = (newValue: string, oldValue: string) =>

@@ -49,3 +49,8 @@ export const materialRoutes = {
   get: (id: number) => `/api/materials/${id}`,
   getAll: () => `/api/materials`
 }
+
+export const studentRoutes = {
+  getDisciplines: () => '/api/students/current/disciplines',
+  getTestData: (testId: number) => `/api/students/current/tests/${testId}/data`
+}

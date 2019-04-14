@@ -46,7 +46,6 @@ class Layout extends PureComponent {
 
   render() {
     let {classes, auth: {checkAuth, User, signOut}} = this.props
-
     const isAuthenticated = checkAuth()
     let isXs = isWidthDown('xs', this.props.width)
 
@@ -88,6 +87,9 @@ class Layout extends PureComponent {
                       closeOnClick={closeOnClick}/>
         <LeftMenuItem component={SimpleLink} to='/materials' Icon={PlaylistAddIcon} tooltip='Темы'
                       closeOnClick={closeOnClick}/>
+      </If>
+      <If condition={checkAuth('Student')}>
+        <LeftMenuItem component={SimpleLink} to='/user/tests' Icon={QuestionIcon} tooltip='Тесты' closeOnClick={closeOnClick}/>
       </If>
     </List>
 

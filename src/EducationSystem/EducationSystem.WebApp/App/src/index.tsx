@@ -17,6 +17,7 @@ import QuestionService from './services/implementations/QuestionService'
 import FileService from './services/implementations/FileService'
 import MaterialService from './services/implementations/MaterialService'
 import NotificationProvider from './providers/NotificationProvider'
+import StudentService from './services/implementations/StudentService'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -33,6 +34,7 @@ Container.getContainer()
   .transient(QuestionService, 'QuestionService')
   .transient(FileService, 'FileService')
   .transient(MaterialService, 'MaterialService')
+  .transient(StudentService, 'StudentService')
   .setUp()
 
 let themes = [purpure(), blue(), edo(), grey()]

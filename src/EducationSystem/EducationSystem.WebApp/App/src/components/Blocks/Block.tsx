@@ -28,13 +28,14 @@ const styles = (theme: Theme) => {
 
 interface IProps extends WithStyles<typeof styles> {
   children?: ReactNode,
-  partial?: boolean
+  partial?: boolean,
+  empty?: boolean
 }
 
-const Block = ({classes, children, partial = false}: IProps) => 
+const Block = ({classes, children, partial = false, empty = false}: IProps) => 
   <div className={classNames(classes.root, {
-    [classes.full]: !partial,
-    [classes.partial]: partial
+    [classes.full]: !partial && !empty,
+    [classes.partial]: partial && !empty
   })}>
     {children}
   </div>

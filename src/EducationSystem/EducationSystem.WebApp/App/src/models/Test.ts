@@ -2,6 +2,7 @@ import Model from './Model'
 import {TestType} from '../common/enums'
 import Theme from './Theme'
 import Discipline from './Discipline'
+import TestData from './TestData'
 
 export default class Test extends Model {
   public Subject: string = ''
@@ -12,6 +13,7 @@ export default class Test extends Model {
   public DisciplineId?: number
   public Discipline?: Discipline
   public Themes: Array<Theme> = []
+  public TestData?: TestData
   
   constructor(disciplineId?: number) {
     super()

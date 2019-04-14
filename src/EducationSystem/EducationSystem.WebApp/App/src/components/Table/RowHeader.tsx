@@ -27,7 +27,7 @@ interface IRowProps extends WithStyles<typeof styles> {
 
 
 const RowHeader = ({classes, children, selected = false, ...rest}: IRowProps) =>
-  <Grid container className={classNames(classes.root, {
+  <Grid container zeroMinWidth wrap='nowrap' className={classNames(classes.root, {
     [classes.selected]: selected
   })} {...rest}>
     {children}
