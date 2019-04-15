@@ -19,6 +19,13 @@ namespace EducationSystem.WebApp.Source.Helpers
         public static void ConfigureMapper(IMapperConfigurationExpression expression)
             => MappingConfigurator.Configure(expression);
 
+        public static string GetConfigurationFileName(IHostingEnvironment environment)
+        {
+            return environment.IsProduction()
+                ? "app-production.json"
+                : "app.json";
+        }
+
         public static StaticFileOptions GetStaticFileOptions(IHostingEnvironment environment)
         {
             return new StaticFileOptions

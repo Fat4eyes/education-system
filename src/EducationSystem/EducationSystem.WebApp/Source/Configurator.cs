@@ -5,7 +5,6 @@ using EducationSystem.WebApp.Source.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +21,7 @@ namespace EducationSystem.WebApp.Source
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
-                .AddJsonFile("app.json")
+                .AddJsonFile(ConfigurationHelper.GetConfigurationFileName(environment))
                 .Build();
         }
 
