@@ -24,9 +24,11 @@ interface IState {
 
 const {Provider, Consumer} = createContext(NullSpinner)
 
+export const SpinnerConsumer = Consumer
+
 const styles = (theme: Theme) => createStyles({
   root: {
-    backgroundColor: `rgba(255, 254, 254, 0.5)`,
+    backgroundColor: `rgba(255, 254, 254, 0.8)`,
     position: 'fixed',
     top: 58,
     left: 0,

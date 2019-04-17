@@ -28,7 +28,6 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Zoom from '@material-ui/core/Zoom'
 import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 import * as Handlers from '../../helpers/Handlers'
-import SpinnerProvider from '../../providers/SpinnerProvider'
 import Scrollbar from '../stuff/Scrollbar'
 
 @withWidth()
@@ -155,11 +154,9 @@ class Layout extends PureComponent {
         </Drawer>
       </If>
       <Scrollbar className={classes.scrollbar}>
-        <SpinnerProvider>
-          <main className={classes.content}>
-            <Routes/>
-          </main>
-        </SpinnerProvider>
+        <main className={classes.content}>
+          <Routes/>
+        </main>
       </Scrollbar>
     </div>
   }

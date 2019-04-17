@@ -18,6 +18,8 @@ import FileService from './services/implementations/FileService'
 import MaterialService from './services/implementations/MaterialService'
 import NotificationProvider from './providers/NotificationProvider'
 import StudentService from './services/implementations/StudentService'
+import SpinnerProvider, {SpinnerConsumer} from './providers/SpinnerProvider'
+import Fetch from './helpers/Fetch'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -44,11 +46,16 @@ const App = () => <Try>
     <MuiThemeProvider theme={themes[Math.floor(Math.random() * themes.length)]}>
       <SnackbarProvider maxSnack={3}>
         <NotificationProvider>
-          <AuthProvider>
-            <Suspense fallback={<Loading/>}>
-              <Layout/>
-            </Suspense>
-          </AuthProvider>
+          <SpinnerProvider>
+            <SpinnerConsumer>
+              {spinner => Fetch.instance(spinner) && <></>}
+            </SpinnerConsumer>
+            <AuthProvider>
+              <Suspense fallback={<Loading/>}>
+                <Layout/>
+              </Suspense>
+            </AuthProvider>
+          </SpinnerProvider>
         </NotificationProvider>
       </SnackbarProvider>
     </MuiThemeProvider>

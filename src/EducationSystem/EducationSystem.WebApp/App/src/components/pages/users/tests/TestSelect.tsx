@@ -14,11 +14,10 @@ import Block from '../../../Blocks/Block'
 import Test from '../../../../models/Test'
 import TestData from '../../../../models/TestData'
 import {TablePagination} from '../../../core'
-import {TSpinnerProps, withSpinner} from '../../../../providers/SpinnerProvider'
 
 interface IProps {}
 
-type TProps = WithStyles<typeof TestSelectStyles> & TNotifierProps & IProps & TSpinnerProps
+type TProps = WithStyles<typeof TestSelectStyles> & TNotifierProps & IProps
 
 interface ITestsDetail {
   IsOpen: boolean
@@ -48,7 +47,6 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
   }
 
   getTableData = async (param?: IPagingOptions) => {
-    this.props.spinner.enable()
     let result = await this.StudentService!.getDisciplines({
       Skip: 0,
       Take: this.state.CountPerPage,
@@ -58,10 +56,8 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
     if (result instanceof Exception)
       return this.props.notifier.error(result.message)
 
-    //let map = new Map()
-
     //TODO богоичная логика, сори, просто бэк не может
-
+    //let map = new Map()
     // result.Items.forEach((discipline: Discipline) =>
     //   discipline.Tests.forEach(async ({Id}: Test) => {
     //     let result = await this.StudentService!.getTestData(Id!)
@@ -75,17 +71,15 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
     //     })
     //   })
     // )
-    
+
     if (result as IPagedData<Discipline>) {
       this.setState({
         Count: result.Count,
         Items: result.Items,
         IsLoading: false
-      }, this.props.spinner.disable)
+      })
     } else {
-      this.setState({
-        IsLoading: false
-      }, this.props.spinner.disable)
+      this.setState({IsLoading: false})
     }
   }
 
@@ -97,7 +91,6 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
     }))
 
   handleTestDetails = (test: Test) => async () => {
-    console.log(test)
     let data = this.state.TestsDetails.get(test.Id!)
 
     let map = new Map(this.state.TestsDetails)
@@ -120,23 +113,21 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
       })
     }
 
-    this.setState({
-      TestsDetails: map
-    })
+    this.setState({TestsDetails: map})
   }
 
   render(): React.ReactNode {
     let {classes} = this.props
-    
+
     return <Grid container justify='center'>
       <Grid item xs={12} md={10} lg={8}>
         <Block partial>
           {
             !!this.state.Items.length || <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
-            <Typography align='center' noWrap color='inherit'>
-              Не найдено
-            </Typography>
-          </Grid>
+              <Typography align='center' noWrap color='inherit'>
+                Не найдено
+              </Typography>
+            </Grid>
           }
           {
             this.state.Items.map((discipline: Discipline, index: number) =>
@@ -160,7 +151,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
                     <Grid container className={classes.mainBodyBlock} spacing={16}>
                       {
                         discipline.Tests.map((test: Test) =>
-                          <Grid item xs={12} md={6} lg={4} key={test.Id!} 
+                          <Grid item xs={12} md={6} lg={4} key={test.Id!}
                                 className={classes.clikableBlock}
                                 onClick={this.handleTestDetails(test)}
                           >
@@ -222,9 +213,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
   }
 }
 
-export default withSpinner(
-  withStyles(TestSelectStyles)(
-    withNotifier(
-      TestSelect)
-  )
+export default withStyles(TestSelectStyles)(
+  withNotifier(
+    TestSelect)
 ) as any

@@ -1,14 +1,31 @@
 import Exception from './Exception'
 
 class Fetch {
+  static _fetch = null
+
+  constructor(spinnerProvider) {
+    Fetch._fetch = this
+    this._spinnerProvider = spinnerProvider
+  }
+  
+  static instance(spinnerProvider) {
+    return Fetch._fetch || new Fetch(spinnerProvider)
+  }
+
   static async handleFetch(url, options, onError) {
+    const {_spinnerProvider} = Fetch.instance()
+    
     try {
+      if (_spinnerProvider) _spinnerProvider.enable()
+
       let response = await fetch(url, options)
 
       if (!response.ok)
         throw response
 
       const {Success, Data, Error} = await response.json()
+
+      if (_spinnerProvider) _spinnerProvider.disable()
 
       if (Success === true)
         return Data
@@ -21,15 +38,17 @@ class Fetch {
         if (e[e.length - 1] === '.') {
           e = e.slice(0, -1)
         }
-        
+
         if (onError) {
           onError(e)
         } else {
           return new Exception(e)
         }
       }
-      
+
       console.log(Error)
+
+      if (_spinnerProvider) _spinnerProvider.disable()
 
       switch (typeof Error) {
         case 'object':
