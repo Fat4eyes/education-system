@@ -2,6 +2,7 @@ import {createStyles, Theme} from '@material-ui/core'
 
 export const TestSelectStyles = (theme: Theme) => createStyles({
   header: {
+    cursor: 'pointer',
     backgroundColor: theme.palette.primary.main,
     padding: `${theme.spacing.unit}px 0 !important`,
     color: theme.palette.primary.contrastText
@@ -15,8 +16,7 @@ export const TestSelectStyles = (theme: Theme) => createStyles({
   mainBodyBlock: {
     padding: `0 ${theme.spacing.unit * 3}px !important`
   },
-  bodyBlock: {
-    padding: theme.spacing.unit * 2,
+  clikableBlock: {
     cursor: 'pointer',
     '-webkit-touch-callout': 'none',
     '-webkit-user-select': 'none',
@@ -24,5 +24,8 @@ export const TestSelectStyles = (theme: Theme) => createStyles({
     '-moz-user-select': 'none',
     '-ms-user-select': 'none',
     'user-select': 'none'
+  },
+  bodyBlock: {
+    padding: theme.spacing.unit * 2,
   }
 })

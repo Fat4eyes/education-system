@@ -30,12 +30,14 @@ const styles = theme => {
     content: {
       padding: contentBasePadding * 2,
       paddingLeft: contentBasePadding + drawerWidth + 10,
-      minHeight: `calc(100vh - ${contentBasePadding * 2 + toolbar.minHeight  + 10}px)`,
-      backgroundColor: theme.palette.grey['50'],
       [theme.breakpoints.down('xs')]: {
         padding: contentBasePadding,
         paddingLeft: contentBasePadding
       },
+    },
+    scrollbar: {
+      backgroundColor: theme.palette.grey['50'],
+      minHeight: `calc(100vh - ${toolbar.minHeight  + 10}px)`,
     },
     leftMenu: {
       display: 'none',

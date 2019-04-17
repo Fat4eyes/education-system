@@ -45,9 +45,7 @@ const App = () => <Try>
       <SnackbarProvider maxSnack={3}>
         <NotificationProvider>
           <AuthProvider>
-            <Suspense fallback={
-              <Loading/>
-            }>
+            <Suspense fallback={<Loading/>}>
               <Layout/>
             </Suspense>
           </AuthProvider>

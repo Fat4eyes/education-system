@@ -28,6 +28,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Zoom from '@material-ui/core/Zoom'
 import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
 import * as Handlers from '../../helpers/Handlers'
+import SpinnerProvider from '../../providers/SpinnerProvider'
+import Scrollbar from '../stuff/Scrollbar'
 
 @withWidth()
 @withStyles(styles)
@@ -89,7 +91,8 @@ class Layout extends PureComponent {
                       closeOnClick={closeOnClick}/>
       </If>
       <If condition={checkAuth('Student')}>
-        <LeftMenuItem component={SimpleLink} to='/user/tests' Icon={QuestionIcon} tooltip='Тесты' closeOnClick={closeOnClick}/>
+        <LeftMenuItem component={SimpleLink} to='/user/tests' Icon={QuestionIcon} tooltip='Тесты'
+                      closeOnClick={closeOnClick}/>
       </If>
     </List>
 
@@ -151,9 +154,13 @@ class Layout extends PureComponent {
           <LeftMenu closeOnClick/>
         </Drawer>
       </If>
-      <main className={classes.content}>
-        <Routes/>
-      </main>
+      <Scrollbar className={classes.scrollbar}>
+        <SpinnerProvider>
+          <main className={classes.content}>
+            <Routes/>
+          </main>
+        </SpinnerProvider>
+      </Scrollbar>
     </div>
   }
 }

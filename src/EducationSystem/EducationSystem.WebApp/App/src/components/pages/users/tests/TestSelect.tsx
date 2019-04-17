@@ -14,10 +14,11 @@ import Block from '../../../Blocks/Block'
 import Test from '../../../../models/Test'
 import TestData from '../../../../models/TestData'
 import {TablePagination} from '../../../core'
+import {TSpinnerProps, withSpinner} from '../../../../providers/SpinnerProvider'
 
 interface IProps {}
 
-type TProps = WithStyles<typeof TestSelectStyles> & TNotifierProps & IProps
+type TProps = WithStyles<typeof TestSelectStyles> & TNotifierProps & IProps & TSpinnerProps
 
 interface ITestsDetail {
   IsOpen: boolean
@@ -47,6 +48,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
   }
 
   getTableData = async (param?: IPagingOptions) => {
+    this.props.spinner.enable()
     let result = await this.StudentService!.getDisciplines({
       Skip: 0,
       Take: this.state.CountPerPage,
@@ -56,28 +58,35 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
     if (result instanceof Exception)
       return this.props.notifier.error(result.message)
 
-    let map = new Map()
+    //let map = new Map()
 
-    result.Items.forEach((discipline: Discipline) =>
-      discipline.Tests.forEach(async ({Id}: Test) => {
-        let result = await this.StudentService!.getTestData(Id!)
+    //TODO богоичная логика, сори, просто бэк не может
 
-        if (result instanceof Exception)
-          return this.props.notifier.error(result.message)
-
-        map.set(Id!, {
-          IsOpen: true,
-          Data: result as TestData
-        })
-      })
-    )
+    // result.Items.forEach((discipline: Discipline) =>
+    //   discipline.Tests.forEach(async ({Id}: Test) => {
+    //     let result = await this.StudentService!.getTestData(Id!)
+    //
+    //     if (result instanceof Exception)
+    //       return this.props.notifier.error(result.message)
+    //
+    //     map.set(Id!, {
+    //       IsOpen: true,
+    //       Data: result as TestData
+    //     })
+    //   })
+    // )
     
-    this.setState({
-      Count: (result as IPagedData<Discipline>).Count,
-      Items: (result as IPagedData<Discipline>).Items,
-      IsLoading: false,
-      TestsDetails: map
-    })
+    if (result as IPagedData<Discipline>) {
+      this.setState({
+        Count: result.Count,
+        Items: result.Items,
+        IsLoading: false
+      }, this.props.spinner.disable)
+    } else {
+      this.setState({
+        IsLoading: false
+      }, this.props.spinner.disable)
+    }
   }
 
   handleOpen = (id: number) => () =>
@@ -88,6 +97,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
     }))
 
   handleTestDetails = (test: Test) => async () => {
+    console.log(test)
     let data = this.state.TestsDetails.get(test.Id!)
 
     let map = new Map(this.state.TestsDetails)
@@ -117,11 +127,17 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
 
   render(): React.ReactNode {
     let {classes} = this.props
-
-
+    
     return <Grid container justify='center'>
       <Grid item xs={12} md={10} lg={8}>
         <Block partial>
+          {
+            !!this.state.Items.length || <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
+            <Typography align='center' noWrap color='inherit'>
+              Не найдено
+            </Typography>
+          </Grid>
+          }
           {
             this.state.Items.map((discipline: Discipline, index: number) =>
               <Fragment key={discipline.Id || index}>
@@ -144,31 +160,32 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
                     <Grid container className={classes.mainBodyBlock} spacing={16}>
                       {
                         discipline.Tests.map((test: Test) =>
-                          <Grid item xs={4} key={test.Id!}>
+                          <Grid item xs={12} md={6} lg={4} key={test.Id!} 
+                                className={classes.clikableBlock}
+                                onClick={this.handleTestDetails(test)}
+                          >
                             <Block partial>
                               <Grid container className={classes.bodyBlock}>
-                                <Grid item xs={12} container zeroMinWidth wrap='nowrap'>
-                                  <Typography align='center' noWrap color='inherit'>
-                                    <b>{test.Subject}</b>
-                                  </Typography>
-                                </Grid>
-                                {(() => {
-                                    let data = this.state.TestsDetails.get(test.Id!)
-                                    return data && data.IsOpen && <>
-                                      <Grid item xs={12} className={classes.mt2Unit}/>
-                                      <Grid item xs={12} container zeroMinWidth wrap='nowrap'>
-                                        <Typography align='center' noWrap color='inherit'>
-                                          Количество вопросов: {data.Data.QuestionsCount}
+                                {((data?: ITestsDetail) =>
+                                    data && data.IsOpen
+                                      ? <>
+                                        <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
+                                          <Typography align='center' color='inherit'>
+                                            Количество вопросов: {data.Data.QuestionsCount}
+                                          </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
+                                          <Typography align='center' color='inherit'>
+                                            Количество тем: {data.Data.ThemesCount}
+                                          </Typography>
+                                        </Grid>
+                                      </>
+                                      : <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
+                                        <Typography align='center' color='inherit'>
+                                          <b>{test.Subject}</b>
                                         </Typography>
                                       </Grid>
-                                      <Grid item xs={12} container zeroMinWidth wrap='nowrap'>
-                                        <Typography align='center' noWrap color='inherit'>
-                                          Количество тем: {data.Data.ThemesCount}
-                                        </Typography>
-                                      </Grid>
-                                    </>
-                                  }
-                                )()}
+                                )(this.state.TestsDetails.get(test.Id!))}
                               </Grid>
                             </Block>
                           </Grid>
@@ -205,4 +222,9 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
   }
 }
 
-export default withStyles(TestSelectStyles)(withNotifier(TestSelect)) as any
+export default withSpinner(
+  withStyles(TestSelectStyles)(
+    withNotifier(
+      TestSelect)
+  )
+) as any
