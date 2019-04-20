@@ -1,7 +1,7 @@
 language: csharp
 solution: src/EducationSystem/EducationSystem.sln
 mono: none
-dotnet: 2.2.102
+dotnet: 2.1.504
 script:
  - cd src/EducationSystem
  - dotnet restore
