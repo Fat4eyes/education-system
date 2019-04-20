@@ -20,7 +20,7 @@
 [Options]          [C] GET Students/Current/Tests/{Id}      Test
 [Options] [Filter] [C] GET Students/Current/Disciplines     List<Discipline>        (PagedData)
 
-                   [C] GET Students/Current/Tests//Data                     List<TestData>
+                   [C] GET Students/Current/Tests/Data                      List<TestData>
                    [C] GET Students/Current/Tests/{TestId}/Data             TestData
                    [C] GET Students/Current/Tests/{TestId}/Questions        List<Question>
 
