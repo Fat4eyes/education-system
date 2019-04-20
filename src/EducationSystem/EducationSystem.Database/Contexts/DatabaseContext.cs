@@ -23,6 +23,7 @@ namespace EducationSystem.Database.Contexts
         public DbSet<DatabaseExtraAttempt> ExtraAttempts { get; set; }
         public DbSet<DatabaseProgramData> ParametersSets { get; set; }
         public DbSet<DatabaseMaterialFile> MaterialFiles { get; set; }
+        public DbSet<DatabaseQuestionStudent> QuestionStudents { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {
@@ -168,6 +169,12 @@ namespace EducationSystem.Database.Contexts
                 .HasOne(x => x.Program)
                 .WithOne(x => x.Question)
                 .HasForeignKey<DatabaseProgram>(x => x.QuestionId);
+
+            builder
+                .Entity<DatabaseQuestion>()
+                .HasMany(x => x.QuestionStudents)
+                .WithOne(x => x.Question)
+                .HasForeignKey(x => x.QuestionId);
         }
 
         private static void BuildTheme(ModelBuilder builder)

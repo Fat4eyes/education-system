@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EducationSystem.Constants;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
@@ -48,8 +49,10 @@ namespace EducationSystem.Repositories.Implementations
                     .Any(b => b.Groups
                     .Any(c => c.GroupStudents
                     .Any(d => d.StudentId == studentId)))))
+                .Where(x => x.QuestionStudents.Any(y => y.StudentId == studentId && y.Passed) == false)
                 .OrderBy(x => x.Theme.Order)
                 .ThenBy(x => x.Order)
+                .Take(TestParamaters.QuestionsCountForStudent)
                 .ToList();
         }
     }
