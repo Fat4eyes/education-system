@@ -21,7 +21,7 @@
 [Options] [Filter] [C] GET Students/Current/Disciplines     List<Discipline>        (PagedData)
 
                    [C] GET Students/Current/Tests/{TestId}/Data             TestData
-                   [C] GET Students/Current/Tests/{TestId}/Execution        TestExecution
+                   [C] GET Students/Current/Tests/{TestId}/Questions        List<Question>
 
 [Options] [Filter] [A] GET Users                            List<User>              (PagedData)
 [Options]          [A] GET Users/{Id}                       User

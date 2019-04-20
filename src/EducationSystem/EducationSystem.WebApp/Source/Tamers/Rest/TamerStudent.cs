@@ -13,37 +13,36 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         private readonly IManagerTest _managerTest;
         private readonly IManagerGroup _managerGroup;
         private readonly IManagerStudent _managerStudent;
+        private readonly IManagerQuestion _managerQuestion;
         private readonly IManagerTestData _managerTestData;
         private readonly IManagerStudyPlan _managerStudyPlan;
         private readonly IManagerInstitute _managerInstitute;
         private readonly IManagerTestResult _managerTestResult;
         private readonly IManagerDiscipline _managerDiscipline;
         private readonly IManagerStudyProfile _managerStudyProfile;
-        private readonly IManagerTestExecution _managerTestExecution;
 
         public TamerStudent(
             IManagerTest managerTest,
             IManagerGroup managerGroup,
             IManagerStudent managerStudent,
-            IManagerTestData managerTestData,
             IManagerQuestion managerQuestion,
+            IManagerTestData managerTestData,
             IManagerStudyPlan managerStudyPlan,
             IManagerInstitute managerInstitute,
             IManagerTestResult managerTestResult,
             IManagerDiscipline managerDiscipline,
-            IManagerStudyProfile managerStudyProfile,
-            IManagerTestExecution managerTestExecution)
+            IManagerStudyProfile managerStudyProfile)
         {
             _managerTest = managerTest;
             _managerGroup = managerGroup;
             _managerStudent = managerStudent;
+            _managerQuestion = managerQuestion;
             _managerTestData = managerTestData;
             _managerStudyPlan = managerStudyPlan;
             _managerInstitute = managerInstitute;
             _managerTestResult = managerTestResult;
             _managerDiscipline = managerDiscipline;
             _managerStudyProfile = managerStudyProfile;
-            _managerTestExecution = managerTestExecution;
         }
 
         [HttpGet("")]
@@ -140,10 +139,10 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public IActionResult GetStudentTestData([FromRoute] int testId)
             => Ok(_managerTestData.GetTestDataForStudentByTestId(testId, GetUserId()));
 
-        [HttpGet("Current/Tests/{testId:int}/Execution")]
+        [HttpGet("Current/Tests/{testId:int}/Questions")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentTestExecution([FromRoute] int testId)
-            => Ok(_managerTestExecution.GetStudentTestExecution(testId, GetUserId()));
+        public IActionResult GetStudentTestQuestions([FromRoute] int testId)
+            => Ok(_managerQuestion.GetQuestionsForStudentByTestId(testId, GetUserId()));
 
         [HttpGet("Current/Disciplines")]
         [Roles(UserRoles.Student)]

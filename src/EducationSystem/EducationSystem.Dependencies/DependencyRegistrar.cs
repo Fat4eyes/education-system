@@ -52,7 +52,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerTestResult, ManagerTestResult>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
             collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
-            collection.AddTransient<IManagerTestExecution, ManagerTestExecution>();
         }
 
         private static void RegisterHelpers(IServiceCollection collection)
