@@ -9,6 +9,8 @@ namespace EducationSystem.Models.Rest
 
         public int DisciplineId { get; set; }
 
+        public int? Order { get; set; }
+
         public List<Question> Questions { get; set; }
     }
 }

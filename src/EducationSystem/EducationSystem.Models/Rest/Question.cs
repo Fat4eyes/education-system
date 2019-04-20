@@ -19,6 +19,8 @@ namespace EducationSystem.Models.Rest
 
         public int? ThemeId { get; set; }
 
+        public int? Order { get; set; }
+
         public Program Program { get; set; }
 
         public int? MaterialId { get; set; }

@@ -13,6 +13,9 @@ namespace EducationSystem.Database.Models
         [Column("discipline_id")]
         public virtual int DisciplineId { get; set; }
 
+        [Column("order")]
+        public virtual int? Order { get; set; }
+
         [ForeignKey(nameof(DisciplineId))]
         public virtual DatabaseDiscipline Discipline { get; set; }
 

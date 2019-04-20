@@ -23,6 +23,9 @@ namespace EducationSystem.Database.Models
         [Column("image_id")]
         public virtual int? ImageId { get; set; }
 
+        [Column("order")]
+        public virtual int? Order { get; set; }
+
         [ForeignKey(nameof(ImageId))]
         public virtual DatabaseFile Image { get; set; }
 
