@@ -124,7 +124,7 @@ namespace EducationSystem.Implementations.Managers
                     $"Дисциплина не найдена.");
 
             if (discipline.Themes.Count != themes.Count)
-                throw ExceptionHelper.CreatePublicException("Указаны не все темы по дисциплине.");
+                throw ExceptionHelper.CreatePublicException("Количество указанных тем не совпадает с количеством тем по дисциплине.");
 
             if (discipline.Themes.All(x => themes.Select(y => y.Id).Contains(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("У одной или нескольких тем указанная дисциплина не совпадает.");
