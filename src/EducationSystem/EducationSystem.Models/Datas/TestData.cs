@@ -1,15 +1,15 @@
-﻿namespace EducationSystem.Models.Datas
+﻿using EducationSystem.Models.Rest;
+
+namespace EducationSystem.Models.Datas
 {
     public class TestData
     {
+        public Test Test { get; set; }
+
         public int ThemesCount { get; set; }
 
         public int QuestionsCount { get; set; }
 
-        public TestData(int themesCount, int questionsCount)
-        {
-            ThemesCount = themesCount;
-            QuestionsCount = questionsCount;
-        }
+        public int PassedQuestionsCount { get; set; }
     }
 }

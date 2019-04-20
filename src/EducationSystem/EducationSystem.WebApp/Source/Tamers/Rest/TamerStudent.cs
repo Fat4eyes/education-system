@@ -139,6 +139,11 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public IActionResult GetStudentTestData([FromRoute] int testId)
             => Ok(_managerTestData.GetTestDataForStudentByTestId(testId, GetUserId()));
 
+        [HttpGet("Current/Tests/Data")]
+        [Roles(UserRoles.Student)]
+        public IActionResult GetStudentTestsData([FromQuery] int[] testIds)
+            => Ok(_managerTestData.GetTestsDataForStudentByTestIds(testIds, GetUserId()));
+
         [HttpGet("Current/Tests/{testId:int}/Questions")]
         [Roles(UserRoles.Student)]
         public IActionResult GetStudentTestQuestions([FromRoute] int testId)
