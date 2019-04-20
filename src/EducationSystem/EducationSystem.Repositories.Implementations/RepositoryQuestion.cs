@@ -33,7 +33,8 @@ namespace EducationSystem.Repositories.Implementations
             {
                 QuestionType.ClosedOneAnswer,
                 QuestionType.ClosedManyAnswers,
-                QuestionType.WithProgram
+                QuestionType.WithProgram,
+                QuestionType.OpenedOneString
             };
 
             return AsQueryable()
@@ -47,6 +48,8 @@ namespace EducationSystem.Repositories.Implementations
                     .Any(b => b.Groups
                     .Any(c => c.GroupStudents
                     .Any(d => d.StudentId == studentId)))))
+                .OrderBy(x => x.Theme.Order)
+                .ThenBy(x => x.Order)
                 .ToList();
         }
     }

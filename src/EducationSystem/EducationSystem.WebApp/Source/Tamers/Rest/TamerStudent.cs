@@ -142,10 +142,8 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("Current/Tests/{testId:int}/Execution")]
         [Roles(UserRoles.Student)]
-        public IActionResult GetStudentTestExecution(
-            [FromRoute] int testId,
-            [FromQuery] OptionsTestExecution options)
-            => Ok(_managerTestExecution.GetStudentTestExecution(testId, GetUserId(), options));
+        public IActionResult GetStudentTestExecution([FromRoute] int testId)
+            => Ok(_managerTestExecution.GetStudentTestExecution(testId, GetUserId()));
 
         [HttpGet("Current/Disciplines")]
         [Roles(UserRoles.Student)]

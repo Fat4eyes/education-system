@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using EducationSystem.Enums;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
@@ -13,7 +12,7 @@ namespace EducationSystem.Interfaces.Managers
         PagedData<Question> GetQuestions(OptionsQuestion options, FilterQuestion filter);
         PagedData<Question> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter);
 
-        List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, TestSize testSize);
+        List<Question> GetQuestionsForStudentByTestId(int testId, int studentId);
 
         Question GetQuestionById(int id, OptionsQuestion options);
 

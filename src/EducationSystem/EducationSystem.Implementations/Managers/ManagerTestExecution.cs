@@ -1,7 +1,6 @@
 ﻿using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models;
-using EducationSystem.Models.Options;
 
 namespace EducationSystem.Implementations.Managers
 {
@@ -22,13 +21,13 @@ namespace EducationSystem.Implementations.Managers
             _helperUserRole = helperUserRole;
         }
 
-        public TestExecution GetStudentTestExecution(int testId, int studentId, OptionsTestExecution options)
+        public TestExecution GetStudentTestExecution(int testId, int studentId)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
             var testData = _managerTestData.GetTestDataForStudentByTestId(testId, studentId);
 
-            var questions = _managerQuestion.GetQuestionsForStudentByTestId(testId, studentId, options.TestSize);
+            var questions = _managerQuestion.GetQuestionsForStudentByTestId(testId, studentId);
 
             return new TestExecution(testData, questions);
         }

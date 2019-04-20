@@ -5,8 +5,6 @@ using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Extensions;
-using EducationSystem.Interfaces.Builders;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
@@ -24,7 +22,6 @@ namespace EducationSystem.Implementations.Managers
         private readonly IHelperPath _helperPath;
         private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
-        private readonly IQuestionTemplateBuilder _questionTemplateBuilder;
 
         private readonly IRepositoryAnswer _repositoryAnswer;
         private readonly IRepositoryProgram _repositoryProgram;
@@ -37,7 +34,6 @@ namespace EducationSystem.Implementations.Managers
             IHelperPath helperPath,
             IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
-            IQuestionTemplateBuilder questionTemplateBuilder,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
             IRepositoryQuestion repositoryQuestion,
@@ -46,7 +42,6 @@ namespace EducationSystem.Implementations.Managers
         {
             _helperUserRole = helperUserRole;
             _validatorQuestion = validatorQuestion;
-            _questionTemplateBuilder = questionTemplateBuilder;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -68,31 +63,12 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
         }
 
-        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId, TestSize testSize)
+        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var questions = _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId)
-                .MixItems()
-                .ToList();
-
-            var templates = _questionTemplateBuilder
-                .Build(testSize, questions)
-                .ToList();
-
-            Logger.LogInformation(
-                $"Идентификатор теста: {testId}. " +
-                $"Идентификатор студента: {studentId}. " +
-                $"Количество вопросов: {questions.Count}. " +
-                $"Типы вопросов: {string.Join(", ", questions.Select(x => (int) x.Type).Distinct())}. " +
-                $"Шаблоны: {string.Join(", ", templates.Select(x => $"{x.Key} - {x.Value}"))}. " +
-                $"Размер теста: {testSize}.");
-
-            return templates
-                .SelectMany(x => questions
-                    .Where(y => y.Type == x.Key)
-                    .Take(x.Value))
-                .OrderBy(x => x.Complexity)
+            return _repositoryQuestion
+                .GetQuestionsForStudentByTestId(testId, studentId)
                 .Select(MapForStudent)
                 .ToList();
         }

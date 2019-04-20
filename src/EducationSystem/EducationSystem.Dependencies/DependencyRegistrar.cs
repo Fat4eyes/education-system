@@ -1,11 +1,9 @@
 ﻿using EducationSystem.Database;
-using EducationSystem.Implementations.Builders;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
 using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
-using EducationSystem.Interfaces.Builders;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
@@ -30,7 +28,6 @@ namespace EducationSystem.Dependencies
             RegisterHelpers(collection);
             RegisterValidators(collection);
             RegisterManagers(collection);
-            RegisterBuilders(collection);
             RegisterRepositories(collection);
         }
 
@@ -76,11 +73,6 @@ namespace EducationSystem.Dependencies
 
             collection.AddTransient<IValidator<Image>, ValidatorImage>();
             collection.AddTransient<IValidator<Document>, ValidatorDocument>();
-        }
-
-        private static void RegisterBuilders(IServiceCollection collection)
-        {
-            collection.AddTransient<IQuestionTemplateBuilder, QuestionTemplateBuilder>();
         }
 
         private static void RegisterRepositories(IServiceCollection collection)
