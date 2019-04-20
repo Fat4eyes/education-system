@@ -21,13 +21,17 @@ namespace EducationSystem.Tests.Managers.Rest
         private readonly Mock<IRepositoryTheme> _mockRepositoryTheme
             = new Mock<IRepositoryTheme>();
 
+        private readonly Mock<IRepositoryDiscipline> _mockRepositoryDiscipline
+            = new Mock<IRepositoryDiscipline>();
+
         public TestsManagerTheme()
         {
             _managerTheme = new ManagerTheme(
                 Mapper,
                 LoggerMock.Object,
                 _mockCheckerTheme.Object,
-                _mockRepositoryTheme.Object);
+                _mockRepositoryTheme.Object,
+                _mockRepositoryDiscipline.Object);
         }
 
         [Fact]

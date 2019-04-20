@@ -1,7 +1,9 @@
-﻿using EducationSystem.Constants;
+﻿using System.Collections.Generic;
+using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
+using EducationSystem.Models.Rest;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,5 +52,12 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
             => Ok(_managerTheme.GetThemesByDisciplineId(disciplineId, options, filter));
+
+        [Transaction]
+        [HttpPut("{disciplineId:int}/Themes")]
+        public IActionResult UpdateDisciplineThemes(
+            [FromRoute] int disciplineId,
+            [FromBody] List<Theme> themes)
+            => Ok(async () => await _managerTheme.UpdateDisciplineThemesAsync(disciplineId, themes));
     }
 }

@@ -14,13 +14,18 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryTheme(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseTheme> Themes) GetThemes(FilterTheme filter) =>
-            AsQueryable().ApplyPaging(filter);
+        public (int Count, List<DatabaseTheme> Themes) GetThemes(FilterTheme filter)
+        {
+            return AsQueryable()
+                .OrderBy(x => x.Order)
+                .ApplyPaging(filter);
+        }
 
         public (int Count, List<DatabaseTheme> Themes) GetThemesByTestId(int testId, FilterTheme filter)
         {
             return AsQueryable()
                 .Where(x => x.ThemeTests.Any(y => y.TestId == testId))
+                .OrderBy(x => x.Order)
                 .ApplyPaging(filter);
         }
 
@@ -28,6 +33,7 @@ namespace EducationSystem.Repositories.Implementations
         {
             return AsQueryable()
                 .Where(x => x.DisciplineId == disciplineId)
+                .OrderBy(x => x.Order)
                 .ApplyPaging(filter);
         }
 

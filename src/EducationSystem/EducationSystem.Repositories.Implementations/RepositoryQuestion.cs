@@ -18,13 +18,16 @@ namespace EducationSystem.Repositories.Implementations
 
         public (int Count, List<DatabaseQuestion> Questions) GetQuestions(FilterQuestion filter)
         {
-            return AsQueryable().ApplyPaging(filter);
+            return AsQueryable()
+                .OrderBy(x => x.Order)
+                .ApplyPaging(filter);
         }
 
         public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, FilterQuestion filter)
         {
             return AsQueryable()
                 .Where(x => x.ThemeId == themeId)
+                .OrderBy(x => x.Order)
                 .ApplyPaging(filter);
         }
 

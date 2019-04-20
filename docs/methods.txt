@@ -58,6 +58,8 @@
 [Options] [Filter] [B] GET Disciplines/{Id}/Tests           List<Test>              (PagedData)
 [Options] [Filter] [B] GET Disciplines/{Id}/Themes          List<Theme>             (PagedData)
 
+                   [B] PUT Disciplines/{Id}/Themes
+
 [Options] [Filter] [*] GET Materials                        List<Material>          (PagedData)
 [Options]          [*] GET Materials/{Id}                   Material
 

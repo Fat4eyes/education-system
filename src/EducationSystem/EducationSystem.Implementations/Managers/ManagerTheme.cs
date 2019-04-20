@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
@@ -19,16 +20,19 @@ namespace EducationSystem.Implementations.Managers
     {
         private readonly IValidator<Theme> _validatorTheme;
         private readonly IRepositoryTheme _repositoryTheme;
+        private readonly IRepositoryDiscipline _repositoryDiscipline;
 
         public ManagerTheme(
             IMapper mapper,
             ILogger<ManagerTheme> logger,
             IValidator<Theme> validatorTheme,
-            IRepositoryTheme repositoryTheme)
+            IRepositoryTheme repositoryTheme,
+            IRepositoryDiscipline repositoryDiscipline)
             : base(mapper, logger)
         {
             _validatorTheme = validatorTheme;
             _repositoryTheme = repositoryTheme;
+            _repositoryDiscipline = repositoryDiscipline;
         }
 
         public PagedData<Theme> GetThemes(OptionsTheme options, FilterTheme filter)
@@ -101,6 +105,45 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryTheme.UpdateAsync(model, true);
 
             return Mapper.Map<DatabaseTheme, Theme>(model);
+        }
+
+        public async Task UpdateDisciplineThemesAsync(int disciplineId, List<Theme> themes)
+        {
+            if (themes.IsEmpty())
+                throw ExceptionHelper.CreatePublicException("Не указаны темы для обновления.");
+
+            if (themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
+                throw ExceptionHelper.CreatePublicException("Указаны повторяющиеся темы.");
+
+            if (_repositoryTheme.IsThemesExists(themes.Select(x => x.Id).ToList()) == false)
+                throw ExceptionHelper.CreatePublicException("Одна или несколько указанных тем не существуют.");
+
+            var discipline = _repositoryDiscipline.GetById(disciplineId) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Дисциплина не найдена. Идентификатор дисциплины: {disciplineId}.",
+                    $"Дисциплина не найдена.");
+
+            if (discipline.Themes.Count != themes.Count)
+                throw ExceptionHelper.CreatePublicException("Указаны не все темы по дисциплине.");
+
+            if (discipline.Themes.All(x => themes.Select(y => y.Id).Contains(x.Id)) == false)
+                throw ExceptionHelper.CreatePublicException("У одной или нескольких тем указанная дисциплина не совпадает.");
+
+            var models = _repositoryTheme.GetByIds(themes.Select(x => x.Id).ToArray());
+
+            var order = 1;
+
+            themes.ForEach(x =>
+            {
+                var model = models.FirstOrDefault(y => y.Id == x.Id) ??
+                    throw ExceptionHelper.CreateNotFoundException(
+                        $"Тема не найдена. Идентификатор темы: {x.Id}.",
+                        $"Тема не найдена.");
+
+                model.Order = order++;
+            });
+
+            await _repositoryTheme.UpdateAsync(models, true);
         }
 
         private Theme Map(DatabaseTheme theme, OptionsTheme options)
