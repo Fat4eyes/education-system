@@ -8,4 +8,5 @@ export default interface IThemeService {
   delete(id: number): Promise<void | Exception>,
   update(theme: Theme): Promise<Theme | Exception>
   getQuestions(id: number, options?: IPagingOptions): Promise<IPagedData<Question> | Exception>
+  updateThemeQuestions(id: number, questions: Array<Question>): Promise<void | Exception>
 }

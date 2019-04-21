@@ -8,7 +8,7 @@ import IThemeService from '../../services/abstractions/IThemeService'
 import {SortableArrayContainer, SortableArrayItem} from '../stuff/SortableArray'
 import {arrayMove, SortEnd} from 'react-sortable-hoc'
 import {TNotifierProps, withNotifier} from '../../providers/NotificationProvider'
-import {resultHandler} from '../../helpers/Exception'
+import {resultHandler, voidHandler} from '../../helpers/Exception'
 
 interface IProps {
   themeId: number,
@@ -44,7 +44,16 @@ class QuestionTable extends Component<TProps, IState> {
   componentDidMount() {this.getTableData()}
 
   handleSort = ({oldIndex, newIndex}: SortEnd) => {
-    this.setState(({Items}) => ({Items: arrayMove(Items, oldIndex, newIndex)}))
+    if (oldIndex === newIndex) return
+
+    this.setState({Items: arrayMove(this.state.Items, oldIndex, newIndex)},
+      async () => voidHandler
+        .onError(this.props.notifier.error)
+        .onSuccess()
+        .handleResult(await this.ThemeService!
+          .updateThemeQuestions(this.props.themeId, this.state.Items)
+        )
+    )
   }
 
   render() {

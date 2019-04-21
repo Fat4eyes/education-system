@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {ChangeEvent, Component, ComponentType} from 'react'
 import {Collapse, Grid, IconButton, TextField, Typography, withStyles, WithStyles} from '@material-ui/core'
+import {Breadcrumbs} from '@material-ui/lab'
 import {InjectedNotistackProps} from 'notistack'
 import ThemesPageStyles from './ThemesPageStyles'
 import DisciplineTable from '../../Table/DisciplineTable'
@@ -21,6 +22,7 @@ import {resultHandler, voidHandler} from '../../../helpers/Exception'
 import {TNotifierProps, withNotifier} from '../../../providers/NotificationProvider'
 import {arrayMove, SortEnd} from 'react-sortable-hoc'
 import {SortableArrayContainer, SortableArrayItem} from '../../stuff/SortableArray'
+import classNames from 'classnames'
 
 type TProps = WithStyles<typeof ThemesPageStyles> & InjectedNotistackProps & TNotifierProps
 
@@ -115,7 +117,7 @@ class ThemesPage extends Component<TProps, IState> {
         })
         .handleResult(await this.ThemeService!.add(this.state.Theme!))
     },
-    delete: async (theme: Theme) => {
+    delete: (theme: Theme) => async () => {
       voidHandler
         .onError(this.props.notifier.error)
         .onSuccess(() => {
@@ -126,16 +128,17 @@ class ThemesPage extends Component<TProps, IState> {
         })
         .handleResult(await this.ThemeService!.delete(theme.Id!))
     },
-    sort: async ({oldIndex, newIndex}: SortEnd) => {
-      if (oldIndex === newIndex) return 
-      
-      const themes = arrayMove(this.state.Items, oldIndex, newIndex)
-      voidHandler
-        .onError(this.props.notifier.error)
-        .onSuccess(() => this.setState({Items: themes}))
-        .handleResult(await this.DisciplineService!
-          .updateDisciplineThemes(this.state.Discipline!.Id!, this.state.Items)
-        )
+    sort: ({oldIndex, newIndex}: SortEnd) => {
+      if (oldIndex === newIndex) return
+
+      this.setState({Items: arrayMove(this.state.Items, oldIndex, newIndex)},
+        async () => voidHandler
+          .onError(this.props.notifier.error)
+          .onSuccess()
+          .handleResult(await this.DisciplineService!
+            .updateDisciplineThemes(this.state.Discipline!.Id!, this.state.Items)
+          )
+      )
     },
     changeName: (theme: Theme) => ({target: {value}}: ChangeEvent<HTMLInputElement>) => {
       theme.Name = value
@@ -184,51 +187,56 @@ class ThemesPage extends Component<TProps, IState> {
       </Grid>
     </RowHeader>
 
-    const DisciplineHeader = () => <>
-      <Grid item xs={12} className={classes.header} onClick={this.handleDisciplinesTableVisible}
-            container zeroMinWidth wrap='nowrap' justify='center' alignItems='center'>
-        <Typography align='center' noWrap color='inherit' variant='subtitle1'>
-          {disciplineSelected ? `Дисциплина: ${this.state.Discipline!.Name}` : 'Дисциплины'}
-        </Typography>
-      </Grid>
-    </>
-
-    const ThemeHeader = () => <>
-      <Grid item xs={12} className={classes.mt2Unit}/>
-      <Grid item xs={12} className={classes.header} onClick={() => this.handleTheme.select(this.state.SelectedThemeId!)}
-            container zeroMinWidth wrap='nowrap' justify='center' alignItems='center'>
-        <Typography align='center' noWrap color='inherit' variant='subtitle1'>
+    const BreadcrumbsHeader = () =>
+      <Grid item xs={12} className={classes.header} container zeroMinWidth wrap='nowrap' alignItems='center'>
+        <Breadcrumbs separator={
+          <Typography variant='subtitle1' className={classes.headerText}>
+            >
+          </Typography>
+        }>
+          <Typography align='center' noWrap variant='subtitle1' 
+                      className={classNames(classes.headerText, classes.breadcrumbs, {
+                        [classes.breadcrumbsClickable]: disciplineSelected
+                      })}
+                      onClick={this.handleDisciplinesTableVisible}
+          >
+            {disciplineSelected ? this.state.Discipline!.Name : 'Дисциплины'}
+          </Typography>
           {
-            this.state.SelectedThemeId
-              ? `Тема: ${this.state.Items.find(t => t.Id === this.state.SelectedThemeId)!.Name}`
-              : 'Темы'
+            disciplineSelected &&
+            <Typography align='center' noWrap variant='subtitle1' 
+                        className={classNames(classes.headerText, classes.breadcrumbs, {
+                          [classes.breadcrumbsClickable]: this.state.SelectedThemeId
+                        })}
+                        onClick={() => this.handleTheme.select(this.state.SelectedThemeId!)}
+            >
+              {
+                this.state.SelectedThemeId
+                  ? this.state.Items.find(t => t.Id === this.state.SelectedThemeId)!.Name
+                  : 'Темы'
+              }
+            </Typography>}
+          {
+            this.state.SelectedThemeId &&
+            <Typography align='center' noWrap variant='subtitle1' 
+                        className={classNames(classes.headerText, classes.breadcrumbs)}>
+              Вопросы
+            </Typography>
           }
-        </Typography>
+        </Breadcrumbs>
       </Grid>
-      <Grid item xs={12} className={classes.mt2Unit}/>
-    </>
-
-    const QuestionHeader = () => <>
-      <Grid item xs={12} className={classes.header}
-            container zeroMinWidth wrap='nowrap' justify='center' alignItems='center'>
-        <Typography align='center' noWrap color='inherit' variant='subtitle1'>
-          Вопросы
-        </Typography>
-      </Grid>
-      <Grid item xs={12} className={classes.mt2Unit}/>
-    </>
 
     return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
         <Block partial>
-          <DisciplineHeader/>
+          <BreadcrumbsHeader/>
+          <Grid item xs={12} className={classes.mt2Unit}/>
           <Grid item xs={12}>
             <Collapse timeout={500} in={this.state.ShowDisciplinesTable}>
               <Grid item xs={12} className={classes.mt2Unit}/>
               <DisciplineTable handleClick={this.handleChangeDiscipline}/>
             </Collapse>
           </Grid>
-          {disciplineSelected && <ThemeHeader/>}
           <Grid item xs={12}>
             <Collapse timeout={500} in={!this.state.ShowDisciplinesTable && !this.state.ShowQuestionsBlock}>
               <Collapse timeout={500} in={!this.state.ShowAddBlock}>
@@ -290,6 +298,8 @@ class ThemesPage extends Component<TProps, IState> {
                             <AddIcon color='action' onClick={this.handleTheme.update(theme)}/>
                           </>
                       }
+                      <Grid item className={classes.mrUnit}/>
+                      <ClearIcon color='action' onClick={this.handleTheme.delete(theme)}/>
                     </>
                   }/>
                 )}
@@ -298,7 +308,6 @@ class ThemesPage extends Component<TProps, IState> {
           </Grid>
           {
             this.state.SelectedThemeId && <>
-              <QuestionHeader/>
               <Grid item xs={12}>
                 <AddButton onClick={() => this.setState({NeedRedirect: true})}/>
               </Grid>

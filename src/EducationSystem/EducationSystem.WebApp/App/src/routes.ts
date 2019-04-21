@@ -25,7 +25,8 @@ export const themeRoutes = {
   add: '/api/themes',
   delete: (id: number) => `/api/themes/${id}`,
   update: (id: number) => `/api/themes/${id}`,
-  getQuestions: (id: number) => `/api/themes/${id}/questions`
+  getQuestions: (id: number) => `/api/themes/${id}/questions`,
+  updateThemeQuestions: (id: number) => `/api/themes/${id}/questions`,
 }
 
 export const questionRoutes = {
