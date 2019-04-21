@@ -31,12 +31,15 @@ namespace EducationSystem.Tests.Helpers
             _helperUserRole.CheckRoleStudent(999);
         }
 
-        [Fact]
-        public void CheckRoleStudent_Error()
+        [Theory]
+        [InlineData(UserRoles.Admin)]
+        [InlineData(UserRoles.Lecturer)]
+        [InlineData(UserRoles.Employee)]
+        public void CheckRoleStudent_Error(string role)
         {
             _mockRepositoryRole
                 .Setup(x => x.GetRoleByUserId(999))
-                .Returns(new DatabaseRole { Name = UserRoles.Admin });
+                .Returns(new DatabaseRole { Name = role });
 
             Assert.Throws<EducationSystemException>(() => _helperUserRole.CheckRoleStudent(999));
         }

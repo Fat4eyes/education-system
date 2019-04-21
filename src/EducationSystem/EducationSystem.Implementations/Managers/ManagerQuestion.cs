@@ -264,13 +264,25 @@ namespace EducationSystem.Implementations.Managers
                 x.AfterMap((s, d) =>
                 {
                     d.Program = Mapper.Map<Program>(s.Program);
-                    d.Answers = Mapper.Map<List<Answer>>(s.Answers);
+
+                    var types = new[]
+                    {
+                        QuestionType.OpenedOneString,
+                        QuestionType.OpenedManyStrings,
+                        QuestionType.WithProgram
+                    };
+
+                    if (types.Contains(question.Type) == false)
+                    {
+                        d.Answers = Mapper.Map<List<Answer>>(s.Answers);
+
+                        d.Answers.ForEach(y => y.IsRight = null);
+                    }
+
                     d.Material = Mapper.Map<Material>(s.Material);
                     
                     if (d.Image != null)
                         d.Image.Path = GetFilePath(s.Image);
-
-                    d.Answers.ForEach(y => y.IsRight = null);
                 });
             });
         }
