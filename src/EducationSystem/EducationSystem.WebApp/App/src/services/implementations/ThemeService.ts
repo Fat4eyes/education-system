@@ -12,4 +12,12 @@ export default class ThemeService implements IThemeService {
   async getQuestions(id: number, options?: IPagingOptions) {
     return await ProtectedFetch.get(UrlBuilder.Build(themeRoutes.getQuestions(id), options))
   }
+
+  async delete(id: number): Promise<void | Exception> {
+    return await ProtectedFetch.delete(UrlBuilder.Build(themeRoutes.delete(id)))
+  }
+
+  async update(theme: Theme): Promise<Theme | Exception> {
+    return await ProtectedFetch.put(UrlBuilder.Build(themeRoutes.update(theme.Id!)), JSON.stringify(theme))
+  }
 }

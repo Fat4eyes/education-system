@@ -37,9 +37,9 @@ const styles = (theme: Theme) => createStyles({
     '& > div': {
       opacity: 1,
       position: 'absolute',
-      top: `50%`,
+      top: `45%`,
       left: `50%`,
-      transform: `translate(-50%, -50%)`
+      transform: `translate(-45%, -50%)`
     }
   }
 })

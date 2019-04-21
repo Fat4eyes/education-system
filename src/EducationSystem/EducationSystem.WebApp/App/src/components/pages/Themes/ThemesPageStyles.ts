@@ -11,7 +11,19 @@ const ThemesPageStyles = (theme: Theme) => createStyles({
   },
   rowProgress: {
     height: theme.spacing.unit / 2
-  }
+  },
+  header: {
+    cursor: 'pointer',
+    backgroundColor: theme.palette.primary.main,
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 3}px !important`,
+    color: theme.palette.primary.contrastText
+  },
+  mr2Unit: {
+    marginRight: theme.spacing.unit * 2
+  },
+  mt2Unit: {
+    marginTop: theme.spacing.unit * 2
+  },
 })
 
 export default ThemesPageStyles

@@ -5,5 +5,7 @@ import Question from '../../models/Question'
 
 export default interface IThemeService {
   add(theme: Theme): Promise<Theme | Exception>,
+  delete(id: number): Promise<void | Exception>,
+  update(theme: Theme): Promise<Theme | Exception>
   getQuestions(id: number, options?: IPagingOptions): Promise<IPagedData<Question> | Exception>
 }

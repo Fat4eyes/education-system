@@ -4,7 +4,7 @@ export default interface IPagedData<T> {
 }
 
 export interface IPagingOptions {
-  Skip: number,
-  Take: number,
+  Skip?: number,
+  Take?: number,
   All?: boolean
 }

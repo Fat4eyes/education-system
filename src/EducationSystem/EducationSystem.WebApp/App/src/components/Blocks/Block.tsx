@@ -3,8 +3,10 @@ import * as React from 'react'
 import {ReactNode} from 'react'
 import classNames from 'classnames'
 
+export const blockPaddingFactor = 4.5
+
 const styles = (theme: Theme) => {
-  const padding = theme.spacing.unit * 4.5
+  const padding = theme.spacing.unit * blockPaddingFactor
   
   return createStyles({
     root: {
@@ -22,6 +24,15 @@ const styles = (theme: Theme) => {
     },
     full: {
       padding: padding
+    },
+    smallPartial: {
+      padding: `${padding / 2}px 0`,
+      '&>div': {
+        padding: `0 ${padding / 2}px`
+      }
+    },
+    smallFull: {
+      padding: padding / 2
     }
   })
 }
@@ -29,13 +40,16 @@ const styles = (theme: Theme) => {
 interface IProps extends WithStyles<typeof styles> {
   children?: ReactNode,
   partial?: boolean,
-  empty?: boolean
+  empty?: boolean,
+  small?: boolean
 }
 
-const Block = ({classes, children, partial = false, empty = false}: IProps) => 
+const Block = ({classes, children, partial = false, empty = false, small = false}: IProps) => 
   <div className={classNames(classes.root, {
-    [classes.full]: !partial && !empty,
-    [classes.partial]: partial && !empty
+    [classes.full]: !partial && !empty && !small,
+    [classes.partial]: partial && !empty && !small,
+    [classes.smallFull]: !partial && !empty && small,
+    [classes.smallPartial]: partial && !empty && small
   })}>
     {children}
   </div>

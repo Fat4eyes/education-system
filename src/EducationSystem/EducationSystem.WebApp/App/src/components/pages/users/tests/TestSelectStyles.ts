@@ -1,4 +1,5 @@
 import {createStyles, Theme} from '@material-ui/core'
+import {blockPaddingFactor} from '../../../Blocks/Block'
 
 export const TestSelectStyles = (theme: Theme) => createStyles({
   header: {
@@ -27,5 +28,10 @@ export const TestSelectStyles = (theme: Theme) => createStyles({
   },
   bodyBlock: {
     padding: theme.spacing.unit * 2,
+  },
+  startButton: {
+    position: 'absolute',
+    top: -theme.spacing.unit * blockPaddingFactor,
+    left: -theme.spacing.unit * blockPaddingFactor
   }
 })

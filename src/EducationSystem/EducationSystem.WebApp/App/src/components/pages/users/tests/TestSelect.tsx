@@ -1,4 +1,4 @@
-import {Grid, Typography, WithStyles, withStyles} from '@material-ui/core'
+import {Grid, IconButton, Typography, WithStyles, withStyles} from '@material-ui/core'
 import {TNotifierProps, withNotifier} from '../../../../providers/NotificationProvider'
 import {TestSelectStyles} from './TestSelectStyles'
 import {inject} from '../../../../infrastructure/di/inject'
@@ -14,6 +14,10 @@ import Block from '../../../Blocks/Block'
 import Test from '../../../../models/Test'
 import TestData from '../../../../models/TestData'
 import {TablePagination} from '../../../core'
+import PlayIcon from '@material-ui/icons/PlayArrow'
+import InfoIcon from '@material-ui/icons/Info'
+import UndoIcon from '@material-ui/icons/Undo'
+import {Link} from 'react-router-dom'
 
 interface IProps {}
 
@@ -40,10 +44,6 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
       Opened: [],
       TestsDetails: new Map()
     }
-  }
-
-  componentDidMount() {
-    this.setState({IsLoading: true}, this.getTableData)
   }
 
   getTableData = async (param?: IPagingOptions) => {
@@ -119,7 +119,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
   render(): React.ReactNode {
     let {classes} = this.props
 
-    return <Grid container justify='center'>
+    return <Grid container justify='center' spacing={40}>
       <Grid item xs={12} md={10} lg={8}>
         <Block partial>
           {
@@ -151,31 +151,49 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
                     <Grid container className={classes.mainBodyBlock} spacing={16}>
                       {
                         discipline.Tests.map((test: Test) =>
-                          <Grid item xs={12} md={6} lg={4} key={test.Id!}
-                                className={classes.clikableBlock}
-                                onClick={this.handleTestDetails(test)}
-                          >
+                          <Grid item xs={12} md={6} lg={4} key={test.Id!} className={classes.clikableBlock}>
                             <Block partial>
                               <Grid container className={classes.bodyBlock}>
-                                {((data?: ITestsDetail) =>
-                                    data && data.IsOpen
-                                      ? <>
-                                        <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
-                                          <Typography align='center' color='inherit'>
-                                            Количество вопросов: {data.Data.QuestionsCount}
-                                          </Typography>
-                                        </Grid>
-                                        <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
-                                          <Typography align='center' color='inherit'>
-                                            Количество тем: {data.Data.ThemesCount}
-                                          </Typography>
-                                        </Grid>
-                                      </>
-                                      : <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
+                                {((data?: ITestsDetail) => {
+                                  const handler = this.handleTestDetails(test)
+                                  return data && data.IsOpen
+                                    ? <Grid item xs={12} container justify='center'>
+                                      <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
+                                        <Typography align='center' color='inherit'>
+                                          Количество вопросов: {data.Data.QuestionsCount}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
+                                        <Typography align='center' color='inherit'>
+                                          Количество тем: {data.Data.ThemesCount}
+                                        </Typography>
+                                      </Grid>
+                                      <Grid item>
+                                        <IconButton onClick={handler}>
+                                          <UndoIcon/>
+                                        </IconButton>
+                                      </Grid>
+                                    </Grid>
+                                    : <Grid item xs={12} container justify='center'>
+                                      <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
                                         <Typography align='center' color='inherit'>
                                           <b>{test.Subject}</b>
                                         </Typography>
                                       </Grid>
+                                      <Grid item>
+                                        <IconButton component={
+                                          (props: any) => <Link to={`/user/test/${test.Id!}`} {...props}/>
+                                        }>
+                                          <PlayIcon/>
+                                        </IconButton>
+                                      </Grid>
+                                      <Grid item>
+                                        <IconButton onClick={handler}>
+                                          <InfoIcon/>
+                                        </IconButton>
+                                      </Grid>
+                                    </Grid>
+                                  }
                                 )(this.state.TestsDetails.get(test.Id!))}
                               </Grid>
                             </Block>

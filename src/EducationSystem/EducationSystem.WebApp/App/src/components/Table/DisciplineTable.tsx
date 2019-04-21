@@ -93,6 +93,7 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
       <Grid item xs={12}>
         <BlockContent bottom>
           <TextField
+            autoFocus
             label='Название дисциплины'
             placeholder='Название дисциплины (больше 3 символов)'
             value={this.state.Name}

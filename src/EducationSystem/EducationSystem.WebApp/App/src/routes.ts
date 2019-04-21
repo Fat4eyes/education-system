@@ -11,7 +11,8 @@ export const disciplineRoutes = {
   getDisciplines: `/api/disciplines`,
   getDiscipline: (id: number) => `/api/disciplines/${id}`,
   getDisciplineTests: (id: number) => `/api/disciplines/${id}/tests`,
-  getDisciplineThemes: (id: number) => `/api/disciplines/${id}/themes`
+  getDisciplineThemes: (id: number) => `/api/disciplines/${id}/themes`,
+  updateDisciplineThemes: (id: number) => `/api/disciplines/${id}/themes`,
 }
 
 export const testRoutes = {
@@ -22,6 +23,8 @@ export const testRoutes = {
 
 export const themeRoutes = {
   add: '/api/themes',
+  delete: (id: number) => `/api/themes/${id}`,
+  update: (id: number) => `/api/themes/${id}`,
   getQuestions: (id: number) => `/api/themes/${id}/questions`
 }
 
@@ -52,5 +55,6 @@ export const materialRoutes = {
 
 export const studentRoutes = {
   getDisciplines: () => '/api/students/current/disciplines',
-  getTestData: (testId: number) => `/api/students/current/tests/${testId}/data`
+  getTestData: (testId: number) => `/api/students/current/tests/${testId}/data`,
+  getTestExecution: (testId: number) => `/api/students/current/tests/${testId}/execution`,
 }
