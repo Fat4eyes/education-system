@@ -11,5 +11,7 @@ namespace EducationSystem.Repositories.Interfaces
         (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, FilterQuestion filter);
 
         List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId);
+
+        bool IsQuestionsExists(List<int> questionIds);
     }
 }

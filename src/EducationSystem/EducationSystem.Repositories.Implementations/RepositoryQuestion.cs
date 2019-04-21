@@ -58,5 +58,14 @@ namespace EducationSystem.Repositories.Implementations
                 .Take(TestParamaters.QuestionsCountForStudent)
                 .ToList();
         }
+
+        public bool IsQuestionsExists(List<int> questionIds)
+        {
+            questionIds = questionIds
+                .Distinct()
+                .ToList();
+
+            return AsQueryable().Count(x => questionIds.Contains(x.Id)) == questionIds.Count;
+        }
     }
 }

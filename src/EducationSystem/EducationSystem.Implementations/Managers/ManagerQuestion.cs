@@ -5,6 +5,7 @@ using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
@@ -23,6 +24,7 @@ namespace EducationSystem.Implementations.Managers
         private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
 
+        private readonly IRepositoryTheme _repositoryTheme;
         private readonly IRepositoryAnswer _repositoryAnswer;
         private readonly IRepositoryProgram _repositoryProgram;
         private readonly IRepositoryQuestion _repositoryQuestion;
@@ -34,6 +36,7 @@ namespace EducationSystem.Implementations.Managers
             IHelperPath helperPath,
             IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
+            IRepositoryTheme repositoryTheme,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
             IRepositoryQuestion repositoryQuestion,
@@ -42,6 +45,7 @@ namespace EducationSystem.Implementations.Managers
         {
             _helperUserRole = helperUserRole;
             _validatorQuestion = validatorQuestion;
+            _repositoryTheme = repositoryTheme;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -188,6 +192,45 @@ namespace EducationSystem.Implementations.Managers
             }
 
             return Mapper.Map<DatabaseQuestion, Question>(model);
+        }
+
+        public async Task UpdateThemeQuestionsAsync(int themeId, List<Question> questions)
+        {
+            if (questions.IsEmpty())
+                throw ExceptionHelper.CreatePublicException("Не указаны вопросы для обновления.");
+
+            if (questions.GroupBy(x => x.Id).Any(x => x.Count() > 1))
+                throw ExceptionHelper.CreatePublicException("Указаны повторяющиеся вопросы.");
+
+            if (_repositoryQuestion.IsQuestionsExists(questions.Select(x => x.Id).ToList()) == false)
+                throw ExceptionHelper.CreatePublicException("Один или несколько указанных вопросов не существуют.");
+
+            var theme = _repositoryTheme.GetById(themeId) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Тема не найдена. Идентификатор темы: {themeId}.",
+                    $"Тема не найдена.");
+
+            if (theme.Questions.Count != questions.Count)
+                throw ExceptionHelper.CreatePublicException("Количество указанных вопросов не совпадает с количеством вопросов в теме.");
+
+            if (theme.Questions.All(x => questions.Select(y => y.Id).Contains(x.Id)) == false)
+                throw ExceptionHelper.CreatePublicException("У одного или нескольких вопросов указанная тема не совпадает.");
+
+            var models = _repositoryQuestion.GetByIds(questions.Select(x => x.Id).ToArray());
+
+            var order = 1;
+
+            questions.ForEach(x =>
+            {
+                var model = models.FirstOrDefault(y => y.Id == x.Id) ??
+                    throw ExceptionHelper.CreateNotFoundException(
+                        $"Вопрос не найден. Идентификатор вопроса: {x.Id}.",
+                        $"Вопрос не найден.");
+
+                model.Order = order++;
+            });
+
+            await _repositoryQuestion.UpdateAsync(models, true);
         }
 
         private Question Map(DatabaseQuestion question, OptionsQuestion options)

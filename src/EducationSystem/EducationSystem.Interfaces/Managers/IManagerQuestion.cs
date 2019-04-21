@@ -21,5 +21,7 @@ namespace EducationSystem.Interfaces.Managers
         Task<Question> CreateQuestionAsync(Question question);
 
         Task<Question> UpdateQuestionAsync(int id, Question question);
+
+        Task UpdateThemeQuestionsAsync(int themeId, List<Question> questions);
     }
 }

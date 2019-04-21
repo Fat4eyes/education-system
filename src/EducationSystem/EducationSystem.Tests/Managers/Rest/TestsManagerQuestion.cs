@@ -20,6 +20,9 @@ namespace EducationSystem.Tests.Managers.Rest
         private readonly Mock<IValidator<Question>> _mockHelperQuestion
             = new Mock<IValidator<Question>>();
 
+        private readonly Mock<IRepositoryTheme> _mockRepositoryTheme
+            = new Mock<IRepositoryTheme>();
+
         private readonly Mock<IRepositoryAnswer> _mockRepositoryAnswer
             = new Mock<IRepositoryAnswer>();
 
@@ -40,6 +43,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 _mockHelperPath.Object,
                 MockHelperUser.Object,
                 _mockHelperQuestion.Object,
+                _mockRepositoryTheme.Object,
                 _mockRepositoryAnswer.Object,
                 _mockRepositoryProgram.Object,
                 _mockRepositoryQuestion.Object,
