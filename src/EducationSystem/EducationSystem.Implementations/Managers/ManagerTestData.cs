@@ -60,6 +60,8 @@ namespace EducationSystem.Implementations.Managers
                 Test = Mapper.Map<Test>(test),
                 ThemesCount = themes.Length,
                 QuestionsCount = questions.Length,
+                PassedThemesCount = themes
+                    .Count(x => x.Questions.All(y => y.QuestionStudents.Any(z => z.StudentId == studentId && z.Passed))),
                 PassedQuestionsCount = questions
                     .Count(x => x.QuestionStudents.Any(y => y.StudentId == studentId && y.Passed))
             };

@@ -10,6 +10,8 @@ namespace EducationSystem.Models.Datas
 
         public int QuestionsCount { get; set; }
 
+        public int PassedThemesCount { get; set; }
+
         public int PassedQuestionsCount { get; set; }
     }
 }
