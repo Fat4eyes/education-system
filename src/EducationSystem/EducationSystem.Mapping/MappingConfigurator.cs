@@ -62,12 +62,14 @@ namespace EducationSystem.Mapping
 
             expression.CreateMap<Theme, DatabaseTheme>()
                 .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Order, o => o.Ignore())
                 .ForMember(d => d.Discipline, o => o.Ignore())
                 .ForMember(d => d.ThemeTests, o => o.Ignore())
                 .ForMember(d => d.Questions, o => o.Ignore());
 
             expression.CreateMap<DatabaseTheme, DatabaseTheme>()
                 .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Order, o => o.Ignore())
                 .ForMember(d => d.Discipline, o => o.Ignore())
                 .ForMember(d => d.ThemeTests, o => o.Ignore())
                 .ForMember(d => d.Questions, o => o.Ignore());
@@ -91,6 +93,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())
+                .ForMember(d => d.Order, o => o.Ignore())
                 .ForMember(d => d.QuestionStudents, o => o.Ignore())
                 .ForMember(d => d.MaterialId, o => o.MapFrom(d => d.Material.Id))
                 .ForMember(d => d.GivenAnswers, o => o.Ignore());
@@ -100,6 +103,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Theme, o => o.Ignore())
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
+                .ForMember(d => d.Order, o => o.Ignore())
                 .ForMember(d => d.QuestionStudents, o => o.Ignore())
                 .ForMember(d => d.GivenAnswers, o => o.Ignore());
 

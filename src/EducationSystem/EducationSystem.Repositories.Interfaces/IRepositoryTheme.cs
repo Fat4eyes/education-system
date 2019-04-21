@@ -12,5 +12,7 @@ namespace EducationSystem.Repositories.Interfaces
         (int Count, List<DatabaseTheme> Themes) GetThemesByDisciplineId(int disciplineId, FilterTheme filter);
 
         bool IsThemesExists(List<int> themeIds);
+
+        int GetLastThemeOrder(int disciplineId);
     }
 }

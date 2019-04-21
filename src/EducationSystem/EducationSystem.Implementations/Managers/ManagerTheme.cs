@@ -84,6 +84,8 @@ namespace EducationSystem.Implementations.Managers
 
             var model = Mapper.Map<DatabaseTheme>(theme);
 
+            model.Order = _repositoryTheme.GetLastThemeOrder(theme.DisciplineId) + 1;
+
             await _repositoryTheme.AddAsync(model, true);
 
             return Mapper.Map<DatabaseTheme, Theme>(model);

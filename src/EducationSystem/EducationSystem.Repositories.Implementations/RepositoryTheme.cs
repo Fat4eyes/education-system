@@ -45,5 +45,12 @@ namespace EducationSystem.Repositories.Implementations
 
             return AsQueryable().Count(x => themeIds.Contains(x.Id)) == themeIds.Count;
         }
+
+        public int GetLastThemeOrder(int disciplineId)
+        {
+            return AsQueryable()
+                .Where(x => x.DisciplineId == disciplineId && x.Order.HasValue)
+                .Max(x => x.Order.Value);
+        }
     }
 }

@@ -13,5 +13,7 @@ namespace EducationSystem.Repositories.Interfaces
         List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId);
 
         bool IsQuestionsExists(List<int> questionIds);
+
+        int GetLastQuestionOrder(int themeId);
     }
 }

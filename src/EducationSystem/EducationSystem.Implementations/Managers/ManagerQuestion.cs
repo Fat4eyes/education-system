@@ -105,6 +105,9 @@ namespace EducationSystem.Implementations.Managers
 
             var model = Mapper.Map<DatabaseQuestion>(question);
 
+            if (question.ThemeId.HasValue)
+                model.Order = _repositoryQuestion.GetLastQuestionOrder(question.ThemeId.Value) + 1;
+
             switch (question.Type)
             {
                 case QuestionType.OpenedOneString:
