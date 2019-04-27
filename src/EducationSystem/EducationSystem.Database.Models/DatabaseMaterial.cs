@@ -7,6 +7,12 @@ namespace EducationSystem.Database.Models
     [Table("material")]
     public class DatabaseMaterial : DatabaseModel
     {
+        [Column("owner_id")]
+        public int? OwnerId { get; set; }
+
+        [ForeignKey(nameof(OwnerId))]
+        public DatabaseUser Owner { get; set; }
+
         [Column("name")]
         public virtual string Name { get; set; }
 

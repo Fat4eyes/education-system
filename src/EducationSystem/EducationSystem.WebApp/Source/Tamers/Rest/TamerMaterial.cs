@@ -36,19 +36,19 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPost("")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateMaterial([FromBody] Material material)
             => Ok(await _managerMaterial.CreateMaterialAsync(material));
 
         [Transaction]
         [HttpPut("{materialId:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateMaterial([FromRoute] int materialId, [FromBody] Material material)
             => Ok(await _managerMaterial.UpdateMaterialAsync(materialId, material));
 
         [Transaction]
         [HttpDelete("{materialId:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult DeleteMaterial([FromRoute] int materialId)
             => Ok(async () => await _managerMaterial.DeleteMaterialByIdAsync(materialId));
     }

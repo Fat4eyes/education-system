@@ -78,9 +78,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Theme> CreateThemeAsync(Theme theme)
         {
-            _validatorTheme.Validate(theme);
-
-            FormatTheme(theme);
+            _validatorTheme.Validate(theme.Format());
 
             var model = Mapper.Map<DatabaseTheme>(theme);
 
@@ -93,14 +91,12 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Theme> UpdateThemeAsync(int id, Theme theme)
         {
-            _validatorTheme.Validate(theme);
+            _validatorTheme.Validate(theme.Format());
 
             var model = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема для обновления не найдена. Идентификатор темы: {id}.",
                     $"Тема для обновления не найдена.");
-
-            FormatTheme(theme);
 
             Mapper.Map(Mapper.Map<DatabaseTheme>(theme), model);
 
@@ -158,11 +154,6 @@ namespace EducationSystem.Implementations.Managers
                         d.Questions = Mapper.Map<List<Question>>(s.Questions);
                 });
             });
-        }
-
-        private static void FormatTheme(Theme theme)
-        {
-            theme.Name = theme.Name.Trim();
         }
     }
 }

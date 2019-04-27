@@ -17,7 +17,6 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         private readonly IManagerTestData _managerTestData;
         private readonly IManagerStudyPlan _managerStudyPlan;
         private readonly IManagerInstitute _managerInstitute;
-        private readonly IManagerTestResult _managerTestResult;
         private readonly IManagerDiscipline _managerDiscipline;
         private readonly IManagerStudyProfile _managerStudyProfile;
 
@@ -29,7 +28,6 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             IManagerTestData managerTestData,
             IManagerStudyPlan managerStudyPlan,
             IManagerInstitute managerInstitute,
-            IManagerTestResult managerTestResult,
             IManagerDiscipline managerDiscipline,
             IManagerStudyProfile managerStudyProfile)
         {
@@ -40,13 +38,12 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerTestData = managerTestData;
             _managerStudyPlan = managerStudyPlan;
             _managerInstitute = managerInstitute;
-            _managerTestResult = managerTestResult;
             _managerDiscipline = managerDiscipline;
             _managerStudyProfile = managerStudyProfile;
         }
 
         [HttpGet("")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetStudents(
             [FromQuery] OptionsStudent options,
             [FromQuery] FilterStudent filter)
@@ -63,7 +60,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             => Ok(_managerGroup.GetGroupByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/Group")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetStudentGroup(
             [FromRoute] int studentId,
             [FromQuery] OptionsGroup options)
@@ -75,7 +72,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             => Ok(_managerStudyPlan.GetStudyPlanByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/StudyPlan")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetStudentStudyPlan(
             [FromRoute] int studentId,
             [FromQuery] OptionsStudyPlan options)
@@ -87,7 +84,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             => Ok(_managerStudyProfile.GetStudyProfileByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/StudyProfile")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetUserStudyProfile(
             [FromRoute] int studentId,
             [FromQuery] OptionsStudyProfile options)
@@ -99,26 +96,11 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             => Ok(_managerInstitute.GetInstituteByStudentId(GetUserId(), options));
 
         [HttpGet("{studentId:int}/Institute")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetUserInstitute(
             [FromRoute] int studentId,
             [FromQuery] OptionsInstitute options)
             => Ok(_managerInstitute.GetInstituteByStudentId(studentId, options));
-
-        [HttpGet("Current/TestResults")]
-        [Roles(UserRoles.Student)]
-        public IActionResult GetStudentTestResults(
-            [FromQuery] OptionsTestResult options,
-            [FromQuery] FilterTestResult filter)
-            => Ok(_managerTestResult.GetTestResultsByStudentId(GetUserId(), options, filter));
-
-        [HttpGet("{studentId:int}/TestResults")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
-        public IActionResult GetUserTestResults(
-            [FromRoute] int studentId,
-            [FromQuery] OptionsTestResult options,
-            [FromQuery] FilterTestResult filter)
-            => Ok(_managerTestResult.GetTestResultsByStudentId(studentId, options, filter));
 
         [HttpGet("Current/Tests")]
         [Roles(UserRoles.Student)]

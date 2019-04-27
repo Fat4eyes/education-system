@@ -49,7 +49,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerMaterial, ManagerMaterial>();
             collection.AddTransient<IManagerInstitute, ManagerInstitute>();
             collection.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
-            collection.AddTransient<IManagerTestResult, ManagerTestResult>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
             collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
         }
@@ -90,7 +89,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
             collection.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
             collection.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();
-            collection.AddTransient<IRepositoryTestResult, RepositoryTestResult>();
             collection.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
             collection.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
             collection.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();

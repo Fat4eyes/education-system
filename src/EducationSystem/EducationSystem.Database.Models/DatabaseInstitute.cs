@@ -10,9 +10,6 @@ namespace EducationSystem.Database.Models
         [Column("name")]
         public virtual string Name { get; set; }
 
-        [Column("description")]
-        public virtual string Description { get; set; }
-
         public virtual List<DatabaseStudyProfile> StudyProfiles { get; set; }
             = new List<DatabaseStudyProfile>();
     }

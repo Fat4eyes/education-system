@@ -12,5 +12,12 @@ namespace EducationSystem.Models.Rest
         public int? Order { get; set; }
 
         public List<Question> Questions { get; set; }
+
+        public Theme Format()
+        {
+            Name = Name.Trim();
+
+            return this;
+        }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("Api/Themes")]
-    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerTheme : Tamer
     {
         private readonly IManagerTheme _managerTheme;

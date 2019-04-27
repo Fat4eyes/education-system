@@ -14,5 +14,7 @@ namespace EducationSystem.Models.Rest
         public List<Test> Tests { get; set; }
 
         public List<Theme> Themes { get; set; }
+
+        public List<User> Lecturers { get; set; }
     }
 }

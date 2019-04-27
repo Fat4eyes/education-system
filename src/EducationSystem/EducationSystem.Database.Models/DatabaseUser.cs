@@ -29,8 +29,5 @@ namespace EducationSystem.Database.Models
             = new List<DatabaseUserRole>();
 
         public virtual DatabaseStudentGroup StudentGroup { get; set; }
-
-        public virtual List<DatabaseTestResult> TestResults { get; set; }
-            = new List<DatabaseTestResult>();
     }
 }

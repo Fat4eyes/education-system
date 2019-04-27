@@ -46,9 +46,6 @@ namespace EducationSystem.Database.Models
         public virtual List<DatabaseAnswer> Answers { get; set; }
             = new List<DatabaseAnswer>();
 
-        public virtual List<DatabaseGivenAnswer> GivenAnswers { get; set; }
-            = new List<DatabaseGivenAnswer>();
-
         public virtual List<DatabaseQuestionStudent> QuestionStudents { get; set; }
             = new List<DatabaseQuestionStudent>();
     }

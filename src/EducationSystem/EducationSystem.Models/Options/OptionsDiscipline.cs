@@ -5,5 +5,7 @@
         public bool WithTests { get; set; } = false;
 
         public bool WithThemes { get; set; } = false;
+
+        public bool WithLecturers { get; set; } = false;
     }
 }

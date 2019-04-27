@@ -29,9 +29,6 @@ namespace EducationSystem.Database.Models
         [Column("is_active")]
         public virtual int IsActive { get; set; }
 
-        [Column("is_random")]
-        public virtual int? IsRandom { get; set; }
-
         public virtual List<DatabaseTestTheme> TestThemes { get; set; }
             = new List<DatabaseTestTheme>();
     }

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("Api/Disciplines")]
-    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerDiscipline : Tamer
     {
         private readonly IManagerTest _managerTest;

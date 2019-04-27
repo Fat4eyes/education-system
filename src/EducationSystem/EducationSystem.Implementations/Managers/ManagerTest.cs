@@ -9,7 +9,6 @@ using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
-using EducationSystem.Models.Datas;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
@@ -98,9 +97,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Test> CreateTestAsync(Test test)
         {
-            _chekerTest.Validate(test);
-
-            FormatTest(test);
+            _chekerTest.Validate(test.Format());
 
             var model = Mapper.Map<DatabaseTest>(test);
 
@@ -111,14 +108,12 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Test> UpdateTestAsync(int id, Test test)
         {
-            _chekerTest.Validate(test);
+            _chekerTest.Validate(test.Format());
 
             var model = _repositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тест для обновления не найден. Идентификатор теста: {id}.",
                     $"Тест для обновления не найден.");
-
-            FormatTest(test);
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
 
@@ -161,11 +156,6 @@ namespace EducationSystem.Implementations.Managers
                     }
                 });
             });
-        }
-
-        private static void FormatTest(Test test)
-        {
-            test.Subject = test.Subject.Trim();
         }
     }
 }

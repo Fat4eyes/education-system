@@ -16,8 +16,7 @@ namespace EducationSystem.Mapping
             expression.CreateMap<DatabaseUser, Student>()
                 .ForMember(d => d.Active, o => o.MapFrom(s => s.Active == 1))
                 .ForMember(d => d.Group, o => o.Ignore())
-                .ForMember(d => d.Roles, o => o.Ignore())
-                .ForMember(d => d.TestResults, o => o.Ignore());
+                .ForMember(d => d.Roles, o => o.Ignore());
 
             expression.CreateMap<DatabaseDiscipline, Discipline>()
                 .ForMember(d => d.Tests, o => o.Ignore())
@@ -35,7 +34,6 @@ namespace EducationSystem.Mapping
             expression.CreateMap<DatabaseTest, Test>()
                 .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive == 1))
                 .ForMember(d => d.Attempts, o => o.Ignore())
-                .ForMember(d => d.IsRandom, o => o.Ignore())
                 .ForMember(d => d.TotalTime, o => o.Ignore())
                 .ForMember(d => d.Themes, o => o.Ignore());
 
@@ -74,13 +72,6 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.ThemeTests, o => o.Ignore())
                 .ForMember(d => d.Questions, o => o.Ignore());
 
-            expression.CreateMap<DatabaseTestResult, TestResult>()
-                .ForMember(d => d.Test, o => o.Ignore())
-                .ForMember(d => d.GivenAnswers, o => o.Ignore());
-
-            expression.CreateMap<DatabaseGivenAnswer, GivenAnswer>()
-                .ForMember(d => d.Question, o => o.Ignore());
-
             expression.CreateMap<DatabaseQuestion, Question>()
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore());
@@ -95,8 +86,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Material, o => o.Ignore())
                 .ForMember(d => d.Order, o => o.Ignore())
                 .ForMember(d => d.QuestionStudents, o => o.Ignore())
-                .ForMember(d => d.MaterialId, o => o.MapFrom(d => d.Material.Id))
-                .ForMember(d => d.GivenAnswers, o => o.Ignore());
+                .ForMember(d => d.MaterialId, o => o.MapFrom(d => d.Material.Id));
 
             expression.CreateMap<DatabaseQuestion, DatabaseQuestion>()
                 .ForMember(d => d.Id, o => o.Ignore())
@@ -104,8 +94,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
                 .ForMember(d => d.Order, o => o.Ignore())
-                .ForMember(d => d.QuestionStudents, o => o.Ignore())
-                .ForMember(d => d.GivenAnswers, o => o.Ignore());
+                .ForMember(d => d.QuestionStudents, o => o.Ignore());
 
             expression.CreateMap<DatabaseAnswer, Answer>()
                 .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));

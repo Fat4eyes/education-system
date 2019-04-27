@@ -16,7 +16,7 @@ namespace EducationSystem.Repositories.Implementations.Basics
             Context = context;
         }
 
-        protected IQueryable<TModel> AsQueryable()  => Context.Set<TModel>();
+        protected IQueryable<TModel> AsQueryable() => Context.Set<TModel>();
 
         public TModel GetById(int id)
         {

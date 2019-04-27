@@ -15,5 +15,11 @@ namespace EducationSystem.Database.Models
 
         [Column("type")]
         public virtual FileType Type { get; set; }
+
+        [Column("owner_id")]
+        public virtual int? OwnerId { get; set; }
+
+        [ForeignKey(nameof(OwnerId))]
+        public virtual DatabaseUser Owner { get; set; }
     }
 }

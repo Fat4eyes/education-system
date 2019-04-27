@@ -13,18 +13,6 @@ namespace EducationSystem.Database.Models
         [ForeignKey(nameof(StudyPlanId))]
         public virtual DatabaseStudyPlan StudyPlan { get; set; }
 
-        [Column("prefix")]
-        public virtual string Prefix { get; set; }
-
-        [Column("course")]
-        public virtual int Course { get; set; }
-
-        [Column("number")]
-        public virtual int Number { get; set; }
-
-        [Column("is_fulltime")]
-        public virtual int IsFullTime { get; set; }
-
         [Column("name")]
         public virtual string Name { get; set; }
 

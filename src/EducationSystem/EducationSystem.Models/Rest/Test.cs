@@ -18,8 +18,13 @@ namespace EducationSystem.Models.Rest
 
         public TestType? Type { get; set; }
 
-        public int? IsRandom { get; set; }
-
         public List<Theme> Themes { get; set; }
+
+        public Test Format()
+        {
+            Subject = Subject.Trim();
+
+            return this;
+        }
     }
 }

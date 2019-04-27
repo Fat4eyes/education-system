@@ -70,9 +70,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Material> CreateMaterialAsync(Material material)
         {
-            _validatorMaterial.Validate(material);
-
-            FormatMaterial(material);
+            _validatorMaterial.Validate(material.Format());
 
             var model = Mapper.Map<DatabaseMaterial>(material);
 
@@ -83,14 +81,12 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Material> UpdateMaterialAsync(int id, Material material)
         {
-            _validatorMaterial.Validate(material);
+            _validatorMaterial.Validate(material.Format());
 
             var model = _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал для обновления не найден. Идентификатор материала: {id}.",
                     $"Материал для обновления не найден.");
-
-            FormatMaterial(material);
 
             Mapper.Map(Mapper.Map<DatabaseMaterial>(material), model);
 
@@ -139,12 +135,6 @@ namespace EducationSystem.Implementations.Managers
             return _helperPath
                 .GetRelativeFilePath(document.Type, document.Guid.Value, document.Name)
                 .Replace("\\", "/");
-        }
-
-        private static void FormatMaterial(Material material)
-        {
-            material.Name = material.Name.Trim();
-            material.Template = material.Template.Trim();
         }
     }
 }

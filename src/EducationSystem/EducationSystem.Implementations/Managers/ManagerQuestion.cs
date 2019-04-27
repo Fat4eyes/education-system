@@ -99,9 +99,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Question> CreateQuestionAsync(Question question)
         {
-            _validatorQuestion.Validate(question);
-
-            FormatQuestion(question);
+            _validatorQuestion.Validate(question.Format());
 
             var model = Mapper.Map<DatabaseQuestion>(question);
 
@@ -127,14 +125,12 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Question> UpdateQuestionAsync(int id, Question question)
         {
-            _validatorQuestion.Validate(question);
+            _validatorQuestion.Validate(question.Format());
 
             var model = _repositoryQuestion.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Вопрос для обновления не найден. Идентификатор вопроса: {id}.",
                     $"Вопрос для обновления не найден.");
-
-            FormatQuestion(question);
 
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);
 
@@ -294,24 +290,6 @@ namespace EducationSystem.Implementations.Managers
             return _helperPath
                 .GetRelativeFilePath(file)
                 .Replace("\\", "/");
-        }
-
-        private static void FormatQuestion(Question question)
-        {
-            question.Text = question.Text.Trim();
-
-            question.Answers?.ForEach(answer =>
-            {
-                answer.Text = answer.Text.Trim();
-            });
-
-            if (question.Program != null)
-            {
-                question.Program.Template = question.Program.Template?.Trim();
-
-                if (string.IsNullOrWhiteSpace(question.Program.Template))
-                    question.Program.Template = null;
-            }
         }
     }
 }

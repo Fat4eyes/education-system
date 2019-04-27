@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("Api/Groups")]
-    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerGroup : Tamer
     {
         private readonly IManagerGroup _managerGroup;

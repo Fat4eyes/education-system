@@ -24,5 +24,8 @@ namespace EducationSystem.Database.Models
 
         public virtual List<DatabaseStudyProfileDiscipline> StudyProfiles { get; set; }
             = new List<DatabaseStudyProfileDiscipline>();
+
+        public virtual List<DatabaseDisciplineLecturer> Lecturers { get; set; }
+            = new List<DatabaseDisciplineLecturer>();
     }
 }

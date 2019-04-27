@@ -21,14 +21,14 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetRoles(
             [FromQuery] OptionsRole options,
             [FromQuery] FilterRole filter)
             => Ok(_managerRole.GetRoles(options, filter));
 
         [HttpGet("{roleId:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetRole(
             [FromRoute] int roleId,
             [FromQuery] OptionsRole options)
@@ -40,7 +40,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             => Ok(_managerRole.GetRoleByUserId(GetUserId(), options));
 
         [HttpGet("{roleId:int}/Users")]
-        [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public IActionResult GetRoleUsers(
             [FromRoute] int roleId,
             [FromQuery] OptionsUser options,

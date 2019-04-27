@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
@@ -64,9 +63,6 @@ namespace EducationSystem.Implementations.Managers
                 {
                     if (options.WithGroup)
                         d.Group = Mapper.Map<Group>(s.StudentGroup.Group);
-
-                    if (options.WithTestResults)
-                        d.TestResults = Mapper.Map<List<TestResult>>(s.TestResults);
                 });
             });
         }

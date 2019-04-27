@@ -17,10 +17,7 @@ namespace EducationSystem.Database.Contexts
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
         public DbSet<DatabaseInstitute> Institutes { get; set; }
         public DbSet<DatabaseDiscipline> Disciplines { get; set; }
-        public DbSet<DatabaseTestResult> TestResults { get; set; }
-        public DbSet<DatabaseGivenAnswer> GivenAnswers { get; set; }
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
-        public DbSet<DatabaseExtraAttempt> ExtraAttempts { get; set; }
         public DbSet<DatabaseProgramData> ParametersSets { get; set; }
         public DbSet<DatabaseMaterialFile> MaterialFiles { get; set; }
         public DbSet<DatabaseQuestionStudent> QuestionStudents { get; set; }
@@ -37,13 +34,11 @@ namespace EducationSystem.Database.Contexts
             BuildTestTheme(builder);
             BuildStudyProfileDiscipline(builder);
 
-            BuildTestResult(builder);
             BuildStudyPlan(builder);
             BuildStudyProfile(builder);
             BuildQuestion(builder);
             BuildTheme(builder);
             BuildProgram(builder);
-            BuildUser(builder);
             BuildDiscipline(builder);
             BuildMaterial(builder);
         }
@@ -123,15 +118,6 @@ namespace EducationSystem.Database.Contexts
                 .HasForeignKey(x => x.StudyProfileId);
         }
 
-        private static void BuildTestResult(ModelBuilder builder)
-        {
-            builder
-                .Entity<DatabaseTestResult>()
-                .HasMany(x => x.GivenAnswers)
-                .WithOne(x => x.TestResult)
-                .HasForeignKey(x => x.TestResultId);
-        }
-
         private static void BuildStudyPlan(ModelBuilder builder)
         {
             builder
@@ -155,12 +141,6 @@ namespace EducationSystem.Database.Contexts
             builder
                 .Entity<DatabaseQuestion>()
                 .HasMany(x => x.Answers)
-                .WithOne(x => x.Question)
-                .HasForeignKey(x => x.QuestionId);
-
-            builder
-                .Entity<DatabaseQuestion>()
-                .HasMany(x => x.GivenAnswers)
                 .WithOne(x => x.Question)
                 .HasForeignKey(x => x.QuestionId);
 
@@ -199,6 +179,12 @@ namespace EducationSystem.Database.Contexts
                 .HasMany(x => x.Themes)
                 .WithOne(x => x.Discipline)
                 .HasForeignKey(x => x.DisciplineId);
+
+            builder
+                .Entity<DatabaseDiscipline>()
+                .HasMany(x => x.Lecturers)
+                .WithOne(x => x.Discipline)
+                .HasForeignKey(x => x.DisciplineId);
         }
 
         private static void BuildProgram(ModelBuilder builder)
@@ -208,15 +194,6 @@ namespace EducationSystem.Database.Contexts
                 .HasMany(x => x.ProgramDatas)
                 .WithOne(x => x.Program)
                 .HasForeignKey(x => x.ProgramId);
-        }
-
-        private static void BuildUser(ModelBuilder builder)
-        {
-            builder
-                .Entity<DatabaseUser>()
-                .HasMany(x => x.TestResults)
-                .WithOne(x => x.User)
-                .HasForeignKey(x => x.UserId);
         }
 
         private static void BuildMaterial(ModelBuilder builder)

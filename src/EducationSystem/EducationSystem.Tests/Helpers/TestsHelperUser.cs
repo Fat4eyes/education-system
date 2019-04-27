@@ -34,7 +34,6 @@ namespace EducationSystem.Tests.Helpers
         [Theory]
         [InlineData(UserRoles.Admin)]
         [InlineData(UserRoles.Lecturer)]
-        [InlineData(UserRoles.Employee)]
         public void CheckRoleStudent_Error(string role)
         {
             _mockRepositoryRole

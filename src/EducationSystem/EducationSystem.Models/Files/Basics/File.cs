@@ -18,6 +18,8 @@ namespace EducationSystem.Models.Files.Basics
 
         public Stream Stream { get; set; }
 
+        public int? OwnerId { get; set; }
+
         protected File(FileType type)
         {
             Type = type;

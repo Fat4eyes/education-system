@@ -1,7 +1,7 @@
 [A] Admin
-[B] Admin / Lecturer / Employee
+[B] Admin / Lecturer
 [C] Student
-[*] Admin / Lecturer / Employee / Student
+[*] Admin / Lecturer / Student
 
 [Options] [Filter] [B] GET Students                         List<Student>           (PagedData)
 [Options]          [B] GET Students/{Id}                    Student
@@ -9,13 +9,11 @@
 [Options]          [B] GET Students/{Id}/StudyPlan          StudyPlan
 [Options]          [B] GET Students/{Id}/StudyProfile       StudyProfile
                    [B] GET Students/{Id}/Institute          Institute
-[Options] [Filter] [B] GET Students/{Id}/TestResults        List<TestResult>        (PagedData)
 [Options]          [C] GET Students/Current                 Student
 [Options]          [C] GET Students/Current/Group           Group
 [Options]          [C] GET Students/Current/StudyPlan       StudyPlan
 [Options]          [C] GET Students/Current/StudyProfile    StudyProfile
 [Options]          [C] GET Students/Current/Institute       Institute
-[Options] [Filter] [C] GET Students/Current/TestResults     List<TestResult>        (PagedData)
 [Options] [Filter] [C] GET Students/Current/Tests           List<Test>              (PagedData)
 [Options]          [C] GET Students/Current/Tests/{Id}      Test
 [Options] [Filter] [C] GET Students/Current/Disciplines     List<Discipline>        (PagedData)

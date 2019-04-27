@@ -28,5 +28,22 @@ namespace EducationSystem.Models.Rest
         public Material Material { get; set; }
 
         public List<Answer> Answers { get; set; }
+
+        public Question Format()
+        {
+            Text = Text.Trim();
+
+            Answers?.ForEach(x => x.Text = x.Text.Trim());
+
+            if (Program == null)
+                return this;
+
+            Program.Template = Program.Template?.Trim();
+
+            if (string.IsNullOrWhiteSpace(Program.Template))
+                Program.Template = null;
+
+            return this;
+        }
     }
 }

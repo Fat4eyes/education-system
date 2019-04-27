@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/Questions")]
-    [Roles(UserRoles.Admin, UserRoles.Employee, UserRoles.Lecturer)]
+    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerQuestion : Tamer
     {
         private readonly IManagerQuestion _managerQuestion;
