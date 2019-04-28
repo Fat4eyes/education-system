@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("Api/Themes")]
-    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerTheme : Tamer
     {
         private readonly IManagerTheme _managerTheme;
@@ -23,45 +22,57 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerQuestion = managerQuestion;
         }
 
-        [HttpGet("")]
-        public IActionResult GetThemes(
-            [FromQuery] OptionsTheme options,
-            [FromQuery] FilterTheme filter)
-            => Ok(_managerTheme.GetThemes(options, filter));
+        [HttpGet("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetTheme([FromRoute] int id, [FromQuery] OptionsTheme options)
+        {
+            return Ok(await _managerTheme.GetTheme(id, options));
+        }
 
+        [HttpPost]
         [Transaction]
-        [HttpPost("")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateTheme([FromBody] Theme theme)
-            => Ok(await _managerTheme.CreateThemeAsync(theme));
-
-        [HttpGet("{themeId:int}")]
-        public IActionResult GetTheme(
-            [FromRoute] int themeId,
-            [FromQuery] OptionsTheme options)
-            => Ok(_managerTheme.GetThemeById(themeId, options));
+        {
+            return Ok(await _managerTheme.CreateTheme(theme));
+        }
 
         [Transaction]
-        [HttpPut("{themeId:int}")]
-        public async Task<IActionResult> UpdateTheme([FromRoute] int themeId, [FromBody] Theme theme)
-            => Ok(await _managerTheme.UpdateThemeAsync(themeId, theme));
+        [HttpPut("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> UpdateTheme([FromRoute] int id, [FromBody] Theme theme)
+        {
+            return Ok(await _managerTheme.UpdateTheme(id, theme));
+        }
 
-        [HttpGet("{themeId:int}/Questions")]
-        public IActionResult GetThemeQuestions(
-            [FromRoute] int themeId,
+        [Transaction]
+        [HttpDelete("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> DeleteTheme([FromRoute] int id)
+        {
+            await _managerTheme.DeleteTheme(id);
+
+            return Ok();
+        }
+
+        [HttpGet("{id:int}/Questions")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetQuestionsByThemeId(
+            [FromRoute] int id,
             [FromQuery] OptionsQuestion options,
             [FromQuery] FilterQuestion filter)
-            => Ok(_managerQuestion.GetQuestionsByThemeId(themeId, options, filter));
+        {
+            return Ok(await _managerQuestion.GetQuestionsByThemeId(id, options, filter));
+        }
 
         [Transaction]
-        [HttpPut("{themeId:int}/Questions")]
-        public IActionResult UpdateThemeQuestions(
-            [FromRoute] int themeId,
-            [FromBody] List<Question> questions)
-            => Ok(async () => await _managerQuestion.UpdateThemeQuestionsAsync(themeId, questions));
+        [HttpPut("{id:int}/Questions")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> UpdateThemeQuestions([FromRoute] int id, [FromBody] List<Question> questions)
+        {
+            await _managerQuestion.UpdateThemeQuestions(id, questions);
 
-        [Transaction]
-        [HttpDelete("{themeId:int}")]
-        public IActionResult DeleteTheme([FromRoute] int themeId) =>
-            Ok(async () => await _managerTheme.DeleteThemeByIdAsync(themeId));
+            return Ok();
+        }
     }
 }

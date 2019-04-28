@@ -29,7 +29,5 @@ namespace EducationSystem.Implementations.Managers.Files
                 validatorDocument,
                 repositoryFile)
         { }
-
-        public override string[] GetAvailableExtensions() => FileExtensions.AvailableDocumentExtensions;
     }
 }

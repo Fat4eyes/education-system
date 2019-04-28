@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using EducationSystem.Models.Datas;
 
 namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerTestData
     {
-        List<TestData> GetTestsDataForStudentByTestIds(int[] testIds, int studentId);
-
-        TestData GetTestDataForStudentByTestId(int testId, int studentId);
+        Task<TestData> GetTestDataForStudentByTestId(int testId, int studentId);
     }
 }

@@ -53,41 +53,51 @@ namespace EducationSystem.Implementations.Managers
             _helperPath = helperPath;
         }
 
-        public PagedData<Question> GetQuestions(OptionsQuestion options, FilterQuestion filter)
+        public Task<PagedData<Question>> GetQuestions(OptionsQuestion options, FilterQuestion filter)
         {
             var (count, questions) = _repositoryQuestion.GetQuestions(filter);
 
-            return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
+            var items = questions
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Question>(items, count));
         }
 
-        public PagedData<Question> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter)
+        public Task<PagedData<Question>> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter)
         {
             var (count, questions) = _repositoryQuestion.GetQuestionsByThemeId(themeId, filter);
 
-            return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
+            var items = questions
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Question>(items, count));
         }
 
-        public List<Question> GetQuestionsForStudentByTestId(int testId, int studentId)
+        public Task<List<Question>> GetQuestionsForStudentByTestId(int testId, int studentId)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            return _repositoryQuestion
+            var questions = _repositoryQuestion
                 .GetQuestionsForStudentByTestId(testId, studentId)
                 .Select(MapForStudent)
                 .ToList();
+
+            return Task.FromResult(questions);
         }
 
-        public Question GetQuestionById(int id, OptionsQuestion options)
+        public Task<Question> GetQuestion(int id, OptionsQuestion options)
         {
             var question = _repositoryQuestion.GetById(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Вопрос не найден. Идентификатор вопроса: {id}.",
                    $"Вопрос не найден.");
 
-            return Map(question, options);
+            return Task.FromResult(Map(question, options));
         }
 
-        public async Task DeleteQuestionByIdAsync(int id)
+        public async Task DeleteQuestion(int id)
         {
             var question = _repositoryQuestion.GetById(id) ??
                throw ExceptionHelper.CreateNotFoundException(
@@ -97,7 +107,7 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryQuestion.RemoveAsync(question, true);
         }
 
-        public async Task<Question> CreateQuestionAsync(Question question)
+        public async Task<Question> CreateQuestion(Question question)
         {
             _validatorQuestion.Validate(question.Format());
 
@@ -123,7 +133,7 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseQuestion, Question>(model);
         }
 
-        public async Task<Question> UpdateQuestionAsync(int id, Question question)
+        public async Task<Question> UpdateQuestion(int id, Question question)
         {
             _validatorQuestion.Validate(question.Format());
 
@@ -193,7 +203,7 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseQuestion, Question>(model);
         }
 
-        public async Task UpdateThemeQuestionsAsync(int themeId, List<Question> questions)
+        public async Task UpdateThemeQuestions(int themeId, List<Question> questions)
         {
             if (questions.IsEmpty())
                 throw ExceptionHelper.CreatePublicException("Не указаны вопросы для обновления.");

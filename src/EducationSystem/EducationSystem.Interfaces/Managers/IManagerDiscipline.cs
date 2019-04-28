@@ -1,4 +1,5 @@
-﻿using EducationSystem.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
@@ -7,9 +8,9 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerDiscipline
     {
-        PagedData<Discipline> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter);
-        PagedData<Discipline> GetDisciplinesForStudent(int studentId, OptionsDiscipline options, FilterDiscipline filter);
+        Task<PagedData<Discipline>> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter);
+        Task<PagedData<Discipline>> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter);
 
-        Discipline GetDisciplineById(int id, OptionsDiscipline options);
+        Task<Discipline> GetDiscipline(int id, OptionsDiscipline options);
     }
 }

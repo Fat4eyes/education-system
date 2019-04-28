@@ -1,4 +1,5 @@
-﻿using EducationSystem.Exceptions;
+﻿using System.Threading.Tasks;
+using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
@@ -51,13 +52,13 @@ namespace EducationSystem.Tests.Managers.Rest
         }
 
         [Fact]
-        public void GetQuestionsForStudentByTestId_NotStudent()
+        public async Task GetQuestionsForStudentByTestId_NotStudent()
         {
             MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
-            Assert.Throws<EducationSystemException>(
+            await Assert.ThrowsAsync<EducationSystemException>(
                 () => _managerQuestion.GetQuestionsForStudentByTestId(999, 999));
         }
     }

@@ -5,12 +5,8 @@ namespace EducationSystem.Interfaces.Managers.Files.Basics
 {
     public interface IManagerFile<TFile> where TFile : File
     {
-        Task<TFile> UploadFile(TFile file);
-
-        Task<TFile> GetFileById(int id);
-
-        Task DeleteFileByIdAsync(int id);
-
-        string[] GetAvailableExtensions();
+        Task DeleteFile(int id);
+        Task<TFile> GetFile(int id);
+        Task<TFile> CreateFile(TFile file);
     }
 }

@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Extensions;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
@@ -19,8 +17,7 @@ namespace EducationSystem.Implementations.Managers
 {
     public sealed class ManagerTest : Manager<ManagerTest>, IManagerTest
     {
-        private readonly IHelperUserRole _helperUserRole;
-        private readonly IValidator<Test> _chekerTest;
+        private readonly IValidator<Test> _validatorTest;
 
         private readonly IRepositoryTest _repositoryTest;
         private readonly IRepositoryTestTheme _repositoryTestTheme;
@@ -28,64 +25,49 @@ namespace EducationSystem.Implementations.Managers
         public ManagerTest(
             IMapper mapper,
             ILogger<ManagerTest> logger,
-            IHelperUserRole helperUserRole,
-            IValidator<Test> chekerTest,
+            IValidator<Test> validatorTest,
             IRepositoryTest repositoryTest,
             IRepositoryTestTheme repositoryTestTheme)
             : base(mapper, logger)
         {
-            _helperUserRole = helperUserRole;
-            _chekerTest = chekerTest;
+            _validatorTest = validatorTest;
             _repositoryTest = repositoryTest;
             _repositoryTestTheme = repositoryTestTheme;
         }
 
-        public PagedData<Test> GetTests(OptionsTest options, FilterTest filter)
+        public Task<PagedData<Test>> GetTests(OptionsTest options, FilterTest filter)
         {
             var (count, tests) = _repositoryTest.GetTests(filter);
 
-            return new PagedData<Test>(tests.Select(x => Map(x, options)).ToList(), count);
+            var items = tests
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Test>(items, count));
         }
 
-        public PagedData<Test> GetTestsByDisciplineId(int disciplineId, OptionsTest options, FilterTest filter)
+        public Task<PagedData<Test>> GetTestsByDisciplineId(int disciplineId, OptionsTest options, FilterTest filter)
         {
             var (count, tests) = _repositoryTest.GetTestsByDisciplineId(disciplineId, filter);
 
-            return new PagedData<Test>(tests.Select(x => Map(x, options)).ToList(), count);
+            var items = tests
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Test>(items, count));
         }
 
-        public PagedData<Test> GetTestsForStudent(int studentId, OptionsTest options, FilterTest filter)
-        {
-            _helperUserRole.CheckRoleStudent(studentId);
-
-            var (count, tests) = _repositoryTest.GetTestsForStudent(studentId, filter);
-
-            return new PagedData<Test>(tests.Select(x => MapForStudent(x, options)).ToList(), count);
-        }
-
-        public Test GetTestById(int id, OptionsTest options)
+        public Task<Test> GetTest(int id, OptionsTest options)
         {
             var test = _repositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тест не найден. Идентификатор теста: {id}.",
                     $"Тест не найден.");
 
-            return Map(test, options);
+            return Task.FromResult(Map(test, options));
         }
 
-        public Test GetTestForStudentById(int id, int studentId, OptionsTest options)
-        {
-            _helperUserRole.CheckRoleStudent(studentId);
-
-            var test = _repositoryTest.GetTestForStudentById(id, studentId) ??
-               throw ExceptionHelper.CreateNotFoundException(
-                   $"Тест не найден. Идентификатор теста: {id}. Идентификатор студента: {studentId}.",
-                   $"Тест не найден.");
-
-            return MapForStudent(test, options);
-        }
-
-        public async Task DeleteTestByIdAsync(int id)
+        public async Task DeleteTest(int id)
         {
             var test = _repositoryTest.GetById(id) ??
                throw ExceptionHelper.CreateNotFoundException(
@@ -95,9 +77,9 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryTest.RemoveAsync(test, true);
         }
 
-        public async Task<Test> CreateTestAsync(Test test)
+        public async Task<Test> CreateTest(Test test)
         {
-            _chekerTest.Validate(test.Format());
+            _validatorTest.Validate(test.Format());
 
             var model = Mapper.Map<DatabaseTest>(test);
 
@@ -106,9 +88,9 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseTest, Test>(model);
         }
 
-        public async Task<Test> UpdateTestAsync(int id, Test test)
+        public async Task<Test> UpdateTest(int id, Test test)
         {
-            _chekerTest.Validate(test.Format());
+            _validatorTest.Validate(test.Format());
 
             var model = _repositoryTest.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
@@ -137,23 +119,6 @@ namespace EducationSystem.Implementations.Managers
                 {
                     if (options.WithThemes)
                         d.Themes = Mapper.Map<List<Theme>>(s.TestThemes.Select(y => y.Theme));
-                });
-            });
-        }
-
-        private Test MapForStudent(DatabaseTest test, OptionsTest options)
-        {
-            return Mapper.Map<DatabaseTest, Test>(test, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithThemes)
-                    {
-                        d.Themes = s.TestThemes
-                            .Where(y => y.Theme?.Questions.IsNotEmpty() == true)
-                            .Select(y => Mapper.Map<Theme>(y.Theme))
-                            .ToList();
-                    }
                 });
             });
         }

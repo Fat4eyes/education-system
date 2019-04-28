@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Managers;
@@ -26,18 +27,18 @@ namespace EducationSystem.Tests.Managers.Rest
         }
 
         [Fact]
-        public void GetInstituteByStudentId_NotStudent()
+        public async Task GetInstituteByStudentId_NotStudent()
         {
             MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
-            Assert.Throws<EducationSystemException>(
+            await Assert.ThrowsAsync<EducationSystemException>(
                 () => _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute()));
         }
 
         [Fact]
-        public void GetInstituteByStudentId_Found()
+        public async Task GetInstituteByStudentId_Found()
         {
             MockHelperUser.Reset();
 
@@ -45,13 +46,13 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetInstituteByStudentId(999))
                 .Returns(new DatabaseInstitute { Name = "ИИТиУвТС" });
 
-            var institute = _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute());
+            var institute = await _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute());
 
             Assert.Equal("ИИТиУвТС", institute.Name);
         }
 
         [Fact]
-        public void GetInstituteByStudentId_NotFound()
+        public async Task GetInstituteByStudentId_NotFound()
         {
             MockHelperUser.Reset();
 
@@ -59,7 +60,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetInstituteByStudentId(999))
                 .Returns((DatabaseInstitute) null);
 
-            Assert.Throws<EducationSystemNotFoundException>(
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute()));
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("Api/Disciplines")]
-    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerDiscipline : Tamer
     {
         private readonly IManagerTest _managerTest;
@@ -27,37 +27,50 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerTheme = managerTheme;
         }
 
-        [HttpGet("")]
-        public IActionResult GetDisciplines(
+        [HttpGet]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetDisciplines(
             [FromQuery] OptionsDiscipline options,
             [FromQuery] FilterDiscipline filter)
-            => Ok(_managerDiscipline.GetDisciplines(options, filter));
+        {
+            return Ok(await _managerDiscipline.GetDisciplines(options, filter));
+        }
 
-        [HttpGet("{disciplineId:int}")]
-        public IActionResult GetDiscipline(
-            [FromRoute] int disciplineId,
-            [FromQuery] OptionsDiscipline options)
-            => Ok(_managerDiscipline.GetDisciplineById(disciplineId, options));
+        [HttpGet("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetDiscipline([FromRoute] int id, [FromQuery] OptionsDiscipline options)
+        {
+            return Ok(await _managerDiscipline.GetDiscipline(id, options));
+        }
 
-        [HttpGet("{disciplineId:int}/Tests")]
-        public IActionResult GetDisciplineTests(
-            [FromRoute] int disciplineId,
+        [HttpGet("{id:int}/Tests")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetTestsByDisciplineId(
+            [FromRoute] int id,
             [FromQuery] OptionsTest options,
             [FromQuery] FilterTest filter)
-            => Ok(_managerTest.GetTestsByDisciplineId(disciplineId, options, filter));
+        {
+            return Ok(await _managerTest.GetTestsByDisciplineId(id, options, filter));
+        }
 
-        [HttpGet("{disciplineId:int}/Themes")]
-        public IActionResult GetDisciplineThemes(
-            [FromRoute] int disciplineId,
+        [HttpGet("{id:int}/Themes")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetThemesByDisciplineId(
+            [FromRoute] int id,
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
-            => Ok(_managerTheme.GetThemesByDisciplineId(disciplineId, options, filter));
+        {
+            return Ok(await _managerTheme.GetThemesByDisciplineId(id, options, filter));
+        }
 
         [Transaction]
-        [HttpPut("{disciplineId:int}/Themes")]
-        public IActionResult UpdateDisciplineThemes(
-            [FromRoute] int disciplineId,
-            [FromBody] List<Theme> themes)
-            => Ok(async () => await _managerTheme.UpdateDisciplineThemesAsync(disciplineId, themes));
+        [HttpPut("{id:int}/Themes")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> UpdateDisciplineThemes([FromRoute] int id, [FromBody] List<Theme> themes)
+        {
+            await _managerTheme.UpdateDisciplineThemes(id, themes);
+
+            return Ok();
+        }
     }
 }

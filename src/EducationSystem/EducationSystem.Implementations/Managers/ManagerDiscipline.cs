@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
@@ -31,30 +32,38 @@ namespace EducationSystem.Implementations.Managers
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public PagedData<Discipline> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter)
+        public Task<PagedData<Discipline>> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter)
         {
             var (count, disciplines) = _repositoryDiscipline.GetDisciplines(filter);
 
-            return new PagedData<Discipline>(disciplines.Select(x => Map(x, options)).ToList(), count);
+            var items = disciplines
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Discipline>(items, count));
         }
 
-        public PagedData<Discipline> GetDisciplinesForStudent(int studentId, OptionsDiscipline options, FilterDiscipline filter)
+        public Task<PagedData<Discipline>> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
             var (count, disciplines) = _repositoryDiscipline.GetDisciplinesForStudent(studentId, filter);
 
-            return new PagedData<Discipline>(disciplines.Select(x => MapForStudent(x, options)).ToList(), count);
+            var items = disciplines
+                .Select(x => MapForStudent(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Discipline>(items, count));
         }
 
-        public Discipline GetDisciplineById(int id, OptionsDiscipline options)
+        public Task<Discipline> GetDiscipline(int id, OptionsDiscipline options)
         {
             var discipline = _repositoryDiscipline.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Дисциплина не найдена. Идентификатор дисциплины: {id}.",
                     $"Дисциплина не найдена.");
 
-            return Map(discipline, options);
+            return Task.FromResult(Map(discipline, options));
         }
 
         private Discipline Map(DatabaseDiscipline discipline, OptionsDiscipline options)

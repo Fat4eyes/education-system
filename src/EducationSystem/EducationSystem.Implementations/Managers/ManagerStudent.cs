@@ -1,12 +1,8 @@
-﻿using System.Linq;
+﻿using System.Threading.Tasks;
 using AutoMapper;
-using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Models;
-using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -29,21 +25,7 @@ namespace EducationSystem.Implementations.Managers
             _repositoryStudent = repositoryStudent;
         }
 
-        public PagedData<Student> GetStudents(OptionsStudent options, FilterStudent filter)
-        {
-            var (count, students) = _repositoryStudent.GetStudents(filter);
-
-            return new PagedData<Student>(students.Select(x => Map(x, options)).ToList(), count);
-        }
-
-        public PagedData<Student> GetStudentsByGroupId(int groupId, OptionsStudent options, FilterStudent filter)
-        {
-            var (count, students) = _repositoryStudent.GetStudentsByGroupId(groupId, filter);
-
-            return new PagedData<Student>(students.Select(x => Map(x, options)).ToList(), count);
-        }
-
-        public Student GetStudentById(int id, OptionsStudent options)
+        public Task<Student> GetStudent(int id)
         {
             _helperUserRole.CheckRoleStudent(id);
 
@@ -52,19 +34,7 @@ namespace EducationSystem.Implementations.Managers
                     $"Студент не найден. Идентификатор студента: {id}.",
                     $"Студент не найден.");
 
-            return Map(student, options);
-        }
-
-        private Student Map(DatabaseUser student, OptionsStudent options)
-        {
-            return Mapper.Map<DatabaseUser, Student>(student, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithGroup)
-                        d.Group = Mapper.Map<Group>(s.StudentGroup.Group);
-                });
-            });
+            return Task.FromResult(Mapper.Map<Student>(student));
         }
     }
 }

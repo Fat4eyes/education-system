@@ -41,7 +41,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerRole, ManagerRole>();
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
-            collection.AddTransient<IManagerGroup, ManagerGroup>();
             collection.AddTransient<IManagerTheme, ManagerTheme>();
             collection.AddTransient<IManagerStudent, ManagerStudent>();
             collection.AddTransient<IManagerTestData, ManagerTestData>();

@@ -20,36 +20,46 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerMaterial = managerMaterial;
         }
 
-        [Authorize]
-        [HttpGet("")]
-        public IActionResult GetMaterials(
+        [HttpGet]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetMaterials(
             [FromQuery] OptionsMaterial options,
             [FromQuery] FilterMaterial filter)
-            => Ok(_managerMaterial.GetMaterials(options, filter));
+        {
+            return Ok(await _managerMaterial.GetMaterials(options, filter));
+        }
 
         [Authorize]
-        [HttpGet("{materialId:int}")]
-        public IActionResult GetMaterial(
-            [FromRoute] int materialId,
-            [FromQuery] OptionsMaterial options)
-            => Ok(_managerMaterial.GetMaterialById(materialId, options));
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetMaterial([FromRoute] int id, [FromQuery] OptionsMaterial options)
+        {
+            return Ok(await _managerMaterial.GetMaterial(id, options));
+        }
 
+        [HttpPost]
         [Transaction]
-        [HttpPost("")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateMaterial([FromBody] Material material)
-            => Ok(await _managerMaterial.CreateMaterialAsync(material));
+        {
+            return Ok(await _managerMaterial.CreateMaterial(material));
+        }
 
         [Transaction]
-        [HttpPut("{materialId:int}")]
+        [HttpPut("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> UpdateMaterial([FromRoute] int materialId, [FromBody] Material material)
-            => Ok(await _managerMaterial.UpdateMaterialAsync(materialId, material));
+        public async Task<IActionResult> UpdateMaterial([FromRoute] int id, [FromBody] Material material)
+        {
+            return Ok(await _managerMaterial.UpdateMaterial(id, material));
+        }
 
         [Transaction]
-        [HttpDelete("{materialId:int}")]
+        [HttpDelete("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public IActionResult DeleteMaterial([FromRoute] int materialId)
-            => Ok(async () => await _managerMaterial.DeleteMaterialByIdAsync(materialId));
+        public async Task<IActionResult> DeleteMaterial([FromRoute] int id)
+        {
+            await _managerMaterial.DeleteMaterial(id);
+
+            return Ok();
+        }
     }
 }

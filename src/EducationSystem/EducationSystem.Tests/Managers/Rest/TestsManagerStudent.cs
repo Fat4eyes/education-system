@@ -1,8 +1,8 @@
-﻿using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Models.Options;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
@@ -26,18 +26,18 @@ namespace EducationSystem.Tests.Managers.Rest
         }
 
         [Fact]
-        public void GetStudentById_NotStudent()
+        public async Task GetStudent_NotStudent()
         {
             MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
-            Assert.Throws<EducationSystemException>(
-                () => _managerStudent.GetStudentById(999, new OptionsStudent()));
+            await Assert.ThrowsAsync<EducationSystemException>(
+                () => _managerStudent.GetStudent(999));
         }
 
         [Fact]
-        public void GetStudentById_Found()
+        public async Task GetStudent_Found()
         {
             MockHelperUser.Reset();
 
@@ -45,13 +45,13 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseUser { FirstName = "Victor" });
 
-            var student = _managerStudent.GetStudentById(999, new OptionsStudent());
+            var student = await _managerStudent.GetStudent(999);
 
             Assert.Equal("Victor", student.FirstName);
         }
 
         [Fact]
-        public void GetStudentById_NotFound()
+        public async Task GetStudent_NotFound()
         {
             MockHelperUser.Reset();
 
@@ -59,8 +59,8 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseUser) null);
 
-            Assert.Throws<EducationSystemNotFoundException>(
-                () => _managerStudent.GetStudentById(999, new OptionsStudent()));
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>(
+                () => _managerStudent.GetStudent(999));
         }
     }
 }

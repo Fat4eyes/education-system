@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Managers;
@@ -26,18 +27,18 @@ namespace EducationSystem.Tests.Managers.Rest
         }
 
         [Fact]
-        public void GetStudyProfileByStudentId_NotStudent()
+        public async Task GetStudyProfileByStudentId_NotStudent()
         {
             MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
-            Assert.Throws<EducationSystemException>(
+            await Assert.ThrowsAsync<EducationSystemException>(
                 () => _managerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile()));
         }
 
         [Fact]
-        public void GetStudyProfileByStudentId_Found()
+        public async Task GetStudyProfileByStudentId_Found()
         {
             MockHelperUser.Reset();
 
@@ -45,13 +46,13 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetStudyProfileByStudentId(999))
                 .Returns(new DatabaseStudyProfile { Name = "Study Profile" });
 
-            var studyProfile = _managerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile());
+            var studyProfile = await _managerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile());
 
             Assert.Equal("Study Profile", studyProfile.Name);
         }
 
         [Fact]
-        public void GetStudyProfileByStudentId_NotFound()
+        public async Task GetStudyProfileByStudentId_NotFound()
         {
             MockHelperUser.Reset();
 
@@ -59,7 +60,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetStudyProfileByStudentId(999))
                 .Returns((DatabaseStudyProfile) null);
 
-            Assert.Throws<EducationSystemNotFoundException>(
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerStudyProfile.GetStudyProfileByStudentId(999, new OptionsStudyProfile()));
         }
     }

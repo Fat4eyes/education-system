@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Managers;
@@ -35,26 +36,26 @@ namespace EducationSystem.Tests.Managers.Rest
         }
 
         [Fact]
-        public void GetThemeById_Found()
+        public async Task GetTest_Found()
         {
             _mockRepositoryTheme
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseTheme { Name = "HTML" });
 
-            var theme = _managerTheme.GetThemeById(999, new OptionsTheme());
+            var theme = await _managerTheme.GetTheme(999, new OptionsTheme());
 
             Assert.Equal("HTML", theme.Name);
         }
 
         [Fact]
-        public void GetThemeById_NotFound()
+        public async Task GetTest_NotFound()
         {
             _mockRepositoryTheme
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseTheme) null);
 
-            Assert.Throws<EducationSystemNotFoundException>(
-                () => _managerTheme.GetThemeById(999, new OptionsTheme()));
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>(
+                () => _managerTheme.GetTheme(999, new OptionsTheme()));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
@@ -26,7 +27,7 @@ namespace EducationSystem.Implementations.Managers
             _repositoryInstitute = repositoryInstitute;
         }
 
-        public Institute GetInstituteByStudentId(int studentId, OptionsInstitute options)
+        public Task<Institute> GetInstituteByStudentId(int studentId, OptionsInstitute options)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
@@ -35,12 +36,7 @@ namespace EducationSystem.Implementations.Managers
                     $"Институт не найден. Идентификатор студента: {studentId}.",
                     $"Институт не найден.");
 
-            return Map(institute);
-        }
-
-        private Institute Map(DatabaseInstitute institute)
-        {
-            return Mapper.Map<DatabaseInstitute, Institute>(institute);
+            return Task.FromResult(Mapper.Map<DatabaseInstitute, Institute>(institute));
         }
     }
 }

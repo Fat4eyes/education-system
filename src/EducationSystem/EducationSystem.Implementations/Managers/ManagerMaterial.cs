@@ -41,14 +41,18 @@ namespace EducationSystem.Implementations.Managers
             _repositoryMaterialFile = repositoryMaterialFile;
         }
 
-        public PagedData<Material> GetMaterials(OptionsMaterial options, FilterMaterial filter)
+        public Task<PagedData<Material>> GetMaterials(OptionsMaterial options, FilterMaterial filter)
         {
             var (count, materials) = _repositoryMaterial.GetMaterials(filter);
 
-            return new PagedData<Material>(materials.Select(x => Map(x, options)).ToList(), count);
+            var items = materials
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Material>(items, count));
         }
 
-        public async Task DeleteMaterialByIdAsync(int id)
+        public async Task DeleteMaterial(int id)
         {
             var material = _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
@@ -58,17 +62,17 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryMaterial.RemoveAsync(material, true);
         }
 
-        public Material GetMaterialById(int id, OptionsMaterial options)
+        public Task<Material> GetMaterial(int id, OptionsMaterial options)
         {
             var material = _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал не найден. Идентификатор материала: {id}.",
                     $"Материал не найден.");
 
-            return Map(material, options);
+            return Task.FromResult(Map(material, options));
         }
 
-        public async Task<Material> CreateMaterialAsync(Material material)
+        public async Task<Material> CreateMaterial(Material material)
         {
             _validatorMaterial.Validate(material.Format());
 
@@ -79,7 +83,7 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseMaterial, Material>(model);
         }
 
-        public async Task<Material> UpdateMaterialAsync(int id, Material material)
+        public async Task<Material> UpdateMaterial(int id, Material material)
         {
             _validatorMaterial.Validate(material.Format());
 

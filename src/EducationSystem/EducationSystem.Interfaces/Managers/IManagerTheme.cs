@@ -9,18 +9,14 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerTheme
     {
-        PagedData<Theme> GetThemes(OptionsTheme options, FilterTheme filter);
-        PagedData<Theme> GetThemesByTestId(int testId, OptionsTheme options, FilterTheme filter);
-        PagedData<Theme> GetThemesByDisciplineId(int disciplineId, OptionsTheme options, FilterTheme filter);
+        Task<PagedData<Theme>> GetThemesByTestId(int testId, OptionsTheme options, FilterTheme filter);
+        Task<PagedData<Theme>> GetThemesByDisciplineId(int disciplineId, OptionsTheme options, FilterTheme filter);
 
-        Theme GetThemeById(int id, OptionsTheme options);
+        Task DeleteTheme(int id);
+        Task<Theme> GetTheme(int id, OptionsTheme options);
+        Task<Theme> CreateTheme(Theme theme);
+        Task<Theme> UpdateTheme(int id, Theme theme);
 
-        Task DeleteThemeByIdAsync(int id);
-
-        Task<Theme> CreateThemeAsync(Theme theme);
-
-        Task<Theme> UpdateThemeAsync(int id, Theme theme);
-
-        Task UpdateDisciplineThemesAsync(int disciplineId, List<Theme> themes);
+        Task UpdateDisciplineThemes(int disciplineId, List<Theme> themes);
     }
 }

@@ -41,7 +41,50 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
             _repositoryFile = repositoryFile;
         }
 
-        public virtual async Task<TFile> UploadFile(TFile file)
+        public async Task DeleteFile(int id)
+        {
+            var model = _repositoryFile.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Файл для удаления не найден. Идентификатор файла: {id}.",
+                    $"Файл для удаления не найден.");
+
+            var file = Mapper.Map<TFile>(model);
+
+            await _repositoryFile.RemoveAsync(model);
+
+            if (_helperFile.IsFileExists(file) == false)
+                return;
+
+            var path = _helperPath.GetAbsoluteFilePath(file);
+
+            if (SystemFile.Exists(path))
+                SystemFile.Delete(path);
+
+            await _repositoryFile.SaveChangesAsync();
+        }
+
+        public Task<TFile> GetFile(int id)
+        {
+            var model = _repositoryFile.GetById(id) ??
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Файл не найден. Идентификатор файла: {id}.",
+                    $"Файл не найден.");
+
+            var file = Mapper.Map<TFile>(model);
+
+            if (_helperFile.IsFileExists(file) == false)
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Файл не найден. Идентификатор файла: {id}.",
+                    $"Файл не найден.");
+
+            file.Path = _helperPath
+                .GetRelativeFilePath(file)
+                .Replace("\\", "/");
+
+            return Task.FromResult(file);
+        }
+
+        public virtual async Task<TFile> CreateFile(TFile file)
         {
             _validatorFile.Validate(file);
 
@@ -81,50 +124,5 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
             return result;
         }
-
-        public Task<TFile> GetFileById(int id)
-        {
-            var model = _repositoryFile.GetById(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Файл не найден. Идентификатор файла: {id}.",
-                    $"Файл не найден.");
-
-            var file = Mapper.Map<TFile>(model);
-
-            if (_helperFile.IsFileExists(file) == false)
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Файл не найден. Идентификатор файла: {id}.",
-                    $"Файл не найден.");
-
-            file.Path = _helperPath
-                .GetRelativeFilePath(file)
-                .Replace("\\", "/");
-
-            return Task.FromResult(file);
-        }
-
-        public async Task DeleteFileByIdAsync(int id)
-        {
-            var model = _repositoryFile.GetById(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Файл для удаления не найден. Идентификатор файла: {id}.",
-                    $"Файл для удаления не найден.");
-
-            var file = Mapper.Map<TFile>(model);
-
-            await _repositoryFile.RemoveAsync(model);
-
-            if (_helperFile.IsFileExists(file) == false)
-                return;
-
-            var path = _helperPath.GetAbsoluteFilePath(file);
-
-            if (SystemFile.Exists(path))
-                SystemFile.Delete(path);
-
-            await _repositoryFile.SaveChangesAsync();
-        }
-
-        public abstract string[] GetAvailableExtensions();
     }
 }

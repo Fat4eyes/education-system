@@ -15,7 +15,6 @@ namespace EducationSystem.Mapping
 
             expression.CreateMap<DatabaseUser, Student>()
                 .ForMember(d => d.Active, o => o.MapFrom(s => s.Active == 1))
-                .ForMember(d => d.Group, o => o.Ignore())
                 .ForMember(d => d.Roles, o => o.Ignore());
 
             expression.CreateMap<DatabaseDiscipline, Discipline>()

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/Tests")]
-    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerTest : Tamer
     {
         private readonly IManagerTest _managerTest;
@@ -22,40 +21,54 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerTheme = managerTheme;
         }
 
-        [HttpGet("")]
-        public IActionResult GetTests(
-            [FromQuery] OptionsTest options,
-            [FromQuery] FilterTest filter)
-            => Ok(_managerTest.GetTests(options, filter));
+        [HttpGet]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetTests([FromQuery] OptionsTest options, [FromQuery] FilterTest filter)
+        {
+            return Ok(await _managerTest.GetTests(options, filter));
+        }
 
         [Transaction]
         [HttpPost("")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateTest([FromBody] Test test)
-            => Ok(await _managerTest.CreateTestAsync(test));
+        {
+            return Ok(await _managerTest.CreateTest(test));
+        }
 
-        [HttpGet("{testId:int}")]
-        public IActionResult GetTest(
-            [FromRoute] int testId,
-            [FromQuery] OptionsTest options)
-            => Ok(_managerTest.GetTestById(testId, options));
+        [HttpGet("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetTest([FromRoute] int id, [FromQuery] OptionsTest options)
+        {
+            return Ok(await _managerTest.GetTest(id, options));
+        }
 
         [Transaction]
-        [HttpPut("{testId:int}")]
-        public async Task<IActionResult> UpdateTest(
-            [FromRoute] int testId,
-            [FromBody] Test test)
-            => Ok(await _managerTest.UpdateTestAsync(testId, test));
+        [HttpPut("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> UpdateTest([FromRoute] int id, [FromBody] Test test)
+        {
+            return Ok(await _managerTest.UpdateTest(id, test));
+        }
 
-        [HttpGet("{testId:int}/Themes")]
-        public IActionResult GetTestThemes(
-            [FromRoute] int testId,
+        [Transaction]
+        [HttpDelete("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> DeleteTest([FromRoute] int id)
+        {
+            await _managerTest.DeleteTest(id);
+
+            return Ok();
+        }
+
+        [HttpGet("{id:int}/Themes")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetThemesByTestId(
+            [FromRoute] int id,
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
-            => Ok(_managerTheme.GetThemesByTestId(testId, options, filter));
-
-        [Transaction]
-        [HttpDelete("{testId:int}")]
-        public IActionResult DeleteTest([FromRoute] int testId) =>
-            Ok(async () => await _managerTest.DeleteTestByIdAsync(testId));
+        {
+            return Ok(await _managerTheme.GetThemesByTestId(id, options, filter));
+        }
     }
 }

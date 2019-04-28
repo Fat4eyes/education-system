@@ -1,10 +1,7 @@
-﻿using System.Threading.Tasks;
-using EducationSystem.Constants;
+﻿using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Models.Files;
-using EducationSystem.WebApp.Source.Attributes;
 using EducationSystem.WebApp.Source.Tamers.Files.Basics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers.Files
@@ -16,13 +13,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Files
             : base(managerDocument)
         { }
 
-        [Transaction]
-        [HttpPost("")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> UploadDocument(IFormFile file)
+        public override IActionResult GetExtensions()
         {
-            using (var stream = file.OpenReadStream())
-                return Ok(await ManagerFile.UploadFile(new Document(file.FileName, stream)));
+            return Ok(FileExtensions.AvailableDocumentExtensions);
         }
     }
 }

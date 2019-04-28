@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Managers;
@@ -26,18 +27,18 @@ namespace EducationSystem.Tests.Managers.Rest
         }
 
         [Fact]
-        public void GetStudyPlanByStudentId_NotStudent()
+        public async Task GetStudyPlanByStudentId_NotStudent()
         {
             MockHelperUser
                 .Setup(x => x.CheckRoleStudent(999))
                 .Throws<EducationSystemException>();
 
-            Assert.Throws<EducationSystemException>(
+            await Assert.ThrowsAsync<EducationSystemException>(
                 () => _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));
         }
 
         [Fact]
-        public void GetStudyPlanByStudentId_Found()
+        public async Task GetStudyPlanByStudentId_Found()
         {
             MockHelperUser.Reset();
 
@@ -45,13 +46,13 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetStudyPlanByStudentId(999))
                 .Returns(new DatabaseStudyPlan { Name = "Study Plan" });
 
-            var studyPlan = _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan());
+            var studyPlan = await _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan());
 
             Assert.Equal("Study Plan", studyPlan.Name);
         }
 
         [Fact]
-        public void GetStudyPlanByStudentId_NotFound()
+        public async Task GetStudyPlanByStudentId_NotFound()
         {
             MockHelperUser.Reset();
 
@@ -59,7 +60,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetStudyPlanByStudentId(999))
                 .Returns((DatabaseStudyPlan) null);
 
-            Assert.Throws<EducationSystemNotFoundException>(
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));
         }
     }

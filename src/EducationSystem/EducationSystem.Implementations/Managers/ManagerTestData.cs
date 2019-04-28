@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
@@ -28,17 +27,7 @@ namespace EducationSystem.Implementations.Managers
             _repositoryTest = repositoryTest;
         }
 
-        public List<TestData> GetTestsDataForStudentByTestIds(int[] testIds, int studentId)
-        {
-            if (testIds == null)
-                throw new ArgumentNullException(nameof(testIds));
-
-            return testIds
-                .Select(x => GetTestDataForStudentByTestId(x, studentId))
-                .ToList();
-        }
-
-        public TestData GetTestDataForStudentByTestId(int testId, int studentId)
+        public Task<TestData> GetTestDataForStudentByTestId(int testId, int studentId)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
@@ -55,7 +44,7 @@ namespace EducationSystem.Implementations.Managers
                 .SelectMany(x => x.Questions)
                 .ToArray();
 
-            return new TestData
+            var data = new TestData
             {
                 Test = Mapper.Map<Test>(test),
                 ThemesCount = themes.Length,
@@ -65,6 +54,8 @@ namespace EducationSystem.Implementations.Managers
                 PassedQuestionsCount = questions
                     .Count(x => x.QuestionStudents.Any(y => y.StudentId == studentId && y.Passed))
             };
+
+            return Task.FromResult(data);
         }
     }
 }

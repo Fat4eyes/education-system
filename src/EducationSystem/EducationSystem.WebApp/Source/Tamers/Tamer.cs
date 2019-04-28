@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,9 +27,6 @@ namespace EducationSystem.WebApp.Source.Tamers
             action();
             return Ok();
         }
-
-        protected IActionResult File(File file) =>
-            File(file.Stream, "application/octet-stream", file.Name);
 
         private static SuccessResponse CreateResponse(object @object)
             => new SuccessResponse(@object);

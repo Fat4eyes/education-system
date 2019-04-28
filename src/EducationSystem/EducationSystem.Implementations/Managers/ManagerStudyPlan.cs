@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
@@ -26,7 +27,7 @@ namespace EducationSystem.Implementations.Managers
             _repositoryStudyPlan = repositoryStudyPlan;
         }
 
-        public StudyPlan GetStudyPlanByStudentId(int studentId, OptionsStudyPlan options)
+        public Task<StudyPlan> GetStudyPlanByStudentId(int studentId, OptionsStudyPlan options)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
@@ -35,7 +36,7 @@ namespace EducationSystem.Implementations.Managers
                     $"Учебный план не найден. Идентификатор студента: {studentId}.",
                     $"Учебный план не найден.");
 
-            return Map(studyPlan, options);
+            return Task.FromResult(Map(studyPlan, options));
         }
 
         private StudyPlan Map(DatabaseStudyPlan studyPlan, OptionsStudyPlan options)

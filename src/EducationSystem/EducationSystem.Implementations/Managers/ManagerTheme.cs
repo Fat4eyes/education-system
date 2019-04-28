@@ -35,38 +35,50 @@ namespace EducationSystem.Implementations.Managers
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public PagedData<Theme> GetThemes(OptionsTheme options, FilterTheme filter)
+        public Task<PagedData<Theme>> GetThemes(OptionsTheme options, FilterTheme filter)
         {
             var (count, themes) = _repositoryTheme.GetThemes(filter);
 
-            return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
+            var items = themes
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Theme>(items, count));
         }
 
-        public PagedData<Theme> GetThemesByTestId(int testId, OptionsTheme options, FilterTheme filter)
+        public Task<PagedData<Theme>> GetThemesByTestId(int testId, OptionsTheme options, FilterTheme filter)
         {
             var (count, themes) = _repositoryTheme.GetThemesByTestId(testId, filter);
 
-            return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
+            var items = themes
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Theme>(items, count));
         }
 
-        public PagedData<Theme> GetThemesByDisciplineId(int disciplineId, OptionsTheme options, FilterTheme filter)
+        public Task<PagedData<Theme>> GetThemesByDisciplineId(int disciplineId, OptionsTheme options, FilterTheme filter)
         {
             var (count, themes) = _repositoryTheme.GetThemesByDisciplineId(disciplineId, filter);
 
-            return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
+            var items = themes
+                .Select(x => Map(x, options))
+                .ToList();
+
+            return Task.FromResult(new PagedData<Theme>(items, count));
         }
 
-        public Theme GetThemeById(int id, OptionsTheme options)
+        public Task<Theme> GetTheme(int id, OptionsTheme options)
         {
             var theme = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема не найдена. Идентификатор темы: {id}.",
                     $"Тема не найдена.");
 
-            return Map(theme, options);
+            return Task.FromResult(Map(theme, options));
         }
 
-        public async Task DeleteThemeByIdAsync(int id)
+        public async Task DeleteTheme(int id)
         {
             var theme = _repositoryTheme.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
@@ -76,7 +88,7 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryTheme.RemoveAsync(theme, true);
         }
 
-        public async Task<Theme> CreateThemeAsync(Theme theme)
+        public async Task<Theme> CreateTheme(Theme theme)
         {
             _validatorTheme.Validate(theme.Format());
 
@@ -89,7 +101,7 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseTheme, Theme>(model);
         }
 
-        public async Task<Theme> UpdateThemeAsync(int id, Theme theme)
+        public async Task<Theme> UpdateTheme(int id, Theme theme)
         {
             _validatorTheme.Validate(theme.Format());
 
@@ -105,7 +117,7 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseTheme, Theme>(model);
         }
 
-        public async Task UpdateDisciplineThemesAsync(int disciplineId, List<Theme> themes)
+        public async Task UpdateDisciplineThemes(int disciplineId, List<Theme> themes)
         {
             if (themes.IsEmpty())
                 throw ExceptionHelper.CreatePublicException("Не указаны темы для обновления.");

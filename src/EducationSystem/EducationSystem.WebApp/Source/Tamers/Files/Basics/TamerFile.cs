@@ -4,6 +4,7 @@ using EducationSystem.Interfaces.Managers.Files.Basics;
 using EducationSystem.Models.Files.Basics;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
@@ -18,19 +19,41 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
         }
 
         [Authorize]
-        [HttpGet("{documentId:int}")]
-        public async Task<IActionResult> GetImage([FromRoute] int documentId)
-            => Ok(await ManagerFile.GetFileById(documentId));
-
-        [Authorize]
-        [HttpGet("Extensions")]
-        public IActionResult GetAvailableExtensions()
-            => Ok(ManagerFile.GetAvailableExtensions());
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetFile([FromRoute] int id)
+        {
+            return Ok(await ManagerFile.GetFile(id));
+        }
 
         [Transaction]
-        [HttpDelete("{documentId:int}")]
+        [HttpDelete("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public IActionResult DeleteDocument([FromRoute] int documentId)
-            => Ok(async () => await ManagerFile.DeleteFileByIdAsync(documentId));
+        public async Task<IActionResult> DeleteFile([FromRoute] int id)
+        {
+            await ManagerFile.DeleteFile(id);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Transaction]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> CreateFile(IFormFile file)
+        {
+            using (var stream = file.OpenReadStream())
+            {
+                var model = new TFile
+                {
+                    Name = file.FileName,
+                    Stream = stream
+                };
+
+                return Ok(await ManagerFile.CreateFile(model));
+            }
+        }
+
+        [HttpGet("Extensions")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public abstract IActionResult GetExtensions();
     }
 }

@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Managers;
@@ -25,26 +26,26 @@ namespace EducationSystem.Tests.Managers.Rest
         }
 
         [Fact]
-        public void GetUserById_Found()
+        public async Task GetUser_Found()
         {
             _mockRepositoryUser
                 .Setup(x => x.GetById(999))
                 .Returns(new DatabaseUser { FirstName = "Victor" });
 
-            var user = _managerUser.GetUserById(999, new OptionsUser());
+            var user = await _managerUser.GetUser(999, new OptionsUser());
 
             Assert.Equal("Victor", user.FirstName);
         }
 
         [Fact]
-        public void GetUserById_NotFound()
+        public async Task GetUser_NotFound()
         {
             _mockRepositoryUser
                 .Setup(x => x.GetById(999))
                 .Returns((DatabaseUser) null);
 
-            Assert.Throws<EducationSystemNotFoundException>(
-                () => _managerUser.GetUserById(999, new OptionsUser()));
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>(
+                () => _managerUser.GetUser(999, new OptionsUser()));
         }
     }
 }

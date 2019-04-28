@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace EducationSystem.WebApp.Source.Tamers.Rest
 {
     [Route("api/Questions")]
-    [Roles(UserRoles.Admin, UserRoles.Lecturer)]
     public class TamerQuestion : Tamer
     {
         private readonly IManagerQuestion _managerQuestion;
@@ -20,33 +19,46 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerQuestion = managerQuestion;
         }
 
-        [HttpGet("")]
-        public IActionResult GetQuestions(
+        [HttpGet]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetQuestions(
             [FromQuery] OptionsQuestion options,
             [FromQuery] FilterQuestion filter)
-            => Ok(_managerQuestion.GetQuestions(options, filter));
+        {
+            return Ok(await _managerQuestion.GetQuestions(options, filter));
+        }
 
+        [HttpPost]
         [Transaction]
-        [HttpPost("")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateQuestion([FromBody] Question question)
-            => Ok(await _managerQuestion.CreateQuestionAsync(question));
+        {
+            return Ok(await _managerQuestion.CreateQuestion(question));
+        }
 
-        [HttpGet("{questionId:int}")]
-        public IActionResult GetQuestion(
-            [FromRoute] int questionId,
-            [FromQuery] OptionsQuestion options)
-            => Ok(_managerQuestion.GetQuestionById(questionId, options));
-
-        [Transaction]
-        [HttpPut("{questionId:int}")]
-        public async Task<IActionResult> UpdateQuestion(
-            [FromRoute] int questionId,
-            [FromBody] Question question)
-            => Ok(await _managerQuestion.UpdateQuestionAsync(questionId, question));
+        [HttpGet("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetQuestion([FromRoute] int id, [FromQuery] OptionsQuestion options)
+        {
+            return Ok(await _managerQuestion.GetQuestion(id, options));
+        }
 
         [Transaction]
-        [HttpDelete("{questionId:int}")]
-        public IActionResult DeleteQuestion([FromRoute] int questionId) =>
-            Ok(async () => await _managerQuestion.DeleteQuestionByIdAsync(questionId));
+        [HttpPut("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> UpdateQuestion([FromRoute] int id, [FromBody] Question question)
+        {
+            return Ok(await _managerQuestion.UpdateQuestion(id, question));
+        }
+
+        [Transaction]
+        [HttpDelete("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> DeleteQuestion([FromRoute] int id)
+        {
+            await _managerQuestion.DeleteQuestion(id);
+
+            return Ok();
+        }
     }
 }
