@@ -68,6 +68,9 @@ namespace EducationSystem.Implementations.Managers
 
                     if (options.WithThemes)
                         d.Themes = Mapper.Map<List<Theme>>(s.Themes);
+
+                    if (options.WithLecturers)
+                        d.Lecturers = Mapper.Map<List<User>>(s.Lecturers.Select(y => y.Lecturer));
                 });
             });
         }
