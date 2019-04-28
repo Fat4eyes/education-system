@@ -19,13 +19,9 @@ namespace EducationSystem.Repositories.Implementations
                 x.Guid, guid.ToString(), StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public bool IsFilesExists(List<int> fileIds)
+        public bool IsFileExists(int id)
         {
-            fileIds = fileIds
-                .Distinct()
-                .ToList();
-
-            return AsQueryable().Count(x => fileIds.Contains(x.Id)) == fileIds.Count;
+            return AsQueryable().Any(x => x.Id == id);
         }
     }
 }

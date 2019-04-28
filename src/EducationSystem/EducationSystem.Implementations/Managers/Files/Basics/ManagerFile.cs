@@ -91,7 +91,7 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
             var file = Mapper.Map<TFile>(model);
 
-            if (_helperFile.FileExists(file) == false)
+            if (_helperFile.IsFileExists(file) == false)
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Файл не найден. Идентификатор файла: {id}.",
                     $"Файл не найден.");
@@ -114,7 +114,7 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
             await _repositoryFile.RemoveAsync(model);
 
-            if (_helperFile.FileExists(file) == false)
+            if (_helperFile.IsFileExists(file) == false)
                 return;
 
             var path = _helperPath.GetAbsoluteFilePath(file);

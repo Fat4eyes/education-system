@@ -45,7 +45,7 @@ namespace EducationSystem.Implementations.Validators
             if (model.Themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В тесте указаны повторяющиеся темы.");
 
-            if (_repositoryTheme.IsThemesExists(model.Themes.Select(x => x.Id).ToList()) == false)
+            if (model.Themes.All(x => _repositoryTheme.IsThemeExists(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
 
             if (_repositoryDiscipline.GetById(model.DisciplineId) == null)

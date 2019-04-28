@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using EducationSystem.Database.Models;
 using EducationSystem.Repositories.Interfaces.Basics;
 
@@ -9,6 +8,6 @@ namespace EducationSystem.Repositories.Interfaces
     {
         DatabaseFile GetByGuid(Guid guid);
 
-        bool IsFilesExists(List<int> fileIds);
+        bool IsFileExists(int id);
     }
 }

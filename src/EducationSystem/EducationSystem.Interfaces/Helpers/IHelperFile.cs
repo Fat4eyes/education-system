@@ -4,7 +4,7 @@ namespace EducationSystem.Interfaces.Helpers
 {
     public interface IHelperFile
     {
-        bool FileExists(File file);
+        bool IsFileExists(File file);
 
         string GetAbsoluteFilePath(File file);
 

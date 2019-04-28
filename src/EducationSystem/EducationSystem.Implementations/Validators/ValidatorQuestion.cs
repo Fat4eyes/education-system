@@ -5,7 +5,6 @@ using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Validators;
-using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 
@@ -60,7 +59,7 @@ namespace EducationSystem.Implementations.Validators
             if (model.Image != null && _repositoryFile.GetById(model.Image.Id) == null)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.Image != null && _helperFile.FileExists(model.Image) == false)
+            if (model.Image != null && _helperFile.IsFileExists(model.Image) == false)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
             if (model.Material != null && _repositoryMaterial.GetById(model.Material.Id) == null)

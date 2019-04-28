@@ -15,7 +15,7 @@ namespace EducationSystem.Implementations.Helpers
             _helperPath = helperPath;
         }
 
-        public bool FileExists(File file)
+        public bool IsFileExists(File file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));

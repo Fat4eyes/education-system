@@ -113,7 +113,7 @@ namespace EducationSystem.Implementations.Managers
             if (themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("Указаны повторяющиеся темы.");
 
-            if (_repositoryTheme.IsThemesExists(themes.Select(x => x.Id).ToList()) == false)
+            if (themes.All(x => _repositoryTheme.IsThemeExists(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько указанных тем не существуют.");
 
             var discipline = _repositoryDiscipline.GetById(disciplineId) ??

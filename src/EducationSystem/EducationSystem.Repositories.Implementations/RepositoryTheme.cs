@@ -37,13 +37,9 @@ namespace EducationSystem.Repositories.Implementations
                 .ApplyPaging(filter);
         }
 
-        public bool IsThemesExists(List<int> themeIds)
+        public bool IsThemeExists(int id)
         {
-            themeIds = themeIds
-                .Distinct()
-                .ToList();
-
-            return AsQueryable().Count(x => themeIds.Contains(x.Id)) == themeIds.Count;
+            return AsQueryable().Any(x => x.Id == id);
         }
 
         public int GetLastThemeOrder(int disciplineId)
