@@ -41,20 +41,20 @@ namespace EducationSystem.Implementations.Managers
             _repositoryMaterialFile = repositoryMaterialFile;
         }
 
-        public Task<PagedData<Material>> GetMaterials(OptionsMaterial options, FilterMaterial filter)
+        public async Task<PagedData<Material>> GetMaterials(OptionsMaterial options, FilterMaterial filter)
         {
-            var (count, materials) = _repositoryMaterial.GetMaterials(filter);
+            var (count, materials) = await _repositoryMaterial.GetMaterials(filter);
 
             var items = materials
                 .Select(x => Map(x, options))
                 .ToList();
 
-            return Task.FromResult(new PagedData<Material>(items, count));
+            return new PagedData<Material>(items, count);
         }
 
         public async Task DeleteMaterial(int id)
         {
-            var material = _repositoryMaterial.GetById(id) ??
+            var material = await _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал для удаления не найден. Идентификатор материала: {id}.",
                     $"Материал для удаления не найден.");
@@ -62,14 +62,14 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryMaterial.RemoveAsync(material, true);
         }
 
-        public Task<Material> GetMaterial(int id, OptionsMaterial options)
+        public async Task<Material> GetMaterial(int id, OptionsMaterial options)
         {
-            var material = _repositoryMaterial.GetById(id) ??
+            var material = await _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал не найден. Идентификатор материала: {id}.",
                     $"Материал не найден.");
 
-            return Task.FromResult(Map(material, options));
+            return Map(material, options);
         }
 
         public async Task<Material> CreateMaterial(Material material)
@@ -87,7 +87,7 @@ namespace EducationSystem.Implementations.Managers
         {
             _validatorMaterial.Validate(material.Format());
 
-            var model = _repositoryMaterial.GetById(id) ??
+            var model = await _repositoryMaterial.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал для обновления не найден. Идентификатор материала: {id}.",
                     $"Материал для обновления не найден.");

@@ -44,7 +44,7 @@ namespace EducationSystem.Tests.Managers.Rest
 
             _mockRepositoryInstitute
                 .Setup(x => x.GetInstituteByStudentId(999))
-                .Returns(new DatabaseInstitute { Name = "ИИТиУвТС" });
+                .ReturnsAsync(new DatabaseInstitute { Name = "ИИТиУвТС" });
 
             var institute = await _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute());
 
@@ -58,7 +58,7 @@ namespace EducationSystem.Tests.Managers.Rest
 
             _mockRepositoryInstitute
                 .Setup(x => x.GetInstituteByStudentId(999))
-                .Returns((DatabaseInstitute) null);
+                .ReturnsAsync((DatabaseInstitute) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerInstitute.GetInstituteByStudentId(999, new OptionsInstitute()));

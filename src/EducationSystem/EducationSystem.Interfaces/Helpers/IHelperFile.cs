@@ -1,13 +1,10 @@
-﻿using EducationSystem.Models.Files.Basics;
+﻿using System.Threading.Tasks;
+using EducationSystem.Models.Files.Basics;
 
 namespace EducationSystem.Interfaces.Helpers
 {
     public interface IHelperFile
     {
-        bool IsFileExists(File file);
-
-        string GetAbsoluteFilePath(File file);
-
-        string GetRelativeFilePath(File file);
+        Task<bool> IsFileExists(File file);
     }
 }

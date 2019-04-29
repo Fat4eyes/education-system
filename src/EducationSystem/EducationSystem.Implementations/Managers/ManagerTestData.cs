@@ -27,11 +27,11 @@ namespace EducationSystem.Implementations.Managers
             _repositoryTest = repositoryTest;
         }
 
-        public Task<TestData> GetTestDataForStudentByTestId(int testId, int studentId)
+        public async Task<TestData> GetTestDataForStudentByTestId(int testId, int studentId)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var test = _repositoryTest.GetTestForStudentById(testId, studentId) ??
+            var test = await _repositoryTest.GetTestForStudentById(testId, studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тест не найден. Идентификатор теста: {testId}.",
                     $"Тест не найден.");
@@ -44,7 +44,7 @@ namespace EducationSystem.Implementations.Managers
                 .SelectMany(x => x.Questions)
                 .ToArray();
 
-            var data = new TestData
+            return new TestData
             {
                 Test = Mapper.Map<Test>(test),
                 ThemesCount = themes.Length,
@@ -54,8 +54,6 @@ namespace EducationSystem.Implementations.Managers
                 PassedQuestionsCount = questions
                     .Count(x => x.QuestionStudents.Any(y => y.StudentId == studentId && y.Passed))
             };
-
-            return Task.FromResult(data);
         }
     }
 }

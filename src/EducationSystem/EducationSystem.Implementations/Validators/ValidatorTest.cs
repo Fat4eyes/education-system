@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Validators;
@@ -19,7 +20,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public void Validate(Test model)
+        public async Task Validate(Test model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -45,10 +46,10 @@ namespace EducationSystem.Implementations.Validators
             if (model.Themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В тесте указаны повторяющиеся темы.");
 
-            if (model.Themes.All(x => _repositoryTheme.IsThemeExists(x.Id)) == false)
+            if (await model.Themes.AllAsync(x => _repositoryTheme.IsThemeExists(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
 
-            if (_repositoryDiscipline.GetById(model.DisciplineId) == null)
+            if (await _repositoryDiscipline.GetById(model.DisciplineId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
         }
     }

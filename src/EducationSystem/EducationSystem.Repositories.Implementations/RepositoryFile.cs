@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations
 {
@@ -13,15 +13,15 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryFile(DatabaseContext context)
             : base(context) { }
 
-        public DatabaseFile GetByGuid(Guid guid)
+        public Task<DatabaseFile> GetByGuid(Guid guid)
         {
-            return AsQueryable().FirstOrDefault(x => string.Equals(
-                x.Guid, guid.ToString(), StringComparison.CurrentCultureIgnoreCase));
+            return AsQueryable().FirstOrDefaultAsync(x => string.Equals(
+                x.Guid, guid.ToString(), StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public bool IsFileExists(int id)
+        public Task<bool> IsFileExists(int id)
         {
-            return AsQueryable().Any(x => x.Id == id);
+            return AsQueryable().AnyAsync(x => x.Id == id);
         }
     }
 }

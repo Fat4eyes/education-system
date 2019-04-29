@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models.Basics;
 using EducationSystem.Repositories.Interfaces.Basics;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations.Basics
 {
@@ -18,16 +20,16 @@ namespace EducationSystem.Repositories.Implementations.Basics
 
         protected IQueryable<TModel> AsQueryable() => Context.Set<TModel>();
 
-        public TModel GetById(int id)
+        public Task<TModel> GetById(int id)
         {
-            return AsQueryable().FirstOrDefault(x => x.Id == id);
+            return AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public List<TModel> GetByIds(int[] ids)
+        public Task<List<TModel>> GetByIds(int[] ids)
         {
             return AsQueryable()
                 .Where(x => ids.Contains(x.Id))
-                .ToList();
+                .ToListAsync();
         }
     }
 }

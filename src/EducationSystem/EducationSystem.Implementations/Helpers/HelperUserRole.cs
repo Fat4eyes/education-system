@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
@@ -15,9 +16,9 @@ namespace EducationSystem.Implementations.Helpers
             _repositoryRole = repositoryRole;
         }
 
-        public void CheckRoleStudent(int userId)
+        public async Task CheckRoleStudent(int userId)
         {
-            var role = _repositoryRole.GetRoleByUserId(userId) ??
+            var role = await _repositoryRole.GetRoleByUserId(userId) ??
                 throw ExceptionHelper.CreateException(
                     $"Не удалось получить роль пользователя. " +
                     $"Идентификатор пользователя: {userId}.");

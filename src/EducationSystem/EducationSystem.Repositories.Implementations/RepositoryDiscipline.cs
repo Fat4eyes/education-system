@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
 using EducationSystem.Extensions;
@@ -15,17 +16,17 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryDiscipline(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplines(FilterDiscipline filter)
+        public async Task<(int Count, List<DatabaseDiscipline> Disciplines)> GetDisciplines(FilterDiscipline filter)
         {
             var query = AsQueryable();
 
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Name.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
 
-            return query.ApplyPaging(filter);
+            return await query.ApplyPaging(filter);
         }
 
-        public (int Count, List<DatabaseDiscipline> Disciplines) GetDisciplinesForStudent(int studentId, FilterDiscipline filter)
+        public async Task<(int Count, List<DatabaseDiscipline> Disciplines)> GetDisciplinesForStudent(int studentId, FilterDiscipline filter)
         {
             var query = AsQueryable()
                 .Where(x => x.Themes.Any(y => y.Questions.Any()))
@@ -39,7 +40,7 @@ namespace EducationSystem.Repositories.Implementations
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Name.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
 
-            return query.ApplyPaging(filter);
+            return await query.ApplyPaging(filter);
         }
     }
 }

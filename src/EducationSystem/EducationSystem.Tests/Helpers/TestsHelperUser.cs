@@ -1,4 +1,5 @@
-﻿using EducationSystem.Constants;
+﻿using System.Threading.Tasks;
+using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Helpers;
@@ -26,7 +27,7 @@ namespace EducationSystem.Tests.Helpers
         {
             _mockRepositoryRole
                 .Setup(x => x.GetRoleByUserId(999))
-                .Returns(new DatabaseRole { Name = UserRoles.Student });
+                .ReturnsAsync(new DatabaseRole { Name = UserRoles.Student });
 
             _helperUserRole.CheckRoleStudent(999);
         }
@@ -34,13 +35,13 @@ namespace EducationSystem.Tests.Helpers
         [Theory]
         [InlineData(UserRoles.Admin)]
         [InlineData(UserRoles.Lecturer)]
-        public void CheckRoleStudent_Error(string role)
+        public async Task CheckRoleStudent_Error(string role)
         {
             _mockRepositoryRole
                 .Setup(x => x.GetRoleByUserId(999))
-                .Returns(new DatabaseRole { Name = role });
+                .ReturnsAsync(new DatabaseRole { Name = role });
 
-            Assert.Throws<EducationSystemException>(() => _helperUserRole.CheckRoleStudent(999));
+            await Assert.ThrowsAsync<EducationSystemException>(() => _helperUserRole.CheckRoleStudent(999));
         }
     }
 }

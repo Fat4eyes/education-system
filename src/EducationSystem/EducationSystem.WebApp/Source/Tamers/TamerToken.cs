@@ -1,4 +1,5 @@
-﻿using EducationSystem.Interfaces.Managers;
+﻿using System.Threading.Tasks;
+using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +18,10 @@ namespace EducationSystem.WebApp.Source.Tamers
 
         [HttpPost]
         [Route("Generate")]
-        public IActionResult Generate([FromBody] TokenRequest request) =>
-            Ok(_managerToken.GenerateToken(request));
+        public async Task<IActionResult> Generate([FromBody] TokenRequest request)
+        {
+            return Ok(await _managerToken.GenerateToken(request));
+        }
 
         [HttpPost]
         [Authorize]

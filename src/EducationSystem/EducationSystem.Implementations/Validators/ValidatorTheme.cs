@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
@@ -15,7 +16,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public void Validate(Theme model)
+        public async Task Validate(Theme model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -23,7 +24,7 @@ namespace EducationSystem.Implementations.Validators
             if (string.IsNullOrWhiteSpace(model.Name))
                 throw ExceptionHelper.CreatePublicException("Не указано название темы.");
 
-            if (_repositoryDiscipline.GetById(model.DisciplineId) == null)
+            if (await _repositoryDiscipline.GetById(model.DisciplineId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
         }
     }

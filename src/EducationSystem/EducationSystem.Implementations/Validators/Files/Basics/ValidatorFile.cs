@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Validators;
@@ -26,7 +27,7 @@ namespace EducationSystem.Implementations.Validators.Files.Basics
             .Select(x => x.ToUpper())
             .ToArray();
 
-        public virtual void Validate(TFile model)
+        public virtual Task Validate(TFile model)
         {
             if (model?.Stream == null || model.Stream.Length == 0)
                 throw ExceptionHelper.CreatePublicException("Не указан файл.");
@@ -46,6 +47,8 @@ namespace EducationSystem.Implementations.Validators.Files.Basics
                 throw ExceptionHelper.CreatePublicException(
                     $"Размер файла превышает допустимый размер. " +
                     $"Допустимый размер файла: {MaxiFileSize} MB.");
+
+            return Task.CompletedTask;
         }
     }
 }

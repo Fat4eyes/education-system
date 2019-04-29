@@ -30,7 +30,7 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             _mockRepositoryUser
                 .Setup(x => x.GetById(999))
-                .Returns(new DatabaseUser { FirstName = "Victor" });
+                .ReturnsAsync(new DatabaseUser { FirstName = "Victor" });
 
             var user = await _managerUser.GetUser(999, new OptionsUser());
 
@@ -42,7 +42,7 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             _mockRepositoryUser
                 .Setup(x => x.GetById(999))
-                .Returns((DatabaseUser) null);
+                .ReturnsAsync((DatabaseUser) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerUser.GetUser(999, new OptionsUser()));

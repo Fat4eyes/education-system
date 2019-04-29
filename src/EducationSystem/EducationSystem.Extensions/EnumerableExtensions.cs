@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace EducationSystem.Extensions
 {
@@ -17,5 +18,39 @@ namespace EducationSystem.Extensions
 
         public static bool IsNotEmpty<T>(this IEnumerable<T> items, Func<T, bool> predicate)
             => items?.Any(predicate) == true;
+
+        public static async Task<bool> AllAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task<bool>> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            foreach (var item in source)
+            {
+                if (await predicate(item) == false)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static async Task<bool> AllAsync<TSource>(this IEnumerable<Task<TSource>> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            foreach (var item in source)
+            {
+                if (!predicate(await item))
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -27,16 +27,16 @@ namespace EducationSystem.Implementations.Managers
             _repositoryStudyPlan = repositoryStudyPlan;
         }
 
-        public Task<StudyPlan> GetStudyPlanByStudentId(int studentId, OptionsStudyPlan options)
+        public async Task<StudyPlan> GetStudyPlanByStudentId(int studentId, OptionsStudyPlan options)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var studyPlan = _repositoryStudyPlan.GetStudyPlanByStudentId(studentId) ??
+            var studyPlan = await _repositoryStudyPlan.GetStudyPlanByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Учебный план не найден. Идентификатор студента: {studentId}.",
                     $"Учебный план не найден.");
 
-            return Task.FromResult(Map(studyPlan, options));
+            return Map(studyPlan, options);
         }
 
         private StudyPlan Map(DatabaseStudyPlan studyPlan, OptionsStudyPlan options)

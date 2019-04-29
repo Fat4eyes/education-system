@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
 using EducationSystem.Extensions;
 using EducationSystem.Models.Filters;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations
 {
@@ -15,7 +17,7 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryTest(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseTest> Tests) GetTests(FilterTest filter)
+        public async Task<(int Count, List<DatabaseTest> Tests)> GetTests(FilterTest filter)
         {
             var query = AsQueryable();
 
@@ -31,10 +33,10 @@ namespace EducationSystem.Repositories.Implementations
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
                 
-            return query.ApplyPaging(filter);
+            return await query.ApplyPaging(filter);
         }
 
-        public (int Count, List<DatabaseTest> Tests) GetTestsByDisciplineId(int disciplineId, FilterTest filter)
+        public async Task<(int Count, List<DatabaseTest> Tests)> GetTestsByDisciplineId(int disciplineId, FilterTest filter)
         {
             var query = AsQueryable()
                 .Where(x => x.DisciplineId == disciplineId);
@@ -48,10 +50,10 @@ namespace EducationSystem.Repositories.Implementations
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
 
-            return query.ApplyPaging(filter);
+            return await query.ApplyPaging(filter);
         }
 
-        public (int Count, List<DatabaseTest> Tests) GetTestsForStudent(int studentId, FilterTest filter)
+        public async Task<(int Count, List<DatabaseTest> Tests)> GetTestsForStudent(int studentId, FilterTest filter)
         {
             var query = AsQueryable()
                 .Where(x => x.IsActive == 1 && x.TestThemes.Any(y => y.Theme.Questions.Any()))
@@ -70,16 +72,16 @@ namespace EducationSystem.Repositories.Implementations
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
 
-            return query.ApplyPaging(filter);
+            return await query.ApplyPaging(filter);
         }
 
-        public DatabaseTest GetTestForStudentById(int id, int studentId)
+        public Task<DatabaseTest> GetTestForStudentById(int id, int studentId)
         {
             return AsQueryable()
                 .Where(x => x.Id == id)
                 .Where(x => x.IsActive == 1)
                 .Where(x => x.TestThemes.Any(y => y.Theme.Questions.Any()))
-                .FirstOrDefault(x => x.Discipline.StudyProfiles
+                .FirstOrDefaultAsync(x => x.Discipline.StudyProfiles
                     .Any(a => a.StudyProfile.StudyPlans
                     .Any(b => b.Groups
                     .Any(c => c.GroupStudents

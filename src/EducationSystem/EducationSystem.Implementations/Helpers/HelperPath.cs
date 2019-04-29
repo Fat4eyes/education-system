@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
@@ -29,10 +30,10 @@ namespace EducationSystem.Implementations.Helpers
 
         public string GetContentPath() => _environment.ContentRootPath;
 
-        public string GetAbsoluteFilePath(File file)
-            => Path.Combine(GetContentPath(), GetRelativeFilePath(file));
+        public async Task<string> GetAbsoluteFilePath(File file)
+            => Path.Combine(GetContentPath(), await GetRelativeFilePath(file));
 
-        public string GetRelativeFilePath(File file)
+        public async Task<string> GetRelativeFilePath(File file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -40,9 +41,9 @@ namespace EducationSystem.Implementations.Helpers
             DatabaseFile model = null;
 
             if (file.Guid.HasValue)
-                model = _repositoryFile.GetByGuid(file.Guid.Value);
+                model = await _repositoryFile.GetByGuid(file.Guid.Value);
 
-            model = model ?? _repositoryFile.GetById(file.Id) ??
+            model = model ?? await _repositoryFile.GetById(file.Id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Файл не найден. Идентификатор файла: {file.Id}.",
                     $"Файл не найден.");

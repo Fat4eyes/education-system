@@ -25,16 +25,16 @@ namespace EducationSystem.Implementations.Managers
             _repositoryStudent = repositoryStudent;
         }
 
-        public Task<Student> GetStudent(int id)
+        public async Task<Student> GetStudent(int id)
         {
             _helperUserRole.CheckRoleStudent(id);
 
-            var student = _repositoryStudent.GetById(id) ??
+            var student = await _repositoryStudent.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Студент не найден. Идентификатор студента: {id}.",
                     $"Студент не найден.");
 
-            return Task.FromResult(Mapper.Map<Student>(student));
+            return Mapper.Map<Student>(student);
         }
     }
 }

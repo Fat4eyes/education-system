@@ -25,14 +25,14 @@ namespace EducationSystem.Implementations.Managers
             _repositoryUser = repositoryUser;
         }
 
-        public Task<User> GetUser(int id, OptionsUser options)
+        public async Task<User> GetUser(int id, OptionsUser options)
         {
-            var user = _repositoryUser.GetById(id) ??
+            var user = await _repositoryUser.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Пользователь не найден. Идентификатор пользователя: {id}.",
                     $"Пользователь не найден.");
 
-            return Task.FromResult(Map(user, options));
+            return Map(user, options);
         }
 
         private User Map(DatabaseUser user, OptionsUser options)

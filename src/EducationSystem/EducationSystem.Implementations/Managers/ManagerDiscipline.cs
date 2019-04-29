@@ -32,38 +32,38 @@ namespace EducationSystem.Implementations.Managers
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public Task<PagedData<Discipline>> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter)
+        public async Task<PagedData<Discipline>> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter)
         {
-            var (count, disciplines) = _repositoryDiscipline.GetDisciplines(filter);
+            var (count, disciplines) = await _repositoryDiscipline.GetDisciplines(filter);
 
             var items = disciplines
                 .Select(x => Map(x, options))
                 .ToList();
 
-            return Task.FromResult(new PagedData<Discipline>(items, count));
+            return new PagedData<Discipline>(items, count);
         }
 
-        public Task<PagedData<Discipline>> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter)
+        public async Task<PagedData<Discipline>> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var (count, disciplines) = _repositoryDiscipline.GetDisciplinesForStudent(studentId, filter);
+            var (count, disciplines) = await _repositoryDiscipline.GetDisciplinesForStudent(studentId, filter);
 
             var items = disciplines
                 .Select(x => MapForStudent(x, options))
                 .ToList();
 
-            return Task.FromResult(new PagedData<Discipline>(items, count));
+            return new PagedData<Discipline>(items, count);
         }
 
-        public Task<Discipline> GetDiscipline(int id, OptionsDiscipline options)
+        public async Task<Discipline> GetDiscipline(int id, OptionsDiscipline options)
         {
-            var discipline = _repositoryDiscipline.GetById(id) ??
+            var discipline = await _repositoryDiscipline.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Дисциплина не найдена. Идентификатор дисциплины: {id}.",
                     $"Дисциплина не найдена.");
 
-            return Task.FromResult(Map(discipline, options));
+            return Map(discipline, options);
         }
 
         private Discipline Map(DatabaseDiscipline discipline, OptionsDiscipline options)

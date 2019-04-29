@@ -57,7 +57,7 @@ namespace EducationSystem.Repositories.Implementations.Basics
 
         public async Task RemoveAsync(int id, bool save = false)
         {
-            var model = GetById(id);
+            var model = await GetById(id);
 
             if (model != null)
             {
@@ -72,9 +72,9 @@ namespace EducationSystem.Repositories.Implementations.Basics
 
         public async Task RemoveAsync(TModel model, bool save = false)
         {
-            var existing = Context
+            var existing = await Context
                 .Set<TModel>()
-                .Find(model.Id);
+                .FindAsync(model.Id);
 
             if (existing != null)
             {

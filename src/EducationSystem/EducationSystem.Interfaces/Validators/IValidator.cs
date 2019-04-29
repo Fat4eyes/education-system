@@ -1,7 +1,9 @@
-﻿namespace EducationSystem.Interfaces.Validators
+﻿using System.Threading.Tasks;
+
+namespace EducationSystem.Interfaces.Validators
 {
     public interface IValidator<in TModel> where TModel : class
     {
-        void Validate(TModel model);
+        Task Validate(TModel model);
     }
 }

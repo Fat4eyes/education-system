@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Managers;
@@ -31,7 +32,7 @@ namespace EducationSystem.Implementations.Managers
             _repositoryUser = repositoryUser;
         }
 
-        public TokenResponse GenerateToken(TokenRequest request)
+        public async Task<TokenResponse> GenerateToken(TokenRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -39,7 +40,7 @@ namespace EducationSystem.Implementations.Managers
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
                 throw ExceptionHelper.CreatePublicException("Неверная электронная почта или пароль.");
 
-            var user = _repositoryUser.GetUserByEmail(request.Email) ??
+            var user = await _repositoryUser.GetUserByEmail(request.Email) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Пользователь не найден. Электронная почта: {request.Email}",
                     $"Неверная электронная почта или пароль.");

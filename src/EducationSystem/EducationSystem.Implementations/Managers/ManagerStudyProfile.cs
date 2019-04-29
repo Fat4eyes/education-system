@@ -27,16 +27,16 @@ namespace EducationSystem.Implementations.Managers
             _repositoryStudyProfile = repositoryStudyProfile;
         }
 
-        public Task<StudyProfile> GetStudyProfileByStudentId(int studentId, OptionsStudyProfile options)
+        public async Task<StudyProfile> GetStudyProfileByStudentId(int studentId, OptionsStudyProfile options)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var studyProfile = _repositoryStudyProfile.GetStudyProfileByStudentId(studentId) ??
+            var studyProfile = await _repositoryStudyProfile.GetStudyProfileByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Профиль обучения не найден. Идентификатор студента: {studentId}.",
                     $"Профиль обучения не найден.");
 
-            return Task.FromResult(Map(studyProfile, options));
+            return Map(studyProfile, options);
         }
 
         private StudyProfile Map(DatabaseStudyProfile studyProfile, OptionsStudyProfile options)

@@ -27,16 +27,16 @@ namespace EducationSystem.Implementations.Managers
             _repositoryInstitute = repositoryInstitute;
         }
 
-        public Task<Institute> GetInstituteByStudentId(int studentId, OptionsInstitute options)
+        public async Task<Institute> GetInstituteByStudentId(int studentId, OptionsInstitute options)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var institute = _repositoryInstitute.GetInstituteByStudentId(studentId) ??
+            var institute = await _repositoryInstitute.GetInstituteByStudentId(studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Институт не найден. Идентификатор студента: {studentId}.",
                     $"Институт не найден.");
 
-            return Task.FromResult(Mapper.Map<DatabaseInstitute, Institute>(institute));
+            return Mapper.Map<DatabaseInstitute, Institute>(institute);
         }
     }
 }

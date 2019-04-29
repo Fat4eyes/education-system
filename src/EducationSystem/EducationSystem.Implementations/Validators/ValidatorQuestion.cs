@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
@@ -30,7 +31,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryMaterial = repositoryMaterial;
         }
 
-        public void Validate(Question model)
+        public async Task Validate(Question model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -53,16 +54,16 @@ namespace EducationSystem.Implementations.Validators
             if (model.ThemeId.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указана тема.");
 
-            if (_repositoryTheme.GetById(model.ThemeId.Value) == null)
+            if (await _repositoryTheme.GetById(model.ThemeId.Value) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            if (model.Image != null && _repositoryFile.GetById(model.Image.Id) == null)
+            if (model.Image != null && await _repositoryFile.GetById(model.Image.Id) == null)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.Image != null && _helperFile.IsFileExists(model.Image) == false)
+            if (model.Image != null && await _helperFile.IsFileExists(model.Image) == false)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.Material != null && _repositoryMaterial.GetById(model.Material.Id) == null)
+            if (model.Material != null && await _repositoryMaterial.GetById(model.Material.Id) == null)
                 throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
 
             ValidateByQuestionType(model);

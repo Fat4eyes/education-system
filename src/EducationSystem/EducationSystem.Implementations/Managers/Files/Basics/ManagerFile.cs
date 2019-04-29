@@ -43,7 +43,7 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
         public async Task DeleteFile(int id)
         {
-            var model = _repositoryFile.GetById(id) ??
+            var model = await _repositoryFile.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Файл для удаления не найден. Идентификатор файла: {id}.",
                     $"Файл для удаления не найден.");
@@ -52,10 +52,10 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
             await _repositoryFile.RemoveAsync(model);
 
-            if (_helperFile.IsFileExists(file) == false)
+            if (await _helperFile.IsFileExists(file) == false)
                 return;
 
-            var path = _helperPath.GetAbsoluteFilePath(file);
+            var path = await _helperPath.GetAbsoluteFilePath(file);
 
             if (SystemFile.Exists(path))
                 SystemFile.Delete(path);
@@ -63,7 +63,7 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
             await _repositoryFile.SaveChangesAsync();
         }
 
-        public Task<TFile> GetFile(int id)
+        public async Task<TFile> GetFile(int id)
         {
             var model = _repositoryFile.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
@@ -72,21 +72,21 @@ namespace EducationSystem.Implementations.Managers.Files.Basics
 
             var file = Mapper.Map<TFile>(model);
 
-            if (_helperFile.IsFileExists(file) == false)
+            if (await _helperFile.IsFileExists(file) == false)
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Файл не найден. Идентификатор файла: {id}.",
                     $"Файл не найден.");
 
-            file.Path = _helperPath
-                .GetRelativeFilePath(file)
-                .Replace("\\", "/");
+            file.Path = await _helperPath.GetRelativeFilePath(file);
 
-            return Task.FromResult(file);
+            file.Path = file.Path.Replace("\\", "/");
+
+            return file;
         }
 
         public virtual async Task<TFile> CreateFile(TFile file)
         {
-            _validatorFile.Validate(file);
+            await _validatorFile.Validate(file);
 
             var guid = Guid.NewGuid();
             var name = guid + Path.GetExtension(file.Name);

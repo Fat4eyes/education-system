@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
-using EducationSystem.Extensions;
-using EducationSystem.Models.Filters;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations
 {
@@ -14,14 +13,9 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryRole(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseRole> Roles) GetRoles(FilterRole filter) =>
-            AsQueryable().ApplyPaging(filter);
-
-        public DatabaseRole GetRoleByUserId(int userId)
+        public Task<DatabaseRole> GetRoleByUserId(int userId)
         {
-            return AsQueryable()
-                .FirstOrDefault(x => x.RoleUsers
-                    .Any(y => y.User.Id == userId));
+            return AsQueryable().FirstOrDefaultAsync(x => x.RoleUsers.Any(y => y.User.Id == userId));
         }
     }
 }

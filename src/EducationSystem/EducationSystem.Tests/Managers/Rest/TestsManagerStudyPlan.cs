@@ -44,7 +44,7 @@ namespace EducationSystem.Tests.Managers.Rest
 
             _mockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))
-                .Returns(new DatabaseStudyPlan { Name = "Study Plan" });
+                .ReturnsAsync(new DatabaseStudyPlan { Name = "Study Plan" });
 
             var studyPlan = await _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan());
 
@@ -58,7 +58,7 @@ namespace EducationSystem.Tests.Managers.Rest
 
             _mockRepositoryStudyPlan
                 .Setup(x => x.GetStudyPlanByStudentId(999))
-                .Returns((DatabaseStudyPlan) null);
+                .ReturnsAsync((DatabaseStudyPlan) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerStudyPlan.GetStudyPlanByStudentId(999, new OptionsStudyPlan()));

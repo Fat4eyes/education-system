@@ -40,7 +40,7 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             _mockRepositoryTest
                 .Setup(x => x.GetById(999))
-                .Returns(new DatabaseTest { Subject = "Subject" });
+                .ReturnsAsync(new DatabaseTest { Subject = "Subject" });
 
             var test = await _managerTest.GetTest(999, new OptionsTest());
 
@@ -52,7 +52,7 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             _mockRepositoryTest
                 .Setup(x => x.GetById(999))
-                .Returns((DatabaseTest) null);
+                .ReturnsAsync((DatabaseTest) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerTest.GetTest(999, new OptionsTest()));

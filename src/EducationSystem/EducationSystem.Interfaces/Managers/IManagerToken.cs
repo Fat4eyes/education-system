@@ -1,9 +1,10 @@
-﻿using EducationSystem.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Models;
 
 namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerToken
     {
-        TokenResponse GenerateToken(TokenRequest request);
+        Task<TokenResponse> GenerateToken(TokenRequest request);
     }
 }

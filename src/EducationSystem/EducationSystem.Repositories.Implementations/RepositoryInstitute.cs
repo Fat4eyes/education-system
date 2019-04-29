@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations
 {
@@ -11,10 +13,10 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryInstitute(DatabaseContext context)
             : base(context) { }
 
-        public DatabaseInstitute GetInstituteByStudentId(int studentId)
+        public Task<DatabaseInstitute> GetInstituteByStudentId(int studentId)
         {
             return AsQueryable()
-                .FirstOrDefault(a => a.StudyProfiles
+                .FirstOrDefaultAsync(a => a.StudyProfiles
                     .Any(b => b.StudyPlans
                     .Any(c => c.Groups
                     .Any(d => d.GroupStudents

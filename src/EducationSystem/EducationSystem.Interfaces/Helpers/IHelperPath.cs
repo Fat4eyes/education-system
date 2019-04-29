@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Models.Files.Basics;
@@ -9,9 +10,9 @@ namespace EducationSystem.Interfaces.Helpers
     {
         string GetContentPath();
 
-        string GetAbsoluteFilePath(File file);
+        Task<string> GetAbsoluteFilePath(File file);
 
-        string GetRelativeFilePath(File file);
+        Task<string> GetRelativeFilePath(File file);
 
         string GetRelativeFilePath(DatabaseFile file);
 

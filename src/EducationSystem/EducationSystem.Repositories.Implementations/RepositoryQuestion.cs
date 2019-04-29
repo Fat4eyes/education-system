@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
@@ -8,6 +9,7 @@ using EducationSystem.Extensions;
 using EducationSystem.Models.Filters;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations
 {
@@ -16,14 +18,14 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryQuestion(DatabaseContext context)
             : base(context) { }
 
-        public (int Count, List<DatabaseQuestion> Questions) GetQuestions(FilterQuestion filter)
+        public Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestions(FilterQuestion filter)
         {
             return AsQueryable()
                 .OrderBy(x => x.Order)
                 .ApplyPaging(filter);
         }
 
-        public (int Count, List<DatabaseQuestion> Questions) GetQuestionsByThemeId(int themeId, FilterQuestion filter)
+        public Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsByThemeId(int themeId, FilterQuestion filter)
         {
             return AsQueryable()
                 .Where(x => x.ThemeId == themeId)
@@ -31,7 +33,7 @@ namespace EducationSystem.Repositories.Implementations
                 .ApplyPaging(filter);
         }
 
-        public List<DatabaseQuestion> GetQuestionsForStudentByTestId(int testId, int studentId)
+        public async Task<List<DatabaseQuestion>> GetQuestionsForStudentByTestId(int testId, int studentId)
         {
             var questionTypes = new List<QuestionType>
             {
@@ -41,7 +43,7 @@ namespace EducationSystem.Repositories.Implementations
                 QuestionType.OpenedOneString
             };
 
-            return AsQueryable()
+            return await AsQueryable()
                 .Where(x => x.Theme.ThemeTests.Any(y =>
                     y.TestId == testId &&
                     y.Test.IsActive == 1 &&
@@ -56,23 +58,19 @@ namespace EducationSystem.Repositories.Implementations
                 .OrderBy(x => x.Theme.Order)
                 .ThenBy(x => x.Order)
                 .Take(TestParamaters.QuestionsCountForStudent)
-                .ToList();
+                .ToListAsync();
         }
 
-        public bool IsQuestionsExists(List<int> questionIds)
+        public Task<bool> IsQuestionExists(int id)
         {
-            questionIds = questionIds
-                .Distinct()
-                .ToList();
-
-            return AsQueryable().Count(x => questionIds.Contains(x.Id)) == questionIds.Count;
+            return AsQueryable().AnyAsync(x => x.Id == id);
         }
 
-        public int GetLastQuestionOrder(int themeId)
+        public Task<int> GetLastQuestionOrder(int themeId)
         {
             return AsQueryable()
                 .Where(x => x.ThemeId == themeId && x.Order.HasValue)
-                .Max(x => x.Order.Value);
+                .MaxAsync(x => x.Order.Value);
         }
     }
 }

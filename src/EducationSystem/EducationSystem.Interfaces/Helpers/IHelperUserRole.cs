@@ -1,7 +1,9 @@
-﻿namespace EducationSystem.Interfaces.Helpers
+﻿using System.Threading.Tasks;
+
+namespace EducationSystem.Interfaces.Helpers
 {
     public interface IHelperUserRole
     {
-        void CheckRoleStudent(int userId);
+        Task CheckRoleStudent(int userId);
     }
 }

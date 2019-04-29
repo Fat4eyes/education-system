@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using EducationSystem.Interfaces.Helpers;
 using File = EducationSystem.Models.Files.Basics.File;
 using SystemFile = System.IO.File;
@@ -15,23 +16,17 @@ namespace EducationSystem.Implementations.Helpers
             _helperPath = helperPath;
         }
 
-        public bool IsFileExists(File file)
+        public async Task<bool> IsFileExists(File file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
             if (string.IsNullOrWhiteSpace(file.Path))
-                return SystemFile.Exists(_helperPath.GetAbsoluteFilePath(file));
+                return SystemFile.Exists(await _helperPath.GetAbsoluteFilePath(file));
 
             var path = Path.Combine(_helperPath.GetContentPath(), file.Path.Replace("/", "\\"));
 
             return SystemFile.Exists(path);
         }
-
-        public string GetAbsoluteFilePath(File file)
-            => _helperPath.GetAbsoluteFilePath(file);
-
-        public string GetRelativeFilePath(File file)
-            => _helperPath.GetRelativeFilePath(file);
     }
 }

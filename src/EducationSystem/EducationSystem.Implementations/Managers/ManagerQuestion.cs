@@ -53,53 +53,52 @@ namespace EducationSystem.Implementations.Managers
             _helperPath = helperPath;
         }
 
-        public Task<PagedData<Question>> GetQuestions(OptionsQuestion options, FilterQuestion filter)
+        public async Task<PagedData<Question>> GetQuestions(OptionsQuestion options, FilterQuestion filter)
         {
-            var (count, questions) = _repositoryQuestion.GetQuestions(filter);
+            var (count, questions) = await _repositoryQuestion.GetQuestions(filter);
 
             var items = questions
                 .Select(x => Map(x, options))
                 .ToList();
 
-            return Task.FromResult(new PagedData<Question>(items, count));
+            return new PagedData<Question>(items, count);
         }
 
-        public Task<PagedData<Question>> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter)
+        public async Task<PagedData<Question>> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter)
         {
-            var (count, questions) = _repositoryQuestion.GetQuestionsByThemeId(themeId, filter);
+            var (count, questions) = await _repositoryQuestion.GetQuestionsByThemeId(themeId, filter);
 
             var items = questions
                 .Select(x => Map(x, options))
                 .ToList();
 
-            return Task.FromResult(new PagedData<Question>(items, count));
+            return new PagedData<Question>(items, count);
         }
 
-        public Task<List<Question>> GetQuestionsForStudentByTestId(int testId, int studentId)
+        public async Task<List<Question>> GetQuestionsForStudentByTestId(int testId, int studentId)
         {
             _helperUserRole.CheckRoleStudent(studentId);
 
-            var questions = _repositoryQuestion
-                .GetQuestionsForStudentByTestId(testId, studentId)
+            var questions = await _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId);
+
+            return questions
                 .Select(MapForStudent)
                 .ToList();
-
-            return Task.FromResult(questions);
         }
 
-        public Task<Question> GetQuestion(int id, OptionsQuestion options)
+        public async Task<Question> GetQuestion(int id, OptionsQuestion options)
         {
-            var question = _repositoryQuestion.GetById(id) ??
+            var question = await _repositoryQuestion.GetById(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Вопрос не найден. Идентификатор вопроса: {id}.",
                    $"Вопрос не найден.");
 
-            return Task.FromResult(Map(question, options));
+            return Map(question, options);
         }
 
         public async Task DeleteQuestion(int id)
         {
-            var question = _repositoryQuestion.GetById(id) ??
+            var question = await _repositoryQuestion.GetById(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Вопрос для удаления не найден. Идентификатор вопроса: {id}.",
                    $"Вопрос для удаления не найден.");
@@ -114,7 +113,7 @@ namespace EducationSystem.Implementations.Managers
             var model = Mapper.Map<DatabaseQuestion>(question);
 
             if (question.ThemeId.HasValue)
-                model.Order = _repositoryQuestion.GetLastQuestionOrder(question.ThemeId.Value) + 1;
+                model.Order = await _repositoryQuestion.GetLastQuestionOrder(question.ThemeId.Value) + 1;
 
             switch (question.Type)
             {
@@ -137,7 +136,7 @@ namespace EducationSystem.Implementations.Managers
         {
             _validatorQuestion.Validate(question.Format());
 
-            var model = _repositoryQuestion.GetById(id) ??
+            var model = await _repositoryQuestion.GetById(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Вопрос для обновления не найден. Идентификатор вопроса: {id}.",
                     $"Вопрос для обновления не найден.");
@@ -211,10 +210,10 @@ namespace EducationSystem.Implementations.Managers
             if (questions.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("Указаны повторяющиеся вопросы.");
 
-            if (_repositoryQuestion.IsQuestionsExists(questions.Select(x => x.Id).ToList()) == false)
+            if (await questions.AllAsync(x => _repositoryQuestion.IsQuestionExists(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных вопросов не существуют.");
 
-            var theme = _repositoryTheme.GetById(themeId) ??
+            var theme = await _repositoryTheme.GetById(themeId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема не найдена. Идентификатор темы: {themeId}.",
                     $"Тема не найдена.");
@@ -225,7 +224,7 @@ namespace EducationSystem.Implementations.Managers
             if (theme.Questions.All(x => questions.Select(y => y.Id).Contains(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("У одного или нескольких вопросов указанная тема не совпадает.");
 
-            var models = _repositoryQuestion.GetByIds(questions.Select(x => x.Id).ToArray());
+            var models = await _repositoryQuestion.GetByIds(questions.Select(x => x.Id).ToArray());
 
             var order = 1;
 

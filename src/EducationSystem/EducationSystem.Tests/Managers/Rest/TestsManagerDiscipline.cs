@@ -33,7 +33,7 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             _mockRepositoryDiscipline
                 .Setup(x => x.GetById(999))
-                .Returns(new DatabaseDiscipline { Name = "WEB" });
+                .ReturnsAsync(new DatabaseDiscipline { Name = "WEB" });
 
             var discipline = await _managerDiscipline.GetDiscipline(999, new OptionsDiscipline());
 
@@ -45,7 +45,7 @@ namespace EducationSystem.Tests.Managers.Rest
         {
             _mockRepositoryDiscipline
                 .Setup(x => x.GetById(999))
-                .Returns((DatabaseDiscipline) null);
+                .ReturnsAsync((DatabaseDiscipline) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerDiscipline.GetDiscipline(999, new OptionsDiscipline()));
@@ -72,7 +72,7 @@ namespace EducationSystem.Tests.Managers.Rest
 
             _mockRepositoryDiscipline
                 .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
-                .Returns((disciplines.Count, disciplines));
+                .ReturnsAsync((disciplines.Count, disciplines));
 
             var data = await _managerDiscipline.GetDisciplinesByStudentId
                 (999, new OptionsDiscipline { WithTests = true }, new FilterDiscipline());
@@ -98,7 +98,7 @@ namespace EducationSystem.Tests.Managers.Rest
 
             _mockRepositoryDiscipline
                 .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
-                .Returns((disciplines.Count, disciplines));
+                .ReturnsAsync((disciplines.Count, disciplines));
 
             var data = await _managerDiscipline.GetDisciplinesByStudentId
                 (999, new OptionsDiscipline { WithThemes = true }, new FilterDiscipline());

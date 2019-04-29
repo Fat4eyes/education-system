@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Helpers;
@@ -20,7 +21,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryFile = repositoryFile;
         }
 
-        public void Validate(Material model)
+        public async Task Validate(Material model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -37,10 +38,10 @@ namespace EducationSystem.Implementations.Validators
             if (model.Files.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся файлы.");
 
-            if (model.Files.Any(x => _helperFile.IsFileExists(x) == false))
+            if (await model.Files.AllAsync(x => _helperFile.IsFileExists(x)) == false)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
 
-            if (model.Files.All(x => _repositoryFile.IsFileExists(x.Id)) == false)
+            if (await model.Files.AllAsync(x => _repositoryFile.IsFileExists(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
         }
     }
