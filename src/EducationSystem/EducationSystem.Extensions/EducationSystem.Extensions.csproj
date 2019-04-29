@@ -5,13 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.EntityFrameworkCore">
-      <HintPath>..\..\..\..\..\..\.nuget\packages\microsoft.entityframeworkcore\2.2.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
   </ItemGroup>
 
 </Project>
