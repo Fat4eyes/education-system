@@ -20,7 +20,7 @@ namespace EducationSystem.WebApp.Source.Tamers
         [Route("Generate")]
         public async Task<IActionResult> Generate([FromBody] TokenRequest request)
         {
-            return Ok(await _tokenGenerator.GenerateAsync(request));
+            return Ok(await _tokenGenerator.GenerateTokenAsync(request));
         }
 
         [HttpPost]

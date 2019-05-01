@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using EducationSystem.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,7 @@ namespace EducationSystem.WebApp.Source.Tamers
     {
         protected int GetUserId()
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value
+            var userId = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value
                 ?? throw new ApplicationException("Не удалось получить идентификатор пользователя.");
 
             return Convert.ToInt32(userId);

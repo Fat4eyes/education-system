@@ -5,6 +5,6 @@ namespace EducationSystem.Interfaces
 {
     public interface ITokenGenerator
     {
-        Task<TokenResponse> GenerateAsync(TokenRequest request);
+        Task<TokenResponse> GenerateTokenAsync(TokenRequest request);
     }
 }

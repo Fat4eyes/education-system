@@ -5,7 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using EducationSystem.Constants;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Extensions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces;
 using EducationSystem.Models;
@@ -33,7 +35,7 @@ namespace EducationSystem.Implementations
             _repositoryUser = repositoryUser;
         }
 
-        public async Task<TokenResponse> GenerateAsync(TokenRequest request)
+        public async Task<TokenResponse> GenerateTokenAsync(TokenRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -46,6 +48,14 @@ namespace EducationSystem.Implementations
                     $"Пользователь не найден. Электронная почта: {request.Email}",
                     $"Неверная электронная почта или пароль.");
 
+            var role = user.UserRoles
+                .Select(x => x.Role.Name)
+                .FirstOrDefault() ??
+                    throw ExceptionHelper.CreatePublicException("Не удалось получить роль пользователя.");
+
+            if (UserRoles.All.ToLowerInvariant().Contains(role.ToLowerInvariant()) == false)
+                throw ExceptionHelper.CreatePublicException("Роль пользователя не поддерживается системой.");
+
             if (!Crypt.Verify(request.Password, user.Password))
             {
                 Logger.LogError($"Пользователь найден, но пароль указан неверно. " +
@@ -55,12 +65,11 @@ namespace EducationSystem.Implementations
             }
 
             var claims = new List<Claim> {
-                new Claim("UserId", user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
             };
 
-            claims.AddRange(user.UserRoles.Select(x =>
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, x.Role.Name)));
+            claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role));
 
             var identity = new ClaimsIdentity(claims, "Token",
                 ClaimsIdentity.DefaultNameClaimType,
