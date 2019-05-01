@@ -6,7 +6,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Interfaces.Managers;
+using EducationSystem.Implementations.Managers;
+using EducationSystem.Interfaces;
 using EducationSystem.Models;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -14,16 +15,16 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Crypt = BCrypt.Net.BCrypt;
 
-namespace EducationSystem.Implementations.Managers
+namespace EducationSystem.Implementations
 {
-    public sealed class ManagerToken : Manager<ManagerToken>, IManagerToken
+    public sealed class TokenGenerator : Manager<TokenGenerator>, ITokenGenerator
     {
         private readonly IConfiguration _configuration;
         private readonly IRepositoryUser _repositoryUser;
 
-        public ManagerToken(
+        public TokenGenerator(
             IMapper mapper,
-            ILogger<ManagerToken> logger,
+            ILogger<TokenGenerator> logger,
             IConfiguration configuration,
             IRepositoryUser repositoryUser)
             : base(mapper, logger)
@@ -32,7 +33,7 @@ namespace EducationSystem.Implementations.Managers
             _repositoryUser = repositoryUser;
         }
 
-        public async Task<TokenResponse> GenerateTokenAsync(TokenRequest request)
+        public async Task<TokenResponse> GenerateAsync(TokenRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));

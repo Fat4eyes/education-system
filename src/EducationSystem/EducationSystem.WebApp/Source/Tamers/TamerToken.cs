@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using EducationSystem.Interfaces.Managers;
+using EducationSystem.Interfaces;
 using EducationSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,18 +9,18 @@ namespace EducationSystem.WebApp.Source.Tamers
     [Route("api/Token")]
     public class TamerToken : Tamer
     {
-        private readonly IManagerToken _managerToken;
+        private readonly ITokenGenerator _tokenGenerator;
 
-        public TamerToken(IManagerToken managerToken)
+        public TamerToken(ITokenGenerator tokenGenerator)
         {
-            _managerToken = managerToken;
+            _tokenGenerator = tokenGenerator;
         }
 
         [HttpPost]
         [Route("Generate")]
         public async Task<IActionResult> Generate([FromBody] TokenRequest request)
         {
-            return Ok(await _managerToken.GenerateTokenAsync(request));
+            return Ok(await _tokenGenerator.GenerateAsync(request));
         }
 
         [HttpPost]

@@ -1,9 +1,11 @@
 ﻿using EducationSystem.Database;
+using EducationSystem.Implementations;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
 using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
+using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
@@ -25,6 +27,8 @@ namespace EducationSystem.Dependencies
 
             RegisterDatabases(collection, configuration);
 
+            collection.AddTransient<ITokenGenerator, TokenGenerator>();
+
             RegisterHelpers(collection);
             RegisterValidators(collection);
             RegisterManagers(collection);
@@ -35,8 +39,6 @@ namespace EducationSystem.Dependencies
         {
             collection.AddTransient<IManagerImage, ManagerImage>();
             collection.AddTransient<IManagerDocument, ManagerDocument>();
-
-            collection.AddTransient<IManagerToken, ManagerToken>();
 
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
