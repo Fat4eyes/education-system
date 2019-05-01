@@ -61,8 +61,8 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Discipline> GetDisciplineAsync(int id, OptionsDiscipline options)
         {
-            var discipline = await _repositoryDiscipline.GetByIdAsync(id)
-                ?? throw _exceptionFactory.NotFound<DatabaseDiscipline>(id);
+            var discipline = await _repositoryDiscipline.GetByIdAsync(id) ??
+                throw _exceptionFactory.NotFound<DatabaseDiscipline>(id);
 
             return Map(discipline, options);
         }

@@ -24,6 +24,8 @@ namespace EducationSystem.Implementations
         private readonly IConfiguration _configuration;
         private readonly IRepositoryUser _repositoryUser;
 
+        private const string PublicExceptionMessage = "Неверная электронная почта или пароль.";
+
         public TokenGenerator(
             IMapper mapper,
             ILogger<TokenGenerator> logger,
@@ -41,12 +43,12 @@ namespace EducationSystem.Implementations
                 throw new ArgumentNullException(nameof(request));
 
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
-                throw ExceptionHelper.CreatePublicException("Неверная электронная почта или пароль.");
+                throw ExceptionHelper.CreatePublicException(PublicExceptionMessage);
 
             var user = await _repositoryUser.GetUserByEmailAsync(request.Email) ??
                 throw ExceptionHelper.CreateNotFoundException(
-                    $"Пользователь не найден. Электронная почта: {request.Email}",
-                    $"Неверная электронная почта или пароль.");
+                    $"Пользователь не найден. Электронная почта: {request.Email}.",
+                    PublicExceptionMessage);
 
             var role = user.UserRoles
                 .Select(x => x.Role.Name)
@@ -58,10 +60,11 @@ namespace EducationSystem.Implementations
 
             if (!Crypt.Verify(request.Password, user.Password))
             {
-                Logger.LogError($"Пользователь найден, но пароль указан неверно. " +
-                                $"Идентификатор пользователя: {user.Id}.");
+                Logger.LogInformation(
+                    $"Пользователь найден, но пароль указан неверно. " +
+                    $"Идентификатор пользователя: {user.Id}.");
 
-                throw ExceptionHelper.CreatePublicException("Неверная электронная почта или пароль.");
+                throw ExceptionHelper.CreatePublicException(PublicExceptionMessage);
             }
 
             var claims = new List<Claim> {

@@ -20,10 +20,9 @@ namespace EducationSystem.Implementations.Helpers
         {
             var role = await _repositoryRole.GetRoleByUserIdAsync(userId) ??
                 throw ExceptionHelper.CreateException(
-                    $"Не удалось получить роль пользователя. " +
-                    $"Идентификатор пользователя: {userId}.");
+                    $"Не удалось получить роль пользователя. Идентификатор пользователя: {userId}.");
 
-            if (string.Equals(role.Name, UserRoles.Student, StringComparison.CurrentCultureIgnoreCase))
+            if (string.Equals(role.Name, UserRoles.Student, StringComparison.InvariantCultureIgnoreCase))
                 return;
 
             throw ExceptionHelper.CreateException(
