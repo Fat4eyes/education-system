@@ -6,6 +6,7 @@ using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
@@ -23,6 +24,7 @@ namespace EducationSystem.Implementations.Managers
         private readonly IHelperPath _helperPath;
         private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
+        private readonly IExceptionFactory _exceptionFactory;
 
         private readonly IRepositoryTheme _repositoryTheme;
         private readonly IRepositoryAnswer _repositoryAnswer;
@@ -36,6 +38,7 @@ namespace EducationSystem.Implementations.Managers
             IHelperPath helperPath,
             IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
+            IExceptionFactory exceptionFactory,
             IRepositoryTheme repositoryTheme,
             IRepositoryAnswer repositoryAnswer,
             IRepositoryProgram repositoryProgram,
@@ -43,14 +46,15 @@ namespace EducationSystem.Implementations.Managers
             IRepositoryProgramData repositoryProgramData)
             : base(mapper, logger)
         {
+            _helperPath = helperPath;
             _helperUserRole = helperUserRole;
             _validatorQuestion = validatorQuestion;
+            _exceptionFactory = exceptionFactory;
             _repositoryTheme = repositoryTheme;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
             _repositoryProgramData = repositoryProgramData;
-            _helperPath = helperPath;
         }
 
         public async Task<PagedData<Question>> GetQuestionsAsync(OptionsQuestion options, FilterQuestion filter)
@@ -77,7 +81,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<List<Question>> GetQuestionsForStudentByTestIdAsync(int testId, int studentId)
         {
-            _helperUserRole.CheckRoleStudentAsync(studentId);
+            await _helperUserRole.CheckRoleStudentAsync(studentId);
 
             var questions = await _repositoryQuestion.GetQuestionsForStudentByTestIdAsync(testId, studentId);
 
@@ -89,9 +93,7 @@ namespace EducationSystem.Implementations.Managers
         public async Task<Question> GetQuestionAsync(int id, OptionsQuestion options)
         {
             var question = await _repositoryQuestion.GetByIdAsync(id) ??
-               throw ExceptionHelper.CreateNotFoundException(
-                   $"Вопрос не найден. Идентификатор вопроса: {id}.",
-                   $"Вопрос не найден.");
+                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
             return Map(question, options);
         }
@@ -99,16 +101,14 @@ namespace EducationSystem.Implementations.Managers
         public async Task DeleteQuestionAsync(int id)
         {
             var question = await _repositoryQuestion.GetByIdAsync(id) ??
-               throw ExceptionHelper.CreateNotFoundException(
-                   $"Вопрос для удаления не найден. Идентификатор вопроса: {id}.",
-                   $"Вопрос для удаления не найден.");
+                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
             await _repositoryQuestion.RemoveAsync(question, true);
         }
 
         public async Task<Question> CreateQuestionAsync(Question question)
         {
-            _validatorQuestion.ValidateAsync(question.Format());
+            await _validatorQuestion.ValidateAsync(question.Format());
 
             var model = Mapper.Map<DatabaseQuestion>(question);
 
@@ -134,12 +134,10 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Question> UpdateQuestionAsync(int id, Question question)
         {
-            _validatorQuestion.ValidateAsync(question.Format());
+            await _validatorQuestion.ValidateAsync(question.Format());
 
             var model = await _repositoryQuestion.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Вопрос для обновления не найден. Идентификатор вопроса: {id}.",
-                    $"Вопрос для обновления не найден.");
+                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);
 
@@ -214,9 +212,7 @@ namespace EducationSystem.Implementations.Managers
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных вопросов не существуют.");
 
             var theme = await _repositoryTheme.GetByIdAsync(themeId) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Тема не найдена. Идентификатор темы: {themeId}.",
-                    $"Тема не найдена.");
+                throw _exceptionFactory.NotFound<DatabaseTheme>(themeId);
 
             if (theme.Questions.Count != questions.Count)
                 throw ExceptionHelper.CreatePublicException("Количество указанных вопросов не совпадает с количеством вопросов в теме.");
@@ -231,9 +227,7 @@ namespace EducationSystem.Implementations.Managers
             questions.ForEach(x =>
             {
                 var model = models.FirstOrDefault(y => y.Id == x.Id) ??
-                    throw ExceptionHelper.CreateNotFoundException(
-                        $"Вопрос не найден. Идентификатор вопроса: {x.Id}.",
-                        $"Вопрос не найден.");
+                    throw _exceptionFactory.NotFound<DatabaseQuestion>(x.Id);
 
                 model.Order = order++;
             });

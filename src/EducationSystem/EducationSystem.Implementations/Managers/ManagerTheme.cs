@@ -5,6 +5,7 @@ using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
@@ -19,6 +20,7 @@ namespace EducationSystem.Implementations.Managers
     public sealed class ManagerTheme : Manager<ManagerTheme>, IManagerTheme
     {
         private readonly IValidator<Theme> _validatorTheme;
+        private readonly IExceptionFactory _exceptionFactory;
         private readonly IRepositoryTheme _repositoryTheme;
         private readonly IRepositoryDiscipline _repositoryDiscipline;
 
@@ -26,24 +28,15 @@ namespace EducationSystem.Implementations.Managers
             IMapper mapper,
             ILogger<ManagerTheme> logger,
             IValidator<Theme> validatorTheme,
+            IExceptionFactory exceptionFactory,
             IRepositoryTheme repositoryTheme,
             IRepositoryDiscipline repositoryDiscipline)
             : base(mapper, logger)
         {
             _validatorTheme = validatorTheme;
+            _exceptionFactory = exceptionFactory;
             _repositoryTheme = repositoryTheme;
             _repositoryDiscipline = repositoryDiscipline;
-        }
-
-        public async Task<PagedData<Theme>> GetThemes(OptionsTheme options, FilterTheme filter)
-        {
-            var (count, themes) = await _repositoryTheme.GetThemes(filter);
-
-            var items = themes
-                .Select(x => Map(x, options))
-                .ToList();
-
-            return new PagedData<Theme>(items, count);
         }
 
         public async Task<PagedData<Theme>> GetThemesByTestIdAsync(int testId, OptionsTheme options, FilterTheme filter)
@@ -71,9 +64,7 @@ namespace EducationSystem.Implementations.Managers
         public async Task<Theme> GetThemeAsync(int id, OptionsTheme options)
         {
             var theme = await _repositoryTheme.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Тема не найдена. Идентификатор темы: {id}.",
-                    $"Тема не найдена.");
+                throw _exceptionFactory.NotFound<DatabaseTheme>(id);
 
             return Map(theme, options);
         }
@@ -81,16 +72,14 @@ namespace EducationSystem.Implementations.Managers
         public async Task DeleteThemeAsync(int id)
         {
             var theme = await _repositoryTheme.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Тема для удаления не найдена. Идентификатор темы: {id}.",
-                    $"Тема для удаления не найдена.");
+                throw _exceptionFactory.NotFound<DatabaseTheme>(id);
 
             await _repositoryTheme.RemoveAsync(theme, true);
         }
 
         public async Task<Theme> CreateThemeAsync(Theme theme)
         {
-            _validatorTheme.ValidateAsync(theme.Format());
+            await _validatorTheme.ValidateAsync(theme.Format());
 
             var model = Mapper.Map<DatabaseTheme>(theme);
 
@@ -103,12 +92,10 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Theme> UpdateThemeAsync(int id, Theme theme)
         {
-            _validatorTheme.ValidateAsync(theme.Format());
+            await _validatorTheme.ValidateAsync(theme.Format());
 
             var model = await _repositoryTheme.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Тема для обновления не найдена. Идентификатор темы: {id}.",
-                    $"Тема для обновления не найдена.");
+                throw _exceptionFactory.NotFound<DatabaseTheme>(id);
 
             Mapper.Map(Mapper.Map<DatabaseTheme>(theme), model);
 
@@ -129,9 +116,7 @@ namespace EducationSystem.Implementations.Managers
                 throw ExceptionHelper.CreatePublicException("Одна или несколько указанных тем не существуют.");
 
             var discipline = await _repositoryDiscipline.GetByIdAsync(disciplineId) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Дисциплина не найдена. Идентификатор дисциплины: {disciplineId}.",
-                    $"Дисциплина не найдена.");
+                throw _exceptionFactory.NotFound<DatabaseDiscipline>(disciplineId);
 
             if (discipline.Themes.Count != themes.Count)
                 throw ExceptionHelper.CreatePublicException("Количество указанных тем не совпадает с количеством тем по дисциплине.");
@@ -146,9 +131,7 @@ namespace EducationSystem.Implementations.Managers
             themes.ForEach(x =>
             {
                 var model = models.FirstOrDefault(y => y.Id == x.Id) ??
-                    throw ExceptionHelper.CreateNotFoundException(
-                        $"Тема не найдена. Идентификатор темы: {x.Id}.",
-                        $"Тема не найдена.");
+                    throw _exceptionFactory.NotFound<DatabaseTheme>(x.Id);
 
                 model.Order = order++;
             });

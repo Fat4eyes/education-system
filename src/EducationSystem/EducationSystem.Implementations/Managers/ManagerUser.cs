@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -14,37 +11,26 @@ namespace EducationSystem.Implementations.Managers
 {
     public sealed class ManagerUser : Manager<ManagerUser>, IManagerUser
     {
+        private readonly IExceptionFactory _exceptionFactory;
         private readonly IRepositoryUser _repositoryUser;
 
         public ManagerUser(
             IMapper mapper,
             ILogger<ManagerUser> logger,
+            IExceptionFactory exceptionFactory,
             IRepositoryUser repositoryUser)
             : base(mapper, logger)
         {
+            _exceptionFactory = exceptionFactory;
             _repositoryUser = repositoryUser;
         }
 
-        public async Task<User> GetUserAsync(int id, OptionsUser options)
+        public async Task<User> GetUserAsync(int id)
         {
             var user = await _repositoryUser.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Пользователь не найден. Идентификатор пользователя: {id}.",
-                    $"Пользователь не найден.");
+                throw _exceptionFactory.NotFound<DatabaseUser>(id);
 
-            return Map(user, options);
-        }
-
-        private User Map(DatabaseUser user, OptionsUser options)
-        {
-            return Mapper.Map<DatabaseUser, User>(user, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithRoles)
-                        d.Roles = Mapper.Map<List<Role>>(s.UserRoles.Select(y => y.Role));
-                });
-            });
+            return Mapper.Map<User>(user);
         }
     }
 }

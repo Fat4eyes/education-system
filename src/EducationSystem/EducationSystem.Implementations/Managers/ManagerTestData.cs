@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Database.Models;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Datas;
@@ -14,27 +15,28 @@ namespace EducationSystem.Implementations.Managers
     public sealed class ManagerTestData : Manager<ManagerTestData>, IManagerTestData
     {
         private readonly IHelperUserRole _helperUserRole;
+        private readonly IExceptionFactory _exceptionFactory;
         private readonly IRepositoryTest _repositoryTest;
 
         public ManagerTestData(
             IMapper mapper,
             ILogger<ManagerTestData> logger,
             IHelperUserRole helperUserRole,
+            IExceptionFactory exceptionFactory,
             IRepositoryTest repositoryTest)
             : base(mapper, logger)
         {
             _helperUserRole = helperUserRole;
+            _exceptionFactory = exceptionFactory;
             _repositoryTest = repositoryTest;
         }
 
         public async Task<TestData> GetTestDataForStudentByTestIdAsync(int testId, int studentId)
         {
-            _helperUserRole.CheckRoleStudentAsync(studentId);
+            await _helperUserRole.CheckRoleStudentAsync(studentId);
 
             var test = await _repositoryTest.GetTestForStudentByIdAsync(testId, studentId) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Тест не найден. Идентификатор теста: {testId}.",
-                    $"Тест не найден.");
+                throw _exceptionFactory.NotFound<DatabaseTest>(testId);
 
             var themes = test.TestThemes
                 .Select(x => x.Theme)

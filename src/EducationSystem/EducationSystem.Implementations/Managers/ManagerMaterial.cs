@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Files;
+using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
-using EducationSystem.Models.Rest.Basics;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -25,6 +24,7 @@ namespace EducationSystem.Implementations.Managers
         private readonly IValidator<Material> _validatorMaterial;
         private readonly IRepositoryMaterial _repositoryMaterial;
         private readonly IRepositoryMaterialFile _repositoryMaterialFile;
+        private readonly IExceptionFactory _exceptionFactory;
 
         public ManagerMaterial(
             IMapper mapper,
@@ -32,13 +32,15 @@ namespace EducationSystem.Implementations.Managers
             IHelperPath helperPath,
             IValidator<Material> validatorMaterial,
             IRepositoryMaterial repositoryMaterial,
-            IRepositoryMaterialFile repositoryMaterialFile)
+            IRepositoryMaterialFile repositoryMaterialFile,
+            IExceptionFactory exceptionFactory)
             : base(mapper, logger)
         {
             _helperPath = helperPath;
             _validatorMaterial = validatorMaterial;
             _repositoryMaterial = repositoryMaterial;
             _repositoryMaterialFile = repositoryMaterialFile;
+            _exceptionFactory = exceptionFactory;
         }
 
         public async Task<PagedData<Material>> GetMaterialsAsync(OptionsMaterial options, FilterMaterial filter)
@@ -55,9 +57,7 @@ namespace EducationSystem.Implementations.Managers
         public async Task DeleteMaterialAsync(int id)
         {
             var material = await _repositoryMaterial.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Материал для удаления не найден. Идентификатор материала: {id}.",
-                    $"Материал для удаления не найден.");
+                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             await _repositoryMaterial.RemoveAsync(material, true);
         }
@@ -65,16 +65,14 @@ namespace EducationSystem.Implementations.Managers
         public async Task<Material> GetMaterialAsync(int id, OptionsMaterial options)
         {
             var material = await _repositoryMaterial.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Материал не найден. Идентификатор материала: {id}.",
-                    $"Материал не найден.");
+                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             return Map(material, options);
         }
 
         public async Task<Material> CreateMaterialAsync(Material material)
         {
-            _validatorMaterial.ValidateAsync(material.Format());
+            await _validatorMaterial.ValidateAsync(material.Format());
 
             var model = Mapper.Map<DatabaseMaterial>(material);
 
@@ -85,12 +83,10 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Material> UpdateMaterialAsync(int id, Material material)
         {
-            _validatorMaterial.ValidateAsync(material.Format());
+            await _validatorMaterial.ValidateAsync(material.Format());
 
             var model = await _repositoryMaterial.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Материал для обновления не найден. Идентификатор материала: {id}.",
-                    $"Материал для обновления не найден.");
+                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             Mapper.Map(Mapper.Map<DatabaseMaterial>(material), model);
 
@@ -118,26 +114,19 @@ namespace EducationSystem.Implementations.Managers
 
                         d.Files = Mapper.Map<List<Document>>(files);
 
-                        d.Files?.ForEach(y => y.Path = GetDocumentPath(d, y));
+                        d.Files?.ForEach(y => y.Path = GetDocumentPath(y));
                     }
                 });
             });
         }
 
-        private string GetDocumentPath(Model material, Document document)
+        private string GetDocumentPath(File file)
         {
-            if (document == null)
-                throw new ArgumentNullException(nameof(document));
-
-            if (document.Guid.HasValue == false)
-                throw ExceptionHelper.CreateException(
-                    $"Не удалось получить документ материала. " +
-                        $"Идентификатор материала: {material.Id}. " +
-                        $"Идентификатор документа: {document.Id}.",
-                    $"Не удалось получить документ материала.");
+            if (file.Guid.HasValue == false)
+                return null;
 
             return _helperPath
-                .GetRelativeFilePath(document.Type, document.Guid.Value, document.Name)
+                .GetRelativeFilePath(file.Type, file.Guid.Value, file.Name)
                 .Replace("\\", "/");
         }
     }

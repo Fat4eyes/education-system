@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
@@ -18,6 +18,7 @@ namespace EducationSystem.Implementations.Managers
     public sealed class ManagerTest : Manager<ManagerTest>, IManagerTest
     {
         private readonly IValidator<Test> _validatorTest;
+        private readonly IExceptionFactory _exceptionFactory;
 
         private readonly IRepositoryTest _repositoryTest;
         private readonly IRepositoryTestTheme _repositoryTestTheme;
@@ -26,11 +27,13 @@ namespace EducationSystem.Implementations.Managers
             IMapper mapper,
             ILogger<ManagerTest> logger,
             IValidator<Test> validatorTest,
+            IExceptionFactory exceptionFactory,
             IRepositoryTest repositoryTest,
             IRepositoryTestTheme repositoryTestTheme)
             : base(mapper, logger)
         {
             _validatorTest = validatorTest;
+            _exceptionFactory = exceptionFactory;
             _repositoryTest = repositoryTest;
             _repositoryTestTheme = repositoryTestTheme;
         }
@@ -60,9 +63,7 @@ namespace EducationSystem.Implementations.Managers
         public async Task<Test> GetTestAsync(int id, OptionsTest options)
         {
             var test = await _repositoryTest.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Тест не найден. Идентификатор теста: {id}.",
-                    $"Тест не найден.");
+                throw _exceptionFactory.NotFound<DatabaseTest>(id);
 
             return Map(test, options);
         }
@@ -70,16 +71,14 @@ namespace EducationSystem.Implementations.Managers
         public async Task DeleteTestAsync(int id)
         {
             var test = await _repositoryTest.GetByIdAsync(id) ??
-               throw ExceptionHelper.CreateNotFoundException(
-                   $"Тест для удаления не найден. Идентификатор теста: {id}.",
-                   $"Тест для удаления не найден.");
+                throw _exceptionFactory.NotFound<DatabaseTest>(id);
 
             await _repositoryTest.RemoveAsync(test, true);
         }
 
         public async Task<Test> CreateTestAsync(Test test)
         {
-            _validatorTest.ValidateAsync(test.Format());
+            await _validatorTest.ValidateAsync(test.Format());
 
             var model = Mapper.Map<DatabaseTest>(test);
 
@@ -90,12 +89,10 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Test> UpdateTestAsync(int id, Test test)
         {
-            _validatorTest.ValidateAsync(test.Format());
+            await _validatorTest.ValidateAsync(test.Format());
 
             var model = await _repositoryTest.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Тест для обновления не найден. Идентификатор теста: {id}.",
-                    $"Тест для обновления не найден.");
+                throw _exceptionFactory.NotFound<DatabaseTest>(id);
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
 

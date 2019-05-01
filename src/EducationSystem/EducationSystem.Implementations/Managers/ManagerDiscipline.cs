@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models;
@@ -19,16 +19,19 @@ namespace EducationSystem.Implementations.Managers
     public sealed class ManagerDiscipline : Manager<ManagerDiscipline>, IManagerDiscipline
     {
         private readonly IHelperUserRole _helperUserRole;
+        private readonly IExceptionFactory _exceptionFactory;
         private readonly IRepositoryDiscipline _repositoryDiscipline;
 
         public ManagerDiscipline(
             IMapper mapper,
             ILogger<ManagerDiscipline> logger,
             IHelperUserRole helperUserRole,
+            IExceptionFactory exceptionFactory,
             IRepositoryDiscipline repositoryDiscipline)
             : base(mapper, logger)
         {
             _helperUserRole = helperUserRole;
+            _exceptionFactory = exceptionFactory;
             _repositoryDiscipline = repositoryDiscipline;
         }
 
@@ -45,7 +48,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<PagedData<Discipline>> GetDisciplinesByStudentIdAsync(int studentId, OptionsDiscipline options, FilterDiscipline filter)
         {
-            _helperUserRole.CheckRoleStudentAsync(studentId);
+            await _helperUserRole.CheckRoleStudentAsync(studentId);
 
             var (count, disciplines) = await _repositoryDiscipline.GetDisciplinesByStudentIdAsync(studentId, filter);
 
@@ -58,10 +61,8 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Discipline> GetDisciplineAsync(int id, OptionsDiscipline options)
         {
-            var discipline = await _repositoryDiscipline.GetByIdAsync(id) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Дисциплина не найдена. Идентификатор дисциплины: {id}.",
-                    $"Дисциплина не найдена.");
+            var discipline = await _repositoryDiscipline.GetByIdAsync(id)
+                ?? throw _exceptionFactory.NotFound<DatabaseDiscipline>(id);
 
             return Map(discipline, options);
         }

@@ -18,7 +18,7 @@ namespace EducationSystem.Tests.Managers.Rest
         private readonly Mock<IHelperPath> _mockHelperPath
             = new Mock<IHelperPath>();
 
-        private readonly Mock<IValidator<Question>> _mockHelperQuestion
+        private readonly Mock<IValidator<Question>> _mockValidatorQuestion
             = new Mock<IValidator<Question>>();
 
         private readonly Mock<IRepositoryTheme> _mockRepositoryTheme
@@ -43,7 +43,8 @@ namespace EducationSystem.Tests.Managers.Rest
                 LoggerMock.Object,
                 _mockHelperPath.Object,
                 MockHelperUser.Object,
-                _mockHelperQuestion.Object,
+                _mockValidatorQuestion.Object,
+                MockExceptionFactory.Object,
                 _mockRepositoryTheme.Object,
                 _mockRepositoryAnswer.Object,
                 _mockRepositoryProgram.Object,

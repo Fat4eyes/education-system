@@ -16,7 +16,7 @@ namespace EducationSystem.Tests.Managers.Rest
     {
         private readonly IManagerTheme _managerTheme;
 
-        private readonly Mock<IValidator<Theme>> _mockCheckerTheme
+        private readonly Mock<IValidator<Theme>> _mockValidatorTheme
             = new Mock<IValidator<Theme>>();
 
         private readonly Mock<IRepositoryTheme> _mockRepositoryTheme
@@ -30,7 +30,8 @@ namespace EducationSystem.Tests.Managers.Rest
             _managerTheme = new ManagerTheme(
                 Mapper,
                 LoggerMock.Object,
-                _mockCheckerTheme.Object,
+                _mockValidatorTheme.Object,
+                MockExceptionFactory.Object,
                 _mockRepositoryTheme.Object,
                 _mockRepositoryDiscipline.Object);
         }
@@ -53,6 +54,10 @@ namespace EducationSystem.Tests.Managers.Rest
             _mockRepositoryTheme
                 .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseTheme) null);
+
+            MockExceptionFactory
+                .Setup(x => x.NotFound<DatabaseTheme>(It.IsAny<int>()))
+                .Returns(new EducationSystemNotFoundException());
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerTheme.GetThemeAsync(999, new OptionsTheme()));

@@ -11,18 +11,18 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Route("Api/Students")]
     public class TamerStudent : Tamer
     {
-        private readonly IManagerStudent _managerStudent;
+        private readonly IManagerUser _managerUser;
         private readonly IManagerQuestion _managerQuestion;
         private readonly IManagerTestData _managerTestData;
         private readonly IManagerDiscipline _managerDiscipline;
 
         public TamerStudent(
-            IManagerStudent managerStudent,
+            IManagerUser managerUser,
             IManagerQuestion managerQuestion,
             IManagerTestData managerTestData,
             IManagerDiscipline managerDiscipline)
         {
-            _managerStudent = managerStudent;
+            _managerUser = managerUser;
             _managerQuestion = managerQuestion;
             _managerTestData = managerTestData;
             _managerDiscipline = managerDiscipline;
@@ -32,7 +32,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Student)]
         public async Task<IActionResult> GetStudent()
         {
-            return Ok(await _managerStudent.GetStudent(GetUserId()));
+            return Ok(await _managerUser.GetUserAsync(GetUserId()));
         }
 
         [Roles(UserRoles.Student)]

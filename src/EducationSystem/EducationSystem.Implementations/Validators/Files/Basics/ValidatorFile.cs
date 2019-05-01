@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Validators;
 using File = EducationSystem.Models.Files.Basics.File;
 
@@ -24,7 +25,7 @@ namespace EducationSystem.Implementations.Validators.Files.Basics
         /// Доступные расширения файла (в верхнем регистре).
         /// </summary>
         protected string[] AvailableExtensionsInUpperCase => AvailableExtensions
-            .Select(x => x.ToUpper())
+            .ToUpperInvariant()
             .ToArray();
 
         public virtual Task ValidateAsync(TFile model)
@@ -38,7 +39,7 @@ namespace EducationSystem.Implementations.Validators.Files.Basics
             if (string.IsNullOrWhiteSpace(model.Name))
                 throw ExceptionHelper.CreatePublicException("Не указано название файла.");
 
-            if (AvailableExtensionsInUpperCase.Contains(Path.GetExtension(model.Name).ToUpper()) == false)
+            if (AvailableExtensionsInUpperCase.Contains(Path.GetExtension(model.Name).ToUpperInvariant()) == false)
                 throw ExceptionHelper.CreatePublicException(
                     $"Файл имеет неверное расширение. " +
                     $"Доступные расширения файла: {string.Join(", ", AvailableExtensions)}.");

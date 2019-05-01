@@ -18,9 +18,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Authorize]
         [HttpGet("Current")]
-        public async Task<IActionResult> GetUser([FromQuery] OptionsUser options)
+        public async Task<IActionResult> GetUser()
         {
-            return Ok(await _managerUser.GetUserAsync(GetUserId(), options));
+            return Ok(await _managerUser.GetUserAsync(GetUserId()));
         }
     }
 }

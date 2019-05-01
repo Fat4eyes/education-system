@@ -25,6 +25,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 Mapper,
                 LoggerMock.Object,
                 MockHelperUser.Object,
+                MockExceptionFactory.Object,
                 _mockRepositoryDiscipline.Object);
         }
 
@@ -46,6 +47,10 @@ namespace EducationSystem.Tests.Managers.Rest
             _mockRepositoryDiscipline
                 .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseDiscipline) null);
+
+            MockExceptionFactory
+                .Setup(x => x.NotFound<DatabaseDiscipline>(It.IsAny<int>()))
+                .Returns(new EducationSystemNotFoundException());
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerDiscipline.GetDisciplineAsync(999, new OptionsDiscipline()));

@@ -1,11 +1,13 @@
 ﻿using EducationSystem.Database;
 using EducationSystem.Implementations;
+using EducationSystem.Implementations.Factories;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
 using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
 using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
@@ -27,7 +29,10 @@ namespace EducationSystem.Dependencies
 
             RegisterDatabases(collection, configuration);
 
+            collection.AddScoped<IExecutionContext, ExecutionContext>();
+
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
+            collection.AddTransient<IExceptionFactory, ExceptionFactory>();
 
             RegisterHelpers(collection);
             RegisterValidators(collection);
@@ -43,7 +48,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
             collection.AddTransient<IManagerTheme, ManagerTheme>();
-            collection.AddTransient<IManagerStudent, ManagerStudent>();
             collection.AddTransient<IManagerTestData, ManagerTestData>();
             collection.AddTransient<IManagerQuestion, ManagerQuestion>();
             collection.AddTransient<IManagerMaterial, ManagerMaterial>();

@@ -3,7 +3,6 @@ using EducationSystem.Database.Models;
 using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Models.Options;
 using EducationSystem.Repositories.Interfaces;
 using Moq;
 using Xunit;
@@ -22,6 +21,7 @@ namespace EducationSystem.Tests.Managers.Rest
             _managerUser = new ManagerUser(
                 Mapper,
                 LoggerMock.Object,
+                MockExceptionFactory.Object,
                 _mockRepositoryUser.Object);
         }
 
@@ -32,7 +32,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync(new DatabaseUser { FirstName = "Victor" });
 
-            var user = await _managerUser.GetUserAsync(999, new OptionsUser());
+            var user = await _managerUser.GetUserAsync(999);
 
             Assert.Equal("Victor", user.FirstName);
         }
@@ -44,8 +44,12 @@ namespace EducationSystem.Tests.Managers.Rest
                 .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseUser) null);
 
+            MockExceptionFactory
+                .Setup(x => x.NotFound<DatabaseUser>(It.IsAny<int>()))
+                .Returns(new EducationSystemNotFoundException());
+
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
-                () => _managerUser.GetUserAsync(999, new OptionsUser()));
+                () => _managerUser.GetUserAsync(999));
         }
     }
 }

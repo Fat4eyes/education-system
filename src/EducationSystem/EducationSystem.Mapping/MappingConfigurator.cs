@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest;
@@ -11,24 +12,13 @@ namespace EducationSystem.Mapping
         {
             expression.CreateMap<DatabaseUser, User>()
                 .ForMember(d => d.Active, o => o.MapFrom(s => s.Active == 1))
-                .ForMember(d => d.Roles, o => o.Ignore());
-
-            expression.CreateMap<DatabaseUser, Student>()
-                .ForMember(d => d.Active, o => o.MapFrom(s => s.Active == 1))
-                .ForMember(d => d.Roles, o => o.Ignore());
+                .ForMember(d => d.Roles, o => o.MapFrom(s => s.UserRoles.Select(x => x.Role)));
 
             expression.CreateMap<DatabaseDiscipline, Discipline>()
                 .ForMember(d => d.Tests, o => o.Ignore())
                 .ForMember(d => d.Themes, o => o.Ignore());
 
-            expression.CreateMap<DatabaseGroup, Group>()
-                .ForMember(d => d.StudyPlan, o => o.Ignore());
-
-            expression.CreateMap<DatabaseStudyPlan, StudyPlan>()
-                .ForMember(d => d.StudyProfile, o => o.Ignore());
-
-            expression.CreateMap<DatabaseStudyProfile, StudyProfile>()
-                .ForMember(d => d.Institute, o => o.Ignore());
+            expression.CreateMap<DatabaseGroup, Group>();
 
             expression.CreateMap<DatabaseTest, Test>()
                 .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive == 1))
@@ -130,9 +120,6 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.ProgramId, o => o.Ignore());
 
             expression.CreateMap<DatabaseRole, Role>();
-            expression.CreateMap<DatabaseInstitute, Institute>();
-
-            expression.CreateMap<User, Student>();
 
             expression.CreateMap<DatabaseMaterial, Material>()
                 .ForMember(d => d.Files, o => o.Ignore());

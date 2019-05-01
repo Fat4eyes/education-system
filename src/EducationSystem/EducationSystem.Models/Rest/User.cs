@@ -19,6 +19,8 @@ namespace EducationSystem.Models.Rest
 
         public List<Role> Roles { get; set; }
 
+        public Group Group { get; set; }
+
         public bool IsStudent() => HasRole(UserRoles.Student);
 
         public bool IsAdmin() => HasRole(UserRoles.Admin);

@@ -31,6 +31,7 @@ namespace EducationSystem.Tests.Managers.Rest
                 Mapper,
                 LoggerMock.Object,
                 _mockValidatorTest.Object,
+                MockExceptionFactory.Object,
                 _mockRepositoryTest.Object,
                 _mockRepositoryTestTheme.Object);
         }
@@ -53,6 +54,10 @@ namespace EducationSystem.Tests.Managers.Rest
             _mockRepositoryTest
                 .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseTest) null);
+
+            MockExceptionFactory
+                .Setup(x => x.NotFound<DatabaseTest>(It.IsAny<int>()))
+                .Returns(new EducationSystemNotFoundException());
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
                 () => _managerTest.GetTestAsync(999, new OptionsTest()));

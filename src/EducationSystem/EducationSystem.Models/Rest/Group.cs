@@ -7,9 +7,5 @@ namespace EducationSystem.Models.Rest
         public string Name { get; set; }
 
         public int? Year { get; set; }
-
-        public int StudyPlanId { get; set; }
-
-        public StudyPlan StudyPlan { get; set; }
     }
 }

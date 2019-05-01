@@ -25,6 +25,12 @@ namespace EducationSystem.Extensions
         public static IEnumerable<string> ToLowerInvariant(this IEnumerable<string> items)
             => items.Select(x => x.ToLowerInvariant());
 
+        public static IEnumerable<string> ToUpper(this IEnumerable<string> items)
+            => items.Select(x => x.ToUpper());
+
+        public static IEnumerable<string> ToUpperInvariant(this IEnumerable<string> items)
+            => items.Select(x => x.ToUpperInvariant());
+
         public static async Task<bool> AllAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task<bool>> predicate)
         {
             if (source == null)
