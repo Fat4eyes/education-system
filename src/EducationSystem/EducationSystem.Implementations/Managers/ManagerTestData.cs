@@ -27,11 +27,11 @@ namespace EducationSystem.Implementations.Managers
             _repositoryTest = repositoryTest;
         }
 
-        public async Task<TestData> GetTestDataForStudentByTestId(int testId, int studentId)
+        public async Task<TestData> GetTestDataForStudentByTestIdAsync(int testId, int studentId)
         {
-            _helperUserRole.CheckRoleStudent(studentId);
+            _helperUserRole.CheckRoleStudentAsync(studentId);
 
-            var test = await _repositoryTest.GetTestForStudentById(testId, studentId) ??
+            var test = await _repositoryTest.GetTestForStudentByIdAsync(testId, studentId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тест не найден. Идентификатор теста: {testId}.",
                     $"Тест не найден.");

@@ -27,7 +27,7 @@ namespace EducationSystem.Implementations.Validators.Files.Basics
             .Select(x => x.ToUpper())
             .ToArray();
 
-        public virtual Task Validate(TFile model)
+        public virtual Task ValidateAsync(TFile model)
         {
             if (model?.Stream == null || model.Stream.Length == 0)
                 throw ExceptionHelper.CreatePublicException("Не указан файл.");

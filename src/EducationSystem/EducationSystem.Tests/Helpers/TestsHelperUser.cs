@@ -26,10 +26,10 @@ namespace EducationSystem.Tests.Helpers
         public void CheckRoleStudent_Success()
         {
             _mockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999))
+                .Setup(x => x.GetRoleByUserIdAsync(999))
                 .ReturnsAsync(new DatabaseRole { Name = UserRoles.Student });
 
-            _helperUserRole.CheckRoleStudent(999);
+            _helperUserRole.CheckRoleStudentAsync(999);
         }
 
         [Theory]
@@ -38,10 +38,10 @@ namespace EducationSystem.Tests.Helpers
         public async Task CheckRoleStudent_Error(string role)
         {
             _mockRepositoryRole
-                .Setup(x => x.GetRoleByUserId(999))
+                .Setup(x => x.GetRoleByUserIdAsync(999))
                 .ReturnsAsync(new DatabaseRole { Name = role });
 
-            await Assert.ThrowsAsync<EducationSystemException>(() => _helperUserRole.CheckRoleStudent(999));
+            await Assert.ThrowsAsync<EducationSystemException>(() => _helperUserRole.CheckRoleStudentAsync(999));
         }
     }
 }

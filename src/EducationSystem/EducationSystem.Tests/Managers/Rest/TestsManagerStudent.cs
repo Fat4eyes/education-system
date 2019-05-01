@@ -29,7 +29,7 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetStudent_NotStudent()
         {
             MockHelperUser
-                .Setup(x => x.CheckRoleStudent(999))
+                .Setup(x => x.CheckRoleStudentAsync(999))
                 .Throws<EducationSystemException>();
 
             await Assert.ThrowsAsync<EducationSystemException>(
@@ -42,7 +42,7 @@ namespace EducationSystem.Tests.Managers.Rest
             MockHelperUser.Reset();
 
             _mockRepositoryStudent
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync(new DatabaseUser { FirstName = "Victor" });
 
             var student = await _managerStudent.GetStudent(999);
@@ -56,7 +56,7 @@ namespace EducationSystem.Tests.Managers.Rest
             MockHelperUser.Reset();
 
             _mockRepositoryStudent
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseUser) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(

@@ -7,8 +7,6 @@ namespace EducationSystem.Repositories.Interfaces
 {
     public interface IRepositoryFile : IRepository<DatabaseFile>
     {
-        Task<DatabaseFile> GetByGuid(Guid guid);
-
-        Task<bool> IsFileExists(int id);
+        Task<DatabaseFile> GetFileAsync(Guid guid);
     }
 }

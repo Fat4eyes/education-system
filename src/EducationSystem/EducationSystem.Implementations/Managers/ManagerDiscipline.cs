@@ -32,9 +32,9 @@ namespace EducationSystem.Implementations.Managers
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public async Task<PagedData<Discipline>> GetDisciplines(OptionsDiscipline options, FilterDiscipline filter)
+        public async Task<PagedData<Discipline>> GetDisciplinesAsync(OptionsDiscipline options, FilterDiscipline filter)
         {
-            var (count, disciplines) = await _repositoryDiscipline.GetDisciplines(filter);
+            var (count, disciplines) = await _repositoryDiscipline.GetDisciplinesAsync(filter);
 
             var items = disciplines
                 .Select(x => Map(x, options))
@@ -43,11 +43,11 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Discipline>(items, count);
         }
 
-        public async Task<PagedData<Discipline>> GetDisciplinesByStudentId(int studentId, OptionsDiscipline options, FilterDiscipline filter)
+        public async Task<PagedData<Discipline>> GetDisciplinesByStudentIdAsync(int studentId, OptionsDiscipline options, FilterDiscipline filter)
         {
-            _helperUserRole.CheckRoleStudent(studentId);
+            _helperUserRole.CheckRoleStudentAsync(studentId);
 
-            var (count, disciplines) = await _repositoryDiscipline.GetDisciplinesForStudent(studentId, filter);
+            var (count, disciplines) = await _repositoryDiscipline.GetDisciplinesByStudentIdAsync(studentId, filter);
 
             var items = disciplines
                 .Select(x => MapForStudent(x, options))
@@ -56,9 +56,9 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Discipline>(items, count);
         }
 
-        public async Task<Discipline> GetDiscipline(int id, OptionsDiscipline options)
+        public async Task<Discipline> GetDisciplineAsync(int id, OptionsDiscipline options)
         {
-            var discipline = await _repositoryDiscipline.GetById(id) ??
+            var discipline = await _repositoryDiscipline.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Дисциплина не найдена. Идентификатор дисциплины: {id}.",
                     $"Дисциплина не найдена.");

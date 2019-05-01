@@ -32,7 +32,7 @@ namespace EducationSystem.Implementations.Managers
             _repositoryUser = repositoryUser;
         }
 
-        public async Task<TokenResponse> GenerateToken(TokenRequest request)
+        public async Task<TokenResponse> GenerateTokenAsync(TokenRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -40,7 +40,7 @@ namespace EducationSystem.Implementations.Managers
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
                 throw ExceptionHelper.CreatePublicException("Неверная электронная почта или пароль.");
 
-            var user = await _repositoryUser.GetUserByEmail(request.Email) ??
+            var user = await _repositoryUser.GetUserByEmailAsync(request.Email) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Пользователь не найден. Электронная почта: {request.Email}",
                     $"Неверная электронная почта или пароль.");

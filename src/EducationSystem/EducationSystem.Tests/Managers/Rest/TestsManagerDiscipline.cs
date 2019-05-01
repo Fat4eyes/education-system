@@ -32,10 +32,10 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetDiscipline_Found()
         {
             _mockRepositoryDiscipline
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync(new DatabaseDiscipline { Name = "WEB" });
 
-            var discipline = await _managerDiscipline.GetDiscipline(999, new OptionsDiscipline());
+            var discipline = await _managerDiscipline.GetDisciplineAsync(999, new OptionsDiscipline());
 
             Assert.Equal("WEB", discipline.Name);
         }
@@ -44,22 +44,22 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetDiscipline_NotFound()
         {
             _mockRepositoryDiscipline
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseDiscipline) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
-                () => _managerDiscipline.GetDiscipline(999, new OptionsDiscipline()));
+                () => _managerDiscipline.GetDisciplineAsync(999, new OptionsDiscipline()));
         }
 
         [Fact]
         public async Task GetDisciplinesByStudentId_NotStudent()
         {
             MockHelperUser
-                .Setup(x => x.CheckRoleStudent(999))
+                .Setup(x => x.CheckRoleStudentAsync(999))
                 .Throws<EducationSystemException>();
 
             await Assert.ThrowsAsync<EducationSystemException>(
-                () => _managerDiscipline.GetDisciplinesByStudentId
+                () => _managerDiscipline.GetDisciplinesByStudentIdAsync
                     (999, new OptionsDiscipline(), new FilterDiscipline()));
         }
 
@@ -71,10 +71,10 @@ namespace EducationSystem.Tests.Managers.Rest
             var disciplines = GetDisciplines();
 
             _mockRepositoryDiscipline
-                .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
+                .Setup(x => x.GetDisciplinesByStudentIdAsync(999, It.IsAny<FilterDiscipline>()))
                 .ReturnsAsync((disciplines.Count, disciplines));
 
-            var data = await _managerDiscipline.GetDisciplinesByStudentId
+            var data = await _managerDiscipline.GetDisciplinesByStudentIdAsync
                 (999, new OptionsDiscipline { WithTests = true }, new FilterDiscipline());
 
             Assert.Equal(2, data.Count);
@@ -97,10 +97,10 @@ namespace EducationSystem.Tests.Managers.Rest
             var disciplines = GetDisciplines();
 
             _mockRepositoryDiscipline
-                .Setup(x => x.GetDisciplinesForStudent(999, It.IsAny<FilterDiscipline>()))
+                .Setup(x => x.GetDisciplinesByStudentIdAsync(999, It.IsAny<FilterDiscipline>()))
                 .ReturnsAsync((disciplines.Count, disciplines));
 
-            var data = await _managerDiscipline.GetDisciplinesByStudentId
+            var data = await _managerDiscipline.GetDisciplinesByStudentIdAsync
                 (999, new OptionsDiscipline { WithThemes = true }, new FilterDiscipline());
 
             Assert.Equal(2, data.Count);

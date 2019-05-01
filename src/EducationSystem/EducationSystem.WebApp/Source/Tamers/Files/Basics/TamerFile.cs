@@ -22,7 +22,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetFile([FromRoute] int id)
         {
-            return Ok(await ManagerFile.GetFile(id));
+            return Ok(await ManagerFile.GetFileAsync(id));
         }
 
         [Transaction]
@@ -30,7 +30,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteFile([FromRoute] int id)
         {
-            await ManagerFile.DeleteFile(id);
+            await ManagerFile.DeleteFileAsync(id);
 
             return Ok();
         }
@@ -48,7 +48,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
                     Stream = stream
                 };
 
-                return Ok(await ManagerFile.CreateFile(model));
+                return Ok(await ManagerFile.CreateFileAsync(model));
             }
         }
 

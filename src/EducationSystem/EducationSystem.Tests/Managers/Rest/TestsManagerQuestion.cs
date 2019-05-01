@@ -55,11 +55,11 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetQuestionsForStudentByTestId_NotStudent()
         {
             MockHelperUser
-                .Setup(x => x.CheckRoleStudent(999))
+                .Setup(x => x.CheckRoleStudentAsync(999))
                 .Throws<EducationSystemException>();
 
             await Assert.ThrowsAsync<EducationSystemException>(
-                () => _managerQuestion.GetQuestionsForStudentByTestId(999, 999));
+                () => _managerQuestion.GetQuestionsForStudentByTestIdAsync(999, 999));
         }
     }
 }

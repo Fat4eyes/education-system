@@ -17,22 +17,12 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryUser(DatabaseContext context)
             : base(context) { }
 
-        public Task<(int Count, List<DatabaseUser> Users)> GetUsers(FilterUser filter)
-        {
-            return AsQueryable().ApplyPaging(filter);
-        }
-
-        public Task<(int Count, List<DatabaseUser> Users)> GetUsersByRoleId(int roleId, FilterUser filter)
+        public Task<DatabaseUser> GetUserByEmailAsync(string email)
         {
             return AsQueryable()
-                .Where(x => x.UserRoles.Any(y => y.RoleId == roleId))
-                .ApplyPaging(filter);
-        }
-
-        public Task<DatabaseUser> GetUserByEmail(string email)
-        {
-            return AsQueryable().FirstOrDefaultAsync(x => string.Equals(
-                x.Email, email, StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefaultAsync(x => string.Equals(
+                    x.Email, email,
+                    StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

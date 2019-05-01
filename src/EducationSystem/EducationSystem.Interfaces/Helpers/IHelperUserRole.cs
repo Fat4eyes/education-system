@@ -4,6 +4,6 @@ namespace EducationSystem.Interfaces.Helpers
 {
     public interface IHelperUserRole
     {
-        Task CheckRoleStudent(int userId);
+        Task CheckRoleStudentAsync(int userId);
     }
 }

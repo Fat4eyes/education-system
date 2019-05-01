@@ -16,13 +16,13 @@ namespace EducationSystem.Implementations.Helpers
             _helperPath = helperPath;
         }
 
-        public async Task<bool> IsFileExists(File file)
+        public async Task<bool> FileExistsAsync(File file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
 
             if (string.IsNullOrWhiteSpace(file.Path))
-                return SystemFile.Exists(await _helperPath.GetAbsoluteFilePath(file));
+                return SystemFile.Exists(await _helperPath.GetAbsoluteFilePathAsync(file));
 
             var path = Path.Combine(_helperPath.GetContentPath(), file.Path.Replace("/", "\\"));
 

@@ -16,14 +16,14 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryMaterial(DatabaseContext context)
             : base(context) { }
 
-        public async Task<(int Count, List<DatabaseMaterial> Materials)> GetMaterials(FilterMaterial filter)
+        public Task<(int Count, List<DatabaseMaterial> Materials)> GetMaterialsAsync(FilterMaterial filter)
         {
             var query = AsQueryable();
 
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
                 query = query.Where(x => x.Name.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
 
-            return await query.ApplyPaging(filter);
+            return query.ApplyPagingAsync(filter);
         }
     }
 }

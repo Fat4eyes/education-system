@@ -25,7 +25,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetTests([FromQuery] OptionsTest options, [FromQuery] FilterTest filter)
         {
-            return Ok(await _managerTest.GetTests(options, filter));
+            return Ok(await _managerTest.GetTestsAsync(options, filter));
         }
 
         [Transaction]
@@ -33,14 +33,14 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateTest([FromBody] Test test)
         {
-            return Ok(await _managerTest.CreateTest(test));
+            return Ok(await _managerTest.CreateTestAsync(test));
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetTest([FromRoute] int id, [FromQuery] OptionsTest options)
         {
-            return Ok(await _managerTest.GetTest(id, options));
+            return Ok(await _managerTest.GetTestAsync(id, options));
         }
 
         [Transaction]
@@ -48,7 +48,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateTest([FromRoute] int id, [FromBody] Test test)
         {
-            return Ok(await _managerTest.UpdateTest(id, test));
+            return Ok(await _managerTest.UpdateTestAsync(id, test));
         }
 
         [Transaction]
@@ -56,7 +56,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteTest([FromRoute] int id)
         {
-            await _managerTest.DeleteTest(id);
+            await _managerTest.DeleteTestAsync(id);
 
             return Ok();
         }
@@ -68,7 +68,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
         {
-            return Ok(await _managerTheme.GetThemesByTestId(id, options, filter));
+            return Ok(await _managerTheme.GetThemesByTestIdAsync(id, options, filter));
         }
     }
 }

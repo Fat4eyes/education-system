@@ -18,22 +18,22 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryQuestion(DatabaseContext context)
             : base(context) { }
 
-        public Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestions(FilterQuestion filter)
+        public Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsAsync(FilterQuestion filter)
         {
             return AsQueryable()
                 .OrderBy(x => x.Order)
-                .ApplyPaging(filter);
+                .ApplyPagingAsync(filter);
         }
 
-        public Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsByThemeId(int themeId, FilterQuestion filter)
+        public Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsByThemeIdAsync(int themeId, FilterQuestion filter)
         {
             return AsQueryable()
                 .Where(x => x.ThemeId == themeId)
                 .OrderBy(x => x.Order)
-                .ApplyPaging(filter);
+                .ApplyPagingAsync(filter);
         }
 
-        public async Task<List<DatabaseQuestion>> GetQuestionsForStudentByTestId(int testId, int studentId)
+        public async Task<List<DatabaseQuestion>> GetQuestionsForStudentByTestIdAsync(int testId, int studentId)
         {
             var questionTypes = new List<QuestionType>
             {
@@ -61,12 +61,7 @@ namespace EducationSystem.Repositories.Implementations
                 .ToListAsync();
         }
 
-        public Task<bool> IsQuestionExists(int id)
-        {
-            return AsQueryable().AnyAsync(x => x.Id == id);
-        }
-
-        public Task<int> GetLastQuestionOrder(int themeId)
+        public Task<int> GetLastQuestionOrderAsync(int themeId)
         {
             return AsQueryable()
                 .Where(x => x.ThemeId == themeId && x.Order.HasValue)

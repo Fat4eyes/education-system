@@ -20,7 +20,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryDiscipline = repositoryDiscipline;
         }
 
-        public async Task Validate(Test model)
+        public async Task ValidateAsync(Test model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -49,7 +49,7 @@ namespace EducationSystem.Implementations.Validators
             if (await model.Themes.AllAsync(x => _repositoryTheme.IsThemeExists(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
 
-            if (await _repositoryDiscipline.GetById(model.DisciplineId) == null)
+            if (await _repositoryDiscipline.GetByIdAsync(model.DisciplineId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
         }
     }

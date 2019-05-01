@@ -8,11 +8,11 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerMaterial
     {
-        Task<PagedData<Material>> GetMaterials(OptionsMaterial options, FilterMaterial filter);
+        Task<PagedData<Material>> GetMaterialsAsync(OptionsMaterial options, FilterMaterial filter);
 
-        Task DeleteMaterial(int id);
-        Task<Material> GetMaterial(int id, OptionsMaterial options);
-        Task<Material> CreateMaterial(Material material);
-        Task<Material> UpdateMaterial(int id, Material material);
+        Task DeleteMaterialAsync(int id);
+        Task<Material> GetMaterialAsync(int id, OptionsMaterial options);
+        Task<Material> CreateMaterialAsync(Material material);
+        Task<Material> UpdateMaterialAsync(int id, Material material);
     }
 }

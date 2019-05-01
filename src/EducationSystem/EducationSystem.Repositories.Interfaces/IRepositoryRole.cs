@@ -6,6 +6,6 @@ namespace EducationSystem.Repositories.Interfaces
 {
     public interface IRepositoryRole : IRepositoryReadOnly<DatabaseRole>
     {
-        Task<DatabaseRole> GetRoleByUserId(int userId);
+        Task<DatabaseRole> GetRoleByUserIdAsync(int userId);
     }
 }

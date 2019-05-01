@@ -5,6 +5,6 @@ namespace EducationSystem.Interfaces.Helpers
 {
     public interface IHelperFile
     {
-        Task<bool> IsFileExists(File file);
+        Task<bool> FileExistsAsync(File file);
     }
 }

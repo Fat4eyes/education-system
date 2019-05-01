@@ -53,9 +53,9 @@ namespace EducationSystem.Implementations.Managers
             _helperPath = helperPath;
         }
 
-        public async Task<PagedData<Question>> GetQuestions(OptionsQuestion options, FilterQuestion filter)
+        public async Task<PagedData<Question>> GetQuestionsAsync(OptionsQuestion options, FilterQuestion filter)
         {
-            var (count, questions) = await _repositoryQuestion.GetQuestions(filter);
+            var (count, questions) = await _repositoryQuestion.GetQuestionsAsync(filter);
 
             var items = questions
                 .Select(x => Map(x, options))
@@ -64,9 +64,9 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Question>(items, count);
         }
 
-        public async Task<PagedData<Question>> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter)
+        public async Task<PagedData<Question>> GetQuestionsByThemeIdAsync(int themeId, OptionsQuestion options, FilterQuestion filter)
         {
-            var (count, questions) = await _repositoryQuestion.GetQuestionsByThemeId(themeId, filter);
+            var (count, questions) = await _repositoryQuestion.GetQuestionsByThemeIdAsync(themeId, filter);
 
             var items = questions
                 .Select(x => Map(x, options))
@@ -75,20 +75,20 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Question>(items, count);
         }
 
-        public async Task<List<Question>> GetQuestionsForStudentByTestId(int testId, int studentId)
+        public async Task<List<Question>> GetQuestionsForStudentByTestIdAsync(int testId, int studentId)
         {
-            _helperUserRole.CheckRoleStudent(studentId);
+            _helperUserRole.CheckRoleStudentAsync(studentId);
 
-            var questions = await _repositoryQuestion.GetQuestionsForStudentByTestId(testId, studentId);
+            var questions = await _repositoryQuestion.GetQuestionsForStudentByTestIdAsync(testId, studentId);
 
             return questions
                 .Select(MapForStudent)
                 .ToList();
         }
 
-        public async Task<Question> GetQuestion(int id, OptionsQuestion options)
+        public async Task<Question> GetQuestionAsync(int id, OptionsQuestion options)
         {
-            var question = await _repositoryQuestion.GetById(id) ??
+            var question = await _repositoryQuestion.GetByIdAsync(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Вопрос не найден. Идентификатор вопроса: {id}.",
                    $"Вопрос не найден.");
@@ -96,9 +96,9 @@ namespace EducationSystem.Implementations.Managers
             return Map(question, options);
         }
 
-        public async Task DeleteQuestion(int id)
+        public async Task DeleteQuestionAsync(int id)
         {
-            var question = await _repositoryQuestion.GetById(id) ??
+            var question = await _repositoryQuestion.GetByIdAsync(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Вопрос для удаления не найден. Идентификатор вопроса: {id}.",
                    $"Вопрос для удаления не найден.");
@@ -106,14 +106,14 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryQuestion.RemoveAsync(question, true);
         }
 
-        public async Task<Question> CreateQuestion(Question question)
+        public async Task<Question> CreateQuestionAsync(Question question)
         {
-            _validatorQuestion.Validate(question.Format());
+            _validatorQuestion.ValidateAsync(question.Format());
 
             var model = Mapper.Map<DatabaseQuestion>(question);
 
             if (question.ThemeId.HasValue)
-                model.Order = await _repositoryQuestion.GetLastQuestionOrder(question.ThemeId.Value) + 1;
+                model.Order = await _repositoryQuestion.GetLastQuestionOrderAsync(question.ThemeId.Value) + 1;
 
             switch (question.Type)
             {
@@ -132,11 +132,11 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseQuestion, Question>(model);
         }
 
-        public async Task<Question> UpdateQuestion(int id, Question question)
+        public async Task<Question> UpdateQuestionAsync(int id, Question question)
         {
-            _validatorQuestion.Validate(question.Format());
+            _validatorQuestion.ValidateAsync(question.Format());
 
-            var model = await _repositoryQuestion.GetById(id) ??
+            var model = await _repositoryQuestion.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Вопрос для обновления не найден. Идентификатор вопроса: {id}.",
                     $"Вопрос для обновления не найден.");
@@ -202,7 +202,7 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseQuestion, Question>(model);
         }
 
-        public async Task UpdateThemeQuestions(int themeId, List<Question> questions)
+        public async Task UpdateThemeQuestionsAsync(int themeId, List<Question> questions)
         {
             if (questions.IsEmpty())
                 throw ExceptionHelper.CreatePublicException("Не указаны вопросы для обновления.");
@@ -210,10 +210,10 @@ namespace EducationSystem.Implementations.Managers
             if (questions.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("Указаны повторяющиеся вопросы.");
 
-            if (await questions.AllAsync(x => _repositoryQuestion.IsQuestionExists(x.Id)) == false)
+            if (await questions.AllAsync(x => _repositoryQuestion.ExistsAsync(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных вопросов не существуют.");
 
-            var theme = await _repositoryTheme.GetById(themeId) ??
+            var theme = await _repositoryTheme.GetByIdAsync(themeId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема не найдена. Идентификатор темы: {themeId}.",
                     $"Тема не найдена.");
@@ -224,7 +224,7 @@ namespace EducationSystem.Implementations.Managers
             if (theme.Questions.All(x => questions.Select(y => y.Id).Contains(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("У одного или нескольких вопросов указанная тема не совпадает.");
 
-            var models = await _repositoryQuestion.GetByIds(questions.Select(x => x.Id).ToArray());
+            var models = await _repositoryQuestion.GetByIdsAsync(questions.Select(x => x.Id).ToArray());
 
             var order = 1;
 

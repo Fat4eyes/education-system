@@ -41,9 +41,9 @@ namespace EducationSystem.Implementations.Managers
             _repositoryMaterialFile = repositoryMaterialFile;
         }
 
-        public async Task<PagedData<Material>> GetMaterials(OptionsMaterial options, FilterMaterial filter)
+        public async Task<PagedData<Material>> GetMaterialsAsync(OptionsMaterial options, FilterMaterial filter)
         {
-            var (count, materials) = await _repositoryMaterial.GetMaterials(filter);
+            var (count, materials) = await _repositoryMaterial.GetMaterialsAsync(filter);
 
             var items = materials
                 .Select(x => Map(x, options))
@@ -52,9 +52,9 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Material>(items, count);
         }
 
-        public async Task DeleteMaterial(int id)
+        public async Task DeleteMaterialAsync(int id)
         {
-            var material = await _repositoryMaterial.GetById(id) ??
+            var material = await _repositoryMaterial.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал для удаления не найден. Идентификатор материала: {id}.",
                     $"Материал для удаления не найден.");
@@ -62,9 +62,9 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryMaterial.RemoveAsync(material, true);
         }
 
-        public async Task<Material> GetMaterial(int id, OptionsMaterial options)
+        public async Task<Material> GetMaterialAsync(int id, OptionsMaterial options)
         {
-            var material = await _repositoryMaterial.GetById(id) ??
+            var material = await _repositoryMaterial.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал не найден. Идентификатор материала: {id}.",
                     $"Материал не найден.");
@@ -72,9 +72,9 @@ namespace EducationSystem.Implementations.Managers
             return Map(material, options);
         }
 
-        public async Task<Material> CreateMaterial(Material material)
+        public async Task<Material> CreateMaterialAsync(Material material)
         {
-            _validatorMaterial.Validate(material.Format());
+            _validatorMaterial.ValidateAsync(material.Format());
 
             var model = Mapper.Map<DatabaseMaterial>(material);
 
@@ -83,11 +83,11 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseMaterial, Material>(model);
         }
 
-        public async Task<Material> UpdateMaterial(int id, Material material)
+        public async Task<Material> UpdateMaterialAsync(int id, Material material)
         {
-            _validatorMaterial.Validate(material.Format());
+            _validatorMaterial.ValidateAsync(material.Format());
 
-            var model = await _repositoryMaterial.GetById(id) ??
+            var model = await _repositoryMaterial.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Материал для обновления не найден. Идентификатор материала: {id}.",
                     $"Материал для обновления не найден.");

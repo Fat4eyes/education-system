@@ -5,6 +5,6 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerToken
     {
-        Task<TokenResponse> GenerateToken(TokenRequest request);
+        Task<TokenResponse> GenerateTokenAsync(TokenRequest request);
     }
 }

@@ -20,7 +20,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [HttpGet("Current")]
         public async Task<IActionResult> GetUser([FromQuery] OptionsUser options)
         {
-            return Ok(await _managerUser.GetUser(GetUserId(), options));
+            return Ok(await _managerUser.GetUserAsync(GetUserId(), options));
         }
     }
 }

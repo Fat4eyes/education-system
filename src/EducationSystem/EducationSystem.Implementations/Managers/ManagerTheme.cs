@@ -46,7 +46,7 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Theme>(items, count);
         }
 
-        public async Task<PagedData<Theme>> GetThemesByTestId(int testId, OptionsTheme options, FilterTheme filter)
+        public async Task<PagedData<Theme>> GetThemesByTestIdAsync(int testId, OptionsTheme options, FilterTheme filter)
         {
             var (count, themes) = await _repositoryTheme.GetThemesByTestId(testId, filter);
 
@@ -57,7 +57,7 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Theme>(items, count);
         }
 
-        public async Task<PagedData<Theme>> GetThemesByDisciplineId(int disciplineId, OptionsTheme options, FilterTheme filter)
+        public async Task<PagedData<Theme>> GetThemesByDisciplineIdAsync(int disciplineId, OptionsTheme options, FilterTheme filter)
         {
             var (count, themes) = await _repositoryTheme.GetThemesByDisciplineId(disciplineId, filter);
 
@@ -68,9 +68,9 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Theme>(items, count);
         }
 
-        public async Task<Theme> GetTheme(int id, OptionsTheme options)
+        public async Task<Theme> GetThemeAsync(int id, OptionsTheme options)
         {
-            var theme = await _repositoryTheme.GetById(id) ??
+            var theme = await _repositoryTheme.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема не найдена. Идентификатор темы: {id}.",
                     $"Тема не найдена.");
@@ -78,9 +78,9 @@ namespace EducationSystem.Implementations.Managers
             return Map(theme, options);
         }
 
-        public async Task DeleteTheme(int id)
+        public async Task DeleteThemeAsync(int id)
         {
-            var theme = await _repositoryTheme.GetById(id) ??
+            var theme = await _repositoryTheme.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема для удаления не найдена. Идентификатор темы: {id}.",
                     $"Тема для удаления не найдена.");
@@ -88,9 +88,9 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryTheme.RemoveAsync(theme, true);
         }
 
-        public async Task<Theme> CreateTheme(Theme theme)
+        public async Task<Theme> CreateThemeAsync(Theme theme)
         {
-            _validatorTheme.Validate(theme.Format());
+            _validatorTheme.ValidateAsync(theme.Format());
 
             var model = Mapper.Map<DatabaseTheme>(theme);
 
@@ -101,11 +101,11 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseTheme, Theme>(model);
         }
 
-        public async Task<Theme> UpdateTheme(int id, Theme theme)
+        public async Task<Theme> UpdateThemeAsync(int id, Theme theme)
         {
-            _validatorTheme.Validate(theme.Format());
+            _validatorTheme.ValidateAsync(theme.Format());
 
-            var model = await _repositoryTheme.GetById(id) ??
+            var model = await _repositoryTheme.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тема для обновления не найдена. Идентификатор темы: {id}.",
                     $"Тема для обновления не найдена.");
@@ -117,7 +117,7 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseTheme, Theme>(model);
         }
 
-        public async Task UpdateDisciplineThemes(int disciplineId, List<Theme> themes)
+        public async Task UpdateDisciplineThemesAsync(int disciplineId, List<Theme> themes)
         {
             if (themes.IsEmpty())
                 throw ExceptionHelper.CreatePublicException("Не указаны темы для обновления.");
@@ -128,7 +128,7 @@ namespace EducationSystem.Implementations.Managers
             if (await themes.AllAsync(x => _repositoryTheme.IsThemeExists(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько указанных тем не существуют.");
 
-            var discipline = await _repositoryDiscipline.GetById(disciplineId) ??
+            var discipline = await _repositoryDiscipline.GetByIdAsync(disciplineId) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Дисциплина не найдена. Идентификатор дисциплины: {disciplineId}.",
                     $"Дисциплина не найдена.");
@@ -139,7 +139,7 @@ namespace EducationSystem.Implementations.Managers
             if (discipline.Themes.All(x => themes.Select(y => y.Id).Contains(x.Id)) == false)
                 throw ExceptionHelper.CreatePublicException("У одной или нескольких тем указанная дисциплина не совпадает.");
 
-            var models = await _repositoryTheme.GetByIds(themes.Select(x => x.Id).ToArray());
+            var models = await _repositoryTheme.GetByIdsAsync(themes.Select(x => x.Id).ToArray());
 
             var order = 1;
 

@@ -38,7 +38,6 @@ namespace EducationSystem.Dependencies
 
             collection.AddTransient<IManagerToken, ManagerToken>();
 
-            collection.AddTransient<IManagerRole, ManagerRole>();
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
             collection.AddTransient<IManagerTheme, ManagerTheme>();
@@ -46,10 +45,7 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IManagerTestData, ManagerTestData>();
             collection.AddTransient<IManagerQuestion, ManagerQuestion>();
             collection.AddTransient<IManagerMaterial, ManagerMaterial>();
-            collection.AddTransient<IManagerInstitute, ManagerInstitute>();
-            collection.AddTransient<IManagerStudyPlan, ManagerStudyPlan>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
-            collection.AddTransient<IManagerStudyProfile, ManagerStudyProfile>();
         }
 
         private static void RegisterHelpers(IServiceCollection collection)
@@ -85,12 +81,9 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IRepositoryStudent, RepositoryStudent>();
             collection.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
             collection.AddTransient<IRepositoryMaterial, RepositoryMaterial>();
-            collection.AddTransient<IRepositoryInstitute, RepositoryInstitute>();
-            collection.AddTransient<IRepositoryStudyPlan, RepositoryStudyPlan>();
             collection.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();
             collection.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
             collection.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
-            collection.AddTransient<IRepositoryStudyProfile, RepositoryStudyProfile>();
             collection.AddTransient<IRepositoryMaterialFile, RepositoryMaterialFile>();
         }
 

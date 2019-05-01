@@ -27,9 +27,9 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<Student> GetStudent(int id)
         {
-            _helperUserRole.CheckRoleStudent(id);
+            _helperUserRole.CheckRoleStudentAsync(id);
 
-            var student = await _repositoryStudent.GetById(id) ??
+            var student = await _repositoryStudent.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Студент не найден. Идентификатор студента: {id}.",
                     $"Студент не найден.");

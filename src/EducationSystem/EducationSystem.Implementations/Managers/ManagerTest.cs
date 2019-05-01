@@ -35,9 +35,9 @@ namespace EducationSystem.Implementations.Managers
             _repositoryTestTheme = repositoryTestTheme;
         }
 
-        public async Task<PagedData<Test>> GetTests(OptionsTest options, FilterTest filter)
+        public async Task<PagedData<Test>> GetTestsAsync(OptionsTest options, FilterTest filter)
         {
-            var (count, tests) = await _repositoryTest.GetTests(filter);
+            var (count, tests) = await _repositoryTest.GetTestsAsync(filter);
 
             var items = tests
                 .Select(x => Map(x, options))
@@ -46,9 +46,9 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Test>(items, count);
         }
 
-        public async Task<PagedData<Test>> GetTestsByDisciplineId(int disciplineId, OptionsTest options, FilterTest filter)
+        public async Task<PagedData<Test>> GetTestsByDisciplineIdAsync(int disciplineId, OptionsTest options, FilterTest filter)
         {
-            var (count, tests) = await _repositoryTest.GetTestsByDisciplineId(disciplineId, filter);
+            var (count, tests) = await _repositoryTest.GetTestsByDisciplineIdAsync(disciplineId, filter);
 
             var items = tests
                 .Select(x => Map(x, options))
@@ -57,9 +57,9 @@ namespace EducationSystem.Implementations.Managers
             return new PagedData<Test>(items, count);
         }
 
-        public async Task<Test> GetTest(int id, OptionsTest options)
+        public async Task<Test> GetTestAsync(int id, OptionsTest options)
         {
-            var test = await _repositoryTest.GetById(id) ??
+            var test = await _repositoryTest.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тест не найден. Идентификатор теста: {id}.",
                     $"Тест не найден.");
@@ -67,9 +67,9 @@ namespace EducationSystem.Implementations.Managers
             return Map(test, options);
         }
 
-        public async Task DeleteTest(int id)
+        public async Task DeleteTestAsync(int id)
         {
-            var test = await _repositoryTest.GetById(id) ??
+            var test = await _repositoryTest.GetByIdAsync(id) ??
                throw ExceptionHelper.CreateNotFoundException(
                    $"Тест для удаления не найден. Идентификатор теста: {id}.",
                    $"Тест для удаления не найден.");
@@ -77,9 +77,9 @@ namespace EducationSystem.Implementations.Managers
             await _repositoryTest.RemoveAsync(test, true);
         }
 
-        public async Task<Test> CreateTest(Test test)
+        public async Task<Test> CreateTestAsync(Test test)
         {
-            _validatorTest.Validate(test.Format());
+            _validatorTest.ValidateAsync(test.Format());
 
             var model = Mapper.Map<DatabaseTest>(test);
 
@@ -88,11 +88,11 @@ namespace EducationSystem.Implementations.Managers
             return Mapper.Map<DatabaseTest, Test>(model);
         }
 
-        public async Task<Test> UpdateTest(int id, Test test)
+        public async Task<Test> UpdateTestAsync(int id, Test test)
         {
-            _validatorTest.Validate(test.Format());
+            _validatorTest.ValidateAsync(test.Format());
 
-            var model = await _repositoryTest.GetById(id) ??
+            var model = await _repositoryTest.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Тест для обновления не найден. Идентификатор теста: {id}.",
                     $"Тест для обновления не найден.");

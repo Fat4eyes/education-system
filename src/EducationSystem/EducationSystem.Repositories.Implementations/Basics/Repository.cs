@@ -57,7 +57,7 @@ namespace EducationSystem.Repositories.Implementations.Basics
 
         public async Task RemoveAsync(int id, bool save = false)
         {
-            var model = await GetById(id);
+            var model = await GetByIdAsync(id);
 
             if (model != null)
             {

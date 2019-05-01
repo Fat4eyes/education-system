@@ -5,6 +5,6 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerTestData
     {
-        Task<TestData> GetTestDataForStudentByTestId(int testId, int studentId);
+        Task<TestData> GetTestDataForStudentByTestIdAsync(int testId, int studentId);
     }
 }

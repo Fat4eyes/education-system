@@ -6,6 +6,6 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerUser
     {
-        Task<User> GetUser(int id, OptionsUser options);
+        Task<User> GetUserAsync(int id, OptionsUser options);
     }
 }

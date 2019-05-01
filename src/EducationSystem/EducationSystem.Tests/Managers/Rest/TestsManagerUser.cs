@@ -29,10 +29,10 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetUser_Found()
         {
             _mockRepositoryUser
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync(new DatabaseUser { FirstName = "Victor" });
 
-            var user = await _managerUser.GetUser(999, new OptionsUser());
+            var user = await _managerUser.GetUserAsync(999, new OptionsUser());
 
             Assert.Equal("Victor", user.FirstName);
         }
@@ -41,11 +41,11 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetUser_NotFound()
         {
             _mockRepositoryUser
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseUser) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
-                () => _managerUser.GetUser(999, new OptionsUser()));
+                () => _managerUser.GetUserAsync(999, new OptionsUser()));
         }
     }
 }

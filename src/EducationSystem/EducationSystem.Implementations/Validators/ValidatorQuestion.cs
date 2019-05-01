@@ -31,7 +31,7 @@ namespace EducationSystem.Implementations.Validators
             _repositoryMaterial = repositoryMaterial;
         }
 
-        public async Task Validate(Question model)
+        public async Task ValidateAsync(Question model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -54,16 +54,16 @@ namespace EducationSystem.Implementations.Validators
             if (model.ThemeId.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указана тема.");
 
-            if (await _repositoryTheme.GetById(model.ThemeId.Value) == null)
+            if (await _repositoryTheme.GetByIdAsync(model.ThemeId.Value) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            if (model.Image != null && await _repositoryFile.GetById(model.Image.Id) == null)
+            if (model.Image != null && await _repositoryFile.GetByIdAsync(model.Image.Id) == null)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.Image != null && await _helperFile.IsFileExists(model.Image) == false)
+            if (model.Image != null && await _helperFile.FileExistsAsync(model.Image) == false)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.Material != null && await _repositoryMaterial.GetById(model.Material.Id) == null)
+            if (model.Material != null && await _repositoryMaterial.GetByIdAsync(model.Material.Id) == null)
                 throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
 
             ValidateByQuestionType(model);

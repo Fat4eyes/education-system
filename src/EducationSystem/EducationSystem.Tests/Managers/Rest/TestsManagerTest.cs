@@ -39,10 +39,10 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetTest_Found()
         {
             _mockRepositoryTest
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync(new DatabaseTest { Subject = "Subject" });
 
-            var test = await _managerTest.GetTest(999, new OptionsTest());
+            var test = await _managerTest.GetTestAsync(999, new OptionsTest());
 
             Assert.Equal("Subject", test.Subject);
         }
@@ -51,11 +51,11 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetTest_NotFound()
         {
             _mockRepositoryTest
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseTest) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
-                () => _managerTest.GetTest(999, new OptionsTest()));
+                () => _managerTest.GetTestAsync(999, new OptionsTest()));
         }
     }
 }

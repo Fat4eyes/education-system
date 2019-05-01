@@ -30,10 +30,10 @@ namespace EducationSystem.Implementations.Helpers
 
         public string GetContentPath() => _environment.ContentRootPath;
 
-        public async Task<string> GetAbsoluteFilePath(File file)
-            => Path.Combine(GetContentPath(), await GetRelativeFilePath(file));
+        public async Task<string> GetAbsoluteFilePathAsync(File file)
+            => Path.Combine(GetContentPath(), await GetRelativeFilePathAsync(file));
 
-        public async Task<string> GetRelativeFilePath(File file)
+        public async Task<string> GetRelativeFilePathAsync(File file)
         {
             if (file == null)
                 throw new ArgumentNullException(nameof(file));
@@ -41,9 +41,9 @@ namespace EducationSystem.Implementations.Helpers
             DatabaseFile model = null;
 
             if (file.Guid.HasValue)
-                model = await _repositoryFile.GetByGuid(file.Guid.Value);
+                model = await _repositoryFile.GetFileAsync(file.Guid.Value);
 
-            model = model ?? await _repositoryFile.GetById(file.Id) ??
+            model = model ?? await _repositoryFile.GetByIdAsync(file.Id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Файл не найден. Идентификатор файла: {file.Id}.",
                     $"Файл не найден.");

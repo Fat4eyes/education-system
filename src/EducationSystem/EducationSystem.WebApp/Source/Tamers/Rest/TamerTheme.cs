@@ -26,7 +26,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetTheme([FromRoute] int id, [FromQuery] OptionsTheme options)
         {
-            return Ok(await _managerTheme.GetTheme(id, options));
+            return Ok(await _managerTheme.GetThemeAsync(id, options));
         }
 
         [HttpPost]
@@ -34,7 +34,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateTheme([FromBody] Theme theme)
         {
-            return Ok(await _managerTheme.CreateTheme(theme));
+            return Ok(await _managerTheme.CreateThemeAsync(theme));
         }
 
         [Transaction]
@@ -42,7 +42,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateTheme([FromRoute] int id, [FromBody] Theme theme)
         {
-            return Ok(await _managerTheme.UpdateTheme(id, theme));
+            return Ok(await _managerTheme.UpdateThemeAsync(id, theme));
         }
 
         [Transaction]
@@ -50,7 +50,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteTheme([FromRoute] int id)
         {
-            await _managerTheme.DeleteTheme(id);
+            await _managerTheme.DeleteThemeAsync(id);
 
             return Ok();
         }
@@ -62,7 +62,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsQuestion options,
             [FromQuery] FilterQuestion filter)
         {
-            return Ok(await _managerQuestion.GetQuestionsByThemeId(id, options, filter));
+            return Ok(await _managerQuestion.GetQuestionsByThemeIdAsync(id, options, filter));
         }
 
         [Transaction]
@@ -70,7 +70,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateThemeQuestions([FromRoute] int id, [FromBody] List<Question> questions)
         {
-            await _managerQuestion.UpdateThemeQuestions(id, questions);
+            await _managerQuestion.UpdateThemeQuestionsAsync(id, questions);
 
             return Ok();
         }

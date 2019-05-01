@@ -20,7 +20,7 @@ namespace EducationSystem.Repositories.Implementations
         {
             return AsQueryable()
                 .OrderBy(x => x.Order)
-                .ApplyPaging(filter);
+                .ApplyPagingAsync(filter);
         }
 
         public Task<(int Count, List<DatabaseTheme> Themes)> GetThemesByTestId(int testId, FilterTheme filter)
@@ -28,7 +28,7 @@ namespace EducationSystem.Repositories.Implementations
             return AsQueryable()
                 .Where(x => x.ThemeTests.Any(y => y.TestId == testId))
                 .OrderBy(x => x.Order)
-                .ApplyPaging(filter);
+                .ApplyPagingAsync(filter);
         }
 
         public Task<(int Count, List<DatabaseTheme> Themes)> GetThemesByDisciplineId(int disciplineId, FilterTheme filter)
@@ -36,7 +36,7 @@ namespace EducationSystem.Repositories.Implementations
             return AsQueryable()
                 .Where(x => x.DisciplineId == disciplineId)
                 .OrderBy(x => x.Order)
-                .ApplyPaging(filter);
+                .ApplyPagingAsync(filter);
         }
 
         public Task<bool> IsThemeExists(int id)

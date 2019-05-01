@@ -6,8 +6,10 @@ namespace EducationSystem.Repositories.Interfaces.Basics
 {
     public interface IRepositoryReadOnly<TModel> where TModel : DatabaseModel
     {
-        Task<TModel> GetById(int id);
+        Task<TModel> GetByIdAsync(int id);
 
-        Task<List<TModel>> GetByIds(int[] ids);
+        Task<List<TModel>> GetByIdsAsync(int[] ids);
+
+        Task<bool> ExistsAsync(int id);
     }
 }

@@ -25,9 +25,9 @@ namespace EducationSystem.Implementations.Managers
             _repositoryUser = repositoryUser;
         }
 
-        public async Task<User> GetUser(int id, OptionsUser options)
+        public async Task<User> GetUserAsync(int id, OptionsUser options)
         {
-            var user = await _repositoryUser.GetById(id) ??
+            var user = await _repositoryUser.GetByIdAsync(id) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Пользователь не найден. Идентификатор пользователя: {id}.",
                     $"Пользователь не найден.");

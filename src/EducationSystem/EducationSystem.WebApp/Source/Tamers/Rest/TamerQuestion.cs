@@ -25,7 +25,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsQuestion options,
             [FromQuery] FilterQuestion filter)
         {
-            return Ok(await _managerQuestion.GetQuestions(options, filter));
+            return Ok(await _managerQuestion.GetQuestionsAsync(options, filter));
         }
 
         [HttpPost]
@@ -33,14 +33,14 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateQuestion([FromBody] Question question)
         {
-            return Ok(await _managerQuestion.CreateQuestion(question));
+            return Ok(await _managerQuestion.CreateQuestionAsync(question));
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetQuestion([FromRoute] int id, [FromQuery] OptionsQuestion options)
         {
-            return Ok(await _managerQuestion.GetQuestion(id, options));
+            return Ok(await _managerQuestion.GetQuestionAsync(id, options));
         }
 
         [Transaction]
@@ -48,7 +48,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateQuestion([FromRoute] int id, [FromBody] Question question)
         {
-            return Ok(await _managerQuestion.UpdateQuestion(id, question));
+            return Ok(await _managerQuestion.UpdateQuestionAsync(id, question));
         }
 
         [Transaction]
@@ -56,7 +56,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteQuestion([FromRoute] int id)
         {
-            await _managerQuestion.DeleteQuestion(id);
+            await _managerQuestion.DeleteQuestionAsync(id);
 
             return Ok();
         }

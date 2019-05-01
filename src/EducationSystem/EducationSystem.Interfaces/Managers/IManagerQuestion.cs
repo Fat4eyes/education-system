@@ -9,16 +9,16 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerQuestion
     {
-        Task<PagedData<Question>> GetQuestions(OptionsQuestion options, FilterQuestion filter);
-        Task<PagedData<Question>> GetQuestionsByThemeId(int themeId, OptionsQuestion options, FilterQuestion filter);
+        Task<PagedData<Question>> GetQuestionsAsync(OptionsQuestion options, FilterQuestion filter);
+        Task<PagedData<Question>> GetQuestionsByThemeIdAsync(int themeId, OptionsQuestion options, FilterQuestion filter);
 
-        Task<List<Question>> GetQuestionsForStudentByTestId(int testId, int studentId);
+        Task<List<Question>> GetQuestionsForStudentByTestIdAsync(int testId, int studentId);
 
-        Task DeleteQuestion(int id);
-        Task<Question> GetQuestion(int id, OptionsQuestion options);
-        Task<Question> CreateQuestion(Question question);
-        Task<Question> UpdateQuestion(int id, Question question);
+        Task DeleteQuestionAsync(int id);
+        Task<Question> GetQuestionAsync(int id, OptionsQuestion options);
+        Task<Question> CreateQuestionAsync(Question question);
+        Task<Question> UpdateQuestionAsync(int id, Question question);
 
-        Task UpdateThemeQuestions(int themeId, List<Question> questions);
+        Task UpdateThemeQuestionsAsync(int themeId, List<Question> questions);
     }
 }

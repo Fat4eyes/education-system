@@ -8,11 +8,11 @@ namespace EducationSystem.Repositories.Interfaces
 {
     public interface IRepositoryTest : IRepository<DatabaseTest>
     {
-        Task<(int Count, List<DatabaseTest> Tests)> GetTests(FilterTest filter);
-        Task<(int Count, List<DatabaseTest> Tests)> GetTestsByDisciplineId(int disciplineId, FilterTest filter);
+        Task<(int Count, List<DatabaseTest> Tests)> GetTestsAsync(FilterTest filter);
+        Task<(int Count, List<DatabaseTest> Tests)> GetTestsByDisciplineIdAsync(int disciplineId, FilterTest filter);
 
-        Task<(int Count, List<DatabaseTest> Tests)> GetTestsForStudent(int studentId, FilterTest filter);
+        Task<(int Count, List<DatabaseTest> Tests)> GetTestsByStudentId(int studentId, FilterTest filter);
 
-        Task<DatabaseTest> GetTestForStudentById(int id, int studentId);
+        Task<DatabaseTest> GetTestForStudentByIdAsync(int id, int studentId);
     }
 }

@@ -33,14 +33,14 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsDiscipline options,
             [FromQuery] FilterDiscipline filter)
         {
-            return Ok(await _managerDiscipline.GetDisciplines(options, filter));
+            return Ok(await _managerDiscipline.GetDisciplinesAsync(options, filter));
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetDiscipline([FromRoute] int id, [FromQuery] OptionsDiscipline options)
         {
-            return Ok(await _managerDiscipline.GetDiscipline(id, options));
+            return Ok(await _managerDiscipline.GetDisciplineAsync(id, options));
         }
 
         [HttpGet("{id:int}/Tests")]
@@ -50,7 +50,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTest options,
             [FromQuery] FilterTest filter)
         {
-            return Ok(await _managerTest.GetTestsByDisciplineId(id, options, filter));
+            return Ok(await _managerTest.GetTestsByDisciplineIdAsync(id, options, filter));
         }
 
         [HttpGet("{id:int}/Themes")]
@@ -60,7 +60,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
         {
-            return Ok(await _managerTheme.GetThemesByDisciplineId(id, options, filter));
+            return Ok(await _managerTheme.GetThemesByDisciplineIdAsync(id, options, filter));
         }
 
         [Transaction]
@@ -68,7 +68,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateDisciplineThemes([FromRoute] int id, [FromBody] List<Theme> themes)
         {
-            await _managerTheme.UpdateDisciplineThemes(id, themes);
+            await _managerTheme.UpdateDisciplineThemesAsync(id, themes);
 
             return Ok();
         }

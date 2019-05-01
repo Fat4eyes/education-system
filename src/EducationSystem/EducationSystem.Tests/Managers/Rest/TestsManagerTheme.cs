@@ -39,10 +39,10 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetTest_Found()
         {
             _mockRepositoryTheme
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync(new DatabaseTheme { Name = "HTML" });
 
-            var theme = await _managerTheme.GetTheme(999, new OptionsTheme());
+            var theme = await _managerTheme.GetThemeAsync(999, new OptionsTheme());
 
             Assert.Equal("HTML", theme.Name);
         }
@@ -51,11 +51,11 @@ namespace EducationSystem.Tests.Managers.Rest
         public async Task GetTest_NotFound()
         {
             _mockRepositoryTheme
-                .Setup(x => x.GetById(999))
+                .Setup(x => x.GetByIdAsync(999))
                 .ReturnsAsync((DatabaseTheme) null);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>(
-                () => _managerTheme.GetTheme(999, new OptionsTheme()));
+                () => _managerTheme.GetThemeAsync(999, new OptionsTheme()));
         }
     }
 }

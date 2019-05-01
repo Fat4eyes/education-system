@@ -8,13 +8,11 @@ namespace EducationSystem.Repositories.Interfaces
 {
     public interface IRepositoryQuestion : IRepository<DatabaseQuestion>
     {
-        Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestions(FilterQuestion filter);
-        Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsByThemeId(int themeId, FilterQuestion filter);
+        Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsAsync(FilterQuestion filter);
+        Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsByThemeIdAsync(int themeId, FilterQuestion filter);
 
-        Task<List<DatabaseQuestion>> GetQuestionsForStudentByTestId(int testId, int studentId);
+        Task<List<DatabaseQuestion>> GetQuestionsForStudentByTestIdAsync(int testId, int studentId);
 
-        Task<bool> IsQuestionExists(int id);
-
-        Task<int> GetLastQuestionOrder(int themeId);
+        Task<int> GetLastQuestionOrderAsync(int themeId);
     }
 }

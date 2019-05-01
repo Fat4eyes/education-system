@@ -8,6 +8,6 @@ namespace EducationSystem.Repositories.Interfaces
 {
     public interface IRepositoryMaterial : IRepository<DatabaseMaterial>
     {
-        Task<(int Count, List<DatabaseMaterial> Materials)> GetMaterials(FilterMaterial filter);
+        Task<(int Count, List<DatabaseMaterial> Materials)> GetMaterialsAsync(FilterMaterial filter);
     }
 }

@@ -13,7 +13,7 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryRole(DatabaseContext context)
             : base(context) { }
 
-        public Task<DatabaseRole> GetRoleByUserId(int userId)
+        public Task<DatabaseRole> GetRoleByUserIdAsync(int userId)
         {
             return AsQueryable().FirstOrDefaultAsync(x => x.RoleUsers.Any(y => y.User.Id == userId));
         }

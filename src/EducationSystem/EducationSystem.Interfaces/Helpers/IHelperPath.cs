@@ -10,9 +10,9 @@ namespace EducationSystem.Interfaces.Helpers
     {
         string GetContentPath();
 
-        Task<string> GetAbsoluteFilePath(File file);
+        Task<string> GetAbsoluteFilePathAsync(File file);
 
-        Task<string> GetRelativeFilePath(File file);
+        Task<string> GetRelativeFilePathAsync(File file);
 
         string GetRelativeFilePath(DatabaseFile file);
 
