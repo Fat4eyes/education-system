@@ -57,7 +57,7 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleStudentAsync(studentId);
 
-            var (count, tests) = await _repositoryTest.GetTestsAsync(filter);
+            var (count, tests) = await _repositoryTest.GetStudentTestsAsync(studentId, filter);
 
             return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
         }
@@ -66,7 +66,7 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
-            var (count, tests) = await _repositoryTest.GetTestsAsync(filter);
+            var (count, tests) = await _repositoryTest.GetLecturerTestsAsync(lecturerId, filter);
 
             return new PagedData<Test>(tests.Select(x => Map(x, options)).ToList(), count);
         }
@@ -106,7 +106,7 @@ namespace EducationSystem.Implementations.Services
 
             var user = await _executionContext.GetCurrentUserAsync();
 
-            if (user.IsLecturer() && test.Discipline?.Lecturers?.All(x => x.LecturerId != user.Id) != false)
+            if (user.IsNotAdmin() && test.Discipline?.Lecturers?.All(x => x.LecturerId != user.Id) != false)
                 throw _exceptionFactory.NoAccess();
 
             await _repositoryTest.RemoveAsync(test, true);
@@ -129,6 +129,11 @@ namespace EducationSystem.Implementations.Services
 
             var model = await _repositoryTest.GetByIdAsync(id) ??
                 throw _exceptionFactory.NotFound<DatabaseTest>(id);
+
+            var user = await _executionContext.GetCurrentUserAsync();
+
+            if (model.Discipline?.Lecturers?.All(x => x.LecturerId != user.Id) != false)
+                throw _exceptionFactory.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
 
