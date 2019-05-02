@@ -27,7 +27,8 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive == 1))
                 .ForMember(d => d.Attempts, o => o.Ignore())
                 .ForMember(d => d.TotalTime, o => o.Ignore())
-                .ForMember(d => d.Themes, o => o.Ignore());
+                .ForMember(d => d.Themes, o => o.Ignore())
+                .ForMember(d => d.Data, o => o.Ignore());
 
             expression.CreateMap<Test, DatabaseTest>()
                 .ForMember(d => d.Id, o => o.Ignore())

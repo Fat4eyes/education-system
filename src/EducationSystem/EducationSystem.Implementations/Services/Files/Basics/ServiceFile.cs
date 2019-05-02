@@ -116,9 +116,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
             await _repositoryFile.AddAsync(model, true);
 
-            var result = Mapper.Map<TFile>(model);
-
-            return result;
+            return Mapper.Map<TFile>(model);
         }
     }
 }

@@ -9,6 +9,7 @@ using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
+using EducationSystem.Models.Datas;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
@@ -59,7 +60,7 @@ namespace EducationSystem.Implementations.Services
 
             var (count, tests) = await _repositoryTest.GetStudentTestsAsync(studentId, filter);
 
-            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
+            return new PagedData<Test>(tests.Select(x => MapForStudent(x, options, studentId)).ToList(), count);
         }
 
         public async Task<PagedData<Test>> GetLecturerTestsAsync(int lecturerId, OptionsTest options, FilterTest filter)
@@ -86,7 +87,7 @@ namespace EducationSystem.Implementations.Services
             var test = await _repositoryTest.GetStudentTestAsync(id, studentId) ??
                 throw _exceptionFactory.NotFound<DatabaseTest>(id);
 
-            return Mapper.Map<Test>(test);
+            return MapForStudent(test, options, studentId);
         }
 
         public async Task<Test> GetLecturerTestAsync(int id, int lecturerId, OptionsTest options)
@@ -155,6 +156,24 @@ namespace EducationSystem.Implementations.Services
                 {
                     if (options.WithThemes)
                         d.Themes = Mapper.Map<List<Theme>>(s.TestThemes.Select(y => y.Theme));
+                });
+            });
+        }
+
+        private Test MapForStudent(DatabaseTest test, OptionsTest options, int studentId)
+        {
+            return Mapper.Map<DatabaseTest, Test>(test, x =>
+            {
+                x.AfterMap((s, d) =>
+                {
+                    if (!options.WithData)
+                        return;
+
+                    var themes = s.TestThemes
+                        .Select(y => y.Theme)
+                        .ToArray();
+
+                    d.Data = TestData.Create(themes, studentId);
                 });
             });
         }
