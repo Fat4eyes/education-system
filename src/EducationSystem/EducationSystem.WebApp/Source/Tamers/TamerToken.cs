@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using EducationSystem.Constants;
 using EducationSystem.Interfaces;
 using EducationSystem.Models;
+using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +26,8 @@ namespace EducationSystem.WebApp.Source.Tamers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("Check")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
         public IActionResult Check() => Ok();
     }
 }
