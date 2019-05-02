@@ -5,7 +5,6 @@ using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Implementations.Managers
@@ -25,27 +24,27 @@ namespace EducationSystem.Implementations.Managers
             _serviceMaterial = serviceMaterial;
         }
 
-        public async Task<PagedData<Material>> GetMaterialsAsync(OptionsMaterial options, FilterMaterial filter)
+        public async Task<PagedData<Material>> GetMaterialsAsync(FilterMaterial filter)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceMaterial.GetMaterialsAsync(options, filter);
+                return await _serviceMaterial.GetMaterialsAsync(filter);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceMaterial.GetLecturerMaterialsAsync(CurrentUser.Id, options, filter);
+                return await _serviceMaterial.GetLecturerMaterialsAsync(CurrentUser.Id, filter);
 
             throw ExceptionFactory.NoAccess();
         }
 
-        public async Task<Material> GetMaterialAsync(int id, OptionsMaterial options)
+        public async Task<Material> GetMaterialAsync(int id)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceMaterial.GetMaterialAsync(id, options);
+                return await _serviceMaterial.GetMaterialAsync(id);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceMaterial.GetLecturerMaterialAsync(id, CurrentUser.Id, options);
+                return await _serviceMaterial.GetLecturerMaterialAsync(id, CurrentUser.Id);
 
             if (CurrentUser.IsStudent())
-                return await _serviceMaterial.GetStudentMaterialAsync(id, CurrentUser.Id, options);
+                return await _serviceMaterial.GetStudentMaterialAsync(id, CurrentUser.Id);
 
             throw ExceptionFactory.NoAccess();
         }

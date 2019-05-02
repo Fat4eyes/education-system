@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using EducationSystem.Dependencies;
 using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
@@ -29,7 +28,11 @@ namespace EducationSystem.WebApp.Source
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.AddAutoMapper(ConfigurationHelper.ConfigureMapper, AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddAutoMapper(
+                ConfigurationHelper.ConfigureMapper,
+                ConfigurationHelper.GetAssemblies());
+
             services.AddSpaStaticFiles(ConfigurationHelper.ConfigureSpaStaticFiles);
 
             services
@@ -38,7 +41,7 @@ namespace EducationSystem.WebApp.Source
 
             services
                 .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(ConfigurationHelper.ConfigureJson);
 
             DependencyRegistrar.Register(services, Configuration);

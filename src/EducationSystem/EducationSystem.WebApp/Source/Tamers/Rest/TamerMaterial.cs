@@ -2,7 +2,6 @@
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -21,16 +20,16 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> GetMaterials([FromQuery] OptionsMaterial options, [FromQuery] FilterMaterial filter)
+        public async Task<IActionResult> GetMaterials([FromQuery] FilterMaterial filter)
         {
-            return await Ok(() => _managerMaterial.GetMaterialsAsync(options, filter));
+            return await Ok(() => _managerMaterial.GetMaterialsAsync(filter));
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> GetMaterial([FromRoute] int id, [FromQuery] OptionsMaterial options)
+        public async Task<IActionResult> GetMaterial([FromRoute] int id)
         {
-            return await Ok(() => _managerMaterial.GetMaterialAsync(id, options));
+            return await Ok(() => _managerMaterial.GetMaterialAsync(id));
         }
 
         [HttpPost]

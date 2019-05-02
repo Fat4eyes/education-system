@@ -2,7 +2,6 @@
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,36 +26,30 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> GetDisciplines([FromQuery] OptionsDiscipline options, [FromQuery] FilterDiscipline filter)
+        public async Task<IActionResult> GetDisciplines([FromQuery] FilterDiscipline filter)
         {
-            return await Ok(() => _managerDiscipline.GetDisciplinesAsync(options, filter));
+            return await Ok(() => _managerDiscipline.GetDisciplinesAsync(filter));
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> GetDiscipline([FromRoute] int id, [FromQuery] OptionsDiscipline options)
+        public async Task<IActionResult> GetDiscipline([FromRoute] int id)
         {
-            return await Ok(() => _managerDiscipline.GetDisciplineAsync(id, options));
+            return await Ok(() => _managerDiscipline.GetDisciplineAsync(id));
         }
 
         [HttpGet("{id:int}/Tests")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> GetDisciplineTests(
-            [FromRoute] int id,
-            [FromQuery] OptionsTest options,
-            [FromQuery] FilterTest filter)
+        public async Task<IActionResult> GetDisciplineTests([FromRoute] int id, [FromQuery] FilterTest filter)
         {
-            return await Ok(() => _managerTest.GetTestsAsync(options, filter.SetDisciplineId(id)));
+            return await Ok(() => _managerTest.GetTestsAsync(filter.SetDisciplineId(id)));
         }
 
         [HttpGet("{id:int}/Themes")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> GetDisciplineThemes(
-            [FromRoute] int id,
-            [FromQuery] OptionsTheme options,
-            [FromQuery] FilterTheme filter)
+        public async Task<IActionResult> GetDisciplineThemes([FromRoute] int id, [FromQuery] FilterTheme filter)
         {
-            return await Ok(() => _managerTheme.GetThemesAsync(options, filter.SetDisciplineId(id)));
+            return await Ok(() => _managerTheme.GetThemesAsync(filter.SetDisciplineId(id)));
         }
     }
 }

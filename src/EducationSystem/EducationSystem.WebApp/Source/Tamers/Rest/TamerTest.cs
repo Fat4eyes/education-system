@@ -2,7 +2,6 @@
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
@@ -23,16 +22,16 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> GetTests([FromQuery] OptionsTest options, [FromQuery] FilterTest filter)
+        public async Task<IActionResult> GetTests([FromQuery] FilterTest filter)
         {
-            return await Ok(() => _managerTest.GetTestsAsync(options, filter));
+            return await Ok(() => _managerTest.GetTestsAsync(filter));
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> GetTest([FromRoute] int id, [FromQuery] OptionsTest options)
+        public async Task<IActionResult> GetTest([FromRoute] int id)
         {
-            return await Ok(() => _managerTest.GetTestAsync(id, options));
+            return await Ok(() => _managerTest.GetTestAsync(id));
         }
 
         [HttpPost]
@@ -61,12 +60,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet("{id:int}/Themes")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> GetTestThemes(
-            [FromRoute] int id,
-            [FromQuery] OptionsTheme options,
-            [FromQuery] FilterTheme filter)
+        public async Task<IActionResult> GetTestThemes([FromRoute] int id, [FromQuery] FilterTheme filter)
         {
-            return await Ok(() => _managerTheme.GetThemesAsync(options, filter.SetTestId(id)));
+            return await Ok(() => _managerTheme.GetThemesAsync(filter.SetTestId(id)));
         }
     }
 }

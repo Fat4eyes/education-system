@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Enums;
-using EducationSystem.Models.Datas;
 using EducationSystem.Models.Rest.Basics;
 
 namespace EducationSystem.Models.Rest
@@ -20,8 +19,6 @@ namespace EducationSystem.Models.Rest
         public TestType? Type { get; set; }
 
         public List<Theme> Themes { get; set; }
-
-        public TestData Data { get; set; }
 
         public Test Format()
         {

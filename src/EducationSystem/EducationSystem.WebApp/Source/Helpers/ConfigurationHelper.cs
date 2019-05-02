@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using AutoMapper;
 using EducationSystem.Mapping;
 using EducationSystem.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,6 +21,17 @@ namespace EducationSystem.WebApp.Source.Helpers
     {
         public static void ConfigureMapper(IMapperConfigurationExpression expression)
             => MappingConfigurator.Configure(expression);
+
+        public static Assembly[] GetAssemblies()
+        {
+            var assemblies = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .ToList();
+
+            assemblies.Add(typeof(MappingConfigurator).Assembly);
+
+            return assemblies.ToArray();
+        }
 
         public static string GetConfigurationFileName(IHostingEnvironment environment)
         {

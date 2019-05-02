@@ -5,7 +5,6 @@ using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Implementations.Managers
@@ -25,24 +24,24 @@ namespace EducationSystem.Implementations.Managers
             _serviceQuestion = serviceQuestion;
         }
 
-        public async Task<PagedData<Question>> GetQuestionsAsync(OptionsQuestion options, FilterQuestion filter)
+        public async Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceQuestion.GetQuestionsAsync(options, filter);
+                return await _serviceQuestion.GetQuestionsAsync(filter);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceQuestion.GetLecturerQuestionsAsync(CurrentUser.Id, options, filter);
+                return await _serviceQuestion.GetLecturerQuestionsAsync(CurrentUser.Id, filter);
 
             throw ExceptionFactory.NoAccess();
         }
 
-        public async Task<Question> GetQuestionAsync(int id, OptionsQuestion options)
+        public async Task<Question> GetQuestionAsync(int id)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceQuestion.GetQuestionAsync(id, options);
+                return await _serviceQuestion.GetQuestionAsync(id);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceQuestion.GetLecturerQuestionAsync(id, CurrentUser.Id, options);
+                return await _serviceQuestion.GetLecturerQuestionAsync(id, CurrentUser.Id);
 
             throw ExceptionFactory.NoAccess();
         }

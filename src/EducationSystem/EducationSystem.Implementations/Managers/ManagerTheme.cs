@@ -5,7 +5,6 @@ using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Implementations.Managers
@@ -25,24 +24,24 @@ namespace EducationSystem.Implementations.Managers
             _serviceTheme = serviceTheme;
         }
 
-        public async Task<PagedData<Theme>> GetThemesAsync(OptionsTheme options, FilterTheme filter)
+        public async Task<PagedData<Theme>> GetThemesAsync(FilterTheme filter)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceTheme.GetThemesAsync(options, filter);
+                return await _serviceTheme.GetThemesAsync(filter);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceTheme.GetLecturerThemesAsync(CurrentUser.Id, options, filter);
+                return await _serviceTheme.GetLecturerThemesAsync(CurrentUser.Id, filter);
 
             throw ExceptionFactory.NoAccess();
         }
 
-        public async Task<Theme> GetThemeAsync(int id, OptionsTheme options)
+        public async Task<Theme> GetThemeAsync(int id)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceTheme.GetThemeAsync(id, options);
+                return await _serviceTheme.GetThemeAsync(id);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceTheme.GetLecturerThemeAsync(id, CurrentUser.Id, options);
+                return await _serviceTheme.GetLecturerThemeAsync(id, CurrentUser.Id);
 
             throw ExceptionFactory.NoAccess();
         }

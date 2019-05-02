@@ -5,7 +5,6 @@ using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Implementations.Managers
@@ -25,30 +24,30 @@ namespace EducationSystem.Implementations.Managers
             _serviceTest = serviceTest;
         }
 
-        public async Task<PagedData<Test>> GetTestsAsync(OptionsTest options, FilterTest filter)
+        public async Task<PagedData<Test>> GetTestsAsync(FilterTest filter)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceTest.GetTestsAsync(options, filter);
+                return await _serviceTest.GetTestsAsync(filter);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceTest.GetLecturerTestsAsync(CurrentUser.Id, options, filter);
+                return await _serviceTest.GetLecturerTestsAsync(CurrentUser.Id, filter);
 
             if (CurrentUser.IsAdmin())
-                return await _serviceTest.GetStudentTestsAsync(CurrentUser.Id, options, filter);
+                return await _serviceTest.GetStudentTestsAsync(CurrentUser.Id, filter);
 
             throw ExceptionFactory.NoAccess();
         }
 
-        public async Task<Test> GetTestAsync(int id, OptionsTest options)
+        public async Task<Test> GetTestAsync(int id)
         {
             if (CurrentUser.IsAdmin())
-                return await _serviceTest.GetTestAsync(id, options);
+                return await _serviceTest.GetTestAsync(id);
 
             if (CurrentUser.IsLecturer())
-                return await _serviceTest.GetLecturerTestAsync(id, CurrentUser.Id, options);
+                return await _serviceTest.GetLecturerTestAsync(id, CurrentUser.Id);
 
             if (CurrentUser.IsAdmin())
-                return await _serviceTest.GetStudentTestAsync(id, CurrentUser.Id, options);
+                return await _serviceTest.GetStudentTestAsync(id, CurrentUser.Id);
 
             throw ExceptionFactory.NoAccess();
         }

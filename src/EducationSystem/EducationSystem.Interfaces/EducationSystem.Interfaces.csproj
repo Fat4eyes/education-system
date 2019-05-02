@@ -10,9 +10,4 @@
     <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Managers\Files\Basics\" />
-    <Folder Include="Services\Files\Basics\" />
-  </ItemGroup>
-
 </Project>

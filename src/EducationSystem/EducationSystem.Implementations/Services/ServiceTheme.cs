@@ -10,7 +10,6 @@ using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -42,38 +41,38 @@ namespace EducationSystem.Implementations.Services
             _repositoryTheme = repositoryTheme;
         }
 
-        public async Task<PagedData<Theme>> GetThemesAsync(OptionsTheme options, FilterTheme filter)
+        public async Task<PagedData<Theme>> GetThemesAsync(FilterTheme filter)
         {
             var (count, themes) = await _repositoryTheme.GetThemesAsync(filter);
 
-            return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
+            return new PagedData<Theme>(Mapper.Map<List<Theme>>(themes), count);
         }
 
-        public async Task<PagedData<Theme>> GetLecturerThemesAsync(int lecturerId, OptionsTheme options, FilterTheme filter)
+        public async Task<PagedData<Theme>> GetLecturerThemesAsync(int lecturerId, FilterTheme filter)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
             var (count, themes) = await _repositoryTheme.GetLecturerThemesAsync(lecturerId, filter);
 
-            return new PagedData<Theme>(themes.Select(x => Map(x, options)).ToList(), count);
+            return new PagedData<Theme>(Mapper.Map<List<Theme>>(themes), count);
         }
 
-        public async Task<Theme> GetThemeAsync(int id, OptionsTheme options)
+        public async Task<Theme> GetThemeAsync(int id)
         {
             var theme = await _repositoryTheme.GetByIdAsync(id) ??
                 throw _exceptionFactory.NotFound<DatabaseTheme>(id);
 
-            return Map(theme, options);
+            return Mapper.Map<Theme>(theme);
         }
 
-        public async Task<Theme> GetLecturerThemeAsync(int id, int lecturerId, OptionsTheme options)
+        public async Task<Theme> GetLecturerThemeAsync(int id, int lecturerId)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
             var theme = await _repositoryTheme.GetLecturerThemeAsync(id, lecturerId) ??
                 throw _exceptionFactory.NotFound<DatabaseTheme>(id);
 
-            return Map(theme, options);
+            return Mapper.Map<Theme>(theme);
         }
 
         public async Task DeleteThemeAsync(int id)
@@ -117,18 +116,6 @@ namespace EducationSystem.Implementations.Services
             Mapper.Map(Mapper.Map<DatabaseTheme>(theme), model);
 
             await _repositoryTheme.UpdateAsync(model, true);
-        }
-
-        private Theme Map(DatabaseTheme theme, OptionsTheme options)
-        {
-            return Mapper.Map<DatabaseTheme, Theme>(theme, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithQuestions)
-                        d.Questions = Mapper.Map<List<Question>>(s.Questions);
-                });
-            });
         }
     }
 }

@@ -9,9 +9,7 @@ using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
-using EducationSystem.Models.Datas;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -47,57 +45,57 @@ namespace EducationSystem.Implementations.Services
             _repositoryTestTheme = repositoryTestTheme;
         }
 
-        public async Task<PagedData<Test>> GetTestsAsync(OptionsTest options, FilterTest filter)
+        public async Task<PagedData<Test>> GetTestsAsync(FilterTest filter)
         {
             var (count, tests) = await _repositoryTest.GetTestsAsync(filter);
 
-            return new PagedData<Test>(tests.Select(x => Map(x, options)).ToList(), count);
+            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
         }
 
-        public async Task<PagedData<Test>> GetStudentTestsAsync(int studentId, OptionsTest options, FilterTest filter)
+        public async Task<PagedData<Test>> GetStudentTestsAsync(int studentId, FilterTest filter)
         {
             await _helperUserRole.CheckRoleStudentAsync(studentId);
 
             var (count, tests) = await _repositoryTest.GetStudentTestsAsync(studentId, filter);
 
-            return new PagedData<Test>(tests.Select(x => MapForStudent(x, options, studentId)).ToList(), count);
+            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
         }
 
-        public async Task<PagedData<Test>> GetLecturerTestsAsync(int lecturerId, OptionsTest options, FilterTest filter)
+        public async Task<PagedData<Test>> GetLecturerTestsAsync(int lecturerId, FilterTest filter)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
             var (count, tests) = await _repositoryTest.GetLecturerTestsAsync(lecturerId, filter);
 
-            return new PagedData<Test>(tests.Select(x => Map(x, options)).ToList(), count);
+            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
         }
 
-        public async Task<Test> GetTestAsync(int id, OptionsTest options)
+        public async Task<Test> GetTestAsync(int id)
         {
             var test = await _repositoryTest.GetByIdAsync(id) ??
                 throw _exceptionFactory.NotFound<DatabaseTest>(id);
 
-            return Map(test, options);
+            return Mapper.Map<Test>(test);
         }
 
-        public async Task<Test> GetStudentTestAsync(int id, int studentId, OptionsTest options)
+        public async Task<Test> GetStudentTestAsync(int id, int studentId)
         {
             await _helperUserRole.CheckRoleStudentAsync(studentId);
 
             var test = await _repositoryTest.GetStudentTestAsync(id, studentId) ??
                 throw _exceptionFactory.NotFound<DatabaseTest>(id);
 
-            return MapForStudent(test, options, studentId);
+            return Mapper.Map<Test>(test);
         }
 
-        public async Task<Test> GetLecturerTestAsync(int id, int lecturerId, OptionsTest options)
+        public async Task<Test> GetLecturerTestAsync(int id, int lecturerId)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
             var test = await _repositoryTest.GetLecturerTestAsync(id, lecturerId) ??
                 throw _exceptionFactory.NotFound<DatabaseTest>(id);
 
-            return Map(test, options);
+            return Mapper.Map<Test>(test);
         }
 
         public async Task DeleteTestAsync(int id)
@@ -146,36 +144,6 @@ namespace EducationSystem.Implementations.Services
             model.TestThemes = Mapper.Map<List<DatabaseTestTheme>>(test.Themes);
 
             await _repositoryTestTheme.AddAsync(model.TestThemes, true);
-        }
-
-        private Test Map(DatabaseTest test, OptionsTest options)
-        {
-            return Mapper.Map<DatabaseTest, Test>(test, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithThemes)
-                        d.Themes = Mapper.Map<List<Theme>>(s.TestThemes.Select(y => y.Theme));
-                });
-            });
-        }
-
-        private Test MapForStudent(DatabaseTest test, OptionsTest options, int studentId)
-        {
-            return Mapper.Map<DatabaseTest, Test>(test, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (!options.WithData)
-                        return;
-
-                    var themes = s.TestThemes
-                        .Select(y => y.Theme)
-                        .ToArray();
-
-                    d.Data = TestData.Create(themes, studentId);
-                });
-            });
         }
     }
 }

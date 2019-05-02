@@ -23,6 +23,8 @@ namespace EducationSystem.Models.Rest
 
         public bool IsStudent() => HasRole(UserRoles.Student);
 
+        public bool IsNotStudent() => !IsStudent();
+
         public bool IsAdmin() => HasRole(UserRoles.Admin);
 
         public bool IsNotAdmin() => !IsAdmin();

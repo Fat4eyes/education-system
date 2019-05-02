@@ -11,7 +11,6 @@ using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -53,38 +52,38 @@ namespace EducationSystem.Implementations.Services
             _repositoryProgramData = repositoryProgramData;
         }
 
-        public async Task<PagedData<Question>> GetQuestionsAsync(OptionsQuestion options, FilterQuestion filter)
+        public async Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter)
         {
             var (count, questions) = await _repositoryQuestion.GetQuestionsAsync(filter);
 
-            return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
+            return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
         }
 
-        public async Task<PagedData<Question>> GetLecturerQuestionsAsync(int lecturerId, OptionsQuestion options, FilterQuestion filter)
+        public async Task<PagedData<Question>> GetLecturerQuestionsAsync(int lecturerId, FilterQuestion filter)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
             var (count, questions) = await _repositoryQuestion.GetLecturerQuestionsAsync(lecturerId, filter);
 
-            return new PagedData<Question>(questions.Select(x => Map(x, options)).ToList(), count);
+            return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
         }
 
-        public async Task<Question> GetQuestionAsync(int id, OptionsQuestion options)
+        public async Task<Question> GetQuestionAsync(int id)
         {
             var question = await _repositoryQuestion.GetByIdAsync(id) ??
                 throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
-            return Map(question, options);
+            return Mapper.Map<Question>(question);
         }
 
-        public async Task<Question> GetLecturerQuestionAsync(int id, int lecturerId, OptionsQuestion options)
+        public async Task<Question> GetLecturerQuestionAsync(int id, int lecturerId)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
             var question = await _repositoryQuestion.GetLecturerQuestionAsync(id, lecturerId) ??
                 throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
-            return Map(question, options);
+            return Mapper.Map<Question>(question);
         }
 
         public async Task DeleteQuestionAsync(int id)
@@ -194,18 +193,6 @@ namespace EducationSystem.Implementations.Services
                     break;
                 }
             }
-        }
-
-        private Question Map(DatabaseQuestion question, OptionsQuestion options)
-        {
-            return Mapper.Map<DatabaseQuestion, Question>(question, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithAnswers)
-                        d.Answers = Mapper.Map<List<Answer>>(s.Answers);
-                });
-            });
         }
     }
 }

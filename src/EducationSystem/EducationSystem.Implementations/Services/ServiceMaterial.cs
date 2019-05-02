@@ -10,7 +10,6 @@ using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
-using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -45,14 +44,14 @@ namespace EducationSystem.Implementations.Services
             _exceptionFactory = exceptionFactory;
         }
 
-        public async Task<PagedData<Material>> GetMaterialsAsync(OptionsMaterial options, FilterMaterial filter)
+        public async Task<PagedData<Material>> GetMaterialsAsync(FilterMaterial filter)
         {
             var (count, materials) = await _repositoryMaterial.GetMaterialsAsync(filter);
 
             return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
         }
 
-        public async Task<PagedData<Material>> GetLecturerMaterialsAsync(int lecturerId, OptionsMaterial options, FilterMaterial filter)
+        public async Task<PagedData<Material>> GetLecturerMaterialsAsync(int lecturerId, FilterMaterial filter)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
@@ -61,7 +60,7 @@ namespace EducationSystem.Implementations.Services
             return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
         }
 
-        public async Task<Material> GetMaterialAsync(int id, OptionsMaterial options)
+        public async Task<Material> GetMaterialAsync(int id)
         {
             var material = await _repositoryMaterial.GetByIdAsync(id) ??
                 throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
@@ -69,7 +68,7 @@ namespace EducationSystem.Implementations.Services
             return Mapper.Map<Material>(material);
         }
 
-        public async Task<Material> GetStudentMaterialAsync(int id, int studentId, OptionsMaterial options)
+        public async Task<Material> GetStudentMaterialAsync(int id, int studentId)
         {
             await _helperUserRole.CheckRoleStudentAsync(studentId);
 
@@ -84,7 +83,7 @@ namespace EducationSystem.Implementations.Services
             return Mapper.Map<Material>(material);
         }
 
-        public async Task<Material> GetLecturerMaterialAsync(int id, int lecturerId, OptionsMaterial options)
+        public async Task<Material> GetLecturerMaterialAsync(int id, int lecturerId)
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
