@@ -4,7 +4,7 @@ using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Helpers;
-using EducationSystem.Repositories.Interfaces;
+using EducationSystem.Interfaces.Repositories;
 
 namespace EducationSystem.Implementations.Helpers
 {
@@ -43,7 +43,7 @@ namespace EducationSystem.Implementations.Helpers
 
         private Task<DatabaseRole> GetRole(int userId)
         {
-            return _repositoryRole.GetRoleByUserIdAsync(userId) ??
+            return _repositoryRole.GetUserRoleAsync(userId) ??
                 throw ExceptionHelper.CreateException($"Не удалось получить роль пользователя. Идентификатор пользователя: {userId}.");
         }
     }

@@ -14,11 +14,12 @@
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
     <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Database\EducationSystem.Database.csproj" />
     <ProjectReference Include="..\EducationSystem.Enums\EducationSystem.Enums.csproj" />
     <ProjectReference Include="..\EducationSystem.Exceptions\EducationSystem.Exceptions.csproj" />
+    <ProjectReference Include="..\EducationSystem.Extensions\EducationSystem.Extensions.csproj" />
     <ProjectReference Include="..\EducationSystem.Interfaces\EducationSystem.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
-    <ProjectReference Include="..\EducationSystem.Repositories.Implementations\EducationSystem.Repositories.Implementations.csproj" />
   </ItemGroup>
 
 </Project>

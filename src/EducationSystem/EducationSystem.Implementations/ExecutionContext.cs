@@ -6,8 +6,8 @@ using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
+using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models.Rest;
-using EducationSystem.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace EducationSystem.Implementations

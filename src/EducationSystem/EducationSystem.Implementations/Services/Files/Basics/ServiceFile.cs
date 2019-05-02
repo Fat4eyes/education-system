@@ -7,9 +7,9 @@ using EducationSystem.Database.Models;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
+using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Interfaces.Validators;
-using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 using File = EducationSystem.Models.Files.Basics.File;
 

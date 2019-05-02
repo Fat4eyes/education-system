@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
-using EducationSystem.Repositories.Interfaces;
 
 namespace EducationSystem.Implementations.Validators
 {

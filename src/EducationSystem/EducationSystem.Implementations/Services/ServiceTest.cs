@@ -6,12 +6,12 @@ using EducationSystem.Database.Models;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
+using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
-using EducationSystem.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Services

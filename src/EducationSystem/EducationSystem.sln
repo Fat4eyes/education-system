@@ -17,12 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{F5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Database.Models", "EducationSystem.Database.Models\EducationSystem.Database.Models.csproj", "{97C4C0A2-9E54-4F41-82E6-975CC486FAA9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Repositories.Interfaces", "EducationSystem.Repositories.Interfaces\EducationSystem.Repositories.Interfaces.csproj", "{F5330623-7180-42B4-9054-9C734E19667D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Repositories.Implementations", "EducationSystem.Repositories.Implementations\EducationSystem.Repositories.Implementations.csproj", "{93A50376-8288-4BE0-ACCC-F776B038279A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repositories", "Repositories", "{41D2952A-96F0-4697-94B0-B59FE773A0A4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Mapping", "EducationSystem.Mapping\EducationSystem.Mapping.csproj", "{30A11D06-1330-436B-A30B-B4DA5068E4D0}"
@@ -37,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Extensions"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Enums", "EducationSystem.Enums\EducationSystem.Enums.csproj", "{B32F6CF2-597E-46F1-84C8-485671FD8559}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Implementations", "EducationSystem.Implementations\EducationSystem.Implementations.csproj", "{C1FD1664-E046-46DC-B99D-682A4E1C939C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Implementations", "EducationSystem.Implementations\EducationSystem.Implementations.csproj", "{C1FD1664-E046-46DC-B99D-682A4E1C939C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationSystem.Interfaces", "EducationSystem.Interfaces\EducationSystem.Interfaces.csproj", "{C96C0A1C-45C7-41D8-B680-4EDF04FCABDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationSystem.Interfaces", "EducationSystem.Interfaces\EducationSystem.Interfaces.csproj", "{C96C0A1C-45C7-41D8-B680-4EDF04FCABDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,14 +61,6 @@ Global
 		{97C4C0A2-9E54-4F41-82E6-975CC486FAA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97C4C0A2-9E54-4F41-82E6-975CC486FAA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97C4C0A2-9E54-4F41-82E6-975CC486FAA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5330623-7180-42B4-9054-9C734E19667D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5330623-7180-42B4-9054-9C734E19667D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5330623-7180-42B4-9054-9C734E19667D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5330623-7180-42B4-9054-9C734E19667D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93A50376-8288-4BE0-ACCC-F776B038279A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93A50376-8288-4BE0-ACCC-F776B038279A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93A50376-8288-4BE0-ACCC-F776B038279A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93A50376-8288-4BE0-ACCC-F776B038279A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -117,8 +103,6 @@ Global
 		{CB502E79-D922-4F4B-9BCF-47775BD8D90E} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 		{A9E5518B-2267-42FC-B63D-BEA3792C7534} = {F5272692-EF30-47A1-8A82-7EC43B407CE3}
 		{97C4C0A2-9E54-4F41-82E6-975CC486FAA9} = {F5272692-EF30-47A1-8A82-7EC43B407CE3}
-		{F5330623-7180-42B4-9054-9C734E19667D} = {41D2952A-96F0-4697-94B0-B59FE773A0A4}
-		{93A50376-8288-4BE0-ACCC-F776B038279A} = {41D2952A-96F0-4697-94B0-B59FE773A0A4}
 		{30A11D06-1330-436B-A30B-B4DA5068E4D0} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 		{72009AA8-808F-414A-886A-3E0683766884} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
 		{51A5C8EC-2722-4D3F-9643-2695DD44C571} = {00774DBB-2166-4BD9-BD4D-D1F82E4D5C5D}
