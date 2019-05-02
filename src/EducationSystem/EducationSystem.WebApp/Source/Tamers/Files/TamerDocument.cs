@@ -9,7 +9,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Files
     [Route("api/Documents")]
     public class TamerDocument : TamerFile<Document>
     {
-        public TamerDocument(IManagerDocument managerDocument)
+        public TamerDocument(IManagerFile<Document> managerDocument)
             : base(managerDocument)
         { }
 

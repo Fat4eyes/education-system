@@ -8,10 +8,10 @@ namespace EducationSystem.Database.Models
     public class DatabaseMaterial : DatabaseModel
     {
         [Column("owner_id")]
-        public int? OwnerId { get; set; }
+        public virtual int? OwnerId { get; set; }
 
         [ForeignKey(nameof(OwnerId))]
-        public DatabaseUser Owner { get; set; }
+        public virtual DatabaseUser Owner { get; set; }
 
         [Column("name")]
         public virtual string Name { get; set; }

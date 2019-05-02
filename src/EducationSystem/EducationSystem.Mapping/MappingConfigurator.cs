@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Implementations.Helpers;
 using EducationSystem.Models.Files;
+using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Mapping
@@ -16,7 +18,8 @@ namespace EducationSystem.Mapping
 
             expression.CreateMap<DatabaseDiscipline, Discipline>()
                 .ForMember(d => d.Tests, o => o.Ignore())
-                .ForMember(d => d.Themes, o => o.Ignore());
+                .ForMember(d => d.Themes, o => o.Ignore())
+                .ForMember(d => d.Lecturers, o => o.Ignore());
 
             expression.CreateMap<DatabaseGroup, Group>();
 
@@ -62,8 +65,7 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Questions, o => o.Ignore());
 
             expression.CreateMap<DatabaseQuestion, Question>()
-                .ForMember(d => d.Answers, o => o.Ignore())
-                .ForMember(d => d.Program, o => o.Ignore());
+                .ForMember(d => d.Answers, o => o.Ignore());
 
             expression.CreateMap<Question, DatabaseQuestion>()
                 .ForMember(d => d.Id, o => o.Ignore())
@@ -122,7 +124,7 @@ namespace EducationSystem.Mapping
             expression.CreateMap<DatabaseRole, Role>();
 
             expression.CreateMap<DatabaseMaterial, Material>()
-                .ForMember(d => d.Files, o => o.Ignore());
+                .ForMember(d => d.Files, o => o.MapFrom(s => s.Files.Select(x => x.File)));
 
             expression.CreateMap<Material, DatabaseMaterial>()
                 .ForMember(d => d.Id, o => o.Ignore());
@@ -133,11 +135,13 @@ namespace EducationSystem.Mapping
 
             expression.CreateMap<DatabaseFile, Image>()
                 .ForMember(d => d.Path, o => o.Ignore())
-                .ForMember(d => d.Stream, o => o.Ignore());
+                .ForMember(d => d.Stream, o => o.Ignore())
+                .AfterMap((s, d) => d.Path = GetDocumentPath(d));
 
             expression.CreateMap<DatabaseFile, Document>()
                 .ForMember(d => d.Path, o => o.Ignore())
-                .ForMember(d => d.Stream, o => o.Ignore());
+                .ForMember(d => d.Stream, o => o.Ignore())
+                .AfterMap((s, d) => d.Path = GetDocumentPath(d));
 
             expression.CreateMap<Document, DatabaseMaterialFile>()
                 .ForMember(d => d.Id, d => d.Ignore())
@@ -146,11 +150,33 @@ namespace EducationSystem.Mapping
                 .ForMember(d => d.Material, o => o.Ignore())
                 .ForMember(d => d.File, o => o.Ignore());
 
+            expression.CreateMap<Document, DatabaseFile>()
+                .ForMember(d => d.Id, d => d.Ignore())
+                .ForMember(d => d.Guid, o => o.Ignore())
+                .ForMember(d => d.Owner, o => o.Ignore())
+                .ForMember(d => d.OwnerId, o => o.Ignore());
+
+            expression.CreateMap<Image, DatabaseFile>()
+                .ForMember(d => d.Id, d => d.Ignore())
+                .ForMember(d => d.Guid, o => o.Ignore())
+                .ForMember(d => d.Owner, o => o.Ignore())
+                .ForMember(d => d.OwnerId, o => o.Ignore());
+
             expression.AllowNullCollections = true;
             expression.ForAllMaps(Configure);
         }
 
         private static void Configure(TypeMap x, IMappingExpression expression)
             => expression.PreserveReferences();
+
+        private static string GetDocumentPath(File file)
+        {
+            if (file.Guid.HasValue == false)
+                return null;
+
+            return HelperPath
+                .GetRelativeFilePath(file.Type, file.Guid.Value, file.Name)
+                .Replace("\\", "/");
+        }
     }
 }

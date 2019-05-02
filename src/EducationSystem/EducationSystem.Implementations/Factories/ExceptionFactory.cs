@@ -62,5 +62,10 @@ namespace EducationSystem.Implementations.Factories
 
             throw ExceptionHelper.CreateException($"Модель типа '{typeof(TModel)}' не поддерживается.");
         }
+
+        public Exception NoAccess()
+        {
+            return ExceptionHelper.CreatePublicException("Не достаточно прав для выполнения данного действия.");
+        }
     }
 }

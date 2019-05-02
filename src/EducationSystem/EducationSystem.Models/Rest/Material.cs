@@ -10,7 +10,7 @@ namespace EducationSystem.Models.Rest
 
         public string Template { get; set; }
 
-        public int OwnerId { get; set; }
+        public int? OwnerId { get; set; }
 
         public List<Document> Files { get; set; }
 

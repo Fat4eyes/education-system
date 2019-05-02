@@ -9,7 +9,5 @@ namespace EducationSystem.Repositories.Interfaces.Basics
         Task<TModel> GetByIdAsync(int id);
 
         Task<List<TModel>> GetByIdsAsync(int[] ids);
-
-        Task<bool> ExistsAsync(int id);
     }
 }

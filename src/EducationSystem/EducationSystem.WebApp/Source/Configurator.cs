@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using EducationSystem.Dependencies;
 using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
@@ -28,7 +29,7 @@ namespace EducationSystem.WebApp.Source
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.AddAutoMapper(ConfigurationHelper.ConfigureMapper);
+            services.AddAutoMapper(ConfigurationHelper.ConfigureMapper, AppDomain.CurrentDomain.GetAssemblies());
             services.AddSpaStaticFiles(ConfigurationHelper.ConfigureSpaStaticFiles);
 
             services

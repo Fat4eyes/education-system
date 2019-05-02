@@ -8,6 +8,7 @@ using EducationSystem.Extensions;
 using EducationSystem.Models.Filters;
 using EducationSystem.Repositories.Implementations.Basics;
 using EducationSystem.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Repositories.Implementations
 {
@@ -24,6 +25,24 @@ namespace EducationSystem.Repositories.Implementations
                 query = query.Where(x => x.Name.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
 
             return query.ApplyPagingAsync(filter);
+        }
+
+        public Task<(int Count, List<DatabaseMaterial> Materials)> GetUserMaterialsAsync(int userId, FilterMaterial filter)
+        {
+            var query = AsQueryable()
+                .Where(x => x.OwnerId == userId);
+
+            if (string.IsNullOrWhiteSpace(filter.Name) == false)
+                query = query.Where(x => x.Name.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
+
+            return query.ApplyPagingAsync(filter);
+        }
+
+        public Task<DatabaseMaterial> GetUserMaterialAsync(int id, int userId)
+        {
+            return AsQueryable()
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync(x => x.OwnerId == userId);
         }
     }
 }

@@ -15,16 +15,11 @@ namespace EducationSystem.Implementations.Helpers
     public sealed class HelperPath : IHelperPath
     {
         private readonly IHostingEnvironment _environment;
-        private readonly IHelperFolder _helperFolder;
         private readonly IRepositoryFile _repositoryFile;
 
-        public HelperPath(
-            IHostingEnvironment environment,
-            IHelperFolder helperFolder,
-            IRepositoryFile repositoryFile)
+        public HelperPath(IHostingEnvironment environment, IRepositoryFile repositoryFile)
         {
             _environment = environment;
-            _helperFolder = helperFolder;
             _repositoryFile = repositoryFile;
         }
 
@@ -56,9 +51,14 @@ namespace EducationSystem.Implementations.Helpers
             return GetRelativeFilePath(file.Type, new Guid(file.Guid), file.Name);
         }
 
-        public string GetRelativeFilePath(FileType type, Guid guid, string name)
+        string IHelperPath.GetRelativeFilePath(FileType type, Guid guid, string name)
         {
-            return Path.Combine(Directories.Files, _helperFolder.GetFolderName(type), guid + Path.GetExtension(name));
+            return GetRelativeFilePath(type, guid, name);
+        }
+
+        public static string GetRelativeFilePath(FileType type, Guid guid, string name)
+        {
+            return Path.Combine(Directories.Files, HelperFolder.GetFolderName(type), guid + Path.GetExtension(name));
         }
     }
 }

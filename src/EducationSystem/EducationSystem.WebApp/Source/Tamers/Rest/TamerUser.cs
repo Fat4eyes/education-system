@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
+using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Models.Options;
-using Microsoft.AspNetCore.Authorization;
+using EducationSystem.Interfaces.Services;
+using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers.Rest
@@ -16,11 +17,11 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _managerUser = managerUser;
         }
 
-        [Authorize]
         [HttpGet("Current")]
-        public async Task<IActionResult> GetUser()
+        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            return Ok(await _managerUser.GetUserAsync(GetUserId()));
+            return await Ok(() => _managerUser.GetCurrentUserAsync());
         }
     }
 }

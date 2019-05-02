@@ -1,36 +1,27 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
-using EducationSystem.Database.Models;
+using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Rest;
-using EducationSystem.Repositories.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Managers
 {
-    public sealed class ManagerUser : Manager<ManagerUser>, IManagerUser
+    public sealed class ManagerUser : Manager, IManagerUser
     {
-        private readonly IExceptionFactory _exceptionFactory;
-        private readonly IRepositoryUser _repositoryUser;
-
         public ManagerUser(
-            IMapper mapper,
-            ILogger<ManagerUser> logger,
-            IExceptionFactory exceptionFactory,
-            IRepositoryUser repositoryUser)
-            : base(mapper, logger)
-        {
-            _exceptionFactory = exceptionFactory;
-            _repositoryUser = repositoryUser;
-        }
+            IExecutionContext executionContext,
+            IExceptionFactory exceptionFactory)
+            : base(
+                executionContext,
+                exceptionFactory)
+        { }
 
-        public async Task<User> GetUserAsync(int id)
+        public async Task<User> GetCurrentUserAsync()
         {
-            var user = await _repositoryUser.GetByIdAsync(id) ??
-                throw _exceptionFactory.NotFound<DatabaseUser>(id);
+            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer() || CurrentUser.IsStudent())
+                return await ExecutionContext.GetCurrentUserAsync();
 
-            return Mapper.Map<User>(user);
+            throw ExceptionFactory.NoAccess();
         }
     }
 }

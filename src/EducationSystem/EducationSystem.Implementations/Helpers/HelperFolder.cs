@@ -8,7 +8,7 @@ namespace EducationSystem.Implementations.Helpers
 {
     public sealed class HelperFolder : IHelperFolder
     {
-        public string GetFolderName(FileType type)
+        public static string GetFolderName(FileType type)
         {
             switch (type)
             {
@@ -19,6 +19,11 @@ namespace EducationSystem.Implementations.Helpers
             }
 
             return Directories.Files;
+        }
+
+        string IHelperFolder.GetFolderName(FileType type)
+        {
+            return GetFolderName(type);
         }
 
         public string GetFolderName(File file) =>

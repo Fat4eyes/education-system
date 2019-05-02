@@ -1,123 +1,80 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Interfaces.Validators;
+using EducationSystem.Interfaces.Services;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
-using EducationSystem.Repositories.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Managers
 {
-    public sealed class ManagerTest : Manager<ManagerTest>, IManagerTest
+    public sealed class ManagerTest : Manager, IManagerTest
     {
-        private readonly IValidator<Test> _validatorTest;
-        private readonly IExceptionFactory _exceptionFactory;
-
-        private readonly IRepositoryTest _repositoryTest;
-        private readonly IRepositoryTestTheme _repositoryTestTheme;
+        private readonly IServiceTest _serviceTest;
 
         public ManagerTest(
-            IMapper mapper,
-            ILogger<ManagerTest> logger,
-            IValidator<Test> validatorTest,
+            IExecutionContext executionContext,
             IExceptionFactory exceptionFactory,
-            IRepositoryTest repositoryTest,
-            IRepositoryTestTheme repositoryTestTheme)
-            : base(mapper, logger)
+            IServiceTest serviceTest)
+            : base(
+                executionContext,
+                exceptionFactory)
         {
-            _validatorTest = validatorTest;
-            _exceptionFactory = exceptionFactory;
-            _repositoryTest = repositoryTest;
-            _repositoryTestTheme = repositoryTestTheme;
+            _serviceTest = serviceTest;
         }
 
         public async Task<PagedData<Test>> GetTestsAsync(OptionsTest options, FilterTest filter)
         {
-            var (count, tests) = await _repositoryTest.GetTestsAsync(filter);
+            if (CurrentUser.IsAdmin())
+                return await _serviceTest.GetTestsAsync(options, filter);
 
-            var items = tests
-                .Select(x => Map(x, options))
-                .ToList();
+            if (CurrentUser.IsLecturer())
+                return await _serviceTest.GetLecturerTestsAsync(CurrentUser.Id, options, filter);
 
-            return new PagedData<Test>(items, count);
-        }
+            if (CurrentUser.IsAdmin())
+                return await _serviceTest.GetStudentTestsAsync(CurrentUser.Id, options, filter);
 
-        public async Task<PagedData<Test>> GetTestsByDisciplineIdAsync(int disciplineId, OptionsTest options, FilterTest filter)
-        {
-            var (count, tests) = await _repositoryTest.GetTestsByDisciplineIdAsync(disciplineId, filter);
-
-            var items = tests
-                .Select(x => Map(x, options))
-                .ToList();
-
-            return new PagedData<Test>(items, count);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task<Test> GetTestAsync(int id, OptionsTest options)
         {
-            var test = await _repositoryTest.GetByIdAsync(id) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
+            if (CurrentUser.IsAdmin())
+                return await _serviceTest.GetTestAsync(id, options);
 
-            return Map(test, options);
+            if (CurrentUser.IsLecturer())
+                return await _serviceTest.GetLecturerTestAsync(id, CurrentUser.Id, options);
+
+            if (CurrentUser.IsAdmin())
+                return await _serviceTest.GetStudentTestAsync(id, CurrentUser.Id, options);
+
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task DeleteTestAsync(int id)
         {
-            var test = await _repositoryTest.GetByIdAsync(id) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
 
-            await _repositoryTest.RemoveAsync(test, true);
+            await _serviceTest.DeleteTestAsync(id);
         }
 
-        public async Task<Test> CreateTestAsync(Test test)
+        public async Task UpdateTestAsync(int id, Test test)
         {
-            await _validatorTest.ValidateAsync(test.Format());
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
 
-            var model = Mapper.Map<DatabaseTest>(test);
-
-            await _repositoryTest.AddAsync(model, true);
-
-            return Mapper.Map<DatabaseTest, Test>(model);
+            await _serviceTest.UpdateTestAsync(id, test);
         }
 
-        public async Task<Test> UpdateTestAsync(int id, Test test)
+        public async Task<int> CreateTestAsync(Test test)
         {
-            await _validatorTest.ValidateAsync(test.Format());
+            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer())
+                return await _serviceTest.CreateTestAsync(test);
 
-            var model = await _repositoryTest.GetByIdAsync(id) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
-
-            Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
-
-            await _repositoryTest.UpdateAsync(model, true);
-
-            if (model.TestThemes.Any())
-                await _repositoryTestTheme.RemoveAsync(model.TestThemes, true);
-
-            model.TestThemes = Mapper.Map<List<DatabaseTestTheme>>(test.Themes);
-
-            await _repositoryTestTheme.AddAsync(model.TestThemes, true);
-
-            return Mapper.Map<DatabaseTest, Test>(model);
-        }
-
-        private Test Map(DatabaseTest test, OptionsTest options)
-        {
-            return Mapper.Map<DatabaseTest, Test>(test, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithThemes)
-                        d.Themes = Mapper.Map<List<Theme>>(s.TestThemes.Select(y => y.Theme));
-                });
-            });
+            throw ExceptionFactory.NoAccess();
         }
     }
 }

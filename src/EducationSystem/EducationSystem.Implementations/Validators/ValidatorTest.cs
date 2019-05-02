@@ -46,11 +46,17 @@ namespace EducationSystem.Implementations.Validators
             if (model.Themes.GroupBy(x => x.Id).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В тесте указаны повторяющиеся темы.");
 
-            if (await model.Themes.AllAsync(x => _repositoryTheme.IsThemeExists(x.Id)) == false)
-                throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
-
             if (await _repositoryDiscipline.GetByIdAsync(model.DisciplineId) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
+
+            var ids = model.Themes
+                .Select(x => x.Id)
+                .ToArray();
+
+            var themes = await _repositoryTheme.GetByIdsAsync(ids);
+
+            if (themes.Count != ids.Length)
+                throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют.");
         }
     }
 }

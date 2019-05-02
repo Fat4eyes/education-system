@@ -8,7 +8,7 @@ using AutoMapper;
 using EducationSystem.Constants;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
-using EducationSystem.Implementations.Managers;
+using EducationSystem.Implementations.Services;
 using EducationSystem.Interfaces;
 using EducationSystem.Models;
 using EducationSystem.Repositories.Interfaces;
@@ -19,7 +19,7 @@ using Crypt = BCrypt.Net.BCrypt;
 
 namespace EducationSystem.Implementations
 {
-    public sealed class TokenGenerator : Manager<TokenGenerator>, ITokenGenerator
+    public sealed class TokenGenerator : Service<TokenGenerator>, ITokenGenerator
     {
         private readonly IConfiguration _configuration;
         private readonly IRepositoryUser _repositoryUser;

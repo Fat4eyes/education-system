@@ -1,133 +1,77 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using EducationSystem.Database.Models;
+﻿using System.Threading.Tasks;
+using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Interfaces.Validators;
+using EducationSystem.Interfaces.Services;
 using EducationSystem.Models;
-using EducationSystem.Models.Files;
-using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Options;
 using EducationSystem.Models.Rest;
-using EducationSystem.Repositories.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Managers
 {
-    public class ManagerMaterial : Manager<ManagerMaterial>, IManagerMaterial
+    public sealed class ManagerMaterial : Manager, IManagerMaterial
     {
-        private readonly IHelperPath _helperPath;
-        private readonly IValidator<Material> _validatorMaterial;
-        private readonly IRepositoryMaterial _repositoryMaterial;
-        private readonly IRepositoryMaterialFile _repositoryMaterialFile;
-        private readonly IExceptionFactory _exceptionFactory;
+        private readonly IServiceMaterial _serviceMaterial;
 
         public ManagerMaterial(
-            IMapper mapper,
-            ILogger<ManagerMaterial> logger,
-            IHelperPath helperPath,
-            IValidator<Material> validatorMaterial,
-            IRepositoryMaterial repositoryMaterial,
-            IRepositoryMaterialFile repositoryMaterialFile,
-            IExceptionFactory exceptionFactory)
-            : base(mapper, logger)
+            IExecutionContext executionContext,
+            IExceptionFactory exceptionFactory,
+            IServiceMaterial serviceMaterial)
+            : base(
+                executionContext,
+                exceptionFactory)
         {
-            _helperPath = helperPath;
-            _validatorMaterial = validatorMaterial;
-            _repositoryMaterial = repositoryMaterial;
-            _repositoryMaterialFile = repositoryMaterialFile;
-            _exceptionFactory = exceptionFactory;
+            _serviceMaterial = serviceMaterial;
         }
 
         public async Task<PagedData<Material>> GetMaterialsAsync(OptionsMaterial options, FilterMaterial filter)
         {
-            var (count, materials) = await _repositoryMaterial.GetMaterialsAsync(filter);
+            if (CurrentUser.IsAdmin())
+                return await _serviceMaterial.GetMaterialsAsync(options, filter);
 
-            var items = materials
-                .Select(x => Map(x, options))
-                .ToList();
+            if (CurrentUser.IsLecturer())
+                return await _serviceMaterial.GetLecturerMaterialsAsync(CurrentUser.Id, options, filter);
 
-            return new PagedData<Material>(items, count);
-        }
-
-        public async Task DeleteMaterialAsync(int id)
-        {
-            var material = await _repositoryMaterial.GetByIdAsync(id) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
-
-            await _repositoryMaterial.RemoveAsync(material, true);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task<Material> GetMaterialAsync(int id, OptionsMaterial options)
         {
-            var material = await _repositoryMaterial.GetByIdAsync(id) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
+            if (CurrentUser.IsAdmin())
+                return await _serviceMaterial.GetMaterialAsync(id, options);
 
-            return Map(material, options);
+            if (CurrentUser.IsLecturer())
+                return await _serviceMaterial.GetLecturerMaterialAsync(id, CurrentUser.Id, options);
+
+            if (CurrentUser.IsStudent())
+                return await _serviceMaterial.GetStudentMaterialAsync(id, CurrentUser.Id, options);
+
+            throw ExceptionFactory.NoAccess();
         }
 
-        public async Task<Material> CreateMaterialAsync(Material material)
+        public async Task DeleteMaterialAsync(int id)
         {
-            await _validatorMaterial.ValidateAsync(material.Format());
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
 
-            var model = Mapper.Map<DatabaseMaterial>(material);
-
-            await _repositoryMaterial.AddAsync(model, true);
-
-            return Mapper.Map<DatabaseMaterial, Material>(model);
+            await _serviceMaterial.DeleteMaterialAsync(id);
         }
 
-        public async Task<Material> UpdateMaterialAsync(int id, Material material)
+        public async Task<int> CreateMaterialAsync(Material material)
         {
-            await _validatorMaterial.ValidateAsync(material.Format());
+            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer())
+                return await _serviceMaterial.CreateMaterialAsync(material);
 
-            var model = await _repositoryMaterial.GetByIdAsync(id) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
-
-            Mapper.Map(Mapper.Map<DatabaseMaterial>(material), model);
-
-            await _repositoryMaterial.UpdateAsync(model, true);
-
-            if (model.Files.Any())
-                await _repositoryMaterialFile.RemoveAsync(model.Files, true);
-
-            model.Files = Mapper.Map<List<DatabaseMaterialFile>>(material.Files);
-
-            await _repositoryMaterialFile.AddAsync(model.Files, true);
-
-            return Mapper.Map<DatabaseMaterial, Material>(model);
+            throw ExceptionFactory.NoAccess();
         }
 
-        private Material Map(DatabaseMaterial material, OptionsMaterial options)
+        public async Task UpdateMaterialAsync(int id, Material material)
         {
-            return Mapper.Map<DatabaseMaterial, Material>(material, x =>
-            {
-                x.AfterMap((s, d) =>
-                {
-                    if (options.WithFiles)
-                    {
-                        var files = s.Files?.Select(y => y.File).ToList();
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
 
-                        d.Files = Mapper.Map<List<Document>>(files);
-
-                        d.Files?.ForEach(y => y.Path = GetDocumentPath(y));
-                    }
-                });
-            });
-        }
-
-        private string GetDocumentPath(File file)
-        {
-            if (file.Guid.HasValue == false)
-                return null;
-
-            return _helperPath
-                .GetRelativeFilePath(file.Type, file.Guid.Value, file.Name)
-                .Replace("\\", "/");
+            await _serviceMaterial.UpdateMaterialAsync(id, material);
         }
     }
 }

@@ -1,33 +1,21 @@
-﻿using AutoMapper;
-using EducationSystem.Constants;
-using EducationSystem.Implementations.Managers.Files.Basics;
-using EducationSystem.Interfaces.Helpers;
-using EducationSystem.Interfaces.Managers.Files;
-using EducationSystem.Interfaces.Validators;
+﻿using EducationSystem.Implementations.Managers.Files.Basics;
+using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Factories;
+using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Models.Files;
-using EducationSystem.Repositories.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Managers.Files
 {
-    public sealed class ManagerDocument : ManagerFile<Document>, IManagerDocument
+    public sealed class ManagerDocument : ManagerFile<Document>
     {
         public ManagerDocument(
-            IMapper mapper,
-            ILogger<ManagerDocument> logger,
-            IHelperPath helperPath,
-            IHelperFile helperFile,
-            IHelperFolder helperFolder,
-            IValidator<Document> validatorDocument,
-            IRepositoryFile repositoryFile)
+            IExecutionContext executionContext,
+            IExceptionFactory exceptionFactory,
+            IServiceFile<Document> serviceFile)
             : base(
-                mapper,
-                logger,
-                helperPath,
-                helperFile,
-                helperFolder,
-                validatorDocument,
-                repositoryFile)
+                executionContext,
+                exceptionFactory,
+                serviceFile)
         { }
     }
 }

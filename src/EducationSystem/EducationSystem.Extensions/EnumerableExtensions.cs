@@ -33,32 +33,9 @@ namespace EducationSystem.Extensions
 
         public static async Task<bool> AllAsync<TSource>(this IEnumerable<TSource> source, Func<TSource, Task<bool>> predicate)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
             foreach (var item in source)
             {
                 if (await predicate(item) == false)
-                    return false;
-            }
-
-            return true;
-        }
-
-        public static async Task<bool> AllAsync<TSource>(this IEnumerable<Task<TSource>> source, Func<TSource, bool> predicate)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
-
-            foreach (var item in source)
-            {
-                if (!predicate(await item))
                     return false;
             }
 

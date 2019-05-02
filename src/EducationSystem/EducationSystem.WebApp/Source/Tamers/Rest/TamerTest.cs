@@ -22,25 +22,25 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
         public async Task<IActionResult> GetTests([FromQuery] OptionsTest options, [FromQuery] FilterTest filter)
         {
-            return Ok(await _managerTest.GetTestsAsync(options, filter));
-        }
-
-        [Transaction]
-        [HttpPost("")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> CreateTest([FromBody] Test test)
-        {
-            return Ok(await _managerTest.CreateTestAsync(test));
+            return await Ok(() => _managerTest.GetTestsAsync(options, filter));
         }
 
         [HttpGet("{id:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
         public async Task<IActionResult> GetTest([FromRoute] int id, [FromQuery] OptionsTest options)
         {
-            return Ok(await _managerTest.GetTestAsync(id, options));
+            return await Ok(() => _managerTest.GetTestAsync(id, options));
+        }
+
+        [HttpPost]
+        [Transaction]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> CreateTest([FromBody] Test test)
+        {
+            return await Ok(() => _managerTest.CreateTestAsync(test));
         }
 
         [Transaction]
@@ -48,7 +48,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateTest([FromRoute] int id, [FromBody] Test test)
         {
-            return Ok(await _managerTest.UpdateTestAsync(id, test));
+            return await Ok(() => _managerTest.UpdateTestAsync(id, test));
         }
 
         [Transaction]
@@ -56,19 +56,17 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteTest([FromRoute] int id)
         {
-            await _managerTest.DeleteTestAsync(id);
-
-            return Ok();
+            return await Ok(() => _managerTest.DeleteTestAsync(id));
         }
 
         [HttpGet("{id:int}/Themes")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> GetThemesByTestId(
+        public async Task<IActionResult> GetTestThemes(
             [FromRoute] int id,
             [FromQuery] OptionsTheme options,
             [FromQuery] FilterTheme filter)
         {
-            return Ok(await _managerTheme.GetThemesByTestIdAsync(id, options, filter));
+            return await Ok(() => _managerTheme.GetThemesAsync(options, filter.SetTestId(id)));
         }
     }
 }

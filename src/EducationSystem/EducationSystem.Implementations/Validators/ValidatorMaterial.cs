@@ -41,7 +41,13 @@ namespace EducationSystem.Implementations.Validators
             if (await model.Files.AllAsync(x => _helperFile.FileExistsAsync(x)) == false)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
 
-            if (await model.Files.AllAsync(x => _repositoryFile.ExistsAsync(x.Id)) == false)
+            var ids = model.Files
+                .Select(x => x.Id)
+                .ToArray();
+
+            var files = await _repositoryFile.GetByIdsAsync(ids);
+
+            if (files.Count != ids.Length)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
         }
     }

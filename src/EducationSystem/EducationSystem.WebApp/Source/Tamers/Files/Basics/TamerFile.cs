@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
-using EducationSystem.Interfaces.Managers.Files.Basics;
+using EducationSystem.Interfaces.Managers.Files;
 using EducationSystem.Models.Files.Basics;
 using EducationSystem.WebApp.Source.Attributes;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,21 +17,11 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
             ManagerFile = managerFile;
         }
 
-        [Authorize]
         [HttpGet("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
         public async Task<IActionResult> GetFile([FromRoute] int id)
         {
-            return Ok(await ManagerFile.GetFileAsync(id));
-        }
-
-        [Transaction]
-        [HttpDelete("{id:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> DeleteFile([FromRoute] int id)
-        {
-            await ManagerFile.DeleteFileAsync(id);
-
-            return Ok();
+            return await Ok(() => ManagerFile.GetFileAsync(id));
         }
 
         [HttpPost]
@@ -48,8 +37,16 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
                     Stream = stream
                 };
 
-                return Ok(await ManagerFile.CreateFileAsync(model));
+                return await Ok(() => ManagerFile.CreateFileAsync(model));
             }
+        }
+
+        [Transaction]
+        [HttpDelete("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> DeleteFile([FromRoute] int id)
+        {
+            return await Ok(() => ManagerFile.DeleteFileAsync(id));
         }
 
         [HttpGet("Extensions")]

@@ -31,10 +31,5 @@ namespace EducationSystem.Repositories.Implementations.Basics
                 .Where(x => ids.Contains(x.Id))
                 .ToListAsync();
         }
-
-        public Task<bool> ExistsAsync(int id)
-        {
-            return AsQueryable().AnyAsync(x => x.Id == id);
-        }
     }
 }

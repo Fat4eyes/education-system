@@ -25,7 +25,11 @@ namespace EducationSystem.Models.Rest
 
         public bool IsAdmin() => HasRole(UserRoles.Admin);
 
+        public bool IsNotAdmin() => !IsAdmin();
+
         public bool IsLecturer() => HasRole(UserRoles.Lecturer);
+
+        public bool IsNotLecturer() => !IsLecturer();
 
         private bool HasRole(string role)
         {

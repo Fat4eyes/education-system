@@ -4,6 +4,8 @@ using EducationSystem.Implementations.Factories;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Implementations.Managers;
 using EducationSystem.Implementations.Managers.Files;
+using EducationSystem.Implementations.Services;
+using EducationSystem.Implementations.Services.Files;
 using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
 using EducationSystem.Interfaces;
@@ -11,11 +13,14 @@ using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Interfaces.Managers.Files;
+using EducationSystem.Interfaces.Services;
+using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest;
 using EducationSystem.Repositories.Implementations;
 using EducationSystem.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,23 +39,37 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IExceptionFactory, ExceptionFactory>();
 
+            collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             RegisterHelpers(collection);
             RegisterValidators(collection);
-            RegisterManagers(collection);
+            RegisterManager(collection);
+            RegisterServices(collection);
             RegisterRepositories(collection);
         }
 
-        private static void RegisterManagers(IServiceCollection collection)
+        private static void RegisterServices(IServiceCollection collection)
         {
-            collection.AddTransient<IManagerImage, ManagerImage>();
-            collection.AddTransient<IManagerDocument, ManagerDocument>();
+            collection.AddTransient<IServiceFile<Image>, ServiceImage>();
+            collection.AddTransient<IServiceFile<Document>, ServiceDocument>();
+
+            collection.AddTransient<IServiceTest, ServiceTest>();
+            collection.AddTransient<IServiceTheme, ServiceTheme>();
+            collection.AddTransient<IServiceQuestion, ServiceQuestion>();
+            collection.AddTransient<IServiceMaterial, ServiceMaterial>();
+            collection.AddTransient<IServiceDiscipline, ServiceDiscipline>();
+        }
+
+        private static void RegisterManager(IServiceCollection collection)
+        {
+            collection.AddTransient<IManagerFile<Image>, ManagerImage>();
+            collection.AddTransient<IManagerFile<Document>, ManagerDocument>();
 
             collection.AddTransient<IManagerTest, ManagerTest>();
             collection.AddTransient<IManagerUser, ManagerUser>();
             collection.AddTransient<IManagerTheme, ManagerTheme>();
-            collection.AddTransient<IManagerTestData, ManagerTestData>();
-            collection.AddTransient<IManagerQuestion, ManagerQuestion>();
             collection.AddTransient<IManagerMaterial, ManagerMaterial>();
+            collection.AddTransient<IManagerQuestion, ManagerQuestion>();
             collection.AddTransient<IManagerDiscipline, ManagerDiscipline>();
         }
 
@@ -84,7 +103,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IRepositoryTheme, RepositoryTheme>();
             collection.AddTransient<IRepositoryAnswer, RepositoryAnswer>();
             collection.AddTransient<IRepositoryProgram, RepositoryProgram>();
-            collection.AddTransient<IRepositoryStudent, RepositoryStudent>();
             collection.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
             collection.AddTransient<IRepositoryMaterial, RepositoryMaterial>();
             collection.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();

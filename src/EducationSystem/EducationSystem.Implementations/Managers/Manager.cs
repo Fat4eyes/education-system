@@ -1,18 +1,25 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Logging;
+﻿using EducationSystem.Extensions;
+using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Factories;
+using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Implementations.Managers
 {
-    public abstract class Manager<TManager> where TManager : class
+    public abstract class Manager
     {
-        protected IMapper Mapper { get; }
+        protected IExecutionContext ExecutionContext { get; }
+        protected IExceptionFactory ExceptionFactory { get; }
 
-        protected ILogger<TManager> Logger { get; }
+        protected User CurrentUser { get; }
 
-        protected Manager(IMapper mapper, ILogger<TManager> logger)
+        protected Manager(IExecutionContext executionContext, IExceptionFactory exceptionFactory)
         {
-            Mapper = mapper;
-            Logger = logger;
+            ExecutionContext = executionContext;
+            ExceptionFactory = exceptionFactory;
+
+            CurrentUser = ExecutionContext
+                .GetCurrentUserAsync()
+                .WaitTask();
         }
     }
 }

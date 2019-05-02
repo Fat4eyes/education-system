@@ -19,6 +19,47 @@ namespace EducationSystem.Repositories.Implementations
 
         public Task<(int Count, List<DatabaseTest> Tests)> GetTestsAsync(FilterTest filter)
         {
+            return GetByFilter(filter).ApplyPagingAsync(filter);
+        }
+
+        public Task<(int Count, List<DatabaseTest> Tests)> GetStudentTestsAsync(int studentId, FilterTest filter)
+        {
+            return GetByFilter(filter)
+                .Where(x => x.Discipline.StudyProfiles
+                    .Any(a => a.StudyProfile.StudyPlans
+                    .Any(b => b.Groups
+                    .Any(c => c.GroupStudents
+                    .Any(d => d.StudentId == studentId)))))
+                .ApplyPagingAsync(filter);
+        }
+
+        public Task<(int Count, List<DatabaseTest> Tests)> GetLecturerTestsAsync(int lecturerId, FilterTest filter)
+        {
+            return GetByFilter(filter)
+                .Where(x => x.Discipline.Lecturers.Any(y => y.LecturerId == lecturerId))
+                .ApplyPagingAsync(filter);
+        }
+
+        public Task<DatabaseTest> GetStudentTestAsync(int id, int studentId)
+        {
+            return AsQueryable()
+                .Where(x => x.Discipline.StudyProfiles
+                    .Any(a => a.StudyProfile.StudyPlans
+                    .Any(b => b.Groups
+                    .Any(c => c.GroupStudents
+                    .Any(d => d.StudentId == studentId)))))
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public Task<DatabaseTest> GetLecturerTestAsync(int id, int lecturerId)
+        {
+            return AsQueryable()
+                .Where(x => x.Discipline.Lecturers.Any(y => y.LecturerId == lecturerId))
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        private IQueryable<DatabaseTest> GetByFilter(FilterTest filter)
+        {
             var query = AsQueryable();
 
             if (filter.DisciplineId.HasValue)
@@ -31,61 +72,9 @@ namespace EducationSystem.Repositories.Implementations
                 query = query.Where(x => x.Type == filter.TestType.Value);
 
             if (string.IsNullOrWhiteSpace(filter.Name) == false)
-                query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
-                
-            return query.ApplyPagingAsync(filter);
-        }
+                query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.InvariantCultureIgnoreCase));
 
-        public Task<(int Count, List<DatabaseTest> Tests)> GetTestsByDisciplineIdAsync(int disciplineId, FilterTest filter)
-        {
-            var query = AsQueryable()
-                .Where(x => x.DisciplineId == disciplineId);
-
-            if (filter.OnlyActive)
-                query = query.Where(x => x.IsActive == 1);
-
-            if (filter.TestType.HasValue)
-                query = query.Where(x => x.Type == filter.TestType.Value);
-
-            if (string.IsNullOrWhiteSpace(filter.Name) == false)
-                query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
-
-            return query.ApplyPagingAsync(filter);
-        }
-
-        public Task<(int Count, List<DatabaseTest> Tests)> GetTestsByStudentId(int studentId, FilterTest filter)
-        {
-            var query = AsQueryable()
-                .Where(x => x.IsActive == 1 && x.TestThemes.Any(y => y.Theme.Questions.Any()))
-                .Where(x => x.Discipline.StudyProfiles
-                    .Any(a => a.StudyProfile.StudyPlans
-                    .Any(b => b.Groups
-                    .Any(c => c.GroupStudents
-                    .Any(d => d.StudentId == studentId)))));
-
-            if (filter.DisciplineId.HasValue)
-                query = query.Where(x => x.DisciplineId == filter.DisciplineId);
-
-            if (filter.TestType.HasValue)
-                query = query.Where(x => x.Type == filter.TestType.Value);
-
-            if (string.IsNullOrWhiteSpace(filter.Name) == false)
-                query = query.Where(x => x.Subject.Contains(filter.Name, StringComparison.CurrentCultureIgnoreCase));
-
-            return query.ApplyPagingAsync(filter);
-        }
-
-        public Task<DatabaseTest> GetTestForStudentByIdAsync(int id, int studentId)
-        {
-            return AsQueryable()
-                .Where(x => x.Id == id)
-                .Where(x => x.IsActive == 1)
-                .Where(x => x.TestThemes.Any(y => y.Theme.Questions.Any()))
-                .FirstOrDefaultAsync(x => x.Discipline.StudyProfiles
-                    .Any(a => a.StudyProfile.StudyPlans
-                    .Any(b => b.Groups
-                    .Any(c => c.GroupStudents
-                    .Any(d => d.StudentId == studentId)))));
+            return query;
         }
     }
 }

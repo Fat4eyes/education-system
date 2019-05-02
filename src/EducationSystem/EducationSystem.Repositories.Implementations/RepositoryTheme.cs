@@ -16,39 +16,39 @@ namespace EducationSystem.Repositories.Implementations
         public RepositoryTheme(DatabaseContext context)
             : base(context) { }
 
-        public Task<(int Count, List<DatabaseTheme> Themes)> GetThemes(FilterTheme filter)
+        public Task<(int Count, List<DatabaseTheme> Themes)> GetThemesAsync(FilterTheme filter)
         {
-            return AsQueryable()
+            return GetByFilter(filter)
                 .OrderBy(x => x.Order)
                 .ApplyPagingAsync(filter);
         }
 
-        public Task<(int Count, List<DatabaseTheme> Themes)> GetThemesByTestId(int testId, FilterTheme filter)
+        public Task<(int Count, List<DatabaseTheme> Themes)> GetLecturerThemesAsync(int lecturerId, FilterTheme filter)
         {
-            return AsQueryable()
-                .Where(x => x.ThemeTests.Any(y => y.TestId == testId))
+            return GetByFilter(filter)
+                .Where(x => x.Discipline.Lecturers.Any(y => y.LecturerId == lecturerId))
                 .OrderBy(x => x.Order)
                 .ApplyPagingAsync(filter);
         }
 
-        public Task<(int Count, List<DatabaseTheme> Themes)> GetThemesByDisciplineId(int disciplineId, FilterTheme filter)
+        public Task<DatabaseTheme> GetLecturerThemeAsync(int id, int lecturerId)
         {
             return AsQueryable()
-                .Where(x => x.DisciplineId == disciplineId)
-                .OrderBy(x => x.Order)
-                .ApplyPagingAsync(filter);
+                .Where(x => x.Discipline.Lecturers.Any(y => y.LecturerId == lecturerId))
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<bool> IsThemeExists(int id)
+        private IQueryable<DatabaseTheme> GetByFilter(FilterTheme filter)
         {
-            return AsQueryable().AnyAsync(x => x.Id == id);
-        }
+            var query = AsQueryable();
 
-        public Task<int> GetLastThemeOrder(int disciplineId)
-        {
-            return AsQueryable()
-                .Where(x => x.DisciplineId == disciplineId && x.Order.HasValue)
-                .MaxAsync(x => x.Order.Value);
+            if (filter.DisciplineId.HasValue)
+                query = query.Where(x => x.DisciplineId == filter.DisciplineId);
+
+            if (filter.TestId.HasValue)
+                query = query.Where(x => x.ThemeTests.Any(y => y.TestId == filter.TestId));
+
+            return query;
         }
     }
 }

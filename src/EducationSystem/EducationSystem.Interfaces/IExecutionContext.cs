@@ -1,11 +1,10 @@
-﻿using EducationSystem.Models.Rest;
+﻿using System.Threading.Tasks;
+using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Interfaces
 {
     public interface IExecutionContext
     {
-        User GetCurrentUser();
-
-        int GetCurrentUserId();
+        Task<User> GetCurrentUserAsync();
     }
 }

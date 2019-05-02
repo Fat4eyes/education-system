@@ -11,5 +11,12 @@ namespace EducationSystem.Models.Filters
         public bool OnlyActive { get; set; } = false;
 
         public TestType? TestType { get; set; } = null;
+
+        public FilterTest SetDisciplineId(int id)
+        {
+            DisciplineId = id;
+
+            return this;
+        }
     }
 }

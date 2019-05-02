@@ -9,10 +9,8 @@ namespace EducationSystem.Repositories.Interfaces
     public interface IRepositoryQuestion : IRepository<DatabaseQuestion>
     {
         Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsAsync(FilterQuestion filter);
-        Task<(int Count, List<DatabaseQuestion> Questions)> GetQuestionsByThemeIdAsync(int themeId, FilterQuestion filter);
+        Task<(int Count, List<DatabaseQuestion> Questions)> GetLecturerQuestionsAsync(int lecturerId, FilterQuestion filter);
 
-        Task<List<DatabaseQuestion>> GetQuestionsForStudentByTestIdAsync(int testId, int studentId);
-
-        Task<int> GetLastQuestionOrderAsync(int themeId);
+        Task<DatabaseQuestion> GetLecturerQuestionAsync(int id, int lecturerId);
     }
 }

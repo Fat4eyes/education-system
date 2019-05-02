@@ -10,9 +10,10 @@ namespace EducationSystem.Interfaces.Managers
     {
         Task<PagedData<Material>> GetMaterialsAsync(OptionsMaterial options, FilterMaterial filter);
 
-        Task DeleteMaterialAsync(int id);
         Task<Material> GetMaterialAsync(int id, OptionsMaterial options);
-        Task<Material> CreateMaterialAsync(Material material);
-        Task<Material> UpdateMaterialAsync(int id, Material material);
+
+        Task DeleteMaterialAsync(int id);
+        Task UpdateMaterialAsync(int id, Material material);
+        Task<int> CreateMaterialAsync(Material material);
     }
 }

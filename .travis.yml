@@ -2,7 +2,7 @@ dist: xenial
 language: csharp
 solution: src/EducationSystem/EducationSystem.sln
 mono: none
-dotnet: 2.1.504
+dotnet: 2.2.106
 script:
  - cd src/EducationSystem
  - dotnet restore

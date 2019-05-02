@@ -21,11 +21,16 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpGet]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> GetQuestions(
-            [FromQuery] OptionsQuestion options,
-            [FromQuery] FilterQuestion filter)
+        public async Task<IActionResult> GetQuestions([FromQuery] OptionsQuestion options, [FromQuery] FilterQuestion filter)
         {
-            return Ok(await _managerQuestion.GetQuestionsAsync(options, filter));
+            return await Ok(() => _managerQuestion.GetQuestionsAsync(options, filter));
+        }
+
+        [HttpGet("{id:int}")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> GetQuestion([FromRoute] int id, [FromQuery] OptionsQuestion options)
+        {
+            return await Ok(() => _managerQuestion.GetQuestionAsync(id, options));
         }
 
         [HttpPost]
@@ -33,14 +38,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateQuestion([FromBody] Question question)
         {
-            return Ok(await _managerQuestion.CreateQuestionAsync(question));
-        }
-
-        [HttpGet("{id:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
-        public async Task<IActionResult> GetQuestion([FromRoute] int id, [FromQuery] OptionsQuestion options)
-        {
-            return Ok(await _managerQuestion.GetQuestionAsync(id, options));
+            return await Ok(() => _managerQuestion.CreateQuestionAsync(question));
         }
 
         [Transaction]
@@ -48,7 +46,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateQuestion([FromRoute] int id, [FromBody] Question question)
         {
-            return Ok(await _managerQuestion.UpdateQuestionAsync(id, question));
+            return await Ok(() => _managerQuestion.UpdateQuestionAsync(id, question));
         }
 
         [Transaction]
@@ -56,9 +54,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteQuestion([FromRoute] int id)
         {
-            await _managerQuestion.DeleteQuestionAsync(id);
-
-            return Ok();
+            return await Ok(() => _managerQuestion.DeleteQuestionAsync(id));
         }
     }
 }

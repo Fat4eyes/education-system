@@ -9,5 +9,8 @@ namespace EducationSystem.Repositories.Interfaces
     public interface IRepositoryMaterial : IRepository<DatabaseMaterial>
     {
         Task<(int Count, List<DatabaseMaterial> Materials)> GetMaterialsAsync(FilterMaterial filter);
+        Task<(int Count, List<DatabaseMaterial> Materials)> GetUserMaterialsAsync(int userId, FilterMaterial filter);
+
+        Task<DatabaseMaterial> GetUserMaterialAsync(int id, int userId);
     }
 }

@@ -5,6 +5,6 @@ namespace EducationSystem.Interfaces.Managers
 {
     public interface IManagerUser
     {
-        Task<User> GetUserAsync(int id);
+        Task<User> GetCurrentUserAsync();
     }
 }

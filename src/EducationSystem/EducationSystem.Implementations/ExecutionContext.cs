@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Interfaces;
@@ -18,7 +19,7 @@ namespace EducationSystem.Implementations
         private readonly IExceptionFactory _exceptionFactory;
         private readonly IRepositoryUser _repositoryUser;
 
-        private Lazy<User> Lazy { get; }
+        private Lazy<Task<User>> Lazy { get; }
 
         public ExecutionContext(
             IMapper mapper,
@@ -31,20 +32,15 @@ namespace EducationSystem.Implementations
             _exceptionFactory = exceptionFactory;
             _repositoryUser = repositoryUser;
 
-            Lazy = new Lazy<User>(GetCurrentUserInternal);
+            Lazy = new Lazy<Task<User>>(GetCurrentUserInternalAsync);
         }
 
-        public User GetCurrentUser()
+        public async Task<User> GetCurrentUserAsync()
         {
-            return Lazy.Value;
+            return await Lazy.Value;
         }
 
-        public int GetCurrentUserId()
-        {
-            return GetCurrentUser().Id;
-        }
-
-        private User GetCurrentUserInternal()
+        private async Task<User> GetCurrentUserInternalAsync()
         {
             var value = _accessor.HttpContext?.User?.Claims?
                 .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ??
@@ -52,7 +48,7 @@ namespace EducationSystem.Implementations
 
             var userId = Convert.ToInt32(value);
 
-            var user = _repositoryUser.GetByIdAsync(userId) ??
+            var user = await _repositoryUser.GetByIdAsync(userId) ??
                 throw _exceptionFactory.NotFound<DatabaseUser>(userId);
 
             return _mapper.Map<User>(user);
