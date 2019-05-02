@@ -1,48 +1,48 @@
 [A] Lecturer & Admin
 [B] Student
-[*] [A] & [B]
+[*] Lecturer & Admin & Student 
 
-[GET]    [*]                    Api/Users/Current                            User
+[GET]    [*]          Api/Users/Current                 User
 
-[POST]   [X]                    Api/Token/Generate                           Token
-[POST]   [*]                    Api/Token/Check                              -
+[POST]   [X]          Api/Token/Generate                Token
+[POST]   [*]          Api/Token/Check                   -
 
-[GET]    [*]                    Api/Documents/{Id}                           Document
-[GET]    [A]                    Api/Documents/Extensions                     []
-[POST]   [A]                    Api/Documents                                Document
-[DELETE] [A]                    Api/Documents/{Id}                           -
-[GET]    [*]                    Api/Images/{Id}                              Image
-[GET]    [A]                    Api/Images/Extensions                        []
-[POST]   [A]                    Api/Images                                   Image
-[DELETE] [A]                    Api/Images/{Id}                              -
+[GET]    [*]          Api/Documents/{Id}                Document
+[GET]    [A]          Api/Documents/Extensions          []
+[POST]   [A]          Api/Documents                     Document
+[DELETE] [A]          Api/Documents/{Id}                -
+[GET]    [*]          Api/Images/{Id}                   Image
+[GET]    [A]          Api/Images/Extensions             []
+[POST]   [A]          Api/Images                        Image
+[DELETE] [A]          Api/Images/{Id}                   -
 
-[GET]    [*] [Options] [Filter] Api/Disciplines                              PagedData<Discipline>
-[GET]    [*] [Options]          Api/Disciplines/{Id}                         Discipline
-[GET]    [*] [Options] [Filter] Api/Disciplines/{Id}/Test                    PagedData<Test>
-[GET]    [*] [Options] [Filter] Api/Disciplines/{Id}/Themes                  PagedData<Theme>
+[GET]    [*] [Filter] Api/Disciplines                   PagedData<Discipline>
+[GET]    [*]          Api/Disciplines/{Id}              Discipline
+[GET]    [*] [Filter] Api/Disciplines/{Id}/Test         PagedData<Test>
+[GET]    [*] [Filter] Api/Disciplines/{Id}/Themes       PagedData<Theme>
 
-[GET]    [A] [Options] [Filter] Api/Materials                                PagedData<Material>
-[GET]    [*] [Options]          Api/Materials/{Id}                           Material
-[POST]   [A]                    Api/Materials                                Int (Id)
-[PUT]    [A]                    Api/Materials/{Id}                           -
-[DELETE] [A]                    Api/Materials/{Id}                           -
+[GET]    [A] [Filter] Api/Materials                     PagedData<Material>
+[GET]    [*]          Api/Materials/{Id}                Material
+[POST]   [A]          Api/Materials                     Int (Id)
+[PUT]    [A]          Api/Materials/{Id}                -
+[DELETE] [A]          Api/Materials/{Id}                -
 
-[GET]    [A] [Options] [Filter] Api/Questions                                PagedData<Question>
-[GET]    [A] [Options]          Api/Questions/{Id}                           Question
-[POST]   [A]                    Api/Questions                                Int (Id)
-[PUT]    [A]                    Api/Questions/{Id}                           -
-[DELETE] [A]                    Api/Questions/{Id}                           -
+[GET]    [A] [Filter] Api/Questions                     PagedData<Question>
+[GET]    [A]          Api/Questions/{Id}                Question
+[POST]   [A]          Api/Questions                     Int (Id)
+[PUT]    [A]          Api/Questions/{Id}                -
+[DELETE] [A]          Api/Questions/{Id}                -
 
-[GET]    [*] [Options] [Filter] Api/Tests                                    PagedData<Test>
-[GET]    [*] [Options]          Api/Tests/{Id}                               Question
-[GET]    [A] [Options] [Filter] Api/Tests/{Id}/Themes                        PagedData<Theme>
-[POST]   [A]                    Api/Tests                                    Int (Id)
-[PUT]    [A]                    Api/Tests/{Id}                               -
-[DELETE] [A]                    Api/Tests/{Id}                               -
+[GET]    [*] [Filter] Api/Tests                         PagedData<Test>
+[GET]    [*]          Api/Tests/{Id}                    Question
+[GET]    [A] [Filter] Api/Tests/{Id}/Themes             PagedData<Theme>
+[POST]   [A]          Api/Tests                         Int (Id)
+[PUT]    [A]          Api/Tests/{Id}                    -
+[DELETE] [A]          Api/Tests/{Id}                    -
 
-[GET]    [A] [Options] [Filter] Api/Themes                                   PagedData<Theme>
-[GET]    [A] [Options]          Api/Themes/{Id}                              Question
-[GET]    [A] [Options] [Filter] Api/Themes/{Id}/Questions                    PagedData<Question>
-[POST]   [A]                    Api/Themes                                   Int (Id)
-[PUT]    [A]                    Api/Themes/{Id}                              -
-[DELETE] [A]                    Api/Themes/{Id}                              -
+[GET]    [A] [Filter] Api/Themes                        PagedData<Theme>
+[GET]    [A]          Api/Themes/{Id}                   Question
+[GET]    [A] [Filter] Api/Themes/{Id}/Questions         PagedData<Question>
+[POST]   [A]          Api/Themes                        Int (Id)
+[PUT]    [A]          Api/Themes/{Id}                   -
+[DELETE] [A]          Api/Themes/{Id}                   -
