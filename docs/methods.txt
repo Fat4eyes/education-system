@@ -17,9 +17,9 @@
 [DELETE] [A]                    Api/Images/{Id}                              -
 
 [GET]    [*] [Options] [Filter] Api/Disciplines                              PagedData<Discipline>
-[GET]    [*] [Options]          Api/Discipline/{Id}                          Discipline
-[GET]    [*] [Options] [Filter] Api/Discipline/{Id}/Test                     PagedData<Test>
-[GET]    [*] [Options] [Filter] Api/Discipline/{Id}/Themes                   PagedData<Theme>
+[GET]    [*] [Options]          Api/Disciplines/{Id}                         Discipline
+[GET]    [*] [Options] [Filter] Api/Disciplines/{Id}/Test                    PagedData<Test>
+[GET]    [*] [Options] [Filter] Api/Disciplines/{Id}/Themes                  PagedData<Theme>
 
 [GET]    [A] [Options] [Filter] Api/Materials                                PagedData<Material>
 [GET]    [*] [Options]          Api/Materials/{Id}                           Material
