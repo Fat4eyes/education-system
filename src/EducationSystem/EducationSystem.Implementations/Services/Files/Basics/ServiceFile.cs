@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
@@ -15,8 +16,7 @@ using File = EducationSystem.Models.Files.Basics.File;
 
 namespace EducationSystem.Implementations.Services.Files.Basics
 {
-    public abstract class ServiceFile<TFile> : Service<ServiceFile<TFile>>, IServiceFile<TFile>
-        where TFile : File
+    public abstract class ServiceFile<TFile> : Service<ServiceFile<TFile>>, IServiceFile<TFile> where TFile : File
     {
         private readonly IHelperPath _helperPath;
         private readonly IHelperFile _helperFile;
@@ -24,7 +24,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
         private readonly IValidator<TFile> _validatorFile;
         private readonly IExceptionFactory _exceptionFactory;
         private readonly IExecutionContext _executionContext;
-        private readonly IRepositoryFile _repositoryFile;
+        private readonly IRepository<DatabaseFile> _repositoryFile;
 
         protected ServiceFile(
             IMapper mapper,
@@ -35,7 +35,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             IValidator<TFile> validatorFile,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
-            IRepositoryFile repositoryFile)
+            IRepository<DatabaseFile> repositoryFile)
             : base(mapper, logger)
         {
             _helperPath = helperPath;
@@ -49,7 +49,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task DeleteFileAsync(int id)
         {
-            var model = await _repositoryFile.GetByIdAsync(id) ??
+            var model = await _repositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseFile>(id);
 
             var user = await _executionContext.GetCurrentUserAsync();
@@ -74,7 +74,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task<TFile> GetFileAsync(int id)
         {
-            var model = await _repositoryFile.GetByIdAsync(id) ??
+            var model = await _repositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseFile>(id);
 
             var file = Mapper.Map<TFile>(model);

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 
@@ -10,9 +11,9 @@ namespace EducationSystem.Implementations.Helpers
 {
     public sealed class HelperUserRole : IHelperUserRole
     {
-        private readonly IRepositoryRole _repositoryRole;
+        private readonly IRepository<DatabaseRole> _repositoryRole;
 
-        public HelperUserRole(IRepositoryRole repositoryRole)
+        public HelperUserRole(IRepository<DatabaseRole> repositoryRole)
         {
             _repositoryRole = repositoryRole;
         }
@@ -43,7 +44,7 @@ namespace EducationSystem.Implementations.Helpers
 
         private Task<DatabaseRole> GetRole(int userId)
         {
-            return _repositoryRole.GetUserRoleAsync(userId) ??
+            return _repositoryRole.FindFirstAsync(new RolesByUserId(userId)) ??
                 throw ExceptionHelper.CreateException($"Не удалось получить роль пользователя. Идентификатор пользователя: {userId}.");
         }
     }

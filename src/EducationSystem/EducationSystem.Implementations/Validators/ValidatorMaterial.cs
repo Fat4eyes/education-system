@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
@@ -13,9 +15,9 @@ namespace EducationSystem.Implementations.Validators
     public sealed class ValidatorMaterial : IValidator<Material>
     {
         private readonly IHelperFile _helperFile;
-        private readonly IRepositoryFile _repositoryFile;
+        private readonly IRepository<DatabaseFile> _repositoryFile;
 
-        public ValidatorMaterial(IHelperFile helperFile, IRepositoryFile repositoryFile)
+        public ValidatorMaterial(IHelperFile helperFile, IRepository<DatabaseFile> repositoryFile)
         {
             _helperFile = helperFile;
             _repositoryFile = repositoryFile;
@@ -45,9 +47,7 @@ namespace EducationSystem.Implementations.Validators
                 .Select(x => x.Id)
                 .ToArray();
 
-            var files = await _repositoryFile.GetByIdsAsync(ids);
-
-            if (files.Count != ids.Length)
+            if ((await _repositoryFile.FindAllAsync(new FilesByIds(ids))).Count != ids.Length)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
         }
     }

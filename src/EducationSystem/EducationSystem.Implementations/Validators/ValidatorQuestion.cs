@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
@@ -15,15 +17,15 @@ namespace EducationSystem.Implementations.Validators
     {
         private readonly IHelperFile _helperFile;
 
-        private readonly IRepositoryFile _repositoryFile;
-        private readonly IRepositoryTheme _repositoryTheme;
-        private readonly IRepositoryMaterial _repositoryMaterial;
+        private readonly IRepository<DatabaseFile> _repositoryFile;
+        private readonly IRepository<DatabaseTheme> _repositoryTheme;
+        private readonly IRepository<DatabaseMaterial> _repositoryMaterial;
 
         public ValidatorQuestion(
             IHelperFile helperFile,
-            IRepositoryFile repositoryFile,
-            IRepositoryTheme repositoryTheme,
-            IRepositoryMaterial repositoryMaterial)
+            IRepository<DatabaseFile> repositoryFile,
+            IRepository<DatabaseTheme> repositoryTheme,
+            IRepository<DatabaseMaterial> repositoryMaterial)
         {
             _helperFile = helperFile;
             _repositoryFile = repositoryFile;
@@ -54,16 +56,16 @@ namespace EducationSystem.Implementations.Validators
             if (model.ThemeId.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указана тема.");
 
-            if (await _repositoryTheme.GetByIdAsync(model.ThemeId.Value) == null)
+            if (await _repositoryTheme.FindFirstAsync(new ThemesById(model.ThemeId.Value)) == null)
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            if (model.Image != null && await _repositoryFile.GetByIdAsync(model.Image.Id) == null)
+            if (model.Image != null && await _repositoryFile.FindFirstAsync(new FilesById(model.Image.Id)) == null)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
             if (model.Image != null && await _helperFile.FileExistsAsync(model.Image) == false)
                 throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-            if (model.Material != null && await _repositoryMaterial.GetByIdAsync(model.Material.Id) == null)
+            if (model.Material != null && await _repositoryMaterial.FindFirstAsync(new MaterialsById(model.Material.Id)) == null)
                 throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
 
             ValidateByQuestionType(model);

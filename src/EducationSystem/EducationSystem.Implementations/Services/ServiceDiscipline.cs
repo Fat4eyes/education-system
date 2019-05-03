@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
@@ -17,14 +18,14 @@ namespace EducationSystem.Implementations.Services
     {
         private readonly IHelperUserRole _helperUserRole;
         private readonly IExceptionFactory _exceptionFactory;
-        private readonly IRepositoryDiscipline _repositoryDiscipline;
+        private readonly IRepository<DatabaseDiscipline> _repositoryDiscipline;
 
         public ServiceDiscipline(
             IMapper mapper,
             ILogger<ServiceDiscipline> logger,
             IHelperUserRole helperUserRole,
             IExceptionFactory exceptionFactory,
-            IRepositoryDiscipline repositoryDiscipline)
+            IRepository<DatabaseDiscipline> repositoryDiscipline)
             : base(mapper, logger)
         {
             _helperUserRole = helperUserRole;
@@ -34,7 +35,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Discipline>> GetDisciplinesAsync(FilterDiscipline filter)
         {
-            var (count, disciplines) = await _repositoryDiscipline.GetDisciplinesAsync(filter);
+            var specification = new DisciplinesByName(filter.Name);
+
+            var (count, disciplines) = await _repositoryDiscipline.FindPaginatedAsync(specification, filter);
 
             return new PagedData<Discipline>(Mapper.Map<List<Discipline>>(disciplines), count);
         }
@@ -43,7 +46,12 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleStudentAsync(studentId);
 
-            var (count, disciplines) = await _repositoryDiscipline.GetStudentDisciplinesAsync(studentId, filter);
+            var specification =
+                new DisciplinesByName(filter.Name) &
+                new DisciplinesByStudentId(studentId) &
+                new DisciplinesForStudents();
+
+            var (count, disciplines) = await _repositoryDiscipline.FindPaginatedAsync(specification, filter);
 
             return new PagedData<Discipline>(Mapper.Map<List<Discipline>>(disciplines), count);
         }
@@ -52,14 +60,18 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
-            var (count, disciplines) = await _repositoryDiscipline.GetLecturerDisciplinesAsync(lecturerId, filter);
+            var specification =
+                new DisciplinesByName(filter.Name) &
+                new DisciplinesByLecturerId(lecturerId);
+
+            var (count, disciplines) = await _repositoryDiscipline.FindPaginatedAsync(specification, filter);
 
             return new PagedData<Discipline>(Mapper.Map<List<Discipline>>(disciplines), count);
         }
 
         public async Task<Discipline> GetDisciplineAsync(int id)
         {
-            var discipline = await _repositoryDiscipline.GetByIdAsync(id) ??
+            var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseDiscipline>(id);
 
             return Mapper.Map<Discipline>(discipline);
@@ -69,7 +81,11 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleStudentAsync(studentId);
 
-            var discipline = await _repositoryDiscipline.GetStudentDisciplineAsync(id, studentId) ??
+            var specification =
+                new DisciplinesById(id) &
+                new DisciplinesByStudentId(studentId);
+
+            var discipline = await _repositoryDiscipline.FindFirstAsync(specification) ??
                 throw _exceptionFactory.NotFound<DatabaseDiscipline>(id);
 
             return Mapper.Map<Discipline>(discipline);
@@ -79,7 +95,11 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
-            var discipline = await _repositoryDiscipline.GetLecturerDisciplineAsync(id, lecturerId) ??
+            var specification =
+                new DisciplinesById(id) &
+                new DisciplinesByLecturerId(lecturerId);
+
+            var discipline = await _repositoryDiscipline.FindFirstAsync(specification) ??
                 throw _exceptionFactory.NotFound<DatabaseDiscipline>(id);
 
             return Mapper.Map<Discipline>(discipline);

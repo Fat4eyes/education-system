@@ -5,6 +5,7 @@ using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using Microsoft.AspNetCore.Hosting;
@@ -15,9 +16,9 @@ namespace EducationSystem.Implementations.Helpers
     public sealed class HelperPath : IHelperPath
     {
         private readonly IHostingEnvironment _environment;
-        private readonly IRepositoryFile _repositoryFile;
+        private readonly IRepository<DatabaseFile> _repositoryFile;
 
-        public HelperPath(IHostingEnvironment environment, IRepositoryFile repositoryFile)
+        public HelperPath(IHostingEnvironment environment, IRepository<DatabaseFile> repositoryFile)
         {
             _environment = environment;
             _repositoryFile = repositoryFile;
@@ -36,9 +37,9 @@ namespace EducationSystem.Implementations.Helpers
             DatabaseFile model = null;
 
             if (file.Guid.HasValue)
-                model = await _repositoryFile.GetFileAsync(file.Guid.Value);
+                model = await _repositoryFile.FindFirstAsync(new FilesByGuid(file.Guid.Value));
 
-            model = model ?? await _repositoryFile.GetByIdAsync(file.Id) ??
+            model = model ?? await _repositoryFile.FindFirstAsync(new FilesById(file.Id)) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Файл не найден. Идентификатор файла: {file.Id}.",
                     $"Файл не найден.");

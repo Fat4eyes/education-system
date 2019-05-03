@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EducationSystem.Database.Models;
 using EducationSystem.Implementations.Services.Files.Basics;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
@@ -21,7 +22,7 @@ namespace EducationSystem.Implementations.Services.Files
             IValidator<Document> validatorDocument,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
-            IRepositoryFile repositoryFile)
+            IRepository<DatabaseFile> repositoryFile)
             : base(
                 mapper,
                 logger,

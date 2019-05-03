@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
@@ -24,10 +25,10 @@ namespace EducationSystem.Implementations.Services
         private readonly IExceptionFactory _exceptionFactory;
         private readonly IExecutionContext _executionContext;
 
-        private readonly IRepositoryAnswer _repositoryAnswer;
-        private readonly IRepositoryProgram _repositoryProgram;
-        private readonly IRepositoryQuestion _repositoryQuestion;
-        private readonly IRepositoryProgramData _repositoryProgramData;
+        private readonly IRepository<DatabaseAnswer> _repositoryAnswer;
+        private readonly IRepository<DatabaseProgram> _repositoryProgram;
+        private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
+        private readonly IRepository<DatabaseProgramData> _repositoryProgramData;
 
         public ServiceQuestion(
             IMapper mapper,
@@ -36,10 +37,10 @@ namespace EducationSystem.Implementations.Services
             IValidator<Question> validatorQuestion,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
-            IRepositoryAnswer repositoryAnswer,
-            IRepositoryProgram repositoryProgram,
-            IRepositoryQuestion repositoryQuestion,
-            IRepositoryProgramData repositoryProgramData)
+            IRepository<DatabaseAnswer> repositoryAnswer,
+            IRepository<DatabaseProgram> repositoryProgram,
+            IRepository<DatabaseQuestion> repositoryQuestion,
+            IRepository<DatabaseProgramData> repositoryProgramData)
             : base(mapper, logger)
         {
             _helperUserRole = helperUserRole;
@@ -54,7 +55,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter)
         {
-            var (count, questions) = await _repositoryQuestion.GetQuestionsAsync(filter);
+            var specification = new QuestionsByThemeId(filter.ThemeId);
+
+            var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
             return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
         }
@@ -63,14 +66,18 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
-            var (count, questions) = await _repositoryQuestion.GetLecturerQuestionsAsync(lecturerId, filter);
+            var specification =
+                new QuestionsByThemeId(filter.ThemeId) &
+                new QuestionsByLecturerId(lecturerId);
+
+            var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
             return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
         }
 
         public async Task<Question> GetQuestionAsync(int id)
         {
-            var question = await _repositoryQuestion.GetByIdAsync(id) ??
+            var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
             return Mapper.Map<Question>(question);
@@ -80,7 +87,11 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
-            var question = await _repositoryQuestion.GetLecturerQuestionAsync(id, lecturerId) ??
+            var specification =
+                new QuestionsById(id) &
+                new QuestionsByLecturerId(lecturerId);
+
+            var question = await _repositoryQuestion.FindFirstAsync(specification) ??
                 throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
             return Mapper.Map<Question>(question);
@@ -88,12 +99,12 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteQuestionAsync(int id)
         {
-            var question = await _repositoryQuestion.GetByIdAsync(id) ??
+            var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
             var user = await _executionContext.GetCurrentUserAsync();
 
-            if (user.IsNotAdmin() && question.Theme?.Discipline?.Lecturers.All(x => x.LecturerId != user.Id) != false)
+            if (user.IsNotAdmin() && !new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(question.Theme?.Discipline))
                 throw _exceptionFactory.NoAccess();
 
             await _repositoryQuestion.RemoveAsync(question, true);
@@ -128,12 +139,12 @@ namespace EducationSystem.Implementations.Services
         {
             await _validatorQuestion.ValidateAsync(question.Format());
 
-            var model = await _repositoryQuestion.GetByIdAsync(id) ??
+            var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
 
             var user = await _executionContext.GetCurrentUserAsync();
 
-            if (model.Theme?.Discipline?.Lecturers?.All(x => x.LecturerId != user.Id) != false)
+            if (!new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(model.Theme?.Discipline))
                 throw _exceptionFactory.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);

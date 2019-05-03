@@ -6,9 +6,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Constants;
+using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Implementations.Services;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models;
@@ -22,7 +24,7 @@ namespace EducationSystem.Implementations
     public sealed class TokenGenerator : Service<TokenGenerator>, ITokenGenerator
     {
         private readonly IConfiguration _configuration;
-        private readonly IRepositoryUser _repositoryUser;
+        private readonly IRepository<DatabaseUser> _repositoryUser;
 
         private const string PublicExceptionMessage = "Неверная электронная почта или пароль.";
 
@@ -30,7 +32,7 @@ namespace EducationSystem.Implementations
             IMapper mapper,
             ILogger<TokenGenerator> logger,
             IConfiguration configuration,
-            IRepositoryUser repositoryUser)
+            IRepository<DatabaseUser> repositoryUser)
             : base(mapper, logger)
         {
             _configuration = configuration;
@@ -45,7 +47,7 @@ namespace EducationSystem.Implementations
             if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
                 throw ExceptionHelper.CreatePublicException(PublicExceptionMessage);
 
-            var user = await _repositoryUser.GetUserByEmailAsync(request.Email) ??
+            var user = await _repositoryUser.FindFirstAsync(new UsersByEmail(request.Email)) ??
                 throw ExceptionHelper.CreateNotFoundException(
                     $"Пользователь не найден. Электронная почта: {request.Email}.",
                     PublicExceptionMessage);

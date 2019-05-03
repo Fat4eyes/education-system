@@ -1,4 +1,5 @@
 ﻿using EducationSystem.Database;
+using EducationSystem.Database.Models;
 using EducationSystem.Implementations;
 using EducationSystem.Implementations.Factories;
 using EducationSystem.Implementations.Helpers;
@@ -95,20 +96,20 @@ namespace EducationSystem.Dependencies
 
         private static void RegisterRepositories(IServiceCollection collection)
         {
-            collection.AddTransient<IRepositoryRole, RepositoryRole>();
-            collection.AddTransient<IRepositoryTest, RepositoryTest>();
-            collection.AddTransient<IRepositoryUser, RepositoryUser>();
-            collection.AddTransient<IRepositoryFile, RepositoryFile>();
-            collection.AddTransient<IRepositoryGroup, RepositoryGroup>();
-            collection.AddTransient<IRepositoryTheme, RepositoryTheme>();
-            collection.AddTransient<IRepositoryAnswer, RepositoryAnswer>();
-            collection.AddTransient<IRepositoryProgram, RepositoryProgram>();
-            collection.AddTransient<IRepositoryQuestion, RepositoryQuestion>();
-            collection.AddTransient<IRepositoryMaterial, RepositoryMaterial>();
-            collection.AddTransient<IRepositoryTestTheme, RepositoryTestTheme>();
-            collection.AddTransient<IRepositoryDiscipline, RepositoryDiscipline>();
-            collection.AddTransient<IRepositoryProgramData, RepositoryProgramData>();
-            collection.AddTransient<IRepositoryMaterialFile, RepositoryMaterialFile>();
+            collection.AddTransient<IRepository<DatabaseRole>, Repository<DatabaseRole>>();
+            collection.AddTransient<IRepository<DatabaseUser>, Repository<DatabaseUser>>();
+            collection.AddTransient<IRepository<DatabaseTest>, Repository<DatabaseTest>>();
+            collection.AddTransient<IRepository<DatabaseFile>, Repository<DatabaseFile>>();
+            collection.AddTransient<IRepository<DatabaseGroup>, Repository<DatabaseGroup>>();
+            collection.AddTransient<IRepository<DatabaseTheme>, Repository<DatabaseTheme>>();
+            collection.AddTransient<IRepository<DatabaseAnswer>, Repository<DatabaseAnswer>>();
+            collection.AddTransient<IRepository<DatabaseProgram>, Repository<DatabaseProgram>>();
+            collection.AddTransient<IRepository<DatabaseQuestion>, Repository<DatabaseQuestion>>();
+            collection.AddTransient<IRepository<DatabaseMaterial>, Repository<DatabaseMaterial>>();
+            collection.AddTransient<IRepository<DatabaseTestTheme>, Repository<DatabaseTestTheme>>();
+            collection.AddTransient<IRepository<DatabaseDiscipline>, Repository<DatabaseDiscipline>>();
+            collection.AddTransient<IRepository<DatabaseProgramData>, Repository<DatabaseProgramData>>();
+            collection.AddTransient<IRepository<DatabaseMaterialFile>, Repository<DatabaseMaterialFile>>();
         }
 
         private static void RegisterDatabases(IServiceCollection collection, IConfiguration configuration)

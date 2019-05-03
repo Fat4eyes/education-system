@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
@@ -21,8 +22,8 @@ namespace EducationSystem.Implementations.Services
         private readonly IExecutionContext _executionContext;
         private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Material> _validatorMaterial;
-        private readonly IRepositoryMaterial _repositoryMaterial;
-        private readonly IRepositoryMaterialFile _repositoryMaterialFile;
+        private readonly IRepository<DatabaseMaterial> _repositoryMaterial;
+        private readonly IRepository<DatabaseMaterialFile> _repositoryMaterialFile;
         private readonly IExceptionFactory _exceptionFactory;
 
         public ServiceMaterial(
@@ -31,8 +32,8 @@ namespace EducationSystem.Implementations.Services
             IHelperUserRole helperUserRole,
             ILogger<ServiceMaterial> logger,
             IValidator<Material> validatorMaterial,
-            IRepositoryMaterial repositoryMaterial,
-            IRepositoryMaterialFile repositoryMaterialFile,
+            IRepository<DatabaseMaterial> repositoryMaterial,
+            IRepository<DatabaseMaterialFile> repositoryMaterialFile,
             IExceptionFactory exceptionFactory)
             : base(mapper, logger)
         {
@@ -46,7 +47,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Material>> GetMaterialsAsync(FilterMaterial filter)
         {
-            var (count, materials) = await _repositoryMaterial.GetMaterialsAsync(filter);
+            var specification = new MaterialsByName(filter.Name);
+
+            var (count, materials) = await _repositoryMaterial.FindPaginatedAsync(specification, filter);
 
             return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
         }
@@ -55,14 +58,18 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
-            var (count, materials) = await _repositoryMaterial.GetUserMaterialsAsync(lecturerId, filter);
+            var specification =
+                new MaterialsByName(filter.Name) &
+                new MaterialsByOwnerId(lecturerId);
+
+            var (count, materials) = await _repositoryMaterial.FindPaginatedAsync(specification, filter);
 
             return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
         }
 
         public async Task<Material> GetMaterialAsync(int id)
         {
-            var material = await _repositoryMaterial.GetByIdAsync(id) ??
+            var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             return Mapper.Map<Material>(material);
@@ -77,7 +84,7 @@ namespace EducationSystem.Implementations.Services
 
             // TODO: Исправить это при необходимости.
 
-            var material = await _repositoryMaterial.GetByIdAsync(id) ??
+            var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             return Mapper.Map<Material>(material);
@@ -87,7 +94,11 @@ namespace EducationSystem.Implementations.Services
         {
             await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
 
-            var material = await _repositoryMaterial.GetUserMaterialAsync(id, lecturerId) ??
+            var specification =
+                new MaterialsById(id) &
+                new MaterialsByOwnerId(lecturerId);
+
+            var material = await _repositoryMaterial.FindFirstAsync(specification) ??
                 throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             return Mapper.Map<Material>(material);
@@ -95,13 +106,13 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteMaterialAsync(int id)
         {
-            var material = await _repositoryMaterial.GetByIdAsync(id) ??
+            var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             var user = await _executionContext.GetCurrentUserAsync();
 
             // Удалить материал может только администратор или владелец материала.
-            if (user.IsNotAdmin() && material.OwnerId != user.Id)
+            if (user.IsNotAdmin() && !new MaterialsByOwnerId(user.Id).IsSatisfiedBy(material))
                 throw _exceptionFactory.NoAccess();
 
             await _repositoryMaterial.RemoveAsync(material, true);
@@ -111,13 +122,13 @@ namespace EducationSystem.Implementations.Services
         {
             await _validatorMaterial.ValidateAsync(material.Format());
 
-            var model = await _repositoryMaterial.GetByIdAsync(id) ??
+            var model = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
 
             var user = await _executionContext.GetCurrentUserAsync();
 
             // Изменить материал может только владелец материала.
-            if (model.OwnerId != user.Id)
+            if (!new MaterialsByOwnerId(user.Id).IsSatisfiedBy(model))
                 throw _exceptionFactory.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseMaterial>(material), model);
