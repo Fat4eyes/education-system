@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
@@ -14,5 +15,7 @@ namespace EducationSystem.Interfaces.Managers
         Task DeleteQuestionAsync(int id);
         Task UpdateQuestionAsync(int id, Question question);
         Task<int> CreateQuestionAsync(Question question);
+
+        Task UpdateThemeQuestionsAsync(int id, List<Question> questions);
     }
 }

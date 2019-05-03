@@ -32,7 +32,7 @@ namespace EducationSystem.Implementations.Managers
             if (CurrentUser.IsLecturer())
                 return await _serviceTest.GetLecturerTestsAsync(CurrentUser.Id, filter);
 
-            if (CurrentUser.IsAdmin())
+            if (CurrentUser.IsStudent())
                 return await _serviceTest.GetStudentTestsAsync(CurrentUser.Id, filter);
 
             throw ExceptionFactory.NoAccess();
@@ -46,7 +46,7 @@ namespace EducationSystem.Implementations.Managers
             if (CurrentUser.IsLecturer())
                 return await _serviceTest.GetLecturerTestAsync(id, CurrentUser.Id);
 
-            if (CurrentUser.IsAdmin())
+            if (CurrentUser.IsStudent())
                 return await _serviceTest.GetStudentTestAsync(id, CurrentUser.Id);
 
             throw ExceptionFactory.NoAccess();

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
@@ -16,5 +17,7 @@ namespace EducationSystem.Interfaces.Services
         Task DeleteThemeAsync(int id);
         Task UpdateThemeAsync(int id, Theme theme);
         Task<int> CreateThemeAsync(Theme theme);
+
+        Task UpdateDisciplineThemesAsync(int id, List<Theme> themes);
     }
 }

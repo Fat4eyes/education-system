@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
@@ -23,6 +24,7 @@ namespace EducationSystem.Implementations.Services
         private readonly IExceptionFactory _exceptionFactory;
         private readonly IExecutionContext _executionContext;
         private readonly IRepository<DatabaseTheme> _repositoryTheme;
+        private readonly IRepository<DatabaseDiscipline> _repositoryDiscipline;
 
         public ServiceTheme(
             IMapper mapper,
@@ -31,7 +33,8 @@ namespace EducationSystem.Implementations.Services
             IValidator<Theme> validatorTheme,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
-            IRepository<DatabaseTheme> repositoryTheme)
+            IRepository<DatabaseTheme> repositoryTheme,
+            IRepository<DatabaseDiscipline> repositoryDiscipline)
             : base(mapper, logger)
         {
             _helperUserRole = helperUserRole;
@@ -39,6 +42,7 @@ namespace EducationSystem.Implementations.Services
             _exceptionFactory = exceptionFactory;
             _executionContext = executionContext;
             _repositoryTheme = repositoryTheme;
+            _repositoryDiscipline = repositoryDiscipline;
         }
 
         public async Task<PagedData<Theme>> GetThemesAsync(FilterTheme filter)
@@ -112,6 +116,31 @@ namespace EducationSystem.Implementations.Services
             await _repositoryTheme.AddAsync(model, true);
 
             return model.Id;
+        }
+
+        public async Task UpdateDisciplineThemesAsync(int id, List<Theme> themes)
+        {
+            var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
+                throw _exceptionFactory.NotFound<DatabaseDiscipline>(id);
+
+            var user = await _executionContext.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && !new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline))
+                throw _exceptionFactory.NoAccess();
+
+            var ids = themes.Select(x => x.Id).ToArray();
+
+            var models = await _repositoryTheme.FindAllAsync(new ThemesByIds(ids));
+
+            models.ForEach(x =>
+            {
+                var theme = themes.FirstOrDefault(y => y.Id == x.Id);
+
+                if (theme?.Order != null)
+                    x.Order = theme.Order.Value;
+            });
+
+            await _repositoryTheme.UpdateAsync(models, true);
         }
 
         public async Task UpdateThemeAsync(int id, Theme theme)

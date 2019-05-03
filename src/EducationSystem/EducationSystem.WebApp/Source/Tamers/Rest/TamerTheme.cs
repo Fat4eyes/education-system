@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
@@ -63,6 +64,13 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public async Task<IActionResult> GetThemeQuestions([FromRoute] int id, [FromQuery] FilterQuestion filter)
         {
             return await Ok(() => _managerQuestion.GetQuestionsAsync(filter.SetThemeId(id)));
+        }
+
+        [HttpPut("{id:int}/Questions")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> UpdateThemeQuestions([FromRoute] int id, [FromBody] List<Question> questions)
+        {
+            return await Ok(() => _managerQuestion.UpdateThemeQuestionsAsync(id, questions));
         }
     }
 }

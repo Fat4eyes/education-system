@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Managers;
@@ -68,6 +69,14 @@ namespace EducationSystem.Implementations.Managers
                 return await _serviceTheme.CreateThemeAsync(theme);
 
             throw ExceptionFactory.NoAccess();
+        }
+
+        public async Task UpdateDisciplineThemesAsync(int id, List<Theme> themes)
+        {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
+            await _serviceTheme.UpdateDisciplineThemesAsync(id, themes);
         }
     }
 }

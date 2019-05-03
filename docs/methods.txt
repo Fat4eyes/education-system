@@ -19,7 +19,8 @@
 [GET]    [*] [Filter] Api/Disciplines                   PagedData<Discipline>
 [GET]    [*]          Api/Disciplines/{Id}              Discipline
 [GET]    [*] [Filter] Api/Disciplines/{Id}/Test         PagedData<Test>
-[GET]    [*] [Filter] Api/Disciplines/{Id}/Themes       PagedData<Theme>
+[GET]    [A] [Filter] Api/Disciplines/{Id}/Themes       PagedData<Theme>
+[PUT]    [A]          Api/Disciplines/{Id}/Themes       -
 
 [GET]    [A] [Filter] Api/Materials                     PagedData<Material>
 [GET]    [*]          Api/Materials/{Id}                Material
@@ -43,6 +44,7 @@
 [GET]    [A] [Filter] Api/Themes                        PagedData<Theme>
 [GET]    [A]          Api/Themes/{Id}                   Question
 [GET]    [A] [Filter] Api/Themes/{Id}/Questions         PagedData<Question>
+[PUT]    [A]          Api/Themes/{Id}/Questions         -
 [POST]   [A]          Api/Themes                        Int (Id)
 [PUT]    [A]          Api/Themes/{Id}                   -
 [DELETE] [A]          Api/Themes/{Id}                   -

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
-using EducationSystem.Interfaces.Services;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 

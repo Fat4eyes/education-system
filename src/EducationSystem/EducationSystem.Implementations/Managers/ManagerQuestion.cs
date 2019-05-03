@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Managers;
@@ -68,6 +69,14 @@ namespace EducationSystem.Implementations.Managers
                 return await _serviceQuestion.CreateQuestionAsync(question);
 
             throw ExceptionFactory.NoAccess();
+        }
+
+        public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
+        {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
+            await _serviceQuestion.UpdateThemeQuestionsAsync(id, questions);
         }
     }
 }

@@ -25,6 +25,7 @@ namespace EducationSystem.Implementations.Services
         private readonly IExceptionFactory _exceptionFactory;
         private readonly IExecutionContext _executionContext;
 
+        private readonly IRepository<DatabaseTheme> _repositoryTheme;
         private readonly IRepository<DatabaseAnswer> _repositoryAnswer;
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
         private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
@@ -37,6 +38,7 @@ namespace EducationSystem.Implementations.Services
             IValidator<Question> validatorQuestion,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
+            IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseAnswer> repositoryAnswer,
             IRepository<DatabaseProgram> repositoryProgram,
             IRepository<DatabaseQuestion> repositoryQuestion,
@@ -47,6 +49,7 @@ namespace EducationSystem.Implementations.Services
             _validatorQuestion = validatorQuestion;
             _exceptionFactory = exceptionFactory;
             _executionContext = executionContext;
+            _repositoryTheme = repositoryTheme;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -133,6 +136,31 @@ namespace EducationSystem.Implementations.Services
             await _repositoryQuestion.AddAsync(model, true);
 
             return model.Id;
+        }
+
+        public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
+        {
+            var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
+                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
+
+            var user = await _executionContext.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && !new ThemesByLecturerId(user.Id).IsSatisfiedBy(theme))
+                throw _exceptionFactory.NoAccess();
+
+            var ids = questions.Select(x => x.Id).ToArray();
+
+            var models = await _repositoryQuestion.FindAllAsync(new QuestionsByIds(ids));
+
+            models.ForEach(x =>
+            {
+                var question = questions.FirstOrDefault(y => y.Id == x.Id);
+
+                if (question?.Order != null)
+                    x.Order = question.Order.Value;
+            });
+
+            await _repositoryQuestion.UpdateAsync(models, true);
         }
 
         public async Task UpdateQuestionAsync(int id, Question question)

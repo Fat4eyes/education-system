@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Interfaces.Managers;
 using EducationSystem.Models.Filters;
+using EducationSystem.Models.Rest;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,10 +48,17 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet("{id:int}/Themes")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetDisciplineThemes([FromRoute] int id, [FromQuery] FilterTheme filter)
         {
             return await Ok(() => _managerTheme.GetThemesAsync(filter.SetDisciplineId(id)));
+        }
+
+        [HttpPut("{id:int}/Themes")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        public async Task<IActionResult> UpdateDisciplineThemes([FromRoute] int id, [FromBody] List<Theme> themes)
+        {
+            return await Ok(() => _managerTheme.UpdateDisciplineThemesAsync(id, themes));
         }
     }
 }
