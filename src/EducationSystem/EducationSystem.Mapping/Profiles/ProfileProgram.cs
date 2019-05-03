@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Mapping.Resolvers;
 using EducationSystem.Models.Rest;
+using EducationSystem.Resolvers;
 
 namespace EducationSystem.Mapping.Profiles
 {

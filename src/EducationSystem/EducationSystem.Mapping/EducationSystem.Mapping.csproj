@@ -10,8 +10,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
-    <ProjectReference Include="..\EducationSystem.Implementations\EducationSystem.Implementations.csproj" />
+    <ProjectReference Include="..\EducationSystem.Helpers\EducationSystem.Helpers.csproj" />
     <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Resolvers\EducationSystem.Resolvers.csproj" />
   </ItemGroup>
 
 </Project>

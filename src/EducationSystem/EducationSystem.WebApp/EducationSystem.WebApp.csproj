@@ -17,6 +17,7 @@
     <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
     <ProjectReference Include="..\EducationSystem.Dependencies\EducationSystem.Dependencies.csproj" />
     <ProjectReference Include="..\EducationSystem.Mapping\EducationSystem.Mapping.csproj" />
+    <ProjectReference Include="..\EducationSystem.Resolvers\EducationSystem.Resolvers.csproj" />
   </ItemGroup>
 
   <ItemGroup>

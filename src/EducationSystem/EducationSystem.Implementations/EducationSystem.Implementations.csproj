@@ -18,6 +18,7 @@
     <ProjectReference Include="..\EducationSystem.Enums\EducationSystem.Enums.csproj" />
     <ProjectReference Include="..\EducationSystem.Exceptions\EducationSystem.Exceptions.csproj" />
     <ProjectReference Include="..\EducationSystem.Extensions\EducationSystem.Extensions.csproj" />
+    <ProjectReference Include="..\EducationSystem.Helpers\EducationSystem.Helpers.csproj" />
     <ProjectReference Include="..\EducationSystem.Interfaces\EducationSystem.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
   </ItemGroup>

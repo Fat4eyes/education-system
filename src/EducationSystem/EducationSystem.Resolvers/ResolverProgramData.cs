@@ -4,7 +4,7 @@ using EducationSystem.Database.Models;
 using EducationSystem.Interfaces;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Mapping.Resolvers
+namespace EducationSystem.Resolvers
 {
     public sealed class ResolverProgramData : Resolver, IValueResolver<DatabaseProgram, Program, List<ProgramData>>
     {

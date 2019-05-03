@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using EducationSystem.Extensions;
+﻿using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Mapping.Resolvers
+namespace EducationSystem.Resolvers
 {
     public abstract class Resolver
     {

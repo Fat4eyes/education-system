@@ -5,7 +5,7 @@ using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Mapping.Resolvers
+namespace EducationSystem.Resolvers
 {
     public sealed class ResolverQuestionAnswers : Resolver, IValueResolver<DatabaseQuestion, Question, List<Answer>>
     {
