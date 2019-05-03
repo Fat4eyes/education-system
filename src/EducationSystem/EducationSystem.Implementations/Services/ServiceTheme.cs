@@ -136,7 +136,7 @@ namespace EducationSystem.Implementations.Services
             {
                 var theme = themes.FirstOrDefault(y => y.Id == x.Id);
 
-                if (theme?.Order != null)
+                if (theme?.Order != null && new ThemesByDisciplineId(discipline.Id).IsSatisfiedBy(x))
                     x.Order = theme.Order.Value;
             });
 

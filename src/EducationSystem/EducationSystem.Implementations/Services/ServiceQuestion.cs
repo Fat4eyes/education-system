@@ -156,7 +156,7 @@ namespace EducationSystem.Implementations.Services
             {
                 var question = questions.FirstOrDefault(y => y.Id == x.Id);
 
-                if (question?.Order != null)
+                if (question?.Order != null && new QuestionsByThemeId(theme.Id).IsSatisfiedBy(x))
                     x.Order = question.Order.Value;
             });
 
