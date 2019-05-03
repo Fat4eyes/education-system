@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using EducationSystem.Database.Models.Basics;
 
 namespace EducationSystem.Database.Models
 {
     [Table("profile_discipline")]
-    public class DatabaseStudyProfileDiscipline
+    public class DatabaseStudyProfileDiscipline : DatabaseModel
     {
         [Column("discipline_id")]
         public virtual int DisciplineId { get; set; }
