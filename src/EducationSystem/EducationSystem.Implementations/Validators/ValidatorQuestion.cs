@@ -75,11 +75,11 @@ namespace EducationSystem.Implementations.Validators
                 var image = await _repositoryFile.FindFirstAsync(new FilesById(model.Image.Id)) ??
                     throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
 
-                if (new FilesByOwnerId(user.Id).IsSatisfiedBy(image) == false)
-                    throw ExceptionHelper.CreatePublicException("Указанное изображение недоступно.");
-
                 if (await _helperFile.FileExistsAsync(model.Image) == false)
                     throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
+
+                if (new FilesByOwnerId(user.Id).IsSatisfiedBy(image) == false)
+                    throw ExceptionHelper.CreatePublicException("Указанное изображение недоступно.");
             }
 
             if (model.Material != null)

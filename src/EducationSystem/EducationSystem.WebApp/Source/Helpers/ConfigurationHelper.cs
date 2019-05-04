@@ -29,9 +29,12 @@ namespace EducationSystem.WebApp.Source.Helpers
                 .GetAssemblies()
                 .ToList();
 
+            assemblies.Add(typeof(MappingConfigurator).Assembly);
             assemblies.Add(typeof(Resolver).Assembly);
 
-            return assemblies.ToArray();
+            return assemblies
+                .Distinct()
+                .ToArray();
         }
 
         public static string GetConfigurationFileName(IHostingEnvironment environment)
