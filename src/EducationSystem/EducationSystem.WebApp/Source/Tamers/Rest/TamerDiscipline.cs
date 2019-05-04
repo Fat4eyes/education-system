@@ -55,7 +55,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpPut("{id:int}/Themes")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateDisciplineThemes([FromRoute] int id, [FromBody] List<Theme> themes)
         {
             return await Ok(() => _managerTheme.UpdateDisciplineThemesAsync(id, themes));

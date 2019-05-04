@@ -60,6 +60,13 @@ namespace EducationSystem.Implementations.Factories
                     $"Тест не найден.");
             }
 
+            if (typeof(TModel) == typeof(DatabaseProgram) || typeof(TModel) == typeof(Program))
+            {
+                throw ExceptionHelper.CreateNotFoundException(
+                    $"Программа не найдена. Идентификатор программы: {id}.",
+                    $"Программа не найдена.");
+            }
+
             throw ExceptionHelper.CreateException($"Модель типа '{typeof(TModel)}' не поддерживается.");
         }
 

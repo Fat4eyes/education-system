@@ -125,7 +125,7 @@ namespace EducationSystem.Implementations.Services
 
             var user = await _executionContext.GetCurrentUserAsync();
 
-            if (user.IsNotAdmin() && !new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline))
+            if (!new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline))
                 throw _exceptionFactory.NoAccess();
 
             var ids = themes.Select(x => x.Id).ToArray();

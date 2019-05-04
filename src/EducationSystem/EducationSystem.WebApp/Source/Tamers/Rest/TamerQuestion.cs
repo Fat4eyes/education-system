@@ -34,7 +34,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpPost]
         [Transaction]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> CreateQuestion([FromBody] Question question)
         {
             return await Ok(() => _managerQuestion.CreateQuestionAsync(question));
@@ -42,7 +42,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPut("{id:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateQuestion([FromRoute] int id, [FromBody] Question question)
         {
             return await Ok(() => _managerQuestion.UpdateQuestionAsync(id, question));

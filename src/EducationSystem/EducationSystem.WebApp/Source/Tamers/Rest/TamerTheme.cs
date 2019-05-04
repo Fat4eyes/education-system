@@ -37,7 +37,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpPost]
         [Transaction]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> CreateTheme([FromBody] Theme theme)
         {
             return await Ok(() => _managerTheme.CreateThemeAsync(theme));
@@ -45,7 +45,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPut("{id:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateTheme([FromRoute] int id, [FromBody] Theme theme)
         {
             return await Ok(() => _managerTheme.UpdateThemeAsync(id, theme));
@@ -67,7 +67,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpPut("{id:int}/Questions")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateThemeQuestions([FromRoute] int id, [FromBody] List<Question> questions)
         {
             return await Ok(() => _managerQuestion.UpdateThemeQuestionsAsync(id, questions));

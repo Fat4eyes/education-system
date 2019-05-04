@@ -44,8 +44,12 @@ namespace EducationSystem.Implementations
         private async Task<User> GetCurrentUserInternalAsync()
         {
             var value = _accessor.HttpContext?.User?.Claims?
-                .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ??
-                    throw new ApplicationException("Не удалось получить идентификатор пользователя.");
+                .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?
+                .Value;
+
+            // Случай для неавторизованного пользователя.
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
 
             var userId = Convert.ToInt32(value);
 

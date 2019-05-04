@@ -62,7 +62,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task UpdateTestAsync(int id, Test test)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            if (CurrentUser.IsNotLecturer())
                 throw ExceptionFactory.NoAccess();
 
             await _serviceTest.UpdateTestAsync(id, test);
@@ -70,7 +70,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<int> CreateTestAsync(Test test)
         {
-            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer())
+            if (CurrentUser.IsLecturer())
                 return await _serviceTest.CreateTestAsync(test);
 
             throw ExceptionFactory.NoAccess();

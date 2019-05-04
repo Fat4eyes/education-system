@@ -39,6 +39,7 @@ namespace EducationSystem.Dependencies
 
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IExceptionFactory, ExceptionFactory>();
+            collection.AddTransient<ICodeExecutor, CodeExecutor>();
 
             collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

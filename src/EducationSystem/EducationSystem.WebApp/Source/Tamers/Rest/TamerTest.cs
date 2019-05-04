@@ -36,7 +36,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpPost]
         [Transaction]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> CreateTest([FromBody] Test test)
         {
             return await Ok(() => _managerTest.CreateTestAsync(test));
@@ -44,7 +44,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPut("{id:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateTest([FromRoute] int id, [FromBody] Test test)
         {
             return await Ok(() => _managerTest.UpdateTestAsync(id, test));

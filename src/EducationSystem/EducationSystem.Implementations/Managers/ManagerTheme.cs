@@ -57,7 +57,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task UpdateThemeAsync(int id, Theme theme)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            if (CurrentUser.IsNotLecturer())
                 throw ExceptionFactory.NoAccess();
 
             await _serviceTheme.UpdateThemeAsync(id, theme);
@@ -65,7 +65,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<int> CreateThemeAsync(Theme theme)
         {
-            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer())
+            if (CurrentUser.IsLecturer())
                 return await _serviceTheme.CreateThemeAsync(theme);
 
             throw ExceptionFactory.NoAccess();
@@ -73,7 +73,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task UpdateDisciplineThemesAsync(int id, List<Theme> themes)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            if (CurrentUser.IsNotLecturer())
                 throw ExceptionFactory.NoAccess();
 
             await _serviceTheme.UpdateDisciplineThemesAsync(id, themes);

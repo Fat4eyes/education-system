@@ -57,7 +57,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task UpdateQuestionAsync(int id, Question question)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            if (CurrentUser.IsNotLecturer())
                 throw ExceptionFactory.NoAccess();
 
             await _serviceQuestion.UpdateQuestionAsync(id, question);
@@ -65,7 +65,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task<int> CreateQuestionAsync(Question question)
         {
-            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer())
+            if (CurrentUser.IsLecturer())
                 return await _serviceQuestion.CreateQuestionAsync(question);
 
             throw ExceptionFactory.NoAccess();
@@ -73,7 +73,7 @@ namespace EducationSystem.Implementations.Managers
 
         public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            if (CurrentUser.IsNotLecturer())
                 throw ExceptionFactory.NoAccess();
 
             await _serviceQuestion.UpdateThemeQuestionsAsync(id, questions);

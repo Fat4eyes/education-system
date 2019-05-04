@@ -18,6 +18,7 @@ namespace EducationSystem.Mapping
             expression.AddProfile<ProfileProgramData>();
             expression.AddProfile<ProfileRole>();
             expression.AddProfile<ProfileFile>();
+            expression.AddProfile<ProfileCode>();
 
             expression.AllowNullCollections = true;
             expression.ForAllMaps(Configure);
