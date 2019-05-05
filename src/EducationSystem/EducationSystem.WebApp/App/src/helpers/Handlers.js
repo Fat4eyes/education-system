@@ -2,7 +2,10 @@ const capitalize = (str = '') => str.slice(0, 1).toUpperCase() + str.slice(1).to
 
 const getInitials = (str = '') => str && `${str.slice(0, 1)}.`
 
-export const getFullName = ({LastName, FirstName, MiddleName}, withInitials) => {
+export const getFullName = (user, withInitials) => {
+  if (!user) return '' 
+  
+  let {LastName, FirstName, MiddleName} = user
   LastName = capitalize(LastName || '')
   FirstName = capitalize(FirstName || '')
   MiddleName = capitalize(MiddleName || '')

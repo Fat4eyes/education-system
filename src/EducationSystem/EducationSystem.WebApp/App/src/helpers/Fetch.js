@@ -3,17 +3,18 @@ import Exception from './Exception'
 class Fetch {
   static _fetch = null
 
-  constructor(spinnerProvider) {
+  constructor(spinnerProvider, errorHandler) {
     Fetch._fetch = this
     this._spinnerProvider = spinnerProvider
+    this._errorHandler = errorHandler
   }
   
-  static instance(spinnerProvider) {
-    return Fetch._fetch || new Fetch(spinnerProvider)
+  static instance(spinnerProvider, errorHandler) {
+    return Fetch._fetch || new Fetch(spinnerProvider, errorHandler)
   }
 
   static async handleFetch(url, options, onError) {
-    const {_spinnerProvider} = Fetch.instance()
+    const {_spinnerProvider, _errorHandler} = Fetch.instance()
     
     try {
       if (_spinnerProvider) _spinnerProvider.enable()
@@ -28,7 +29,7 @@ class Fetch {
       if (_spinnerProvider) _spinnerProvider.disable()
 
       if (Success === true)
-        return Data
+        return Data || true
 
       throw Error
 
@@ -38,15 +39,18 @@ class Fetch {
         if (e[e.length - 1] === '.') {
           e = e.slice(0, -1)
         }
-
+        
         if (onError) {
           onError(e)
+          return null
         } else {
+          if (typeof _errorHandler === 'function') {
+            _errorHandler(e)
+            return null
+          }
           return new Exception(e)
         }
       }
-
-      console.log(Error)
 
       if (_spinnerProvider) _spinnerProvider.disable()
 

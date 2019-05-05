@@ -1,18 +1,18 @@
 import * as React from 'react'
 import {ChangeEvent, Component} from 'react'
-import {Button, Collapse, Grid, Paper, TextField, Typography, withStyles, WithStyles} from '@material-ui/core'
+import {Button, Collapse, Grid, TextField, Typography, withStyles, WithStyles} from '@material-ui/core'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import MaterialStyles from './MaterialStyles'
-import IFileService from '../../../services/abstractions/IFileService'
+import IFileService from '../../../services/FileService'
 import {inject} from '../../../infrastructure/di/inject'
 import Material from '../../../models/Material'
 import DocumentFile from '../../../models/DocumentFile'
 import FileUpload from '../../stuff/FileUpload'
 import {FileType} from '../../../common/enums'
 import MaterialEditor from '../../MaterialEditor/MaterialEditor'
-import IMaterialService from '../../../services/abstractions/IMaterialService'
-import {Exception} from '../../../helpers'
+import IMaterialService from '../../../services/MaterialService'
 import Block from '../../Blocks/Block'
+import INotificationService from '../../../services/NotificationService'
 
 interface IProps {
   match?: {
@@ -33,11 +33,9 @@ interface IState {
 
 
 class MaterialHandling extends Component<TProps, IState> {
-  @inject
-  private FileService?: IFileService
-
-  @inject
-  private MaterialService?: IMaterialService
+  @inject private FileService?: IFileService
+  @inject private MaterialService?: IMaterialService
+  @inject private NotificationService?: INotificationService
 
   constructor(props: TProps) {
     super(props)
@@ -53,25 +51,17 @@ class MaterialHandling extends Component<TProps, IState> {
     if (!this.props.match || !this.props.match.params.id) return
 
     this.setState({IsLoading: true}, async () => {
-      let result = await this.MaterialService!.get(this.props.match!.params.id!)
+      const {data, success} = await this.MaterialService!.get(this.props.match!.params.id!)
 
-      if (result instanceof Exception) {
-        return this.props.enqueueSnackbar(result.message, {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'right'
-          }
+      if (success && data) {
+        this.setState({
+          Model: {
+            Files: [],
+            ...data
+          },
+          IsLoading: false
         })
       }
-
-      this.setState({
-        Model: {
-          Files: [],
-          ...result
-        },
-        IsLoading: false
-      })
     })
   }
 
@@ -107,36 +97,22 @@ class MaterialHandling extends Component<TProps, IState> {
   }
 
   handleSubmit = async () => {
-    let result: Material | Exception
+    let material = this.state.Model
+
+    let result = false
     if (this.state.Model.Id) {
-      result = await this.MaterialService!.update(this.state.Model)
+      result = await this.MaterialService!.update(material)
+      result && this.NotificationService!.showSuccess(`Материал успешно обновлен`)
     } else {
-      result = await this.MaterialService!.add(this.state.Model)
+      const {data, success} = await this.MaterialService!.add(material)
+      if (data && success) {
+        result = success
+        material.Id = data
+        this.NotificationService!.showSuccess(`Материал успешно добавлен`)
+      }
     }
 
-    if (result instanceof Exception) {
-      return this.props.enqueueSnackbar(result.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-    }
-
-    if ((result as Material).Id) {
-      this.props.enqueueSnackbar(this.props.match && this.props.match.params.id
-        ? `Материал успешно обновлен`
-        : `Материал успешно добавлен`, {
-        variant: 'success',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-      
-      this.props.onMaterialSave && this.props.onMaterialSave(result)
-    }
+    result && this.props.onMaterialSave && this.props.onMaterialSave(material)
   }
 
   render(): React.ReactNode {
@@ -164,10 +140,10 @@ class MaterialHandling extends Component<TProps, IState> {
           <Collapse timeout={500} in={this.state.IsMaterialEditorOpen}>
             <Grid item xs={12} container spacing={16}>
               {!this.state.IsLoading &&
-                <MaterialEditor
-                  export={(html: string) => this.handleModel({target: {name: 'Template', value: html}})}
-                  import={this.state.Model.Template}
-                />
+              <MaterialEditor
+                export={(html: string) => this.handleModel({target: {name: 'Template', value: html}})}
+                import={this.state.Model.Template}
+              />
               }
             </Grid>
           </Collapse>

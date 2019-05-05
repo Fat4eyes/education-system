@@ -1,14 +1,16 @@
-const TestsTableStyles = theme => {
+import {createStyles, Theme} from '@material-ui/core'
+
+const TestsTableStyles = (theme: Theme) => {
   const userSelectNone = {
     '-webkit-touch-callout': 'none',
     '-webkit-user-select': 'none',
     '-khtml-user-select': 'none',
     '-moz-user-select': 'none',
     '-ms-user-select': 'none',
-    'user-select': 'none' 
+    'user-select': 'none'
   }
   
-  return ({
+  return createStyles({
     main: {
       [theme.breakpoints.down('md')]: {
         flexDirection: 'row'
@@ -18,9 +20,16 @@ const TestsTableStyles = theme => {
       }
 
     },
+    header: {
+      backgroundColor: theme.palette.primary.main,
+      padding: `${theme.spacing.unit}px ${theme.spacing.unit * 3}px !important`,
+      color: theme.palette.primary.contrastText
+    },
+    headerText: {
+      color: theme.palette.primary.contrastText
+    },
     paper: {
       padding: theme.spacing.unit * 4.5,
-      // backgroundColor: theme.palette.grey['50']
     },
     loading: {
       width: 100,
@@ -60,6 +69,23 @@ const TestsTableStyles = theme => {
     },
     content: {
       margin: `${theme.spacing.unit * 3}px 0`
+    },
+    rowDetails: {
+      backgroundColor: theme.palette.grey['50'],
+      padding: `${theme.spacing.unit * 2}px`,
+      borderBottom: `1px solid`,
+      borderBottomColor: theme.palette.grey['500'],
+    },
+    rowDetailsHeader: {
+      color: theme.palette.primary.main
+    },
+    modal: {
+      position: 'absolute',
+      width: 300,
+      top: `50%`,
+      left: `50%`,
+      transform: `translate(-50%, -50%)`,
+      padding: 1
     }
   })
 }

@@ -1,25 +1,29 @@
 import React, {Suspense} from 'react'
 import ReactDOM from 'react-dom'
 import {Router} from 'react-router-dom'
-import {MuiThemeProvider} from '@material-ui/core/styles'
-import {SnackbarProvider} from 'notistack'
-import AuthProvider from './providers/AuthProvider/AuthProvider'
 import {Loading, Try} from './components/core'
 import {blue, edo, grey, purpure} from './themes'
 import {unregister} from './serviceWorker'
-import './index.less'
 import history from './history'
 import Container from './infrastructure/di/Container'
-import TestService from './services/implementations/TestService'
-import DisciplineService from './services/implementations/DisciplineService'
-import ThemeService from './services/implementations/ThemeService'
-import QuestionService from './services/implementations/QuestionService'
-import FileService from './services/implementations/FileService'
-import MaterialService from './services/implementations/MaterialService'
-import NotificationProvider from './providers/NotificationProvider'
-import StudentService from './services/implementations/StudentService'
-import SpinnerProvider, {SpinnerConsumer} from './providers/SpinnerProvider'
 import Fetch from './helpers/Fetch'
+//Providers
+import {MuiThemeProvider} from '@material-ui/core/styles'
+import {SnackbarProvider} from 'notistack'
+import SpinnerProvider, {SpinnerConsumer} from './providers/SpinnerProvider'
+import NotificationProvider, {NotificationConsumer} from './providers/NotificationProvider'
+import AuthProvider from './providers/AuthProvider/AuthProvider'
+//Services
+import {TestService} from './services/TestService'
+import {DisciplineService} from './services/DisciplineService'
+import {ThemeService} from './services/ThemeService'
+import {QuestionService} from './services/QuestionService'
+import {FileService} from './services/FileService'
+import {MaterialService} from './services/MaterialService'
+import {NotificationService} from './services/NotificationService'
+import {UserService} from './services/UserService'
+
+import './index.less'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -36,8 +40,7 @@ Container.getContainer()
   .transient(QuestionService, 'QuestionService')
   .transient(FileService, 'FileService')
   .transient(MaterialService, 'MaterialService')
-  .transient(StudentService, 'StudentService')
-  .setUp()
+  .transient(UserService, 'UserService')
 
 let themes = [purpure(), blue(), edo(), grey()]
 
@@ -47,9 +50,17 @@ const App = () => <Try>
       <SnackbarProvider maxSnack={3}>
         <NotificationProvider>
           <SpinnerProvider>
-            <SpinnerConsumer>
-              {spinner => Fetch.instance(spinner) && <></>}
-            </SpinnerConsumer>
+            <NotificationConsumer>
+              {notify => {
+                Container.getContainer().singleton(NotificationService, 'NotificationService', [notify]).setUp()
+                return <SpinnerConsumer>
+                  {spinner => {
+                    Fetch.instance(spinner, notify.error)
+                    return <></>
+                  }}
+                </SpinnerConsumer>
+              }}
+            </NotificationConsumer>
             <AuthProvider>
               <Suspense fallback={<Loading/>}>
                 <Layout/>

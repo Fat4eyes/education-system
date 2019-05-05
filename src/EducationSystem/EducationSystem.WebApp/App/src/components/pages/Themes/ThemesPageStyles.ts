@@ -41,6 +41,14 @@ const ThemesPageStyles = (theme: Theme) => createStyles({
   },
   mt2Unit: {
     marginTop: theme.spacing.unit * 2
+  },
+  modal: {
+    position: 'absolute',
+    width: 300,
+    top: `50%`,
+    left: `50%`,
+    transform: `translate(-50%, -50%)`,
+    padding: 1
   }
 })
 

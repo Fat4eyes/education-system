@@ -52,9 +52,12 @@ const TablePagination = (props) => {
       }
       <Grid item xs/>
       <Grid item>
-        <Typography variant='body1' className={classes.typography}>
-          {`${page + 1} из ${~~(count.all / count.perPage) + 1}`}
-        </Typography>
+        {
+          count.all > count.perPage &&
+          <Typography variant='body1' className={classes.typography}>
+            {`${page + 1} из ${~~(count.all / count.perPage) + (count.all % count.perPage ? 1 : 0)}`}
+          </Typography>
+        }
       </Grid>
       {
         showChangeCountPerPageBlock &&

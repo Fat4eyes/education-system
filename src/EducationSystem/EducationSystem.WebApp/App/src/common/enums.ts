@@ -31,3 +31,5 @@ export enum FileType {
   Image = 2,
   Document = 3
 }
+
+export type TUserRole = 'Admin' | 'Student' | 'Lecturer'

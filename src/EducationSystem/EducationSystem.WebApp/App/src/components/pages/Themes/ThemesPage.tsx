@@ -2,29 +2,30 @@ import * as React from 'react'
 import {ChangeEvent, Component, ComponentType} from 'react'
 import {Collapse, Grid, IconButton, TextField, Typography, withStyles, WithStyles} from '@material-ui/core'
 import {Breadcrumbs} from '@material-ui/lab'
-import {InjectedNotistackProps} from 'notistack'
 import ThemesPageStyles from './ThemesPageStyles'
 import DisciplineTable from '../../Table/DisciplineTable'
 import Discipline from '../../../models/Discipline'
 import {inject} from '../../../infrastructure/di/inject'
-import IDisciplineService from '../../../services/abstractions/IDisciplineService'
+import IDisciplineService from '../../../services/DisciplineService'
 import Theme from '../../../models/Theme'
-import IPagedData, {IPagingOptions} from '../../../models/PagedData'
+import {IPagingOptions} from '../../../models/PagedData'
 import RowHeader from '../../Table/RowHeader'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import ClearIcon from '@material-ui/icons/Clear'
-import IThemeService from '../../../services/abstractions/IThemeService'
+import IThemeService from '../../../services/ThemeService'
 import QuestionTable from '../../Table/QuestionTable'
 import {Redirect} from 'react-router'
 import Block from '../../Blocks/Block'
-import {resultHandler, voidHandler} from '../../../helpers/Exception'
 import {TNotifierProps, withNotifier} from '../../../providers/NotificationProvider'
 import {arrayMove, SortEnd} from 'react-sortable-hoc'
 import {SortableArrayContainer, SortableArrayItem} from '../../stuff/SortableArray'
 import classNames from 'classnames'
+import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider'
+import {TAuthProps} from '../../../providers/AuthProvider/AuthProviderTypes'
+import Modal from '../../stuff/Modal'
 
-type TProps = WithStyles<typeof ThemesPageStyles> & InjectedNotistackProps & TNotifierProps
+type TProps = WithStyles<typeof ThemesPageStyles> & TNotifierProps & TAuthProps
 
 interface IState {
   Items: Array<Theme>
@@ -36,13 +37,14 @@ interface IState {
   SelectedQuestionId?: number,
   ShowQuestionsBlock: boolean,
   NeedRedirect: boolean,
-  EditThemeId?: number
+  EditThemeId?: number,
+  DeleteThemeId?: number
 }
+
 
 class ThemesPage extends Component<TProps, IState> {
   @inject private DisciplineService?: IDisciplineService
   @inject private ThemeService?: IThemeService
-  private _resultHandler = resultHandler.onError(this.props.notifier.error)
 
   constructor(props: TProps) {
     super(props)
@@ -58,9 +60,13 @@ class ThemesPage extends Component<TProps, IState> {
   }
 
   getTableData = async (param: IPagingOptions = {All: true}) => {
-    this._resultHandler
-      .onSuccess((data: IPagedData<Theme>) => this.setState({Items: data.Items}))
-      .handleResult(await this.DisciplineService!.getThemes(this.state.Discipline!.Id!, param))
+    const {data, success} = await this.ThemeService!.getByDisciplineId(this.state.Discipline!.Id!, param)
+
+    if (success && data) {
+      data.Items.sort((a, b) => a.Order !== undefined && b.Order !== undefined && a.Order > b.Order ? 1 : -1)
+
+      this.setState({Items: data.Items})
+    }
   }
 
   handleChangeDiscipline = (discipline: Discipline) => {
@@ -104,40 +110,51 @@ class ThemesPage extends Component<TProps, IState> {
       }))
     },
     submit: async () => {
-      this._resultHandler
-        .onSuccess((result: Theme) => {
-          if (result.Id) {
-            this.props.notifier.success(`Тема "${result.Name}" успешно добавлена`)
-            this.setState({
-              ShowAddBlock: false,
-              Theme: new Theme(),
-              Items: [...this.state.Items, result as Theme]
-            })
-          }
+      if (!this.state.Theme) return
+
+      const theme = this.state.Theme
+      const {data, success} = await this.ThemeService!.add(theme)
+
+      if (success && data) {
+        this.props.notifier.success(`Тема "${theme.Name}" успешно добавлена`)
+        this.setState({
+          ShowAddBlock: false,
+          Theme: new Theme(),
+          Items: [...this.state.Items, theme]
         })
-        .handleResult(await this.ThemeService!.add(this.state.Theme!))
+      }
+
     },
-    delete: (theme: Theme) => async () => {
-      voidHandler
-        .onError(this.props.notifier.error)
-        .onSuccess(() => {
-          this.props.notifier.success(`Тема успешно удалена`)
-          this.setState(state => ({
-            Items: state.Items.filter((t: Theme) => t.Id !== theme.Id)
-          }))
-        })
-        .handleResult(await this.ThemeService!.delete(theme.Id!))
+    modal: (id?: number) => () => {
+      this.setState({
+        DeleteThemeId: id
+      })
+    },
+    delete: async () => {
+      const id = this.state.DeleteThemeId
+
+      this.handleTheme.modal()()
+
+      if (id && await this.ThemeService!.delete(id)) {
+        this.props.notifier.success(`Тема успешно удалена`)
+        this.setState(state => ({
+          Items: state.Items.filter((t: Theme) => t.Id !== id)
+        }))
+      }
     },
     sort: ({oldIndex, newIndex}: SortEnd) => {
-      if (oldIndex === newIndex) return
+      if (oldIndex === newIndex || !this.state.Discipline) return
 
-      this.setState({Items: arrayMove(this.state.Items, oldIndex, newIndex)},
-        async () => voidHandler
-          .onError(this.props.notifier.error)
-          .onSuccess()
-          .handleResult(await this.DisciplineService!
-            .updateDisciplineThemes(this.state.Discipline!.Id!, this.state.Items)
-          )
+      const themes = arrayMove(this.state.Items, oldIndex, newIndex)
+        .map((theme, index): Theme => ({...theme, Order: index}))
+
+      this.setState(
+        {Items: themes},
+        async () => {
+          if (this.state.Discipline && this.state.Discipline.Id) {
+            await this.ThemeService!.setOrder(this.state.Discipline.Id, themes)
+          }
+        }
       )
     },
     changeName: (theme: Theme) => ({target: {value}}: ChangeEvent<HTMLInputElement>) => {
@@ -150,16 +167,12 @@ class ThemesPage extends Component<TProps, IState> {
       })
     },
     update: (theme: Theme) => async () => {
-      this._resultHandler
-        .onSuccess((result: Theme) => {
-          if (result.Id) {
-            this.props.notifier.success(`Тема успешно обновлена`)
-            this.setState({
-              EditThemeId: undefined
-            })
-          }
+      if (await this.ThemeService!.update(theme)) {
+        this.props.notifier.success(`Тема успешно обновлена`)
+        this.setState({
+          EditThemeId: undefined
         })
-        .handleResult(await this.ThemeService!.update(theme))
+      }
     },
     handleKeyDown: (theme: Theme) => async ({key}: any) => {
       if (key === 'Enter') {
@@ -169,8 +182,9 @@ class ThemesPage extends Component<TProps, IState> {
   }
 
   render(): React.ReactNode {
-    const {classes} = this.props
+    const {classes, auth: {User}} = this.props
     const disciplineSelected = !!this.state.Discipline
+    const isLecturer = User && User.Roles && User.Roles.Lecturer
 
     if (this.state.NeedRedirect && this.state.SelectedThemeId)
       return <Redirect to={
@@ -194,7 +208,7 @@ class ThemesPage extends Component<TProps, IState> {
             >
           </Typography>
         }>
-          <Typography align='center' noWrap variant='subtitle1' 
+          <Typography align='center' noWrap variant='subtitle1'
                       className={classNames(classes.headerText, classes.breadcrumbs, {
                         [classes.breadcrumbsClickable]: disciplineSelected
                       })}
@@ -204,7 +218,7 @@ class ThemesPage extends Component<TProps, IState> {
           </Typography>
           {
             disciplineSelected &&
-            <Typography align='center' noWrap variant='subtitle1' 
+            <Typography align='center' noWrap variant='subtitle1'
                         className={classNames(classes.headerText, classes.breadcrumbs, {
                           [classes.breadcrumbsClickable]: this.state.SelectedThemeId
                         })}
@@ -218,7 +232,7 @@ class ThemesPage extends Component<TProps, IState> {
             </Typography>}
           {
             this.state.SelectedThemeId &&
-            <Typography align='center' noWrap variant='subtitle1' 
+            <Typography align='center' noWrap variant='subtitle1'
                         className={classNames(classes.headerText, classes.breadcrumbs)}>
               Вопросы
             </Typography>
@@ -239,78 +253,105 @@ class ThemesPage extends Component<TProps, IState> {
           </Grid>
           <Grid item xs={12}>
             <Collapse timeout={500} in={!this.state.ShowDisciplinesTable && !this.state.ShowQuestionsBlock}>
-              <Collapse timeout={500} in={!this.state.ShowAddBlock}>
-                <AddButton onClick={this.handleTheme.open}/>
-              </Collapse>
-              <Collapse timeout={500} in={this.state.ShowAddBlock}>
-                <Grid container>
-                  <Grid item xs>
-                    <TextField
-                      autoFocus
-                      label='Название темы'
-                      placeholder='Название темы'
-                      value={this.state.Theme!.Name}
-                      onChange={this.handleTheme.change}
-                      fullWidth
-                      margin='none'
-                    />
+              {
+                isLecturer && <>
+                  <Collapse timeout={500} in={!this.state.ShowAddBlock}>
+                    <AddButton onClick={this.handleTheme.open}/>
+                  </Collapse>
+                  <Collapse timeout={500} in={this.state.ShowAddBlock}>
+                    <Grid container>
+                      <Grid item xs>
+                        <TextField
+                          autoFocus
+                          label='Название темы'
+                          placeholder='Название темы'
+                          value={this.state.Theme!.Name}
+                          onChange={this.handleTheme.change}
+                          fullWidth
+                          margin='none'
+                        />
+                      </Grid>
+                      <Grid item>
+                        <IconButton onClick={this.handleTheme.submit}>
+                          <AddIcon/>
+                        </IconButton>
+                      </Grid>
+                      <Grid item>
+                        <IconButton onClick={this.handleTheme.close}>
+                          <ClearIcon/>
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Collapse>
+                </>
+              }
+              {
+                isLecturer &&
+                <SortableArrayContainer onSortEnd={this.handleTheme.sort} useDragHandle>
+                  {this.state.Items.map((theme: Theme, index: number) =>
+                    <SortableArrayItem key={theme.Id} index={index} value={
+                      <>
+                        {
+                          this.state.EditThemeId !== theme.Id
+                            ? <>
+                              <Grid item xs container zeroMinWidth alignItems='center'
+                                    onClick={() => this.handleTheme.select(theme.Id!)}
+                              >
+                                <Typography variant='subtitle1'>
+                                  {theme.Name}
+                                </Typography>
+                              </Grid>
+                              <EditIcon color='action' onClick={this.handleTheme.edit(theme.Id!)} fontSize='small'/>
+                            </>
+                            : <>
+                              <Grid item xs container wrap='nowrap' zeroMinWidth alignItems='center'
+                                    onKeyDown={this.handleTheme.handleKeyDown(theme)}
+                              >
+                                <TextField
+                                  autoFocus
+                                  value={theme.Name}
+                                  onChange={this.handleTheme.changeName(theme)}
+                                  fullWidth
+                                  margin='none'
+                                />
+                              </Grid>
+                              <AddIcon color='action' onClick={this.handleTheme.update(theme)}/>
+                            </>
+                        }
+                        <Grid item className={classes.mrUnit}/>
+                        <ClearIcon color='action' onClick={this.handleTheme.modal(theme.Id)}/>
+                      </>
+                    }/>
+                  )}
+                </SortableArrayContainer>
+              }
+              {
+                !isLecturer &&
+                this.state.Items.map((theme: Theme) =>
+                  <Grid item xs={12} container key={theme.Id}>
+                    <RowHeader>
+                      <Grid item xs container zeroMinWidth alignItems='center'
+                            onClick={() => this.handleTheme.select(theme.Id!)}
+                      >
+                        <Typography variant='subtitle1'>
+                          {theme.Name}
+                        </Typography>
+                      </Grid>
+                      <ClearIcon color='action' onClick={this.handleTheme.modal(theme.Id)}/>
+                    </RowHeader>
                   </Grid>
-                  <Grid item>
-                    <IconButton onClick={this.handleTheme.submit}>
-                      <AddIcon/>
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton onClick={this.handleTheme.close}>
-                      <ClearIcon/>
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Collapse>
-              <SortableArrayContainer onSortEnd={this.handleTheme.sort} useDragHandle>
-                {this.state.Items.map((theme: Theme, index: number) =>
-                  <SortableArrayItem key={theme.Id} index={index} value={
-                    <>
-                      {
-                        this.state.EditThemeId !== theme.Id
-                          ? <>
-                            <Grid item xs container zeroMinWidth alignItems='center'
-                                  onClick={() => this.handleTheme.select(theme.Id!)}
-                            >
-                              <Typography variant='subtitle1'>
-                                {theme.Name}
-                              </Typography>
-                            </Grid>
-                            <EditIcon color='action' onClick={this.handleTheme.edit(theme.Id!)} fontSize='small'/>
-                          </>
-                          : <>
-                            <Grid item xs container wrap='nowrap' zeroMinWidth alignItems='center'
-                                  onKeyDown={this.handleTheme.handleKeyDown(theme)}
-                            >
-                              <TextField
-                                autoFocus
-                                value={theme.Name}
-                                onChange={this.handleTheme.changeName(theme)}
-                                fullWidth
-                                margin='none'
-                              />
-                            </Grid>
-                            <AddIcon color='action' onClick={this.handleTheme.update(theme)}/>
-                          </>
-                      }
-                      <Grid item className={classes.mrUnit}/>
-                      <ClearIcon color='action' onClick={this.handleTheme.delete(theme)}/>
-                    </>
-                  }/>
-                )}
-              </SortableArrayContainer>
+                )
+              }
             </Collapse>
           </Grid>
           {
             this.state.SelectedThemeId && <>
-              <Grid item xs={12}>
-                <AddButton onClick={() => this.setState({NeedRedirect: true})}/>
-              </Grid>
+              {
+                isLecturer &&
+                <Grid item xs={12}>
+                  <AddButton onClick={() => this.setState({NeedRedirect: true})}/>
+                </Grid>
+              }
               <Grid item xs={12}>
                 <Collapse timeout={500} in={this.state.ShowQuestionsBlock}>
                   {
@@ -327,8 +368,14 @@ class ThemesPage extends Component<TProps, IState> {
           }
         </Block>
       </Grid>
+      <Modal
+        isOpen={!!this.state.DeleteThemeId}
+        onClose={this.handleTheme.modal()}
+        onYes={this.handleTheme.delete}
+        onNo={this.handleTheme.modal()}
+      />
     </Grid>
   }
 }
 
-export default withNotifier(withStyles(ThemesPageStyles)(ThemesPage)) as ComponentType<{}>
+export default withAuthenticated(withNotifier(withStyles(ThemesPageStyles)(ThemesPage))) as ComponentType<{}>

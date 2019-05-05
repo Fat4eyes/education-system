@@ -18,7 +18,8 @@ export const disciplineRoutes = {
 export const testRoutes = {
   getTests: `/api/tests`,
   getThemes: (id: number) => `/api/tests/${id}/themes`,
-  add: '/api/tests'
+  add: '/api/tests',
+  delete: (id: number) => `/api/tests/${id}`,
 }
 
 export const themeRoutes = {

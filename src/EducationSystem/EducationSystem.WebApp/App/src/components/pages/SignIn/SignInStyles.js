@@ -1,4 +1,4 @@
-const styles = theme => ({
+const styles = () => ({
   root: {
     paddingTop: '10vh',
   },

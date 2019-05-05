@@ -4,83 +4,100 @@ import Grid from '@material-ui/core/Grid'
 import Test from '../../../models/Test'
 import {
   Button,
-  Chip,
-  FormControl, FormControlLabel,
+  Chip, Collapse,
+  FormControl,
   Input,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   Step,
   StepContent,
   StepLabel,
-  Stepper, Switch,
+  Stepper,
   Typography,
   WithStyles,
   withStyles
 } from '@material-ui/core'
 import HandleTestStyles from './HandleTestStyles'
-import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import EditIcon from '@material-ui/icons/Edit'
-import {If, VTextField} from '../../core'
-import ITestService from '../../../services/abstractions/ITestService'
+import {VTextField} from '../../core'
 import {inject} from '../../../infrastructure/di/inject'
 import TotalTimeInput from './TotalTimeInput'
 import Theme from '../../../models/Theme'
 import {SelectProps} from '@material-ui/core/Select'
-import IDisciplineService from '../../../services/abstractions/IDisciplineService'
 import {TestType} from '../../../common/enums'
-import {Exception} from '../../../helpers'
-import IPagedData from '../../../models/PagedData'
 import Discipline from '../../../models/Discipline'
 import DisciplineTable from '../../Table/DisciplineTable'
 import Block from '../../Blocks/Block'
+import {RouteComponentProps} from 'react-router'
+import ITestService from '../../../services/TestService'
+import IThemeService from '../../../services/ThemeService'
+import INotificationService from '../../../services/NotificationService'
+import IDisciplineService from '../../../services/DisciplineService'
+import {Breadcrumbs} from '@material-ui/lab'
+import classNames from 'classnames'
+import {MtBlock} from '../../stuff/Margin'
 
-interface IProps extends WithStyles<typeof HandleTestStyles>, InjectedNotistackProps {
-  isEdit: boolean,
-  match: {
-    params: {
-      disciplineId: number
-    }
-  }
-}
+type RouteParam = { id: string }
+type TProps = WithStyles<typeof HandleTestStyles> & RouteComponentProps<RouteParam>
 
 interface IState {
   Model: Test,
   AvailableThemes: Array<Theme>,
   SelectedThemes: Array<number>,
-  step: number
+  ShowDisciplinesTable: boolean
 }
 
-const initState = {
+let initState = {
   Model: new Test(),
   AvailableThemes: [],
   SelectedThemes: [],
-  step: 0
+  ShowDisciplinesTable: true
 } as IState
 
-class HandleTest extends Component<IProps, IState> {
-  @inject
-  private TestService?: ITestService
+class HandleTest extends Component<TProps, IState> {
+  @inject private TestService?: ITestService
+  @inject private ThemeService?: IThemeService
+  @inject private DisciplineService?: IDisciplineService
+  @inject private NotificationService?: INotificationService
 
-  @inject
-  private DisciplineService?: IDisciplineService
-
-  constructor(props: IProps) {
+  constructor(props: TProps) {
     super(props)
 
     this.state = initState
     this.state.Model.TotalTime = 60
   }
   
-  handleModel = ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) => {
-    this.setState(state => ({
-      Model: {
-        ...state.Model,
-        [name]: value
-      }
-    }))
+  async componentDidMount() {
+    if (this.props.match.params.id) {
+      const {data, success} = await this.TestService!.get(Number(this.props.match.params.id))
+      
+      if (success && data && data.DisciplineId) {
+        let disciplinePromise = this.DisciplineService!.get(data.DisciplineId!)
+        let disciplineThemesPromise = this.ThemeService!.getByDisciplineId(data.DisciplineId!, {All: true})
+        let testThemesPromise = this.ThemeService!.getByTestId(data.Id!, {All: true})
+        
+        const {data: discipline} = await disciplinePromise
+        const {data: disciplineThemes} = await disciplineThemesPromise
+        const {data: testThemes} = await testThemesPromise
+        
+        if (discipline && disciplineThemes) {
+          data.Discipline = discipline
+          this.setState({
+            Model: data,
+            ShowDisciplinesTable: false,
+            AvailableThemes: disciplineThemes ? disciplineThemes.Items : [],
+            SelectedThemes: testThemes ? testThemes.Items.map(t => t.Id!) : []
+          })
+        } else {
+          this.setState({Model: data})
+        }
+      } 
+    } 
   }
+
+  handleModel = ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) =>
+    this.setState(state => ({Model: {...state.Model, [name]: value}}))
 
   handleSelect = ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) => {
     this.setState(state => ({
@@ -91,68 +108,35 @@ class HandleTest extends Component<IProps, IState> {
       SelectedThemes: [...value]
     }))
   }
-  
+
   handleChangeDiscipline = async (discipline: Discipline) => {
     if (discipline.Id !== this.state.Model.DisciplineId) {
-      let result = await this.DisciplineService!.getThemes(discipline.Id!)
+      const {data, success} = await this.ThemeService!.getByDisciplineId(discipline.Id!, {All: true})
 
-      if (result instanceof Exception) {
-        return this.props.enqueueSnackbar(result.message, {
-          variant: 'error',
-          anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'right'
-          }
-        })
+      if (success && data) {
+        this.setState(state => ({
+          Model: {
+            ...state.Model,
+            DisciplineId: discipline.Id,
+            Discipline: discipline
+          },
+          AvailableThemes: data.Items,
+          SelectedThemes: [],
+          ShowDisciplinesTable: false
+        }))
       }
-
-      this.setState(state => ({
-        Model: {
-          ...state.Model,
-          DisciplineId: discipline.Id,
-          Discipline: discipline
-        },
-        AvailableThemes: (result as IPagedData<Theme>).Items,
-        SelectedThemes: [],
-        step: state.step + 1
-      }))
     } else {
-      this.setState(state => ({
-        step: state.step + 1
-      }))
+      this.setState({ShowDisciplinesTable: false})
     }
   }
 
   handleSubmit = async () => {
-    let result = await this.TestService!.add(this.state.Model)
+    const {data, success} = await this.TestService!.add(this.state.Model)
 
-    if (result instanceof Exception) {
-      return this.props.enqueueSnackbar(result.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-    }
-    
-    if ((result as Test).Id) {
-      this.props.enqueueSnackbar(`Тест "${result.Subject}" успешно добавлен`, {
-        variant: 'success',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-      
+    if (success && data) {
+      this.NotificationService!.showSuccess(`Тест "${this.state.Model.Subject}" успешно добавлен`)
       this.setState(initState)
     }
-  }
-
-  handleSteps = {
-    next: () => this.setState(state => ({step: state.step + 1})),
-    back: () => this.setState(state => ({step: state.step - 1})),
-    reset: () => this.setState({step: 0})
   }
 
   renderSelectValues = (ids: SelectProps['value']): React.ReactNode => {
@@ -173,170 +157,168 @@ class HandleTest extends Component<IProps, IState> {
   }
 
   render() {
-    let {classes, isEdit} = this.props
-    const Header = () => (
-      <Grid container item xs={12} alignItems='center' spacing={16}>
-        <Grid item>
-          <EditIcon color='primary' fontSize='large'/>
-        </Grid>
-        <Grid item xs container wrap='nowrap' zeroMinWidth>
-          <Typography noWrap variant='subtitle1'>
-            {isEdit ? 'Редактирование теста' : 'Создание теста'}
+    let {classes} = this.props
+
+    const BreadcrumbsHeader = () =>
+      <Grid item xs={12} className={classes.header} container zeroMinWidth wrap='nowrap' alignItems='center'>
+        <Breadcrumbs separator={
+          <Typography variant='subtitle1' className={classes.headerText}>
+            >
           </Typography>
-        </Grid>
+        }>
+          <Typography align='center' noWrap variant='subtitle1'
+                      className={classNames(classes.headerText, classes.breadcrumbs, {
+                        [classes.breadcrumbsClickable]: !!this.state.Model.DisciplineId
+                      })}
+                      onClick={() => this.setState({ShowDisciplinesTable: true})}
+          >
+            {this.state.Model.DisciplineId ? this.state.Model.Discipline!.Name : 'Дисциплины'}
+          </Typography>
+          {
+            this.state.Model.DisciplineId && !this.state.ShowDisciplinesTable && 
+            <Typography align='center' noWrap variant='subtitle1'
+                        className={classNames(classes.headerText, classes.breadcrumbs)}>
+              Тест
+            </Typography>
+          }
+        </Breadcrumbs>
       </Grid>
-    )
-    return <Grid container justify='center'>
+    
+    return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
-        <Block>
-          <Header/>
-          <Stepper activeStep={this.state.step} orientation='vertical' className={classes.stepper}>
-            <Step>
-              <StepLabel>
-                <Typography noWrap variant='subtitle1'>
-                  {!!this.state.Model.DisciplineId 
-                    ? `Дисциплина: ${this.state.Model.Discipline!.Name}`
-                    : 'Выбор дисциплины'
-                  }
-                </Typography>
-              </StepLabel>
-              <StepContent>
-                <Grid container>
-                  <DisciplineTable handleClick={this.handleChangeDiscipline}/>
-                </Grid>
-              </StepContent>
-            </Step>
-            <Step>
-              <StepLabel>
-                <Typography noWrap variant='subtitle1'>
-                  Создание теста
-                </Typography>
-              </StepLabel>
-              <StepContent>
-                <Grid container>
-                  <Grid item xs={12} container spacing={16}>
-                    <Grid item xs={12} container direction='column'>
-                      <VTextField
-                        id='Subject' name='Subject' label='Название'
-                        value={this.state.Model.Subject}
-                        onChange={this.handleModel}
-                        margin='normal' required fullWidth
-                        validators={{
-                          max: {value: 255, message: 'Название не должно привышать 255 символов'},
-                          required: true
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                      <TotalTimeInput
-                        id='TotalTime' name='TotalTime' label='Длительность теста'
-                        value={this.state.Model.TotalTime}
-                        onChange={this.handleModel}
-                        required
-                        type='duration'
-                        validators={{
-                          max: {value: 3600, message: 'Тест не может быть больше 60 минут'}
-                        }}
-                        mask={[/[0-9]/, /[0-9]/, ':', /[0-5]/, /[0-9]/]}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                      <FormControl fullWidth margin='normal'>
-                        <InputLabel htmlFor='Attempts'>Количество попыток</InputLabel>
-                        <Select name='Attempts'
-                                value={this.state.Model.Attempts}
-                                onChange={this.handleModel}
-                                input={<Input id="Attempts"/>}
-                        >
-                          {this.renderAttempts(1, 10)}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                      <FormControl fullWidth margin='normal'>
-                        <InputLabel htmlFor='Type'>Тип</InputLabel>
-                        <Select
-                          name='Type'
-                          value={this.state.Model.Type}
-                          onChange={this.handleModel}
-                          input={
-                            <Input id="Type"/>
-                          }
-                        >
-                          <MenuItem value={TestType.Control}>
-                            Контрольный
-                          </MenuItem>
-                          <MenuItem value={TestType.Teaching}>
-                            Обучающий
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                      <FormControl fullWidth margin='normal'>
-                        <InputLabel htmlFor='IsActive'>Активный</InputLabel>
-                        <Select
-                          name='IsActive'
-                          value={Number(this.state.Model.IsActive)}
-                          onChange={(e: any) => { 
-                            e.target.value = !!e.target.value;
-                            this.handleModel(e)
-                          }}
-                          input={
-                            <Input id="IsActive"/>
-                          }
-                        >
-                          <MenuItem value={0}>
-                            Нет
-                          </MenuItem>
-                          <MenuItem value={1}>
-                            Да
-                          </MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormControl fullWidth>
-                        <InputLabel htmlFor="select-multiple-chip">Темы</InputLabel>
-                        <Select
-                          multiple
-                          name='Themes'
-                          value={this.state.SelectedThemes}
-                          onChange={this.handleSelect}
-                          input={
-                            <Input id="select-multiple-chip"/>
-                          }
-                          renderValue={this.renderSelectValues}
-                        >
-                          {this.state.AvailableThemes.map((theme: Theme) =>
-                            <MenuItem key={theme.Id} value={theme.Id}>
-                              {theme.Name}
-                            </MenuItem>
-                          )}
-                        </Select>
-                      </FormControl>
-                    </Grid>
+        <Block partial>
+          <BreadcrumbsHeader/>
+          <MtBlock value={2}/>
+          <Grid item xs={12}>
+            <Collapse timeout={500} in={this.state.ShowDisciplinesTable}>
+              <Grid container>
+                <DisciplineTable handleClick={this.handleChangeDiscipline}/>
+              </Grid>
+            </Collapse>
+          </Grid>
+          <Grid item xs={12}>
+            <Collapse timeout={500} in={!this.state.ShowDisciplinesTable}>
+              <Grid container>
+                <Grid item xs={12} container spacing={16}>
+                  <Grid item xs={12} container direction='column'>
+                    <VTextField
+                      id='Subject' name='Subject' label='Название'
+                      value={this.state.Model.Subject}
+                      onChange={this.handleModel}
+                      margin='normal' required fullWidth
+                      validators={{
+                        max: {value: 255, message: 'Название не должно привышать 255 символов'},
+                        required: true
+                      }}
+                    />
                   </Grid>
-                  <Grid container className={classes.buttonBlock}>
-                    <Grid item>
-                      <Button variant='outlined' onClick={this.handleSteps.back}>
-                        К выбору дисциплины
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button variant='contained' color='primary' onClick={this.handleSubmit}>
-                        Добавить
-                      </Button>
-                    </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <TotalTimeInput
+                      id='TotalTime' name='TotalTime' label='Длительность теста'
+                      value={this.state.Model.TotalTime}
+                      onChange={this.handleModel}
+                      required
+                      type='duration'
+                      validators={{
+                        max: {value: 3600, message: 'Тест не может быть больше 60 минут'}
+                      }}
+                      mask={[/[0-9]/, /[0-9]/, ':', /[0-5]/, /[0-9]/]}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <FormControl fullWidth margin='normal'>
+                      <InputLabel htmlFor='Attempts'>Количество попыток</InputLabel>
+                      <Select name='Attempts'
+                              value={this.state.Model.Attempts}
+                              onChange={this.handleModel}
+                              input={<Input id="Attempts"/>}
+                      >
+                        {this.renderAttempts(1, 10)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <FormControl fullWidth margin='normal'>
+                      <InputLabel htmlFor='Type'>Тип</InputLabel>
+                      <Select
+                        name='Type'
+                        value={this.state.Model.Type}
+                        onChange={this.handleModel}
+                        input={
+                          <Input id="Type"/>
+                        }
+                      >
+                        <MenuItem value={TestType.Control}>
+                          Контрольный
+                        </MenuItem>
+                        <MenuItem value={TestType.Teaching}>
+                          Обучающий
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <FormControl fullWidth margin='normal'>
+                      <InputLabel htmlFor='IsActive'>Активный</InputLabel>
+                      <Select
+                        name='IsActive'
+                        value={Number(this.state.Model.IsActive)}
+                        onChange={(e: any) => {
+                          e.target.value = !!e.target.value
+                          this.handleModel(e)
+                        }}
+                        input={
+                          <Input id="IsActive"/>
+                        }
+                      >
+                        <MenuItem value={0}>
+                          Нет
+                        </MenuItem>
+                        <MenuItem value={1}>
+                          Да
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel htmlFor="select-multiple-chip">Темы</InputLabel>
+                      <Select
+                        multiple
+                        name='Themes'
+                        value={this.state.SelectedThemes}
+                        onChange={this.handleSelect}
+                        input={
+                          <Input id="select-multiple-chip"/>
+                        }
+                        renderValue={this.renderSelectValues}
+                        classes={{
+                          selectMenu: classes.selectMenu
+                        }}
+                      >
+                        {this.state.AvailableThemes.map((theme: Theme) =>
+                          <MenuItem key={theme.Id} value={theme.Id}>
+                            {theme.Name}
+                          </MenuItem>
+                        )}
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
-              </StepContent>
-            </Step>
-          </Stepper>
+                <Grid container className={classes.buttonBlock}>
+                  <Grid item>
+                    <Button variant='contained' color='primary' onClick={this.handleSubmit}>
+                      Добавить
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Collapse>
+          </Grid>
         </Block>
       </Grid>
     </Grid>
   }
 }
 
-export default withSnackbar(withStyles(HandleTestStyles)(HandleTest) as any)
+export default withStyles(HandleTestStyles)(HandleTest) as any

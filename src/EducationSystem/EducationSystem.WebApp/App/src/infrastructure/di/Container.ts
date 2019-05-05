@@ -28,21 +28,22 @@ export default class Container {
     return name
   }
 
-  private _register<T>(service: new() => T, name: string, isSingleton: boolean) {
+  private _register<T>(service: new() => T, name: string, isSingleton: boolean, param?: Array<any>) {
     let _name = this._getName(service, name)
+    this._isConfigured = false
 
     if (!this._services.has(_name)) {
-      this._services.set(_name, new Service(service, _name, isSingleton))
+      this._services.set(_name, new Service(service, _name, isSingleton, param))
     }
     return this
   }
 
-  public singleton<T>(service: new() => T, name: string) {
-    return this._register(service, name, true)
+  public singleton<T>(service: new() => T, name: string, param?: Array<any>) {
+    return this._register(service, name, true, param)
   }
 
-  public transient<T>(service: new() => T, name: string) {
-    return this._register(service, name, false)
+  public transient<T>(service: new() => T, name: string, param?: Array<any>) {
+    return this._register(service, name, false, param)
   }
 
   public getService(name: string) {

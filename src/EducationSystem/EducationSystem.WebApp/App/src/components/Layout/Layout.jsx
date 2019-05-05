@@ -79,20 +79,28 @@ class Layout extends PureComponent {
         <LeftMenuItem component={SimpleLink} to='/account' Icon={AccountIcon} tooltip='Профиль'
                       closeOnClick={closeOnClick}/>
       </If>
-      <If condition={checkAuth('Admin')}>
-        <LeftMenuItem component={SimpleLink} to='/tests' Icon={QuestionIcon} tooltip='Тесты'
-                      closeOnClick={closeOnClick}/>
-        <LeftMenuItem component={SimpleLink} to='/handletest' Icon={PlaylistAddIcon} tooltip='Добавить тест'
-                      closeOnClick={closeOnClick}/>
-        <LeftMenuItem component={SimpleLink} to='/themes' Icon={PlaylistAddIcon} tooltip='Темы'
-                      closeOnClick={closeOnClick}/>
-        <LeftMenuItem component={SimpleLink} to='/materials' Icon={PlaylistAddIcon} tooltip='Темы'
-                      closeOnClick={closeOnClick}/>
-      </If>
-      <If condition={checkAuth('Student')}>
-        <LeftMenuItem component={SimpleLink} to='/user/tests' Icon={QuestionIcon} tooltip='Тесты'
-                      closeOnClick={closeOnClick}/>
-      </If>
+      {
+        User.Roles && <>
+          <If condition={User.Roles.Admin || User.Roles.Lecturer}>
+            <LeftMenuItem component={SimpleLink} to='/tests' Icon={QuestionIcon} tooltip='Тесты'
+                          closeOnClick={closeOnClick}/>
+          </If>
+          <If condition={User.Roles.Lecturer}>
+            <LeftMenuItem component={SimpleLink} to='/createtest' Icon={PlaylistAddIcon} tooltip='Добавить тест'
+                          closeOnClick={closeOnClick}/>
+          </If>
+          <If condition={User.Roles.Admin || User.Roles.Lecturer}>
+            <LeftMenuItem component={SimpleLink} to='/themes' Icon={PlaylistAddIcon} tooltip='Темы'
+                          closeOnClick={closeOnClick}/>
+            <LeftMenuItem component={SimpleLink} to='/materials' Icon={PlaylistAddIcon} tooltip='Темы'
+                          closeOnClick={closeOnClick}/>
+          </If>
+          <If condition={User.Roles.Student}>
+            <LeftMenuItem component={SimpleLink} to='/user/tests' Icon={QuestionIcon} tooltip='Тесты'
+                          closeOnClick={closeOnClick}/>
+          </If>
+        </>
+      }
     </List>
 
     return <div className={classes.root}>

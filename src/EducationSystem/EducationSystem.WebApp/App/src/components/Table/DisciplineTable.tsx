@@ -1,15 +1,14 @@
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import {ITableState} from './IHandleTable'
 import {Grid, TextField, Typography} from '@material-ui/core'
-import IPagedData, {IPagingOptions} from '../../models/PagedData'
+import {IPagingOptions} from '../../models/PagedData'
 import RowHeader from './RowHeader'
 import TableComponent from './TableComponent'
-import IDisciplineService from '../../services/abstractions/IDisciplineService'
+import IDisciplineService from '../../services/DisciplineService'
+import * as React from 'react'
 import {ChangeEvent} from 'react'
 import Discipline from '../../models/Discipline'
 import {inject} from '../../infrastructure/di/inject'
-import {Exception} from '../../helpers'
-import * as React from 'react'
 import {TablePagination} from '../core'
 import BlockContent from '../Blocks/BlockContent'
 
@@ -41,31 +40,15 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
   }
 
   getTableData = async (param: IPagingOptions) => {
-    let result = await this.DisciplineService!.getAll({
+    const {data, success} = await this.DisciplineService!.getAll({
       Skip: 0,
       Take: this.state.CountPerPage,
       ...param
-    },this.state.Name.length >= minLengthForTrigger ? {
-      Name: this.state.Name
-    } : {})
+    }, this.getNameFilter(this.state.Name))
 
-    if (result instanceof Exception) {
-      return this.props.enqueueSnackbar(result.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-    }
-
-    this.setState({
-      Count: (result as IPagedData<Discipline>).Count,
-      Items: (result as IPagedData<Discipline>).Items,
-      IsLoading: false
-    })
+    if (success && data) this.setState({Count: data.Count, Items: data.Items})
   }
-  
+
   private handleName = ({target: {value}}: ChangeEvent<HTMLInputElement> | any) => {
     const oldValue = this.state.Name
 
@@ -85,7 +68,7 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
   }
 
   componentDidMount() {
-    this.setState({IsLoading: true}, () => this.getTableData({Skip: 0, Take: this.state.CountPerPage}))
+    this.getTableData({Skip: 0, Take: this.state.CountPerPage})
   }
 
   render() {

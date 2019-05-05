@@ -5,10 +5,7 @@ import * as React from 'react'
 import {Component} from 'react'
 import Block from '../../../Blocks/Block'
 import {RouteComponentProps} from 'react-router'
-import {inject} from '../../../../infrastructure/di/inject'
-import IStudentService from '../../../../services/abstractions/IStudentService'
 import TestExecution from '../../../../models/TestExecution'
-import {handleResult} from '../../../../helpers/Exception'
 
 type TProps = WithStyles<typeof TestStyles> & TNotifierProps & RouteComponentProps<{ id: string }>
 
@@ -17,8 +14,6 @@ interface IState {
 }
 
 class Test extends Component<TProps, IState> {
-  @inject private StudentService?: IStudentService
-  
   constructor(props: TProps) {
     super(props)
 
@@ -26,13 +21,6 @@ class Test extends Component<TProps, IState> {
   }
 
   async componentDidMount() {
-    handleResult(
-      await this.StudentService!.getTestExecution(Number(this.props.match.params.id)),
-      this.props.notifier.error,
-      ((data: TestExecution) => this.setState({
-        Model: data
-      }))
-    )
   }
 
   render(): React.ReactNode {

@@ -12,23 +12,21 @@ import {
   WithStyles
 } from '@material-ui/core'
 import QuestionHandlingStyle from './QuestionHandlingStyle'
-import {InjectedNotistackProps, withSnackbar} from 'notistack'
-import Question, {QuestionOptions} from '../../../models/Question'
+import Question from '../../../models/Question'
 import TotalTimeInput from '../HandleTest/TotalTimeInput'
 import {FileType, QuestionComplexityType, QuestionType} from '../../../common/enums'
 import {AnswersHandling} from './AnswerHandling'
 import Answer from '../../../models/Answer'
 import Program from '../../../models/Program'
-import IQuestionService from '../../../services/abstractions/IQuestionService'
+import IQuestionService from '../../../services/QuestionService'
 import {inject} from '../../../infrastructure/di/inject'
-import {Exception} from '../../../helpers'
 import FileUpload from '../../stuff/FileUpload'
-import IFileService from '../../../services/abstractions/IFileService'
+import IFileService from '../../../services/FileService'
 import FileModel from '../../../models/FileModel'
-import EventDispatcher, {EventType, IEvent, IEventDispatcher} from '../../../helpers/EventDispatcher'
 import MaterialSelect from '../../Table/MaterialSelect'
 import Material from '../../../models/Material'
 import Block from '../../Blocks/Block'
+import INotificationService from '../../../services/NotificationService'
 
 interface IProps {
   match: {
@@ -39,14 +37,14 @@ interface IProps {
   }
 }
 
-type TProps = WithStyles<typeof QuestionHandlingStyle> & InjectedNotistackProps & IProps
+type TProps = WithStyles<typeof QuestionHandlingStyle> & IProps
 
 interface IState {Model: Question}
 
 class QuestionHandling extends Component<TProps, IState> {
   @inject private QuestionService?: IQuestionService
   @inject private FileService?: IFileService
-  private EventDispatcher: IEventDispatcher
+  @inject private NotificationService?: INotificationService
 
   constructor(props: TProps) {
     super(props)
@@ -54,8 +52,6 @@ class QuestionHandling extends Component<TProps, IState> {
     this.state = {
       Model: new Question(this.props.match.params.themeId)
     } as IState
-
-    this.EventDispatcher = new EventDispatcher(props.enqueueSnackbar)
   }
 
   async componentDidMount() {
@@ -63,24 +59,16 @@ class QuestionHandling extends Component<TProps, IState> {
 
     if (!id) return
 
-    let result = await this.QuestionService!.get(id, {
-      WithAnswers: true,
-      WithProgram: true
-    } as QuestionOptions)
+    const {data, success} = await this.QuestionService!.get(id)
 
-    if (result instanceof Exception) {
-      return this.EventDispatcher.send({
-        message: result.message,
-        type: EventType.error
-      } as IEvent)
+    if (success && data) {
+      this.setState({
+        Model: {
+          Answers: [],
+          ...data
+        }
+      })
     }
-
-    this.setState({
-      Model: {
-        Answers: [],
-        ...result
-      }
-    })
   }
 
   handleModel = ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) => {
@@ -119,21 +107,16 @@ class QuestionHandling extends Component<TProps, IState> {
   handleProgram = (program: Program) => this.handleModel({target: {name: 'Program', value: program}})
 
   handleSubmit = async () => {
-    let result = await (this.state.Model.Id
-      ? this.QuestionService!.update
-      : this.QuestionService!.add)
-    (this.state.Model)
+    if (this.props.match.params.id) {
+      if (await this.QuestionService!.update(this.state.Model)) {
+        this.NotificationService!.showSuccess('Вопрос успешно обновлен')
+      }
+    } else {
+      const {data, success} = await this.QuestionService!.add(this.state.Model)
 
-    if (result instanceof Exception) {
-      return this.EventDispatcher.send({
-        message: result.message,
-        type: EventType.error
-      } as IEvent)
-    }
-
-    if ((result as Question).Id) {
-      const message = 'Вопрос успешно ' + this.props.match.params.id ? `обновлен` : `добавлен`
-      return this.EventDispatcher.send({message, type: EventType.success} as IEvent)
+      if (success && data) {
+        this.NotificationService!.showSuccess('Вопрос успешно добавлен')
+      }
     }
   }
 
@@ -244,4 +227,4 @@ class QuestionHandling extends Component<TProps, IState> {
   }
 }
 
-export default withSnackbar(withStyles(QuestionHandlingStyle)(QuestionHandling) as any)
+export default withStyles(QuestionHandlingStyle)(QuestionHandling) as any

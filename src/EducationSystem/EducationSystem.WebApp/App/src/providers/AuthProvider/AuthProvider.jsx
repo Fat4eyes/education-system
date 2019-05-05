@@ -1,11 +1,8 @@
 import React, {Component} from 'react'
-import Fetch from '../../helpers/Fetch'
 import {handleAuthData, ValidateAuthModel} from './common'
-import ProtectedFetch from '../../helpers/ProtectedFetch'
 import {withSnackbar} from 'notistack'
-import {authRoutes, usersRoutes} from '../../routes'
-import UrlBuilder from '../../helpers/UrlBuilder'
 import Snackbar from '../../helpers/Snackbar'
+import {inject} from '../../infrastructure/di/inject'
 
 const {Provider, Consumer} = React.createContext()
 
@@ -24,6 +21,8 @@ class IsAuthenticated {
 
 @withSnackbar
 class AuthProvider extends Component {
+  @inject UserService
+
   constructor(props) {
     super(props)
 
@@ -42,14 +41,11 @@ class AuthProvider extends Component {
     this.Snackbar = new Snackbar(this.props.enqueueSnackbar)
   }
 
-  getUserData = async () => await ProtectedFetch.get(
-    UrlBuilder.Build(usersRoutes.getInfo, {WithRoles: true}),
-    this.Snackbar.Error
-  )
-
   async componentDidMount() {
-    if (this.state.Token && await ProtectedFetch.check(this.actions.signOut)) {
-      this.setState({User: await this.getUserData()})
+    if (this.state.Token && await this.UserService.checkToken()) {
+      this.setState({User: (await this.UserService.getData()).data})
+    } else {
+      this.actions.signOut()
     }
   }
 
@@ -58,12 +54,12 @@ class AuthProvider extends Component {
       try {
         ValidateAuthModel(authModel)
 
-        const authData = await Fetch.post(authRoutes.signIn, authModel, this.Snackbar.Error)
+        const result = await this.UserService.getToken(authModel)
 
-        if (authData) {
-          handleAuthData.set(authData)
+        if (result.success) {
+          handleAuthData.set(result.data)
 
-          this.setState({...authData, User: await this.getUserData()})
+          this.setState({...result.data, User: (await this.UserService.getData()).data})
 
           return true
         }
@@ -81,8 +77,16 @@ class AuthProvider extends Component {
     checkAuth: role => {
       if (!role) return new IsAuthenticated(handleAuthData.check()).result()
 
+      const result = this.state.User && this.state.User.Roles
+
+      if (typeof role === 'object') {
+        return new IsAuthenticated(handleAuthData.check(),
+          result && !!role.find(r => this.state.User.Roles[r])
+        ).result()
+      }
+
       return new IsAuthenticated(handleAuthData.check(),
-        this.state.User && this.state.User.Roles && !!this.state.User.Roles.find(r => r.Name === role)
+        result && !!this.state.User.Roles[role]
       ).result()
     }
   }

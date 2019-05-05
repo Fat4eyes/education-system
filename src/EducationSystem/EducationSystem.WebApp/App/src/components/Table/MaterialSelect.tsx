@@ -2,7 +2,7 @@ import TableComponent from './TableComponent'
 import Material from '../../models/Material'
 import {ITableState} from './IHandleTable'
 import IPagedData, {IPagingOptions} from '../../models/PagedData'
-import IMaterialService from '../../services/abstractions/IMaterialService'
+import IMaterialService from '../../services/MaterialService'
 import {inject} from '../../infrastructure/di/inject'
 import {TNotifierProps, withNotifier} from '../../providers/NotificationProvider'
 import * as React from 'react'
@@ -56,19 +56,18 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
   }
 
   async getTableData(param: IPagingOptions): Promise<any> {
-    let result = await this.MaterialService!.getAll({
+    let {data, success} = await this.MaterialService!.getAll({
       ...this.firstPageOptions,
       ...param
     }, this.getNameFilter(this.state.Name))
-    if (result instanceof Exception) {
-      return this.props.notifier.error(result.message)
+    
+    if (success && data) {
+      this.setState({
+        Count: data.Count,
+        Items: data.Items,
+        IsLoading: false
+      })
     }
-
-    this.setState({
-      Count: (result as IPagedData<Material>).Count,
-      Items: (result as IPagedData<Material>).Items,
-      IsLoading: false
-    })
   }
 
   handleName = ({target: {value}}: ChangeEvent<HTMLInputElement> | any) => {

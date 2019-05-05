@@ -15,6 +15,7 @@ export default class Question extends Model {
   public Program?: Program
   public Image?: ImageFile
   public Material?: Material
+  public Order?: number
   
   constructor(themeId?: number){
     super()

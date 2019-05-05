@@ -91,7 +91,7 @@ class ProtectedFetch extends Fetch {
       }
       return true
     } catch (e) {
-      onError(e)
+      onError && onError(e)
       return false
     }
   };

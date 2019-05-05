@@ -15,7 +15,7 @@ export interface IEvent {
   message: string
 }
 
-interface INotifierProps {
+export interface INotifierProps {
   notify: (event: IEvent) => void
   error: (message: string) => void
   success: (message: string) => void
@@ -26,7 +26,7 @@ export type TNotifierProps = {
   notifier: INotifierProps
 }
 
-const NullNotifier: INotifierProps = {
+export const NullNotifier: INotifierProps = {
   notify: (event: IEvent): void => console.log(event.message, EventType[event.type]),
   error: function (message: string) {this.notify({message, type: EventType.error})},
   success: function (message: string) {this.notify({message, type: EventType.success})},
@@ -62,5 +62,7 @@ export const withNotifier = (Component: any) => (props: any) =>
   <Consumer>
     {notifier => <Component {...props} notifier={notifier}/>}
   </Consumer>
+
+export const NotificationConsumer = Consumer
 
 export default withSnackbar(NotificationProvider) as any

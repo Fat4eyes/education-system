@@ -4,11 +4,9 @@ import {createStyles, Grid, IconButton, withStyles, WithStyles} from '@material-
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import Clear from '@material-ui/icons/Clear'
-import IFileService from '../../services/abstractions/IFileService'
+import IFileService from '../../services/FileService'
 import {inject} from '../../infrastructure/di/inject'
 import FileModel from '../../models/FileModel'
-import {InjectedNotistackProps, withSnackbar} from 'notistack'
-import {Exception} from '../../helpers'
 import {If} from '../core'
 import {FileType} from '../../common/enums'
 import {Guid} from '../../helpers/guid'
@@ -26,7 +24,7 @@ interface IProps {
   type: FileType
 }
 
-type TProps = WithStyles<typeof styles> & IProps & InjectedNotistackProps
+type TProps = WithStyles<typeof styles> & IProps
 
 interface IState {
   fileModel?: FileModel,
@@ -49,18 +47,11 @@ class FileUpload extends Component<TProps, IState> {
   async componentDidMount() {
     if (this.props.fileModel) return
 
-    let result = await this.FileService!.getExtensions(this.props.type)
-    if (result instanceof Exception) {
-      return this.props.enqueueSnackbar(result.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-    }
+    const {data, success} = await this.FileService!.getExtensions(this.props.type)
 
-    this.setState({extensions: result})
+    if (success && data) {
+      this.setState({extensions: data})
+    }
   }
 
   componentWillReceiveProps(nextProps: Readonly<TProps>) {
@@ -73,18 +64,11 @@ class FileUpload extends Component<TProps, IState> {
     let form = new FormData()
     form.append('file', file)
 
-    let result = await this.FileService!.add(form, this.props.type)
-    if (result instanceof Exception) {
-      return this.props.enqueueSnackbar(result.message, {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'right'
-        }
-      })
-    }
+    const {data, success} = await this.FileService!.add(form, this.props.type)
 
-    this.setState({fileModel: result}, () => this.props.onLoad((result as FileModel)))
+    if (success && data) {
+      this.setState({fileModel: data}, () => this.props.onLoad((data)))
+    }
   }
 
   handleDelete = async () => {
@@ -130,4 +114,4 @@ class FileUpload extends Component<TProps, IState> {
   }
 }
 
-export default withSnackbar(withStyles(styles)(FileUpload)) as any
+export default withStyles(styles)(FileUpload) as any
