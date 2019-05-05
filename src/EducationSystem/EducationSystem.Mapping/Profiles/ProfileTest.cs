@@ -9,8 +9,6 @@ namespace EducationSystem.Mapping.Profiles
         public ProfileTest()
         {
             CreateMap<DatabaseTest, Test>()
-                .ForMember(d => d.Attempts, o => o.Ignore())
-                .ForMember(d => d.TotalTime, o => o.Ignore())
                 .ForMember(d => d.Themes, o => o.Ignore())
                 .ForMember(d => d.IsActive, o => o.MapFrom(s => s.IsActive == 1));
 
