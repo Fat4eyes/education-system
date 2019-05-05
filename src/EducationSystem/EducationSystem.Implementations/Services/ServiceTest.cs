@@ -117,7 +117,11 @@ namespace EducationSystem.Implementations.Services
                 var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                     throw ExceptionFactory.NotFound<DatabaseTest>(id);
 
-                if (new TestsByStudentId(CurrentUser.Id).IsSatisfiedBy(test) == false)
+                var specification =
+                    new TestsByStudentId(CurrentUser.Id) &
+                    new TestsForStudent();
+
+                if (specification.IsSatisfiedBy(test) == false)
                     throw ExceptionFactory.NoAccess();
 
                 return Mapper.Map<Test>(test);
