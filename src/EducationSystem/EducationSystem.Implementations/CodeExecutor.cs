@@ -68,8 +68,10 @@ namespace EducationSystem.Implementations
             {
                 var user = await _executionContext.GetCurrentUserAsync();
 
-                _logger.LogError($"Не удалось выполнить запрос на выполнение кода. " +
-                                 $"Идентификатор пользователя: {user.Id}.", ex);
+                _logger.LogError(
+                    $"Не удалось выполнить запрос на выполнение кода. " +
+                    $"Идентификатор пользователя: {user.Id}. " +
+                    $"Идентификатор программы: {request.Program.Id}.", ex);
 
                 throw ExceptionHelper.CreatePublicException("Не удалось выполнить запрос на выполнение кода.");
             }

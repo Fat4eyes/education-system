@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
+using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Models.Files.Basics;
 using EducationSystem.WebApp.Source.Attributes;
@@ -29,6 +30,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateFile(IFormFile file)
         {
+            if (file == null)
+                throw ExceptionHelper.CreatePublicException("Не указан файл.");
+
             using (var stream = file.OpenReadStream())
             {
                 var model = new TFile
