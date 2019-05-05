@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.0" />
-    <PackageReference Include="CodeExecutionSystem.Contracts" Version="0.0.7.1" />
+    <PackageReference Include="CodeExecutionSystem.Contracts" Version="0.0.7.2" />
   </ItemGroup>
 
   <ItemGroup>
