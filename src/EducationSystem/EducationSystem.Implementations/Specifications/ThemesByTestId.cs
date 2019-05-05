@@ -17,7 +17,10 @@ namespace EducationSystem.Implementations.Specifications
 
         public override Expression<Func<DatabaseTheme, bool>> ToExpression()
         {
-            return x => x.ThemeTests.Any(y => y.TestId == _testId);
+            if (_testId.HasValue)
+                return x => x.ThemeTests.Any(y => y.TestId == _testId);
+
+            return x => true;
         }
     }
 }

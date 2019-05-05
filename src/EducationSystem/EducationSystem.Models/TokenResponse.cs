@@ -4,6 +4,8 @@
     {
         public string Token { get; set; }
 
+        public TokenResponse() { }
+
         public TokenResponse(string token)
         {
             Token = token;

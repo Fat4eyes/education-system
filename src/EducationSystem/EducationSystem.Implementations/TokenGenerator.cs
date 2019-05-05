@@ -4,12 +4,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
-using EducationSystem.Implementations.Services;
 using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Repositories;
@@ -21,20 +19,20 @@ using Crypt = BCrypt.Net.BCrypt;
 
 namespace EducationSystem.Implementations
 {
-    public sealed class TokenGenerator : Service<TokenGenerator>, ITokenGenerator
+    public sealed class TokenGenerator : ITokenGenerator
     {
         private readonly IConfiguration _configuration;
+        private readonly ILogger<TokenGenerator> _logger;
         private readonly IRepository<DatabaseUser> _repositoryUser;
 
         private const string PublicExceptionMessage = "Неверная электронная почта или пароль.";
 
         public TokenGenerator(
-            IMapper mapper,
-            ILogger<TokenGenerator> logger,
             IConfiguration configuration,
+            ILogger<TokenGenerator> logger,
             IRepository<DatabaseUser> repositoryUser)
-            : base(mapper, logger)
         {
+            _logger = logger;
             _configuration = configuration;
             _repositoryUser = repositoryUser;
         }
@@ -62,7 +60,7 @@ namespace EducationSystem.Implementations
 
             if (!Crypt.Verify(request.Password, user.Password))
             {
-                Logger.LogInformation(
+                _logger.LogInformation(
                     $"Пользователь найден, но пароль указан неверно. " +
                     $"Идентификатор пользователя: {user.Id}.");
 

@@ -7,7 +7,6 @@ using EducationSystem.Enums;
 using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
@@ -20,11 +19,8 @@ namespace EducationSystem.Implementations.Services
 {
     public sealed class ServiceQuestion : Service<ServiceQuestion>, IServiceQuestion
     {
-        private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Question> _validatorQuestion;
-        private readonly IExceptionFactory _exceptionFactory;
-        private readonly IExecutionContext _executionContext;
-
+        private readonly IRepository<DatabaseTheme> _repositoryTheme;
         private readonly IRepository<DatabaseAnswer> _repositoryAnswer;
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
         private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
@@ -33,20 +29,22 @@ namespace EducationSystem.Implementations.Services
         public ServiceQuestion(
             IMapper mapper,
             ILogger<ServiceQuestion> logger,
-            IHelperUserRole helperUserRole,
             IValidator<Question> validatorQuestion,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
+            IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseAnswer> repositoryAnswer,
             IRepository<DatabaseProgram> repositoryProgram,
             IRepository<DatabaseQuestion> repositoryQuestion,
             IRepository<DatabaseProgramData> repositoryProgramData)
-            : base(mapper, logger)
+            : base(
+                mapper,
+                logger,
+                executionContext,
+                exceptionFactory)
         {
-            _helperUserRole = helperUserRole;
             _validatorQuestion = validatorQuestion;
-            _exceptionFactory = exceptionFactory;
-            _executionContext = executionContext;
+            _repositoryTheme = repositoryTheme;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
@@ -55,57 +53,62 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter)
         {
-            var specification = new QuestionsByThemeId(filter.ThemeId);
+            if (CurrentUser.IsAdmin())
+            {
+                var specification = new QuestionsByThemeId(filter.ThemeId);
 
-            var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
+                var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
-            return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
-        }
+                return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
+            }
 
-        public async Task<PagedData<Question>> GetLecturerQuestionsAsync(int lecturerId, FilterQuestion filter)
-        {
-            await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
+            if (CurrentUser.IsLecturer())
+            {
+                var specification =
+                    new QuestionsByThemeId(filter.ThemeId) &
+                    new QuestionsByLecturerId(CurrentUser.Id);
 
-            var specification =
-                new QuestionsByThemeId(filter.ThemeId) &
-                new QuestionsByLecturerId(lecturerId);
+                var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
-            var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
+                return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
+            }
 
-            return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task<Question> GetQuestionAsync(int id)
         {
-            var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
+            if (CurrentUser.IsAdmin())
+            {
+                var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
+                    throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
 
-            return Mapper.Map<Question>(question);
-        }
+                return Mapper.Map<Question>(question);
+            }
 
-        public async Task<Question> GetLecturerQuestionAsync(int id, int lecturerId)
-        {
-            await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
+            if (CurrentUser.IsLecturer())
+            {
+                var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
+                    throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
 
-            var specification =
-                new QuestionsById(id) &
-                new QuestionsByLecturerId(lecturerId);
+                if (new QuestionsByLecturerId(CurrentUser.Id).IsSatisfiedBy(question) == false)
+                    throw ExceptionFactory.NoAccess();
 
-            var question = await _repositoryQuestion.FindFirstAsync(specification) ??
-                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
+                return Mapper.Map<Question>(question);
+            }
 
-            return Mapper.Map<Question>(question);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task DeleteQuestionAsync(int id)
         {
             var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
+                throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
+            var user = await ExecutionContext.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && !new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(question.Theme?.Discipline))
-                throw _exceptionFactory.NoAccess();
+                throw ExceptionFactory.NoAccess();
 
             await _repositoryQuestion.RemoveAsync(question, true);
         }
@@ -135,17 +138,38 @@ namespace EducationSystem.Implementations.Services
             return model.Id;
         }
 
+        public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
+        {
+            var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
+                throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
+
+            if (!new ThemesByLecturerId(CurrentUser.Id).IsSatisfiedBy(theme))
+                throw ExceptionFactory.NoAccess();
+
+            var ids = questions.Select(x => x.Id).ToArray();
+
+            var models = await _repositoryQuestion.FindAllAsync(new QuestionsByIds(ids));
+
+            models.ForEach(x =>
+            {
+                var question = questions.FirstOrDefault(y => y.Id == x.Id);
+
+                if (question?.Order != null && new QuestionsByThemeId(theme.Id).IsSatisfiedBy(x))
+                    x.Order = question.Order.Value;
+            });
+
+            await _repositoryQuestion.UpdateAsync(models, true);
+        }
+
         public async Task UpdateQuestionAsync(int id, Question question)
         {
             await _validatorQuestion.ValidateAsync(question.Format());
 
             var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseQuestion>(id);
+                throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
-            if (!new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(model.Theme?.Discipline))
-                throw _exceptionFactory.NoAccess();
+            if (!new QuestionsByLecturerId(CurrentUser.Id).IsSatisfiedBy(model))
+                throw ExceptionFactory.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);
 

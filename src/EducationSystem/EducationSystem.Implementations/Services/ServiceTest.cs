@@ -6,7 +6,6 @@ using EducationSystem.Database.Models;
 using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
@@ -19,131 +18,121 @@ namespace EducationSystem.Implementations.Services
 {
     public sealed class ServiceTest : Service<ServiceTest>, IServiceTest
     {
-        private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Test> _validatorTest;
-        private readonly IExceptionFactory _exceptionFactory;
-        private readonly IExecutionContext _executionContext;
-
         private readonly IRepository<DatabaseTest> _repositoryTest;
         private readonly IRepository<DatabaseTestTheme> _repositoryTestTheme;
 
         public ServiceTest(
             IMapper mapper,
             ILogger<ServiceTest> logger,
-            IHelperUserRole helperUserRole,
             IValidator<Test> validatorTest,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseTestTheme> repositoryTestTheme)
-            : base(mapper, logger)
+            : base(
+                mapper,
+                logger,
+                executionContext,
+                exceptionFactory)
         {
-            _helperUserRole = helperUserRole;
             _validatorTest = validatorTest;
-            _exceptionFactory = exceptionFactory;
-            _executionContext = executionContext;
             _repositoryTest = repositoryTest;
             _repositoryTestTheme = repositoryTestTheme;
         }
 
         public async Task<PagedData<Test>> GetTestsAsync(FilterTest filter)
         {
-            var specification =
-                new TestsByName(filter.Name) &
-                new TestsByDisciplineId(filter.DisciplineId) &
-                new TestsByType(filter.TestType);
+            if (CurrentUser.IsAdmin())
+            {
+                var specification =
+                    new TestsByName(filter.Name) &
+                    new TestsByDisciplineId(filter.DisciplineId) &
+                    new TestsByType(filter.TestType);
 
-            if (filter.OnlyActive)
-                specification = specification & new TestsByActive(true);
+                if (filter.OnlyActive)
+                    specification = specification & new TestsByActive(true);
 
-            var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
+                var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
 
-            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
-        }
+                return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
+            }
 
-        public async Task<PagedData<Test>> GetStudentTestsAsync(int studentId, FilterTest filter)
-        {
-            await _helperUserRole.CheckRoleStudentAsync(studentId);
+            if (CurrentUser.IsLecturer())
+            {
+                var specification =
+                    new TestsByName(filter.Name) &
+                    new TestsByDisciplineId(filter.DisciplineId) &
+                    new TestsByType(filter.TestType) &
+                    new TestsByLecturerId(CurrentUser.Id);
 
-            var specification =
-                new TestsByName(filter.Name) &
-                new TestsByDisciplineId(filter.DisciplineId) &
-                new TestsByType(filter.TestType) &
-                new TestsByStudentId(studentId) &
-                new TestsForStudent();
+                if (filter.OnlyActive)
+                    specification = specification & new TestsByActive(true);
 
-            if (filter.OnlyActive)
-                specification = specification & new TestsByActive(true);
+                var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
 
-            var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
+                return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
+            }
 
-            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
-        }
+            if (CurrentUser.IsStudent())
+            {
+                var specification =
+                    new TestsByName(filter.Name) &
+                    new TestsByDisciplineId(filter.DisciplineId) &
+                    new TestsByType(filter.TestType) &
+                    new TestsByStudentId(CurrentUser.Id) &
+                    new TestsForStudent();
 
-        public async Task<PagedData<Test>> GetLecturerTestsAsync(int lecturerId, FilterTest filter)
-        {
-            await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
+                var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
 
-            var specification =
-                new TestsByName(filter.Name) &
-                new TestsByDisciplineId(filter.DisciplineId) &
-                new TestsByType(filter.TestType) &
-                new TestsByLecturerId(lecturerId);
+                return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
+            }
 
-            if (filter.OnlyActive)
-                specification = specification & new TestsByActive(true);
-
-            var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
-
-            return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task<Test> GetTestAsync(int id)
         {
-            var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
+            if (CurrentUser.IsAdmin())
+            {
+                var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
+                    throw ExceptionFactory.NotFound<DatabaseTest>(id);
 
-            return Mapper.Map<Test>(test);
-        }
+                return Mapper.Map<Test>(test);
+            }
 
-        public async Task<Test> GetStudentTestAsync(int id, int studentId)
-        {
-            await _helperUserRole.CheckRoleStudentAsync(studentId);
+            if (CurrentUser.IsLecturer())
+            {
+                var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
+                    throw ExceptionFactory.NotFound<DatabaseTest>(id);
 
-            var specification =
-                new TestsById(id) &
-                new TestsByStudentId(studentId) &
-                new TestsForStudent();
+                if (new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(test) == false)
+                    throw ExceptionFactory.NoAccess();
 
-            var test = await _repositoryTest.FindFirstAsync(specification) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
+                return Mapper.Map<Test>(test);
+            }
 
-            return Mapper.Map<Test>(test);
-        }
+            if (CurrentUser.IsStudent())
+            {
+                var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
+                    throw ExceptionFactory.NotFound<DatabaseTest>(id);
 
-        public async Task<Test> GetLecturerTestAsync(int id, int lecturerId)
-        {
-            await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
+                if (new TestsByStudentId(CurrentUser.Id).IsSatisfiedBy(test) == false)
+                    throw ExceptionFactory.NoAccess();
 
-            var specification =
-                new TestsById(id) &
-                new TestsByLecturerId(lecturerId);
+                return Mapper.Map<Test>(test);
+            }
 
-            var test = await _repositoryTest.FindFirstAsync(specification) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
-
-            return Mapper.Map<Test>(test);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task DeleteTestAsync(int id)
         {
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
+                throw ExceptionFactory.NotFound<DatabaseTest>(id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
-            if (user.IsNotAdmin() && !new TestsByLecturerId(user.Id).IsSatisfiedBy(test))
-                throw _exceptionFactory.NoAccess();
+            if (CurrentUser.IsNotAdmin() && !new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(test))
+                throw ExceptionFactory.NoAccess();
 
             await _repositoryTest.RemoveAsync(test, true);
         }
@@ -164,12 +153,10 @@ namespace EducationSystem.Implementations.Services
             await _validatorTest.ValidateAsync(test.Format());
 
             var model = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseTest>(id);
+                throw ExceptionFactory.NotFound<DatabaseTest>(id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
-            if (!new TestsByLecturerId(user.Id).IsSatisfiedBy(model))
-                throw _exceptionFactory.NoAccess();
+            if (!new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(model))
+                throw ExceptionFactory.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
 

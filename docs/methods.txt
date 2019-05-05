@@ -1,6 +1,7 @@
-[A] Lecturer & Admin
-[B] Student
-[*] Lecturer & Admin & Student 
+[A] Admin
+[B] Lecturer
+[C] Student
+[D] Admin & Lecturer
 
 [GET]    [*]          Api/Users/Current                 User
 
@@ -8,41 +9,43 @@
 [POST]   [*]          Api/Token/Check                   -
 
 [GET]    [*]          Api/Documents/{Id}                Document
-[GET]    [A]          Api/Documents/Extensions          []
-[POST]   [A]          Api/Documents                     Document
-[DELETE] [A]          Api/Documents/{Id}                -
+[GET]    [D]          Api/Documents/Extensions          []
+[POST]   [D]          Api/Documents                     Document
+[DELETE] [D]          Api/Documents/{Id}                -
 [GET]    [*]          Api/Images/{Id}                   Image
-[GET]    [A]          Api/Images/Extensions             []
-[POST]   [A]          Api/Images                        Image
-[DELETE] [A]          Api/Images/{Id}                   -
+[GET]    [D]          Api/Images/Extensions             []
+[POST]   [D]          Api/Images                        Image
+[DELETE] [D]          Api/Images/{Id}                   -
 
 [GET]    [*] [Filter] Api/Disciplines                   PagedData<Discipline>
 [GET]    [*]          Api/Disciplines/{Id}              Discipline
 [GET]    [*] [Filter] Api/Disciplines/{Id}/Test         PagedData<Test>
-[GET]    [*] [Filter] Api/Disciplines/{Id}/Themes       PagedData<Theme>
+[GET]    [D] [Filter] Api/Disciplines/{Id}/Themes       PagedData<Theme>
+[PUT]    [B]          Api/Disciplines/{Id}/Themes       -
 
-[GET]    [A] [Filter] Api/Materials                     PagedData<Material>
+[GET]    [D] [Filter] Api/Materials                     PagedData<Material>
 [GET]    [*]          Api/Materials/{Id}                Material
-[POST]   [A]          Api/Materials                     Int (Id)
-[PUT]    [A]          Api/Materials/{Id}                -
-[DELETE] [A]          Api/Materials/{Id}                -
+[POST]   [D]          Api/Materials                     Int (Id)
+[PUT]    [D]          Api/Materials/{Id}                -
+[DELETE] [D]          Api/Materials/{Id}                -
 
-[GET]    [A] [Filter] Api/Questions                     PagedData<Question>
-[GET]    [A]          Api/Questions/{Id}                Question
-[POST]   [A]          Api/Questions                     Int (Id)
-[PUT]    [A]          Api/Questions/{Id}                -
-[DELETE] [A]          Api/Questions/{Id}                -
+[GET]    [D] [Filter] Api/Questions                     PagedData<Question>
+[GET]    [D]          Api/Questions/{Id}                Question
+[POST]   [B]          Api/Questions                     Int (Id)
+[PUT]    [B]          Api/Questions/{Id}                -
+[DELETE] [D]          Api/Questions/{Id}                -
 
 [GET]    [*] [Filter] Api/Tests                         PagedData<Test>
 [GET]    [*]          Api/Tests/{Id}                    Question
-[GET]    [A] [Filter] Api/Tests/{Id}/Themes             PagedData<Theme>
-[POST]   [A]          Api/Tests                         Int (Id)
-[PUT]    [A]          Api/Tests/{Id}                    -
-[DELETE] [A]          Api/Tests/{Id}                    -
+[GET]    [D] [Filter] Api/Tests/{Id}/Themes             PagedData<Theme>
+[POST]   [B]          Api/Tests                         Int (Id)
+[PUT]    [B]          Api/Tests/{Id}                    -
+[DELETE] [D]          Api/Tests/{Id}                    -
 
-[GET]    [A] [Filter] Api/Themes                        PagedData<Theme>
-[GET]    [A]          Api/Themes/{Id}                   Question
-[GET]    [A] [Filter] Api/Themes/{Id}/Questions         PagedData<Question>
-[POST]   [A]          Api/Themes                        Int (Id)
-[PUT]    [A]          Api/Themes/{Id}                   -
-[DELETE] [A]          Api/Themes/{Id}                   -
+[GET]    [D] [Filter] Api/Themes                        PagedData<Theme>
+[GET]    [D]          Api/Themes/{Id}                   Question
+[GET]    [D] [Filter] Api/Themes/{Id}/Questions         PagedData<Question>
+[PUT]    [B]          Api/Themes/{Id}/Questions         -
+[POST]   [B]          Api/Themes                        Int (Id)
+[PUT]    [B]          Api/Themes/{Id}                   -
+[DELETE] [D]          Api/Themes/{Id}                   -

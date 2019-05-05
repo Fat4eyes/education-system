@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Extensions\EducationSystem.Extensions.csproj" />
+    <ProjectReference Include="..\EducationSystem.Interfaces\EducationSystem.Interfaces.csproj" />
+    <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+  </ItemGroup>
+
+</Project>

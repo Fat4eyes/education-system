@@ -1,17 +1,23 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
-using EducationSystem.Interfaces.Managers;
+using EducationSystem.Interfaces.Services;
 using EducationSystem.Models.Rest;
+using Microsoft.Extensions.Logging;
 
-namespace EducationSystem.Implementations.Managers
+namespace EducationSystem.Implementations.Services
 {
-    public sealed class ManagerUser : Manager, IManagerUser
+    public sealed class ServiceUser : Service<ServiceUser>, IServiceUser
     {
-        public ManagerUser(
+        public ServiceUser(
+            IMapper mapper,
+            ILogger<ServiceUser> logger,
             IExecutionContext executionContext,
             IExceptionFactory exceptionFactory)
             : base(
+                mapper,
+                logger,
                 executionContext,
                 exceptionFactory)
         { }

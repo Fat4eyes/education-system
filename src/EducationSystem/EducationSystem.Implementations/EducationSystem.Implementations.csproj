@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.0" />
     <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+    <PackageReference Include="CodeExecutionSystem.Contracts" Version="0.0.7.1" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
   </ItemGroup>
@@ -18,6 +19,7 @@
     <ProjectReference Include="..\EducationSystem.Enums\EducationSystem.Enums.csproj" />
     <ProjectReference Include="..\EducationSystem.Exceptions\EducationSystem.Exceptions.csproj" />
     <ProjectReference Include="..\EducationSystem.Extensions\EducationSystem.Extensions.csproj" />
+    <ProjectReference Include="..\EducationSystem.Helpers\EducationSystem.Helpers.csproj" />
     <ProjectReference Include="..\EducationSystem.Interfaces\EducationSystem.Interfaces.csproj" />
     <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
   </ItemGroup>

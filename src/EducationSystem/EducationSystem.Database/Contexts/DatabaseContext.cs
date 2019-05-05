@@ -10,17 +10,24 @@ namespace EducationSystem.Database.Contexts
         public DbSet<DatabaseTest> Tests { get; set; }
         public DbSet<DatabaseFile> Files { get; set; }
         public DbSet<DatabaseGroup> Groups { get; set; }
+        public DbSet<DatabaseTheme> Themes { get; set; }
         public DbSet<DatabaseAnswer> Answers { get; set; }
         public DbSet<DatabaseProgram> Programs { get; set; }
+        public DbSet<DatabaseUserRole> UserRoles { get; set; }
         public DbSet<DatabaseQuestion> Questions { get; set; }
         public DbSet<DatabaseMaterial> Materials { get; set; }
         public DbSet<DatabaseStudyPlan> StudyPlans { get; set; }
         public DbSet<DatabaseInstitute> Institutes { get; set; }
+        public DbSet<DatabaseTestTheme> TestThemes { get; set; }
         public DbSet<DatabaseDiscipline> Disciplines { get; set; }
+        public DbSet<DatabaseProgramData> ProgramDatas { get; set; }
+        public DbSet<DatabaseStudentGroup> StudentGroups { get; set; }
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
         public DbSet<DatabaseProgramData> ParametersSets { get; set; }
         public DbSet<DatabaseMaterialFile> MaterialFiles { get; set; }
         public DbSet<DatabaseQuestionStudent> QuestionStudents { get; set; }
+        public DbSet<DatabaseDisciplineLecturer> DisciplineLecturers { get; set; }
+        public DbSet<DatabaseStudyProfileDiscipline> StudyProfileDisciplines { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {

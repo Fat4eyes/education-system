@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Mapping.Resolvers;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Mapping.Profiles
@@ -9,8 +8,7 @@ namespace EducationSystem.Mapping.Profiles
     {
         public ProfileProgram()
         {
-            CreateMap<DatabaseProgram, Program>()
-                .ForMember(d => d.ProgramDatas, o => o.MapFrom<ResolverProgramData>());
+            CreateMap<DatabaseProgram, Program>();
 
             CreateMap<Program, DatabaseProgram>()
                 .ForMember(d => d.Id, o => o.Ignore())

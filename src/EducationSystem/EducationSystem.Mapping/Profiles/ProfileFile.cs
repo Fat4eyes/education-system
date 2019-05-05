@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Implementations.Helpers;
+using EducationSystem.Helpers;
 using EducationSystem.Models.Files;
 using EducationSystem.Models.Files.Basics;
 
@@ -45,7 +45,7 @@ namespace EducationSystem.Mapping.Profiles
             if (file.Guid.HasValue == false)
                 return null;
 
-            return HelperPath
+            return PathHelper
                 .GetRelativeFilePath(file.Type, file.Guid.Value, file.Name)
                 .Replace("\\", "/");
         }

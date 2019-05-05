@@ -6,6 +6,7 @@ using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
 using EducationSystem.Implementations.Specifications;
+using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
@@ -16,18 +17,20 @@ namespace EducationSystem.Implementations.Validators
     public sealed class ValidatorQuestion : IValidator<Question>
     {
         private readonly IHelperFile _helperFile;
-
+        private readonly IExecutionContext _executionContext;
         private readonly IRepository<DatabaseFile> _repositoryFile;
         private readonly IRepository<DatabaseTheme> _repositoryTheme;
         private readonly IRepository<DatabaseMaterial> _repositoryMaterial;
 
         public ValidatorQuestion(
             IHelperFile helperFile,
+            IExecutionContext executionContext,
             IRepository<DatabaseFile> repositoryFile,
             IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseMaterial> repositoryMaterial)
         {
             _helperFile = helperFile;
+            _executionContext = executionContext;
             _repositoryFile = repositoryFile;
             _repositoryTheme = repositoryTheme;
             _repositoryMaterial = repositoryMaterial;
@@ -44,7 +47,10 @@ namespace EducationSystem.Implementations.Validators
             if (model.Time.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано время ответа на вопрос.");
 
-            if (model.Time.Value <= 0 || model.Time.Value > 60 * 60)
+            // Секунды.
+            // От 1 до 3600 секунд.
+            // От 1 секунды до 1 часа.
+            if (model.Time.Value < 1 || model.Time.Value > 60 * 60)
                 throw ExceptionHelper.CreatePublicException("Указано некорректное время ответа на вопрос.");
 
             if (model.Type.HasValue == false)
@@ -56,17 +62,34 @@ namespace EducationSystem.Implementations.Validators
             if (model.ThemeId.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указана тема.");
 
-            if (await _repositoryTheme.FindFirstAsync(new ThemesById(model.ThemeId.Value)) == null)
+            var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(model.ThemeId.Value)) ??
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            if (model.Image != null && await _repositoryFile.FindFirstAsync(new FilesById(model.Image.Id)) == null)
-                throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
+            var user = await _executionContext.GetCurrentUserAsync();
 
-            if (model.Image != null && await _helperFile.FileExistsAsync(model.Image) == false)
-                throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
+            if (new ThemesByLecturerId(user.Id).IsSatisfiedBy(theme) == false)
+                throw ExceptionHelper.CreatePublicException("Указанная тема недоступна.");
 
-            if (model.Material != null && await _repositoryMaterial.FindFirstAsync(new MaterialsById(model.Material.Id)) == null)
-                throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
+            if (model.Image != null)
+            {
+                var image = await _repositoryFile.FindFirstAsync(new FilesById(model.Image.Id)) ??
+                    throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
+
+                if (await _helperFile.FileExistsAsync(model.Image) == false)
+                    throw ExceptionHelper.CreatePublicException("Указанное изображение не существует.");
+
+                if (new FilesByOwnerId(user.Id).IsSatisfiedBy(image) == false)
+                    throw ExceptionHelper.CreatePublicException("Указанное изображение недоступно.");
+            }
+
+            if (model.Material != null)
+            {
+                var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(model.Material.Id)) ??
+                    throw ExceptionHelper.CreatePublicException("Указанный материал не существует.");
+
+                if (new MaterialsByOwnerId(user.Id).IsSatisfiedBy(material) == false)
+                    throw ExceptionHelper.CreatePublicException("Указанный материал недоступен.");
+            }
 
             ValidateByQuestionType(model);
         }
@@ -79,32 +102,30 @@ namespace EducationSystem.Implementations.Validators
             if (question.Type == QuestionType.WithProgram)
             {
                 if (question.Program == null)
-                    throw ExceptionHelper.CreatePublicException(
-                        "Для вопроса не указана программа.");
+                    throw ExceptionHelper.CreatePublicException("Для вопроса не указана программа.");
 
                 if (question.Program.TimeLimit.HasValue == false)
-                    throw ExceptionHelper.CreatePublicException(
-                        "Для программы не указано ограничение по времени.");
+                    throw ExceptionHelper.CreatePublicException("Для программы не указано ограничение по времени.");
 
+                // Секунды.
+                // От 1 до 60 секунд.
                 if (question.Program.TimeLimit.Value < 1 || question.Program.TimeLimit.Value > 60)
                     throw ExceptionHelper.CreatePublicException(
                         "Для программы указано некорректное ограничение по времени.");
 
                 if (question.Program.MemoryLimit.HasValue == false)
-                    throw ExceptionHelper.CreatePublicException(
-                        "Для программы не указано ограничение по памяти.");
+                    throw ExceptionHelper.CreatePublicException("Для программы не указано ограничение по памяти.");
 
-                if (question.Program.MemoryLimit.Value < 1 || question.Program.MemoryLimit.Value > 10000)
-                    throw ExceptionHelper.CreatePublicException(
-                        "Для программы указано некорректное ограничение по памяти.");
+                // Килобайты.
+                // От 5 до 10 мегабайтов.
+                if (question.Program.MemoryLimit.Value < 5120 || question.Program.MemoryLimit.Value > 10240)
+                    throw ExceptionHelper.CreatePublicException("Для программы указано некорректное ограничение по памяти.");
 
                 if (question.Program.LanguageType.HasValue == false)
-                    throw ExceptionHelper.CreatePublicException(
-                        "Для программы не указан язык программирования.");
+                    throw ExceptionHelper.CreatePublicException("Для программы не указан язык программирования.");
 
                 if (question.Program.ProgramDatas.IsEmpty())
-                    throw ExceptionHelper.CreatePublicException(
-                        "Для программы не указаны входные и выходные параметры.");
+                    throw ExceptionHelper.CreatePublicException("Для программы не указаны входные и выходные параметры.");
 
                 if (question.Program.ProgramDatas.Any(x =>
                     string.IsNullOrWhiteSpace(x.Input) ||
@@ -118,12 +139,10 @@ namespace EducationSystem.Implementations.Validators
             if (question.Type == QuestionType.OpenedOneString)
             {
                 if (question.Answers.IsEmpty())
-                    throw ExceptionHelper.CreatePublicException(
-                        "Для вопроса не указано ни одного варианта ответа.");
+                    throw ExceptionHelper.CreatePublicException("Для вопроса не указано ни одного варианта ответа.");
 
                 if (question.Answers.Any(x => string.IsNullOrWhiteSpace(x.Text)))
-                    throw ExceptionHelper.CreatePublicException(
-                        "Один или несколько вариантов ответа имеют неверный формат.");
+                    throw ExceptionHelper.CreatePublicException("Один или несколько вариантов ответа имеют неверный формат.");
 
                 return;
             }
@@ -134,12 +153,10 @@ namespace EducationSystem.Implementations.Validators
                     "Минимальное количество вариантов ответа: 2.");
 
             if (question.Answers.All(x => x.IsRight != true))
-                throw ExceptionHelper.CreatePublicException(
-                    "Ни один вариант ответа не указан как правильный.");
+                throw ExceptionHelper.CreatePublicException("Ни один вариант ответа не указан как правильный.");
 
             if (question.Answers.Any(x => string.IsNullOrWhiteSpace(x.Text)))
-                throw ExceptionHelper.CreatePublicException(
-                    "Указанные варианты ответа имеют неверный формат.");
+                throw ExceptionHelper.CreatePublicException("Указанные варианты ответа имеют неверный формат.");
 
             if (question.Type != QuestionType.ClosedOneAnswer)
                 return;

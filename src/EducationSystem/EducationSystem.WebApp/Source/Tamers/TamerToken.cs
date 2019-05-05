@@ -3,7 +3,6 @@ using EducationSystem.Constants;
 using EducationSystem.Interfaces;
 using EducationSystem.Models;
 using EducationSystem.WebApp.Source.Attributes;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EducationSystem.WebApp.Source.Tamers
@@ -22,7 +21,7 @@ namespace EducationSystem.WebApp.Source.Tamers
         [Route("Generate")]
         public async Task<IActionResult> Generate([FromBody] TokenRequest request)
         {
-            return Ok(await _tokenGenerator.GenerateTokenAsync(request));
+            return await Ok(() => _tokenGenerator.GenerateTokenAsync(request));
         }
 
         [HttpPost]

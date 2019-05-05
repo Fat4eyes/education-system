@@ -1,6 +1,6 @@
 ﻿using System;
-using EducationSystem.Constants;
 using EducationSystem.Enums;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Models.Files.Basics;
 
@@ -10,15 +10,7 @@ namespace EducationSystem.Implementations.Helpers
     {
         public static string GetFolderName(FileType type)
         {
-            switch (type)
-            {
-                case FileType.Image:
-                    return Directories.Images;
-                case FileType.Document:
-                    return Directories.Documents;
-            }
-
-            return Directories.Files;
+            return FolderHelper.GetFolderName(type);
         }
 
         string IHelperFolder.GetFolderName(FileType type)

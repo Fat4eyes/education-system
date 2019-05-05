@@ -4,6 +4,7 @@ using System.Reflection;
 using AutoMapper;
 using EducationSystem.Mapping;
 using EducationSystem.Models;
+using EducationSystem.Resolvers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,8 +30,11 @@ namespace EducationSystem.WebApp.Source.Helpers
                 .ToList();
 
             assemblies.Add(typeof(MappingConfigurator).Assembly);
+            assemblies.Add(typeof(Resolver).Assembly);
 
-            return assemblies.ToArray();
+            return assemblies
+                .Distinct()
+                .ToArray();
         }
 
         public static string GetConfigurationFileName(IHostingEnvironment environment)

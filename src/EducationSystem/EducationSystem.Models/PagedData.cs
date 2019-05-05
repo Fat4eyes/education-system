@@ -8,6 +8,8 @@ namespace EducationSystem.Models
 
         public int Count { get; set; }
 
+        public PagedData() { }
+
         public PagedData(List<T> items, int count)
         {
             Items = items;

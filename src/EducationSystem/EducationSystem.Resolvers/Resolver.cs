@@ -1,21 +1,18 @@
 ﻿using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Implementations.Managers
+namespace EducationSystem.Resolvers
 {
-    public abstract class Manager
+    public abstract class Resolver
     {
         protected IExecutionContext ExecutionContext { get; }
-        protected IExceptionFactory ExceptionFactory { get; }
 
         protected User CurrentUser { get; }
 
-        protected Manager(IExecutionContext executionContext, IExceptionFactory exceptionFactory)
+        protected Resolver(IExecutionContext executionContext)
         {
             ExecutionContext = executionContext;
-            ExceptionFactory = exceptionFactory;
 
             CurrentUser = ExecutionContext
                 .GetCurrentUserAsync()

@@ -6,12 +6,14 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.0" />
+    <PackageReference Include="CodeExecutionSystem.Contracts" Version="0.0.7.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
-    <ProjectReference Include="..\EducationSystem.Implementations\EducationSystem.Implementations.csproj" />
+    <ProjectReference Include="..\EducationSystem.Helpers\EducationSystem.Helpers.csproj" />
     <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Resolvers\EducationSystem.Resolvers.csproj" />
   </ItemGroup>
 
 </Project>
