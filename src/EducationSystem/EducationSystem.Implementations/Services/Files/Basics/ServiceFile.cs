@@ -18,11 +18,11 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 {
     public abstract class ServiceFile<TFile> : Service<ServiceFile<TFile>>, IServiceFile<TFile> where TFile : File
     {
-        private readonly IHelperPath _helperPath;
-        private readonly IHelperFile _helperFile;
-        private readonly IHelperFolder _helperFolder;
-        private readonly IValidator<TFile> _validatorFile;
-        private readonly IRepository<DatabaseFile> _repositoryFile;
+        protected IHelperPath HelperPath { get; }
+        protected IHelperFile HelperFile { get; }
+        protected IHelperFolder HelperFolder { get; }
+        protected IValidator<TFile> ValidatorFile { get; }
+        protected IRepository<DatabaseFile> RepositoryFile { get; }
 
         protected ServiceFile(
             IMapper mapper,
@@ -40,16 +40,16 @@ namespace EducationSystem.Implementations.Services.Files.Basics
                 executionContext,
                 exceptionFactory)
         {
-            _helperPath = helperPath;
-            _helperFile = helperFile;
-            _helperFolder = helperFolder;
-            _validatorFile = validatorFile;
-            _repositoryFile = repositoryFile;
+            HelperPath = helperPath;
+            HelperFile = helperFile;
+            HelperFolder = helperFolder;
+            ValidatorFile = validatorFile;
+            RepositoryFile = repositoryFile;
         }
 
         public async Task DeleteFileAsync(int id)
         {
-            var model = await _repositoryFile.FindFirstAsync(new FilesById(id)) ??
+            var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseFile>(id);
 
             if (CurrentUser.IsNotAdmin() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
@@ -57,27 +57,27 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
             var file = Mapper.Map<TFile>(model);
 
-            await _repositoryFile.RemoveAsync(model);
+            await RepositoryFile.RemoveAsync(model);
 
-            if (await _helperFile.FileExistsAsync(file) == false)
+            if (await HelperFile.FileExistsAsync(file) == false)
                 return;
 
-            var path = await _helperPath.GetAbsoluteFilePathAsync(file);
+            var path = await HelperPath.GetAbsoluteFilePathAsync(file);
 
             if (System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
 
-            await _repositoryFile.SaveChangesAsync();
+            await RepositoryFile.SaveChangesAsync();
         }
 
         public async Task<TFile> GetFileAsync(int id)
         {
-            var model = await _repositoryFile.FindFirstAsync(new FilesById(id)) ??
+            var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseFile>(id);
 
             var file = Mapper.Map<TFile>(model);
 
-            if (await _helperFile.FileExistsAsync(file) == false)
+            if (await HelperFile.FileExistsAsync(file) == false)
                 throw ExceptionFactory.NotFound<File>(id);
 
             return file;
@@ -85,17 +85,17 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public virtual async Task<TFile> CreateFileAsync(TFile file)
         {
-            await _validatorFile.ValidateAsync(file);
+            await ValidatorFile.ValidateAsync(file);
 
             var guid = Guid.NewGuid();
             var name = guid + Path.GetExtension(file.Name);
 
-            var path = Path.Combine(_helperPath.GetContentPath(), Directories.Files);
+            var path = Path.Combine(HelperPath.GetContentPath(), Directories.Files);
 
             if (Directory.Exists(path) == false)
                 Directory.CreateDirectory(path);
 
-            path = Path.Combine(path, _helperFolder.GetFolderName(file.Type));
+            path = Path.Combine(path, HelperFolder.GetFolderName(file.Type));
 
             if (Directory.Exists(path) == false)
                 Directory.CreateDirectory(path);
@@ -110,7 +110,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             model.Guid = guid.ToString();
             model.OwnerId = CurrentUser.Id;
 
-            await _repositoryFile.AddAsync(model, true);
+            await RepositoryFile.AddAsync(model, true);
 
             return Mapper.Map<TFile>(model);
         }
