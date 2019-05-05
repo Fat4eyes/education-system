@@ -73,6 +73,7 @@ class TestsTable extends TableComponent<Test, TProps, IState> {
 
   async getTableData(pagingOptions: IPagingOptions = {Skip: 0, Take: this.state.CountPerPage}, param: any = {}) {
     const {data, success} = await this.TestService!.getAll({
+      OnlyActive: this.state.Filter.IsActive,
       DisciplineId: this.state.Filter.DisciplineId,
       ...this.getNameFilter(this.state.Filter.Name),
       ...pagingOptions

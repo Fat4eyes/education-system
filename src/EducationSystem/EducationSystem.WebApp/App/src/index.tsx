@@ -1,7 +1,7 @@
 import React, {Suspense} from 'react'
 import ReactDOM from 'react-dom'
 import {Router} from 'react-router-dom'
-import {Loading, Try} from './components/core'
+import {Loading} from './components/core'
 import {blue, edo, grey, purpure} from './themes'
 import {unregister} from './serviceWorker'
 import history from './history'
@@ -44,7 +44,7 @@ Container.getContainer()
 
 let themes = [purpure(), blue(), edo(), grey()]
 
-const App = () => <Try>
+const App = () =>
   <Router history={history}>
     <MuiThemeProvider theme={themes[Math.floor(Math.random() * themes.length)]}>
       <SnackbarProvider maxSnack={3}>
@@ -71,6 +71,5 @@ const App = () => <Try>
       </SnackbarProvider>
     </MuiThemeProvider>
   </Router>
-</Try>
 
 ReactDOM.render(<App/>, document.getElementById('root'))

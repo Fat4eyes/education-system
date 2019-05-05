@@ -4,22 +4,18 @@ import Grid from '@material-ui/core/Grid'
 import Test from '../../../models/Test'
 import {
   Button,
-  Chip, Collapse,
+  Chip,
+  Collapse,
   FormControl,
   Input,
   InputLabel,
   MenuItem,
   Select,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
   Typography,
   WithStyles,
   withStyles
 } from '@material-ui/core'
 import HandleTestStyles from './HandleTestStyles'
-import EditIcon from '@material-ui/icons/Edit'
 import {VTextField} from '../../core'
 import {inject} from '../../../infrastructure/di/inject'
 import TotalTimeInput from './TotalTimeInput'
@@ -67,24 +63,28 @@ class HandleTest extends Component<TProps, IState> {
     this.state = initState
     this.state.Model.TotalTime = 60
   }
-  
+
   async componentDidMount() {
     if (this.props.match.params.id) {
       const {data, success} = await this.TestService!.get(Number(this.props.match.params.id))
-      
+
       if (success && data && data.DisciplineId) {
         let disciplinePromise = this.DisciplineService!.get(data.DisciplineId!)
         let disciplineThemesPromise = this.ThemeService!.getByDisciplineId(data.DisciplineId!, {All: true})
         let testThemesPromise = this.ThemeService!.getByTestId(data.Id!, {All: true})
-        
+
         const {data: discipline} = await disciplinePromise
         const {data: disciplineThemes} = await disciplineThemesPromise
         const {data: testThemes} = await testThemesPromise
-        
+
         if (discipline && disciplineThemes) {
-          data.Discipline = discipline
+          const model: Test = {
+            ...data,
+            Themes: testThemes ? testThemes.Items : [],
+            Discipline: discipline
+          }
           this.setState({
-            Model: data,
+            Model: model,
             ShowDisciplinesTable: false,
             AvailableThemes: disciplineThemes ? disciplineThemes.Items : [],
             SelectedThemes: testThemes ? testThemes.Items.map(t => t.Id!) : []
@@ -92,8 +92,8 @@ class HandleTest extends Component<TProps, IState> {
         } else {
           this.setState({Model: data})
         }
-      } 
-    } 
+      }
+    }
   }
 
   handleModel = ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) =>
@@ -118,7 +118,8 @@ class HandleTest extends Component<TProps, IState> {
           Model: {
             ...state.Model,
             DisciplineId: discipline.Id,
-            Discipline: discipline
+            Discipline: discipline,
+            Themes: []
           },
           AvailableThemes: data.Items,
           SelectedThemes: [],
@@ -131,11 +132,17 @@ class HandleTest extends Component<TProps, IState> {
   }
 
   handleSubmit = async () => {
-    const {data, success} = await this.TestService!.add(this.state.Model)
+    if (this.state.Model.Id) {
+      if (await this.TestService!.update(this.state.Model)) {
+        this.NotificationService!.showSuccess(`Тест "${this.state.Model.Subject}" успешно обновлен`)
+      }
+    } else {
+      const {data, success} = await this.TestService!.add(this.state.Model)
 
-    if (success && data) {
-      this.NotificationService!.showSuccess(`Тест "${this.state.Model.Subject}" успешно добавлен`)
-      this.setState(initState)
+      if (success && data) {
+        this.NotificationService!.showSuccess(`Тест "${this.state.Model.Subject}" успешно добавлен`)
+        this.setState(initState)
+      }
     }
   }
 
@@ -175,7 +182,7 @@ class HandleTest extends Component<TProps, IState> {
             {this.state.Model.DisciplineId ? this.state.Model.Discipline!.Name : 'Дисциплины'}
           </Typography>
           {
-            this.state.Model.DisciplineId && !this.state.ShowDisciplinesTable && 
+            this.state.Model.DisciplineId && !this.state.ShowDisciplinesTable &&
             <Typography align='center' noWrap variant='subtitle1'
                         className={classNames(classes.headerText, classes.breadcrumbs)}>
               Тест
@@ -183,7 +190,7 @@ class HandleTest extends Component<TProps, IState> {
           }
         </Breadcrumbs>
       </Grid>
-    
+
     return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
         <Block partial>
@@ -308,7 +315,7 @@ class HandleTest extends Component<TProps, IState> {
                 <Grid container className={classes.buttonBlock}>
                   <Grid item>
                     <Button variant='contained' color='primary' onClick={this.handleSubmit}>
-                      Добавить
+                      {this.state.Model.Id ? 'Обновить' : 'Добавить'}
                     </Button>
                   </Grid>
                 </Grid>
