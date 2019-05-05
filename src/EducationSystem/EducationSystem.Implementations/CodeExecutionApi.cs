@@ -27,24 +27,11 @@ namespace EducationSystem.Implementations
             {
                 Results = new[]
                 {
-                    new TestRunResult
-                    {
-                        ExecutionResult = ExecutionResult.Success,
-                        ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
-                        UserOutput = nameof(TestRunResult.ExpectedOutput)
-                    },
-                    new TestRunResult
-                    {
-                        ExecutionResult = ExecutionResult.Success,
-                        ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
-                        UserOutput = nameof(TestRunResult.ExpectedOutput)
-                    },
-                    new TestRunResult
-                    {
-                        ExecutionResult = ExecutionResult.Success,
-                        ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
-                        UserOutput = nameof(TestRunResult.ExpectedOutput)
-                    }
+                    CreateSuccessResult(),
+                    CreateSuccessResult(),
+                    CreateSuccessResult(),
+                    CreateSuccessResult(),
+                    CreateSuccessResult()
                 }
             };
         }
@@ -62,35 +49,35 @@ namespace EducationSystem.Implementations
                 },
                 Results = new[]
                 {
-                    new TestRunResult
-                    {
-                        ExecutionResult = ExecutionResult.Success,
-                        ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
-                        UserOutput = nameof(TestRunResult.ExpectedOutput)
-                    },
-                    new TestRunResult
-                    {
-                        ExecutionResult = ExecutionResult.Success,
-                        ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
-                        UserOutput = nameof(TestRunResult.ExpectedOutput)
-                    },
-                    new TestRunResult
-                    {
-                        ExecutionResult = ExecutionResult.KilledByMemoryLimit,
-                        ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
-                        UserOutput = nameof(TestRunResult.UserOutput)
-                    },
-                    new TestRunResult
-                    {
-                        ExecutionResult = ExecutionResult.KilledByTimeout,
-                        ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
-                        UserOutput = nameof(TestRunResult.UserOutput)
-                    }
+                    CreateSuccessResult(),
+                    CreateSuccessResult(),
+                    CreateResult(ExecutionResult.KilledByMemoryLimit),
+                    CreateResult(ExecutionResult.KilledByTimeout)
                 }
             };
         }
 
-        public static string GetRandomString(int length)
+        private static TestRunResult CreateSuccessResult()
+        {
+            return new TestRunResult
+            {
+                ExecutionResult = ExecutionResult.Success,
+                ExpectedOutput = nameof(TestRunResult.ExpectedOutput),
+                UserOutput = nameof(TestRunResult.ExpectedOutput)
+            };
+        }
+
+        private static TestRunResult CreateResult(ExecutionResult result)
+        {
+            return new TestRunResult
+            {
+                ExecutionResult = result,
+                ExpectedOutput = GetRandomString(25),
+                UserOutput = GetRandomString(25)
+            };
+        }
+
+        private static string GetRandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
