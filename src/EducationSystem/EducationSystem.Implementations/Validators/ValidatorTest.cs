@@ -59,7 +59,7 @@ namespace EducationSystem.Implementations.Validators
 
             var user = await _executionContext.GetCurrentUserAsync();
 
-            if (new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline))
+            if (new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline) == false)
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина недоступна.");
 
             var ids = model.Themes
