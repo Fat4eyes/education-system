@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database;
+﻿using CodeExecutionSystem.Contracts.Abstractions;
+using EducationSystem.Database;
 using EducationSystem.Database.Models;
 using EducationSystem.Implementations;
 using EducationSystem.Implementations.Factories;
@@ -36,6 +37,7 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IExceptionFactory, ExceptionFactory>();
             collection.AddTransient<ICodeExecutor, CodeExecutor>();
+            collection.AddTransient<ICodeExecutionApi, CodeExecutionApi>();
 
             collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

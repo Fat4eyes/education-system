@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CodeExecutionSystem.Client.Extensions;
 using EducationSystem.Dependencies;
 using EducationSystem.WebApp.Source.Handlers;
 using EducationSystem.WebApp.Source.Helpers;
@@ -44,8 +43,6 @@ namespace EducationSystem.WebApp.Source
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(ConfigurationHelper.ConfigureJson);
-
-            services.AddCodeExecutionSystem();
 
             DependencyRegistrar.Register(services, Configuration);
         }
