@@ -9,10 +9,8 @@ namespace EducationSystem.Interfaces.Services
     public interface IServiceTheme
     {
         Task<PagedData<Theme>> GetThemesAsync(FilterTheme filter);
-        Task<PagedData<Theme>> GetLecturerThemesAsync(int lecturerId, FilterTheme filter);
 
         Task<Theme> GetThemeAsync(int id);
-        Task<Theme> GetLecturerThemeAsync(int id, int lecturerId);
 
         Task DeleteThemeAsync(int id);
         Task UpdateThemeAsync(int id, Theme theme);

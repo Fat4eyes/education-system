@@ -9,10 +9,8 @@ namespace EducationSystem.Interfaces.Services
     public interface IServiceQuestion
     {
         Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter);
-        Task<PagedData<Question>> GetLecturerQuestionsAsync(int lecturerId, FilterQuestion filter);
 
         Task<Question> GetQuestionAsync(int id);
-        Task<Question> GetLecturerQuestionAsync(int id, int lecturerId);
 
         Task DeleteQuestionAsync(int id);
         Task UpdateQuestionAsync(int id, Question question);

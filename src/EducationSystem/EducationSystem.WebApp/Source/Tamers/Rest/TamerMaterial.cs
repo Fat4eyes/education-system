@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
-using EducationSystem.Interfaces.Managers;
+using EducationSystem.Interfaces.Services;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
 using EducationSystem.WebApp.Source.Attributes;
@@ -11,25 +11,25 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     [Route("Api/Materials")]
     public class TamerMaterial : Tamer
     {
-        private readonly IManagerMaterial _managerMaterial;
+        private readonly IServiceMaterial _serviceMaterial;
 
-        public TamerMaterial(IManagerMaterial managerMaterial)
+        public TamerMaterial(IServiceMaterial serviceMaterial)
         {
-            _managerMaterial = managerMaterial;
+            _serviceMaterial = serviceMaterial;
         }
 
         [HttpGet]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetMaterials([FromQuery] FilterMaterial filter)
         {
-            return await Ok(() => _managerMaterial.GetMaterialsAsync(filter));
+            return await Ok(() => _serviceMaterial.GetMaterialsAsync(filter));
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
         public async Task<IActionResult> GetMaterial([FromRoute] int id)
         {
-            return await Ok(() => _managerMaterial.GetMaterialAsync(id));
+            return await Ok(() => _serviceMaterial.GetMaterialAsync(id));
         }
 
         [HttpPost]
@@ -37,7 +37,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> CreateMaterial([FromBody] Material material)
         {
-            return await Ok(() => _managerMaterial.CreateMaterialAsync(material));
+            return await Ok(() => _serviceMaterial.CreateMaterialAsync(material));
         }
 
         [Transaction]
@@ -45,7 +45,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateMaterial([FromRoute] int id, [FromBody] Material material)
         {
-            return await Ok(() => _managerMaterial.UpdateMaterialAsync(id, material));
+            return await Ok(() => _serviceMaterial.UpdateMaterialAsync(id, material));
         }
 
         [Transaction]
@@ -53,7 +53,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteMaterial([FromRoute] int id)
         {
-            return await Ok(() => _managerMaterial.DeleteMaterialAsync(id));
+            return await Ok(() => _serviceMaterial.DeleteMaterialAsync(id));
         }
     }
 }

@@ -20,8 +20,8 @@ namespace EducationSystem.Implementations.Services.Files
             IHelperFile helperFile,
             IHelperFolder helperFolder,
             IValidator<Document> validatorDocument,
-            IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
+            IExceptionFactory exceptionFactory,
             IRepository<DatabaseFile> repositoryFile)
             : base(
                 mapper,
@@ -30,8 +30,8 @@ namespace EducationSystem.Implementations.Services.Files
                 helperFile,
                 helperFolder,
                 validatorDocument,
-                exceptionFactory,
                 executionContext,
+                exceptionFactory,
                 repositoryFile)
         { }
     }

@@ -6,7 +6,6 @@ using EducationSystem.Database.Models;
 using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
-using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
@@ -19,101 +18,90 @@ namespace EducationSystem.Implementations.Services
 {
     public class ServiceMaterial : Service<ServiceMaterial>, IServiceMaterial
     {
-        private readonly IExecutionContext _executionContext;
-        private readonly IHelperUserRole _helperUserRole;
         private readonly IValidator<Material> _validatorMaterial;
         private readonly IRepository<DatabaseMaterial> _repositoryMaterial;
         private readonly IRepository<DatabaseMaterialFile> _repositoryMaterialFile;
-        private readonly IExceptionFactory _exceptionFactory;
 
         public ServiceMaterial(
             IMapper mapper,
             IExecutionContext executionContext,
-            IHelperUserRole helperUserRole,
             ILogger<ServiceMaterial> logger,
             IValidator<Material> validatorMaterial,
             IRepository<DatabaseMaterial> repositoryMaterial,
             IRepository<DatabaseMaterialFile> repositoryMaterialFile,
             IExceptionFactory exceptionFactory)
-            : base(mapper, logger)
+            : base(
+                mapper,
+                logger,
+                executionContext,
+                exceptionFactory)
         {
-            _executionContext = executionContext;
-            _helperUserRole = helperUserRole;
             _validatorMaterial = validatorMaterial;
             _repositoryMaterial = repositoryMaterial;
             _repositoryMaterialFile = repositoryMaterialFile;
-            _exceptionFactory = exceptionFactory;
         }
 
         public async Task<PagedData<Material>> GetMaterialsAsync(FilterMaterial filter)
         {
-            var specification = new MaterialsByName(filter.Name);
+            if (CurrentUser.IsAdmin())
+            {
+                var specification = new MaterialsByName(filter.Name);
 
-            var (count, materials) = await _repositoryMaterial.FindPaginatedAsync(specification, filter);
+                var (count, materials) = await _repositoryMaterial.FindPaginatedAsync(specification, filter);
 
-            return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
-        }
+                return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
+            }
 
-        public async Task<PagedData<Material>> GetLecturerMaterialsAsync(int lecturerId, FilterMaterial filter)
-        {
-            await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
+            if (CurrentUser.IsLecturer())
+            {
+                var specification =
+                    new MaterialsByName(filter.Name) &
+                    new MaterialsByOwnerId(CurrentUser.Id);
 
-            var specification =
-                new MaterialsByName(filter.Name) &
-                new MaterialsByOwnerId(lecturerId);
+                var (count, materials) = await _repositoryMaterial.FindPaginatedAsync(specification, filter);
 
-            var (count, materials) = await _repositoryMaterial.FindPaginatedAsync(specification, filter);
+                return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
+            }
 
-            return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task<Material> GetMaterialAsync(int id)
         {
-            var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
-
-            return Mapper.Map<Material>(material);
-        }
-
-        public async Task<Material> GetStudentMaterialAsync(int id, int studentId)
-        {
-            await _helperUserRole.CheckRoleStudentAsync(studentId);
-
             // Студент сейчас может получить доступ к любому материалу любого преподавателя (администратора).
             // Под материалом здесь понимается учебный материал.
 
             // TODO: Исправить это при необходимости.
 
-            var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
+            if (CurrentUser.IsAdmin() || CurrentUser.IsStudent())
+            {
+                var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
+                    throw ExceptionFactory.NotFound<DatabaseMaterial>(id);
 
-            return Mapper.Map<Material>(material);
-        }
+                return Mapper.Map<Material>(material);
+            }
 
-        public async Task<Material> GetLecturerMaterialAsync(int id, int lecturerId)
-        {
-            await _helperUserRole.CheckRoleLecturerAsync(lecturerId);
+            if (CurrentUser.IsLecturer())
+            {
+                var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
+                    throw ExceptionFactory.NotFound<DatabaseMaterial>(id);
 
-            var specification =
-                new MaterialsById(id) &
-                new MaterialsByOwnerId(lecturerId);
+                if (new MaterialsByOwnerId(CurrentUser.Id).IsSatisfiedBy(material) == false)
+                    throw ExceptionFactory.NoAccess();
 
-            var material = await _repositoryMaterial.FindFirstAsync(specification) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
+                return Mapper.Map<Material>(material);
+            }
 
-            return Mapper.Map<Material>(material);
+            throw ExceptionFactory.NoAccess();
         }
 
         public async Task DeleteMaterialAsync(int id)
         {
             var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
+                throw ExceptionFactory.NotFound<DatabaseMaterial>(id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
-            // Удалить материал может только администратор или владелец материала.
-            if (user.IsNotAdmin() && !new MaterialsByOwnerId(user.Id).IsSatisfiedBy(material))
-                throw _exceptionFactory.NoAccess();
+            if (CurrentUser.IsNotAdmin() && !new MaterialsByOwnerId(CurrentUser.Id).IsSatisfiedBy(material))
+                throw ExceptionFactory.NoAccess();
 
             await _repositoryMaterial.RemoveAsync(material, true);
         }
@@ -123,13 +111,10 @@ namespace EducationSystem.Implementations.Services
             await _validatorMaterial.ValidateAsync(material.Format());
 
             var model = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseMaterial>(id);
+                throw ExceptionFactory.NotFound<DatabaseMaterial>(id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
-            // Изменить материал может только владелец материала.
-            if (!new MaterialsByOwnerId(user.Id).IsSatisfiedBy(model))
-                throw _exceptionFactory.NoAccess();
+            if (!new MaterialsByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+                throw ExceptionFactory.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseMaterial>(material), model);
 
@@ -149,9 +134,7 @@ namespace EducationSystem.Implementations.Services
 
             var model = Mapper.Map<DatabaseMaterial>(material);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
-            model.OwnerId = user.Id;
+            model.OwnerId = CurrentUser.Id;
 
             await _repositoryMaterial.AddAsync(model, true);
 

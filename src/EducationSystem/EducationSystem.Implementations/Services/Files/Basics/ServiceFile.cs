@@ -22,8 +22,6 @@ namespace EducationSystem.Implementations.Services.Files.Basics
         private readonly IHelperFile _helperFile;
         private readonly IHelperFolder _helperFolder;
         private readonly IValidator<TFile> _validatorFile;
-        private readonly IExceptionFactory _exceptionFactory;
-        private readonly IExecutionContext _executionContext;
         private readonly IRepository<DatabaseFile> _repositoryFile;
 
         protected ServiceFile(
@@ -33,29 +31,29 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             IHelperFile helperFile,
             IHelperFolder helperFolder,
             IValidator<TFile> validatorFile,
-            IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
+            IExceptionFactory exceptionFactory,
             IRepository<DatabaseFile> repositoryFile)
-            : base(mapper, logger)
+            : base(
+                mapper,
+                logger,
+                executionContext,
+                exceptionFactory)
         {
             _helperPath = helperPath;
             _helperFile = helperFile;
             _helperFolder = helperFolder;
             _validatorFile = validatorFile;
-            _exceptionFactory = exceptionFactory;
-            _executionContext = executionContext;
             _repositoryFile = repositoryFile;
         }
 
         public async Task DeleteFileAsync(int id)
         {
             var model = await _repositoryFile.FindFirstAsync(new FilesById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseFile>(id);
+                throw ExceptionFactory.NotFound<DatabaseFile>(id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
-            if (user.IsNotAdmin() && model.OwnerId != user.Id)
-                throw _exceptionFactory.NoAccess();
+            if (CurrentUser.IsNotAdmin() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+                throw ExceptionFactory.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
 
@@ -75,12 +73,12 @@ namespace EducationSystem.Implementations.Services.Files.Basics
         public async Task<TFile> GetFileAsync(int id)
         {
             var model = await _repositoryFile.FindFirstAsync(new FilesById(id)) ??
-                throw _exceptionFactory.NotFound<DatabaseFile>(id);
+                throw ExceptionFactory.NotFound<DatabaseFile>(id);
 
             var file = Mapper.Map<TFile>(model);
 
             if (await _helperFile.FileExistsAsync(file) == false)
-                throw _exceptionFactory.NotFound<File>(id);
+                throw ExceptionFactory.NotFound<File>(id);
 
             return file;
         }
@@ -109,10 +107,8 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
             var model = Mapper.Map<DatabaseFile>(file);
 
-            var user = await _executionContext.GetCurrentUserAsync();
-
             model.Guid = guid.ToString();
-            model.OwnerId = user.Id;
+            model.OwnerId = CurrentUser.Id;
 
             await _repositoryFile.AddAsync(model, true);
 

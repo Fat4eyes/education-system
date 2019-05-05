@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Interfaces.Managers
+namespace EducationSystem.Interfaces.Services
 {
-    public interface IManagerUser
+    public interface IServiceUser
     {
         Task<User> GetCurrentUserAsync();
     }

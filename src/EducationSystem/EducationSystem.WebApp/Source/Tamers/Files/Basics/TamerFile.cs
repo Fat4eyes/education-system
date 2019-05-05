@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
-using EducationSystem.Interfaces.Managers.Files;
+using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Models.Files.Basics;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Http;
@@ -10,18 +10,18 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
 {
     public abstract class TamerFile<TFile> : Tamer where TFile : File, new()
     {
-        protected IManagerFile<TFile> ManagerFile { get; }
+        protected IServiceFile<TFile> ServiceFile { get; }
 
-        protected TamerFile(IManagerFile<TFile> managerFile)
+        protected TamerFile(IServiceFile<TFile> serviceFile)
         {
-            ManagerFile = managerFile;
+            ServiceFile = serviceFile;
         }
 
         [HttpGet("{id:int}")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
         public async Task<IActionResult> GetFile([FromRoute] int id)
         {
-            return await Ok(() => ManagerFile.GetFileAsync(id));
+            return await Ok(() => ServiceFile.GetFileAsync(id));
         }
 
         [HttpPost]
@@ -37,7 +37,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
                     Stream = stream
                 };
 
-                return await Ok(() => ManagerFile.CreateFileAsync(model));
+                return await Ok(() => ServiceFile.CreateFileAsync(model));
             }
         }
 
@@ -46,7 +46,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Files.Basics
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> DeleteFile([FromRoute] int id)
         {
-            return await Ok(() => ManagerFile.DeleteFileAsync(id));
+            return await Ok(() => ServiceFile.DeleteFileAsync(id));
         }
 
         [HttpGet("Extensions")]
