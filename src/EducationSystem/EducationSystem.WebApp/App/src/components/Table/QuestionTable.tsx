@@ -119,7 +119,7 @@ class QuestionTable extends Component<TProps, IState> {
               <ClearIcon color='action' onClick={this.handleModal(question.Id)}/>
             </RowHeader>
           </Grid>
-        )}
+        )
       }
       <Modal
         isOpen={!!this.state.DeleteQuestionId}

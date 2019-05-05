@@ -22,7 +22,7 @@ export class FileService implements IFileService {
         )
       case FileType.Document:
         return getResult(
-          await ProtectedFetch.postAndFiles(`/api/documents`)
+          await ProtectedFetch.postAndFiles(`/api/documents`, form)
         )
     }
 
