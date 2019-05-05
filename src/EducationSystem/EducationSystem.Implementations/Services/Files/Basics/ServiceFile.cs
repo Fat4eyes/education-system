@@ -49,6 +49,9 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task DeleteFileAsync(int id)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseFile>(id);
 
@@ -72,8 +75,14 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task<TFile> GetFileAsync(int id)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer() && CurrentUser.IsNotStudent())
+                throw ExceptionFactory.NoAccess();
+
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseFile>(id);
+
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotStudent() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+                throw ExceptionFactory.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
 
@@ -85,6 +94,9 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public virtual async Task<TFile> CreateFileAsync(TFile file)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             await ValidatorFile.ValidateAsync(file);
 
             var guid = Guid.NewGuid();

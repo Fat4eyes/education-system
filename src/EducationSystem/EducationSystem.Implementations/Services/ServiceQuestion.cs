@@ -102,6 +102,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteQuestionAsync(int id)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
 
@@ -115,6 +118,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateQuestionAsync(Question question)
         {
+            if (CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             await _validatorQuestion.ValidateAsync(question.Format());
 
             var model = Mapper.Map<DatabaseQuestion>(question);
@@ -140,6 +146,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
         {
+            if (CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
 
@@ -163,6 +172,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateQuestionAsync(int id, Question question)
         {
+            if (CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             await _validatorQuestion.ValidateAsync(question.Format());
 
             var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??

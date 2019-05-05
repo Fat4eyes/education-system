@@ -128,6 +128,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteTestAsync(int id)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseTest>(id);
 
@@ -139,6 +142,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateTestAsync(Test test)
         {
+            if (CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             await _validatorTest.ValidateAsync(test.Format());
 
             var model = Mapper.Map<DatabaseTest>(test);
@@ -150,6 +156,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateTestAsync(int id, Test test)
         {
+            if (CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             await _validatorTest.ValidateAsync(test.Format());
 
             var model = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??

@@ -97,6 +97,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteMaterialAsync(int id)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw ExceptionFactory.NotFound<DatabaseMaterial>(id);
 
@@ -108,6 +111,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateMaterialAsync(int id, Material material)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             await _validatorMaterial.ValidateAsync(material.Format());
 
             var model = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
@@ -130,6 +136,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateMaterialAsync(Material material)
         {
+            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+                throw ExceptionFactory.NoAccess();
+
             await _validatorMaterial.ValidateAsync(material.Format());
 
             var model = Mapper.Map<DatabaseMaterial>(material);
