@@ -80,15 +80,16 @@ namespace EducationSystem.Dependencies
 
         private static void RegisterRepositories(IServiceCollection collection)
         {
+            collection.AddTransient<IRepository<DatabaseTheme>, RepositoryTheme>();
+            collection.AddTransient<IRepository<DatabaseQuestion>, RepositoryQuestion>();
+
             collection.AddTransient<IRepository<DatabaseRole>, Repository<DatabaseRole>>();
             collection.AddTransient<IRepository<DatabaseUser>, Repository<DatabaseUser>>();
             collection.AddTransient<IRepository<DatabaseTest>, Repository<DatabaseTest>>();
             collection.AddTransient<IRepository<DatabaseFile>, Repository<DatabaseFile>>();
             collection.AddTransient<IRepository<DatabaseGroup>, Repository<DatabaseGroup>>();
-            collection.AddTransient<IRepository<DatabaseTheme>, Repository<DatabaseTheme>>();
             collection.AddTransient<IRepository<DatabaseAnswer>, Repository<DatabaseAnswer>>();
             collection.AddTransient<IRepository<DatabaseProgram>, Repository<DatabaseProgram>>();
-            collection.AddTransient<IRepository<DatabaseQuestion>, Repository<DatabaseQuestion>>();
             collection.AddTransient<IRepository<DatabaseMaterial>, Repository<DatabaseMaterial>>();
             collection.AddTransient<IRepository<DatabaseTestTheme>, Repository<DatabaseTestTheme>>();
             collection.AddTransient<IRepository<DatabaseDiscipline>, Repository<DatabaseDiscipline>>();

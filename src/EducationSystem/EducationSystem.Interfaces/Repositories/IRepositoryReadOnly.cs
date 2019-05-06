@@ -6,12 +6,12 @@ using EducationSystem.Models.Filters;
 
 namespace EducationSystem.Interfaces.Repositories
 {
-    public interface IRepositoryReadOnly<TModel> where TModel : DatabaseModel
+    public interface IRepositoryReadOnly<TEntity> where TEntity : DatabaseModel
     {
-        Task<List<TModel>> FindAllAsync(ISpecification<TModel> specification);
+        Task<List<TEntity>> FindAllAsync(ISpecification<TEntity> specification);
 
-        Task<(int Count, List<TModel> Items)> FindPaginatedAsync(ISpecification<TModel> specification, Filter filter);
+        Task<(int Count, List<TEntity> Items)> FindPaginatedAsync(ISpecification<TEntity> specification, Filter filter);
 
-        Task<TModel> FindFirstAsync(ISpecification<TModel> specification);
+        Task<TEntity> FindFirstAsync(ISpecification<TEntity> specification);
     }
 }

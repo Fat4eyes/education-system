@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Implementations.Repositories
 {
-    public abstract class RepositoryReadOnly<TModel> : IRepositoryReadOnly<TModel> where TModel : DatabaseModel
+    public abstract class RepositoryReadOnly<TEntity> : IRepositoryReadOnly<TEntity> where TEntity : DatabaseModel
     {
         protected DatabaseContext Context { get; }
 
@@ -20,27 +20,25 @@ namespace EducationSystem.Implementations.Repositories
             Context = context;
         }
 
-        public Task<List<TModel>> FindAllAsync(ISpecification<TModel> specification)
+        protected IQueryable<TEntity> Entities => Context.Set<TEntity>();
+
+        public virtual Task<List<TEntity>> FindAllAsync(ISpecification<TEntity> specification)
         {
-            return Context
-                .Set<TModel>()
+            return Entities
                 .Where(specification.ToExpression())
                 .ToListAsync();
         }
 
-        public Task<(int Count, List<TModel> Items)> FindPaginatedAsync(ISpecification<TModel> specification, Filter filter)
+        public virtual Task<(int Count, List<TEntity> Items)> FindPaginatedAsync(ISpecification<TEntity> specification, Filter filter)
         {
-            return Context
-                .Set<TModel>()
+            return Entities
                 .Where(specification.ToExpression())
                 .ApplyPagingAsync(filter);
         }
 
-        public Task<TModel> FindFirstAsync(ISpecification<TModel> specification)
+        public virtual Task<TEntity> FindFirstAsync(ISpecification<TEntity> specification)
         {
-            return Context
-                .Set<TModel>()
-                .FirstOrDefaultAsync(specification.ToExpression());
+            return Entities.FirstOrDefaultAsync(specification.ToExpression());
         }
     }
 }

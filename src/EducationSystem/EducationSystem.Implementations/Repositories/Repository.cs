@@ -6,62 +6,62 @@ using EducationSystem.Interfaces.Repositories;
 
 namespace EducationSystem.Implementations.Repositories
 {
-    public class Repository<TModel> : RepositoryReadOnly<TModel>, IRepository<TModel> where TModel : DatabaseModel
+    public class Repository<TEntity> : RepositoryReadOnly<TEntity>, IRepository<TEntity> where TEntity : DatabaseModel
     {
         public Repository(DatabaseContext context) : base(context) { }
 
-        public async Task<TModel> AddAsync(TModel model, bool save = false)
+        public async Task<TEntity> AddAsync(TEntity entity, bool save = false)
         {
             await Context
-                .Set<TModel>()
-                .AddAsync(model);
+                .Set<TEntity>()
+                .AddAsync(entity);
 
             if (save)
                 await SaveChangesAsync();
 
-            return model;
+            return entity;
         }
 
-        public async Task AddAsync(IEnumerable<TModel> models, bool save = false)
+        public async Task AddAsync(IEnumerable<TEntity> entities, bool save = false)
         {
             await Context
-                .Set<TModel>()
-                .AddRangeAsync(models);
+                .Set<TEntity>()
+                .AddRangeAsync(entities);
 
             if (save)
                 await SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(TModel model, bool save = false)
+        public async Task UpdateAsync(TEntity entity, bool save = false)
         {
             Context
-                .Set<TModel>()
-                .Update(model);
+                .Set<TEntity>()
+                .Update(entity);
 
             if (save)
                 await SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(IEnumerable<TModel> models, bool save = false)
+        public async Task UpdateAsync(IEnumerable<TEntity> entities, bool save = false)
         {
             Context
-                .Set<TModel>()
-                .UpdateRange(models);
+                .Set<TEntity>()
+                .UpdateRange(entities);
 
             if (save)
                 await SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(TModel model, bool save = false)
+        public async Task RemoveAsync(TEntity entity, bool save = false)
         {
             var existing = await Context
-                .Set<TModel>()
-                .FindAsync(model.Id);
+                .Set<TEntity>()
+                .FindAsync(entity.Id);
 
             if (existing != null)
             {
                 Context
-                    .Set<TModel>()
+                    .Set<TEntity>()
                     .Remove(existing);
 
                 if (save)
@@ -69,11 +69,11 @@ namespace EducationSystem.Implementations.Repositories
             }
         }
 
-        public async Task RemoveAsync(IEnumerable<TModel> models, bool save = false)
+        public async Task RemoveAsync(IEnumerable<TEntity> entities, bool save = false)
         {
             Context
-                .Set<TModel>()
-                .RemoveRange(models);
+                .Set<TEntity>()
+                .RemoveRange(entities);
 
             if (save)
                 await SaveChangesAsync();
