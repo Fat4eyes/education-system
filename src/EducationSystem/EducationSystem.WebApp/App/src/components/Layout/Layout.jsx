@@ -96,7 +96,7 @@ class Layout extends PureComponent {
                           closeOnClick={closeOnClick}/>
           </If>
           <If condition={User.Roles.Student}>
-            <LeftMenuItem component={SimpleLink} to='/user/tests' Icon={QuestionIcon} tooltip='Тесты'
+            <LeftMenuItem component={SimpleLink} to='/student' Icon={QuestionIcon} tooltip='Тесты'
                           closeOnClick={closeOnClick}/>
           </If>
         </>

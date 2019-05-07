@@ -13,7 +13,8 @@ export default class Test extends Model {
   public DisciplineId?: number
   public Discipline?: Discipline
   public Themes: Array<Theme> = []
-  public TestData?: TestData
+  public ThemesCount: number = 0
+  public QuestionsCount: number = 0
   
   constructor(disciplineId?: number) {
     super()

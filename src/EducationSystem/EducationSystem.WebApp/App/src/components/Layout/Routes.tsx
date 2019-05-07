@@ -9,6 +9,7 @@ import ThemesPage from '../pages/Themes/ThemesPage'
 import QuestionHandling from '../pages/QuestionHandling/QuestionHandling'
 import MaterialHandling from '../pages/Material/MaterialHandling'
 import RouteProxy from './RouteProxy'
+import TestSelect from '../pages/student/tests/TestSelect'
 
 const Routes = () =>
   <Switch>
@@ -23,6 +24,7 @@ const Routes = () =>
     <RouteProxy exact path='/question/:themeId' component={QuestionHandling} roles={['Admin', 'Lecturer']} title='Создание вопроса'/>
     <RouteProxy path='/materials/:id' component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Редактирование материала'/>
     <RouteProxy path='/materials' component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Создание материала'/>
+    <RouteProxy path='/student' component={TestSelect} roles={['Student']} title='Выбор теста'/>
   </Switch>
 
 export default Routes
