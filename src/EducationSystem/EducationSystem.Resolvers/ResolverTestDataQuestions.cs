@@ -15,7 +15,15 @@ namespace EducationSystem.Resolvers
 
         public int? Resolve(DatabaseTest source, TestData destination, int? member, ResolutionContext context)
         {
-            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer())
+            if (CurrentUser.IsAdmin())
+            {
+                return source.TestThemes
+                    .Select(x => x.Theme)
+                    .SelectMany(x => x.Questions)
+                    .Count();
+            }
+            
+            if (CurrentUser.IsLecturer())
             {
                 return source.TestThemes
                     .Select(x => x.Theme)
