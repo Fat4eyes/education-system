@@ -2,11 +2,11 @@
 using System.Threading.Tasks;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
+using EducationSystem.Specifications.Disciplines;
 
 namespace EducationSystem.Implementations.Validators
 {

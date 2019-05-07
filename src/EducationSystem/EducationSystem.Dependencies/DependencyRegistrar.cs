@@ -54,6 +54,7 @@ namespace EducationSystem.Dependencies
 
             collection.AddTransient<IServiceUser, ServiceUser>();
             collection.AddTransient<IServiceTest, ServiceTest>();
+            collection.AddTransient<IServiceTestData, ServiceTestData>();
             collection.AddTransient<IServiceTheme, ServiceTheme>();
             collection.AddTransient<IServiceQuestion, ServiceQuestion>();
             collection.AddTransient<IServiceMaterial, ServiceMaterial>();

@@ -5,9 +5,9 @@ using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
+using EducationSystem.Specifications.Files;
 using Microsoft.AspNetCore.Hosting;
 using File = EducationSystem.Models.Files.Basics.File;
 

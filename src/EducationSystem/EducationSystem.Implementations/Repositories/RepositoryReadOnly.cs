@@ -5,8 +5,8 @@ using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models.Basics;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces.Repositories;
-using EducationSystem.Interfaces.Specifications;
 using EducationSystem.Models.Filters;
+using EducationSystem.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Implementations.Repositories

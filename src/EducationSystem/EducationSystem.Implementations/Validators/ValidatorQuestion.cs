@@ -5,12 +5,14 @@ using EducationSystem.Database.Models;
 using EducationSystem.Enums;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
-using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
+using EducationSystem.Specifications.Files;
+using EducationSystem.Specifications.Materials;
+using EducationSystem.Specifications.Themes;
 
 namespace EducationSystem.Implementations.Validators
 {

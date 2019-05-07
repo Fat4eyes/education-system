@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using EducationSystem.Database.Models.Basics;
-using EducationSystem.Interfaces.Specifications;
 using EducationSystem.Models.Filters;
+using EducationSystem.Specifications;
 
 namespace EducationSystem.Interfaces.Repositories
 {

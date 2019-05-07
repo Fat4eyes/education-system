@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using EducationSystem.Database.Contexts;
 using EducationSystem.Database.Models;
 using EducationSystem.Extensions;
-using EducationSystem.Interfaces.Specifications;
 using EducationSystem.Models.Filters;
+using EducationSystem.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Implementations.Repositories

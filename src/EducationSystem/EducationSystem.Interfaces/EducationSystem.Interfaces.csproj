@@ -8,6 +8,7 @@
     <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
     <ProjectReference Include="..\EducationSystem.Enums\EducationSystem.Enums.csproj" />
     <ProjectReference Include="..\EducationSystem.Models\EducationSystem.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Specifications\EducationSystem.Specifications.csproj" />
   </ItemGroup>
 
 </Project>

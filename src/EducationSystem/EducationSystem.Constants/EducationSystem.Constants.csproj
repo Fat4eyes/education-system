@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EducationSystem.Enums\EducationSystem.Enums.csproj" />
+  </ItemGroup>
+
 </Project>

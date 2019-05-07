@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using EducationSystem.Database.Models;
 using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
-using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
+using EducationSystem.Specifications.Disciplines;
+using EducationSystem.Specifications.Themes;
 
 namespace EducationSystem.Implementations.Validators
 {

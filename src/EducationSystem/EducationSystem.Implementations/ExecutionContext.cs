@@ -4,11 +4,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models.Rest;
+using EducationSystem.Specifications.Users;
 using Microsoft.AspNetCore.Http;
 
 namespace EducationSystem.Implementations

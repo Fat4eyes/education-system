@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Implementations.Specifications;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
@@ -12,6 +11,7 @@ using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
+using EducationSystem.Specifications.Tests;
 using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Services
@@ -81,7 +81,7 @@ namespace EducationSystem.Implementations.Services
                     new TestsByDisciplineId(filter.DisciplineId) &
                     new TestsByType(filter.TestType) &
                     new TestsByStudentId(CurrentUser.Id) &
-                    new TestsForStudent();
+                    new TestsForStudents();
 
                 var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
 
@@ -119,7 +119,7 @@ namespace EducationSystem.Implementations.Services
 
                 var specification =
                     new TestsByStudentId(CurrentUser.Id) &
-                    new TestsForStudent();
+                    new TestsForStudents();
 
                 if (specification.IsSatisfiedBy(test) == false)
                     throw ExceptionFactory.NoAccess();
