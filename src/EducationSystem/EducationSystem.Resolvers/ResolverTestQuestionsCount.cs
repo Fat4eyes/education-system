@@ -2,40 +2,43 @@
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Interfaces;
-using EducationSystem.Models.Datas;
-using EducationSystem.Specifications.Themes;
+using EducationSystem.Models.Rest;
+using EducationSystem.Specifications.Questions;
 
 namespace EducationSystem.Resolvers
 {
-    public sealed class ResolverTestDataThemes : Resolver, IValueResolver<DatabaseTest, TestData, int?>
+    public class ResolverTestQuestionsCount : Resolver, IValueResolver<DatabaseTest, Test, int?>
     {
-        public ResolverTestDataThemes(IExecutionContext executionContext)
+        public ResolverTestQuestionsCount(IExecutionContext executionContext)
             : base(executionContext) { }
 
-        public int? Resolve(DatabaseTest source, TestData destination, int? member, ResolutionContext context)
+        public int? Resolve(DatabaseTest source, Test destination, int? member, ResolutionContext context)
         {
             if (CurrentUser.IsAdmin())
             {
                 return source.TestThemes
                     .Select(x => x.Theme)
+                    .SelectMany(x => x.Questions)
                     .Count();
             }
-
+            
             if (CurrentUser.IsLecturer())
             {
                 return source.TestThemes
                     .Select(x => x.Theme)
-                    .Count(new ThemesByLecturerId(CurrentUser.Id));
+                    .SelectMany(x => x.Questions)
+                    .Count(new QuestionsByLecturerId(CurrentUser.Id));
             }
 
             if (CurrentUser.IsStudent())
             {
                 var specification =
-                    new ThemesForStudents() &
-                    new ThemesByStudentId(CurrentUser.Id);
+                    new QuestionsForStudents() &
+                    new QuestionsByStudentId(CurrentUser.Id);
 
                 return source.TestThemes
                     .Select(x => x.Theme)
+                    .SelectMany(x => x.Questions)
                     .Count(specification);
             }
 
