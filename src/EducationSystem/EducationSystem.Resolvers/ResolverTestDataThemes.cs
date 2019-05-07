@@ -30,9 +30,13 @@ namespace EducationSystem.Resolvers
 
             if (CurrentUser.IsStudent())
             {
+                var specification =
+                    new ThemesForStudents() &
+                    new ThemesByStudentId(CurrentUser.Id);
+
                 return source.TestThemes
                     .Select(x => x.Theme)
-                    .Count(new ThemesForStudents());
+                    .Count(specification);
             }
 
             return null;
