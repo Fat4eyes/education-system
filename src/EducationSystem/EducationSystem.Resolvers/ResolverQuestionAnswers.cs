@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
 using EducationSystem.Models.Rest;
@@ -20,6 +21,11 @@ namespace EducationSystem.Resolvers
                 return mapper.Map<List<Answer>>(source.Answers);
 
             if (CurrentUser.IsNotStudent())
+                return null;
+
+            // Ответы на этот тип вопроса представляют собой строки.
+            // Все эти строки являются правильным вариантом ответа (просто в разных вариациях).
+            if (source.Type == QuestionType.OpenedOneString)
                 return null;
 
             return mapper

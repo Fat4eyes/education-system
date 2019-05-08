@@ -40,7 +40,6 @@ namespace EducationSystem.Database.Contexts
             BuildStudentGroup(builder);
             BuildTestTheme(builder);
             BuildStudyProfileDiscipline(builder);
-
             BuildStudyPlan(builder);
             BuildStudyProfile(builder);
             BuildQuestion(builder);
@@ -48,6 +47,21 @@ namespace EducationSystem.Database.Contexts
             BuildProgram(builder);
             BuildDiscipline(builder);
             BuildMaterial(builder);
+
+            builder
+                .Entity<DatabaseAnswer>()
+                .Property(x => x.IsRight)
+                .HasConversion<int>();
+
+            builder
+                .Entity<DatabaseTest>()
+                .Property(x => x.IsActive)
+                .HasConversion<int>();
+
+            builder
+                .Entity<DatabaseQuestionStudent>()
+                .Property(x => x.Passed)
+                .HasConversion<int>();
         }
 
         private static void BuildUserRole(ModelBuilder builder)

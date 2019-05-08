@@ -16,6 +16,6 @@ namespace EducationSystem.Database.Models
         public virtual string Text { get; set; }
 
         [Column("is_right")]
-        public virtual int IsRight { get; set; }
+        public virtual bool IsRight { get; set; }
     }
 }

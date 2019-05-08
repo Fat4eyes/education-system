@@ -72,7 +72,7 @@ namespace EducationSystem.Implementations.Factories
 
         public Exception NoAccess()
         {
-            return ExceptionHelper.CreatePublicException("Не достаточно прав для выполнения данного действия.");
+            return ExceptionHelper.CreatePublicException("Не достаточно прав для выполнения данного действия или действие запрещено.");
         }
     }
 }

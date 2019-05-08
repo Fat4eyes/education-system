@@ -32,5 +32,13 @@ namespace EducationSystem.Implementations.Repositories
                 .ThenBy(x => x.Order)
                 .ApplyPagingAsync(filter);
         }
+
+        public override Task<DatabaseQuestion> FindFirstAsync(ISpecification<DatabaseQuestion> specification)
+        {
+            return Entities
+                .OrderBy(x => x.Theme.Order)
+                .ThenBy(x => x.Order)
+                .FirstOrDefaultAsync(specification.ToExpression());
+        }
     }
 }

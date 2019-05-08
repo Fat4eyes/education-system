@@ -16,9 +16,7 @@ namespace EducationSystem.Specifications.Tests
 
         public override Expression<Func<DatabaseTest, bool>> ToExpression()
         {
-            var isActive = _isActive ? 1 : 0;
-
-            return x => x.IsActive == isActive;
+            return x => x.IsActive == _isActive;
         }
     }
 }

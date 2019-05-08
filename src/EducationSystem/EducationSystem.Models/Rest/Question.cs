@@ -27,7 +27,11 @@ namespace EducationSystem.Models.Rest
 
         public Material Material { get; set; }
 
-        public List<Answer> Answers { get; set; }
+        public List<Answer> Answers { get; set; } = new List<Answer>();
+
+        public string Hash { get; set; }
+
+        public bool? Save { get; set; }
 
         public Question Format()
         {

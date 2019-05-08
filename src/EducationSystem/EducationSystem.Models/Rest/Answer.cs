@@ -1,4 +1,5 @@
-﻿using EducationSystem.Models.Rest.Basics;
+﻿using EducationSystem.Enums;
+using EducationSystem.Models.Rest.Basics;
 
 namespace EducationSystem.Models.Rest
 {
@@ -9,5 +10,7 @@ namespace EducationSystem.Models.Rest
         public bool? IsRight { get; set; }
 
         public int? QuestionId { get; set; }
+
+        public AnswerStatus? Status { get; set; }
     }
 }

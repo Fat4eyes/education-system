@@ -9,7 +9,7 @@ namespace EducationSystem.Mapping.Profiles
         public ProfileAnswer()
         {
             CreateMap<DatabaseAnswer, Answer>()
-                .ForMember(d => d.IsRight, o => o.MapFrom(s => s.IsRight == 1));
+                .ForMember(d => d.Status, o => o.Ignore());
 
             CreateMap<Answer, DatabaseAnswer>()
                 .ForMember(d => d.Id, o => o.Ignore())

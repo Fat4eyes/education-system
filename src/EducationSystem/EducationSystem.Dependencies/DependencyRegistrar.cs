@@ -34,9 +34,10 @@ namespace EducationSystem.Dependencies
 
             collection.AddScoped<IExecutionContext, ExecutionContext>();
 
+            collection.AddTransient<ICodeExecutor, CodeExecutor>();
+            collection.AddTransient<IHashComputer, HashComputer>();
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IExceptionFactory, ExceptionFactory>();
-            collection.AddTransient<ICodeExecutor, CodeExecutor>();
             collection.AddTransient<ICodeExecutionApi, CodeExecutionApi>();
 
             collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -58,6 +59,8 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IServiceQuestion, ServiceQuestion>();
             collection.AddTransient<IServiceMaterial, ServiceMaterial>();
             collection.AddTransient<IServiceDiscipline, ServiceDiscipline>();
+
+            collection.AddTransient<IServiceTestProcess, ServiceTestProcess>();
         }
 
         private static void RegisterHelpers(IServiceCollection collection)

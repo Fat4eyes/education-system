@@ -27,7 +27,7 @@ namespace EducationSystem.Database.Models
         public virtual TestType Type { get; set; }
 
         [Column("is_active")]
-        public virtual int IsActive { get; set; }
+        public virtual bool IsActive { get; set; }
 
         public virtual List<DatabaseTestTheme> TestThemes { get; set; }
             = new List<DatabaseTestTheme>();

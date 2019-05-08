@@ -12,7 +12,7 @@ namespace EducationSystem.Specifications.Disciplines
         public override Expression<Func<DatabaseDiscipline, bool>> ToExpression()
         {
             return x => x.Tests
-                .Where(y => y.IsActive == 1)
+                .Where(y => y.IsActive)
                 .SelectMany(y => y.TestThemes)
                 .Select(y => y.Theme)
                 .SelectMany(y => y.Questions)

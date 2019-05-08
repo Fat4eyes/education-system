@@ -14,7 +14,7 @@ namespace EducationSystem.Specifications.Themes
             return x => x.Questions.Any(y => QuestionTypes.Supported.Contains(y.Type)) &&
                         x.ThemeTests
                             .Select(y => y.Test)
-                            .Any(y => y.IsActive == 1);
+                            .Any(y => y.IsActive);
         }
     }
 }

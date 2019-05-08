@@ -11,7 +11,7 @@ namespace EducationSystem.Specifications.Tests
     {
         public override Expression<Func<DatabaseTest, bool>> ToExpression()
         {
-            return x => x.IsActive == 1 &&
+            return x => x.IsActive &&
                         x.TestThemes
                             .Select(y => y.Theme)
                             .SelectMany(y => y.Questions)
