@@ -7,7 +7,6 @@
         public FilterQuestion SetThemeId(int id)
         {
             ThemeId = id;
-
             return this;
         }
     }

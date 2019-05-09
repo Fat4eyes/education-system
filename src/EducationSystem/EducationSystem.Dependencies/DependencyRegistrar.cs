@@ -9,6 +9,7 @@ using EducationSystem.Implementations.Services;
 using EducationSystem.Implementations.Services.Files;
 using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
+using EducationSystem.Implementations.Validators.Questions;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
@@ -38,6 +39,8 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IHashComputer, HashComputer>();
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IExceptionFactory, ExceptionFactory>();
+            collection.AddTransient<IQuestionValidatorFactory, QuestionValidatorFactory>();
+
             collection.AddTransient<ICodeExecutionApi, CodeExecutionApi>();
 
             collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -79,6 +82,11 @@ namespace EducationSystem.Dependencies
 
             collection.AddTransient<IValidator<Image>, ValidatorImage>();
             collection.AddTransient<IValidator<Document>, ValidatorDocument>();
+
+            collection.AddTransient<IQuestionValidatorClosedOneAnswer, QuestionValidatorClosedOneAnswer>();
+            collection.AddTransient<IQuestionValidatorClosedManyAnswers, QuestionValidatorClosedManyAnswers>();
+            collection.AddTransient<IQuestionValidatorOpenedOneString, QuestionValidatorOpenedOneString>();
+            collection.AddTransient<IQuestionValidatorWithProgram, QuestionValidatorWithProgram>();
         }
 
         private static void RegisterRepositories(IServiceCollection collection)

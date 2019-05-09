@@ -9,14 +9,12 @@
         public FilterTheme SetTestId(int id)
         {
             TestId = id;
-
             return this;
         }
 
         public FilterTheme SetDisciplineId(int id)
         {
             DisciplineId = id;
-
             return this;
         }
     }

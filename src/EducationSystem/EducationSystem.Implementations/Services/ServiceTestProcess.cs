@@ -1,12 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
-using EducationSystem.Constants;
 using EducationSystem.Database.Models;
-using EducationSystem.Enums;
-using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
@@ -20,27 +14,27 @@ namespace EducationSystem.Implementations.Services
 {
     public sealed class ServiceTestProcess : Service<ServiceTestProcess>, IServiceTestProcess
     {
-        private readonly IHashComputer _hashComputer;
         private readonly IRepository<DatabaseTest> _repositoryTest;
         private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
+        private readonly IQuestionValidatorFactory _questionValidatorFactory;
 
         public ServiceTestProcess(
             IMapper mapper,
             ILogger<ServiceTestProcess> logger,
             IExecutionContext executionContext,
             IExceptionFactory exceptionFactory,
-            IHashComputer hashComputer,
             IRepository<DatabaseTest> repositoryTest,
-            IRepository<DatabaseQuestion> repositoryQuestion)
+            IRepository<DatabaseQuestion> repositoryQuestion,
+            IQuestionValidatorFactory questionValidatorFactory)
             : base(
                 mapper,
                 logger,
                 executionContext,
                 exceptionFactory)
         {
-            _hashComputer = hashComputer;
             _repositoryTest = repositoryTest;
             _repositoryQuestion = repositoryQuestion;
+            _questionValidatorFactory = questionValidatorFactory;
         }
 
         public async Task<Question> GetQuestionAsync(int id)
@@ -66,78 +60,26 @@ namespace EducationSystem.Implementations.Services
                 throw ExceptionFactory.NoAccess();
 
             await ValidateTestAsync(id);
-            await ValidateQuestionAsync(id, question);
 
             var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(question.Id)) ??
                 throw ExceptionFactory.NotFound<DatabaseQuestion>(question.Id);
 
-            var result = Mapper.Map<Question>(model);
+            var result = await _questionValidatorFactory
+                .GetQuestionValidator(model.Type)
+                .ValidateAsync(question);
 
-            model.Answers.ForEach(x =>
+            if (question.Save != true || result.Right != true)
+                return result;
+
+            model.QuestionStudents.Add(new DatabaseQuestionStudent
             {
-                var a = result.Answers.FirstOrDefault(y => y.Id == x.Id);
-                var b = question.Answers.FirstOrDefault(y => y.Id == x.Id);
-
-                // Если такой ответ был указан.
-                if (a != null && b != null)
-                {
-                    // Проставляем статус в зависимости от правильности.
-                    a.Status = x.IsRight
-                        ? AnswerStatus.Right
-                        : AnswerStatus.Wrong;
-                }
-
-                // Если такой ответ не был указан (а он правильный).
-                if (a != null && b == null && x.IsRight)
-                    a.Status = AnswerStatus.Ignore;
+                Passed = true,
+                StudentId = CurrentUser.Id
             });
 
-            // TODO: Дорабатывать.
-
-            if (question.Save == true)
-                await SaveQuestionAsync(model);
+            await _repositoryQuestion.UpdateAsync(model, true);
 
             return result;
-        }
-
-        private async Task ValidateQuestionAsync(int id, Question question)
-        {
-            if (question == null)
-                throw ExceptionHelper.CreatePublicException("Не указан вопрос.");
-
-            var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(question.Id)) ??
-                throw ExceptionFactory.NotFound<DatabaseQuestion>(question.Id);
-
-            var specification =
-                new QuestionsByTestId(id) &
-                new QuestionsForStudents() &
-                new QuestionsByStudentId(CurrentUser.Id, false);
-
-            if (specification.IsSatisfiedBy(model) == false)
-                throw ExceptionFactory.NoAccess();
-
-            var hash = await _hashComputer.ComputeForQuestionAsync(model);
-
-            if (string.Equals(hash, question.Hash, StringComparison.InvariantCulture) == false)
-                throw ExceptionFactory.NoAccess();
-
-            if (QuestionTypes.Supported.Contains(model.Type) == false)
-                throw ExceptionHelper.CreatePublicException("Данный тип вопроса не поддерживается.");
-
-            if (model.Type == QuestionType.WithProgram)
-                return;
-
-            if (question.Answers.IsEmpty())
-                throw ExceptionHelper.CreatePublicException("Не указаны ответы на вопрос.");
-
-            if (!question.Answers
-                .Select(x => x.Id)
-                .All(x => model.Answers
-                    .Select(y => y.Id)
-                    .Contains(x)))
-            {
-                throw ExceptionHelper.CreatePublicException("Один из указанных вариантов ответа не принадлежит вопросу.");
-            }
         }
 
         private async Task ValidateTestAsync(int id)
@@ -152,17 +94,6 @@ namespace EducationSystem.Implementations.Services
 
             if (specification.IsSatisfiedBy(test) == false)
                 throw ExceptionFactory.NoAccess();
-        }
-
-        private async Task SaveQuestionAsync(DatabaseQuestion question)
-        {
-            question.QuestionStudents.Add(new DatabaseQuestionStudent
-            {
-                Passed = true,
-                StudentId = CurrentUser.Id
-            });
-
-            await _repositoryQuestion.UpdateAsync(question, true);
         }
     }
 }

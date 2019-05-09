@@ -29,9 +29,25 @@ namespace EducationSystem.Models.Rest
 
         public List<Answer> Answers { get; set; } = new List<Answer>();
 
+        public int? TestId { get; set; }
+
         public string Hash { get; set; }
 
         public bool? Save { get; set; }
+
+        public bool? Right { get; set; }
+
+        public Question SetTestId(int testId)
+        {
+            TestId = testId;
+            return this;
+        }
+
+        public Question SetRight(bool right)
+        {
+            Right = right;
+            return this;
+        }
 
         public Question Format()
         {

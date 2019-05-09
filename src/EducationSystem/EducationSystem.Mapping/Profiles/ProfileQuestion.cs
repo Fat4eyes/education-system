@@ -12,7 +12,9 @@ namespace EducationSystem.Mapping.Profiles
             CreateMap<DatabaseQuestion, Question>()
                 .ForMember(d => d.Answers, o => o.MapFrom<ResolverQuestionAnswers>())
                 .ForMember(d => d.Hash, o => o.MapFrom<ResolverQuestionHash>())
-                .ForMember(d => d.Save, o => o.Ignore());
+                .ForMember(d => d.Save, o => o.Ignore())
+                .ForMember(d => d.TestId, o => o.Ignore())
+                .ForMember(d => d.Right, o => o.Ignore());
 
             CreateMap<Question, DatabaseQuestion>()
                 .ForMember(d => d.Id, o => o.Ignore())

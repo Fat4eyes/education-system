@@ -15,7 +15,6 @@ namespace EducationSystem.Models.Filters
         public FilterTest SetDisciplineId(int id)
         {
             DisciplineId = id;
-
             return this;
         }
     }

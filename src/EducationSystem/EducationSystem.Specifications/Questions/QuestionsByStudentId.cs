@@ -27,7 +27,7 @@ namespace EducationSystem.Specifications.Questions
             {
                 case true:
 
-                    return x => x.QuestionStudents.Any(y => y.StudentId == _studentId) &&
+                    return x => x.QuestionStudents.Any(y => y.StudentId == _studentId && y.Passed) &&
                                 x.Theme.Discipline.StudyProfiles
                                     .Any(a => a.StudyProfile.StudyPlans
                                     .Any(b => b.Groups
@@ -36,7 +36,7 @@ namespace EducationSystem.Specifications.Questions
 
                 case false:
 
-                    return x => x.QuestionStudents.All(y => y.StudentId != _studentId) &&
+                    return x => x.QuestionStudents.All(y => y.StudentId != _studentId || y.Passed == false) &&
                                 x.Theme.Discipline.StudyProfiles
                                     .Any(a => a.StudyProfile.StudyPlans
                                     .Any(b => b.Groups
