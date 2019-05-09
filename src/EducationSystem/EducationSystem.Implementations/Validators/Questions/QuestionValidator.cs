@@ -19,8 +19,6 @@ namespace EducationSystem.Implementations.Validators.Questions
         protected readonly IExceptionFactory ExceptionFactory;
         protected readonly IRepository<DatabaseQuestion> RepositoryQuestion;
 
-        protected static readonly Random Random = new Random();
-
         protected QuestionValidator(
             IMapper mapper,
             IHashComputer hashComputer,

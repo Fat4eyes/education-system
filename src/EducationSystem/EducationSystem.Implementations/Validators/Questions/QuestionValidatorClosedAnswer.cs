@@ -67,7 +67,7 @@ namespace EducationSystem.Implementations.Validators.Questions
                     x.Status = AnswerStatus.Ignore;
             });
 
-            if (result.Answers.All(x => x.Status == AnswerStatus.Right))
+            if (result.Answers.All(x => x.Status == null || x.Status == AnswerStatus.Right))
                 result.SetRight(true);
 
             return result.SetRight(false);

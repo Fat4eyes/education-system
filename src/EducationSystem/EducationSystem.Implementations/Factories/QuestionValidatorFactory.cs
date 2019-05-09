@@ -5,7 +5,7 @@ using EducationSystem.Interfaces.Validators;
 
 namespace EducationSystem.Implementations.Factories
 {
-    public class QuestionValidatorFactory : IQuestionValidatorFactory
+    public sealed class QuestionValidatorFactory : IQuestionValidatorFactory
     {
         private readonly IQuestionValidatorClosedOneAnswer _questionValidatorClosedOneAnswer;
         private readonly IQuestionValidatorClosedManyAnswers _questionValidatorClosedManyAnswers;
