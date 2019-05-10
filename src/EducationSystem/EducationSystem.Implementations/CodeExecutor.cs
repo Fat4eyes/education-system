@@ -8,10 +8,10 @@ using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
-using EducationSystem.Models.Code;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Programs;
 using Microsoft.Extensions.Logging;
+using CodeExecutionResult = EducationSystem.Models.Code.CodeExecutionResult;
 
 namespace EducationSystem.Implementations
 {
@@ -40,57 +40,44 @@ namespace EducationSystem.Implementations
             _repositoryProgram = repositoryProgram;
         }
 
-        public async Task<CodeExecutionResponse> ExecuteAsync(CodeExecutionRequest request)
+        public async Task<CodeExecutionResult> ExecuteAsync(Program program)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            if (program == null)
+                throw ExceptionHelper.CreatePublicException("Не указана программа.");
 
-            if (string.IsNullOrWhiteSpace(request.Source))
+            if (string.IsNullOrWhiteSpace(program.Source))
                 throw ExceptionHelper.CreatePublicException("Не указан исходный код программы.");
 
-            if (request.Program == null)
-                throw ExceptionHelper.CreatePublicException("Не указана программа (окружение программы).");
-
-            await AddProgramToRequestAsync(request);
-
-            try
-            {
-                var code = _mapper.Map<TestingCode>(request);
-
-                // На данный момент интеграция не работает.
-                // Сейчас используем фейковые ответы.
-
-                var response = await _codeExecutionApi.ExecuteCodeAsync(code);
-
-                return _mapper.Map<CodeExecutionResponse>(response);
-            }
-            catch (Exception ex)
-            {
-                var user = await _executionContext.GetCurrentUserAsync();
-
-                _logger.LogError(
-                    $"Не удалось выполнить запрос на выполнение кода. " +
-                    $"Идентификатор пользователя: {user.Id}. " +
-                    $"Идентификатор программы: {request.Program.Id}.", ex);
-
-                throw ExceptionHelper.CreatePublicException("Не удалось выполнить запрос на выполнение кода.");
-            }
-        }
-
-        public async Task AddProgramToRequestAsync(CodeExecutionRequest request)
-        {
-            var program = await _repositoryProgram.FindFirstAsync(new ProgramsById(request.Program.Id)) ??
-                throw _exceptionFactory.NotFound<DatabaseProgram>(request.Program.Id);
+            var model = await _repositoryProgram.FindFirstAsync(new ProgramsById(program.Id)) ??
+                throw _exceptionFactory.NotFound<DatabaseProgram>(program.Id);
 
             var user = await _executionContext.GetCurrentUserAsync();
 
-            if (user.IsStudent() && !new ProgramsByStudentId(user.Id).IsSatisfiedBy(program))
+            if (user.IsStudent() && !new ProgramsByStudentId(user.Id).IsSatisfiedBy(model))
                 throw _exceptionFactory.NoAccess();
 
-            if (user.IsLecturer() && !new ProgramsByLecturerId(user.Id).IsSatisfiedBy(program))
+            if (user.IsLecturer() && !new ProgramsByLecturerId(user.Id).IsSatisfiedBy(model))
                 throw _exceptionFactory.NoAccess();
 
-            request.Program = _mapper.Map<Program>(program);
+            _mapper.Map(_mapper.Map<Program>(model), program);
+
+            try
+            {
+                var code = _mapper.Map<TestingCode>(program);
+
+                var response = await _codeExecutionApi.ExecuteCodeAsync(code);
+
+                return _mapper.Map<CodeExecutionResult>(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    $"Не удалось выполнить запрос на выполнение кода. " +
+                    $"Идентификатор пользователя: {user.Id}. " +
+                    $"Идентификатор программы: {program.Id}.", ex);
+
+                throw ExceptionHelper.CreatePublicException("Не удалось выполнить запрос на выполнение кода.");
+            }
         }
     }
 }

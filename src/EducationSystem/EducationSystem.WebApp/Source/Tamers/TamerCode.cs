@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Interfaces;
-using EducationSystem.Models.Code;
 using EducationSystem.WebApp.Source.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using ExecutableProgram = EducationSystem.Models.Rest.Program;
 
 namespace EducationSystem.WebApp.Source.Tamers
 {
@@ -20,9 +20,9 @@ namespace EducationSystem.WebApp.Source.Tamers
         [HttpPost]
         [Route("Execute")]
         [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
-        public async Task<IActionResult> Execute([FromBody] CodeExecutionRequest request)
+        public async Task<IActionResult> Execute([FromBody] ExecutableProgram program)
         {
-            return await Ok(() => _codeExecutor.ExecuteAsync(request));
+            return await Ok(() => _codeExecutor.ExecuteAsync(program));
         }
     }
 }

@@ -8,6 +8,8 @@
 [POST]   [X]          Api/Token/Generate                Token
 [POST]   [*]          Api/Token/Check                   -
 
+[POST]   [*]          Api/Code/Execute                  CodeExecutionResult
+
 [GET]    [*]          Api/Documents/{Id}                Document
 [GET]    [D]          Api/Documents/Extensions          []
 [POST]   [D]          Api/Documents                     Document
@@ -49,3 +51,6 @@
 [POST]   [B]          Api/Themes                        Int (Id)
 [PUT]    [B]          Api/Themes/{Id}                   -
 [DELETE] [D]          Api/Themes/{Id}                   -
+
+[GET]    [C]          Api/Tests/{Id}/Process/Question       Question
+[POST]   [C]          Api/Tests/{Id}/Process/Question       Question

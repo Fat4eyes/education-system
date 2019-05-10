@@ -16,6 +16,8 @@ namespace EducationSystem.Models.Rest
 
         public int? MemoryLimit { get; set; }
 
+        public string Source { get; set; }
+
         public List<ProgramData> ProgramDatas { get; set; }
     }
 }

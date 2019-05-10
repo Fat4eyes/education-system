@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace EducationSystem.Models.Code
 {
-    public class CodeExecutionResponse
+    public class CodeExecutionResult
     {
         public bool Success => !Errors.Any() && Results.All(x => x.Success);
 
