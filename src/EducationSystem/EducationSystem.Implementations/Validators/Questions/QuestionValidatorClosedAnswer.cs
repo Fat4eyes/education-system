@@ -54,12 +54,18 @@ namespace EducationSystem.Implementations.Validators.Questions
                 // Был указан ответ
                 // Он правильный.
                 if (question.Answers.Any(y => y.Id == x.Id && rights.Contains(x.Id)))
+                {
                     x.Status = AnswerStatus.Right;
+                    return;
+                }
 
                 // Был указан ответ.
                 // Он неправильный.
                 if (question.Answers.Any(y => y.Id == x.Id))
+                {
                     x.Status = AnswerStatus.Wrong;
+                    return;
+                }
 
                 // Ответ не был указан.
                 // Он правильный.
