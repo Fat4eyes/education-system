@@ -1,12 +1,13 @@
-import React, {Suspense} from 'react'
+import React, {Suspense, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {Router} from 'react-router-dom'
 import {Loading} from './components/core'
-import {blue, edo, grey, purpure} from './themes'
+import {themes, themesNames} from './themes'
 import {unregister} from './serviceWorker'
 import history from './history'
 import Container from './infrastructure/di/Container'
 import Fetch from './helpers/Fetch'
+
 //Providers
 import {MuiThemeProvider} from '@material-ui/core/styles'
 import {SnackbarProvider} from 'notistack'
@@ -24,6 +25,7 @@ import {NotificationService} from './services/NotificationService'
 import {UserService} from './services/UserService'
 
 import './index.less'
+import * as Cookies from 'js-cookie'
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -42,11 +44,34 @@ Container.getContainer()
   .transient(MaterialService, 'MaterialService')
   .transient(UserService, 'UserService')
 
-let themes = [purpure(), blue(), edo(), grey()]
+const themeCookieName = 'theme'
 
-const App = () =>
-  <Router history={history}>
-    <MuiThemeProvider theme={themes[Math.floor(Math.random() * themes.length)]}>
+// @ts-ignore
+window.availableThemes = themesNames
+
+const App = () => {
+  const getThemeByName = (name: string = 'blue') => {
+    if (!themesNames.includes(name)) {
+      name = 'blue'
+    }
+
+    // @ts-ignore
+    let theme = themes[name]
+    return {name, theme}
+  }
+
+  const {theme: initTheme} = getThemeByName(Cookies.get(themeCookieName))
+  const [theme, setThemes] = useState(initTheme())
+
+  // @ts-ignore
+  window.setTheme = (themeName: string = 'blue') => {
+    let {name, theme} = getThemeByName(themeName)
+    Cookies.set(themeCookieName, name)
+    setThemes(theme())
+  }
+
+  return <Router history={history}>
+    <MuiThemeProvider theme={theme}>
       <SnackbarProvider maxSnack={3}>
         <NotificationProvider>
           <SpinnerProvider>
@@ -71,5 +96,6 @@ const App = () =>
       </SnackbarProvider>
     </MuiThemeProvider>
   </Router>
+}
 
 ReactDOM.render(<App/>, document.getElementById('root'))

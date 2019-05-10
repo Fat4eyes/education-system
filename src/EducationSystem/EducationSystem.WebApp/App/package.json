@@ -165,6 +165,7 @@
     ]
   },
   "devDependencies": {
+    "@types/js-cookie": "^2.2.2",
     "@types/react-router-dom": "^4.3.1",
     "draft-js-resizeable-plugin": "^2.0.8"
   }

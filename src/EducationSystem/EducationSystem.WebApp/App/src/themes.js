@@ -88,3 +88,31 @@ export const grey = () => createMuiTheme({
     }
   },
 })
+
+export const dark = () => createMuiTheme({
+  ...base,
+  palette: {
+    primary: {
+      light: '#89a2a4',
+      main: '#282729',
+      dark: '#161616',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      light: '#efefef',
+      main: '#bdbdbd',
+      dark: '#8d8d8d',
+      contrastText: '#000000',
+    }
+  },
+})
+
+export const themes = {
+  dark,
+  grey,
+  edo,
+  blue,
+  purpure
+}
+
+export const themesNames = ['dark', 'purpure', 'edo', 'grey', 'blue']
