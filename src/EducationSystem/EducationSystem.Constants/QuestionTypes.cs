@@ -8,6 +8,7 @@ namespace EducationSystem.Constants
         {
             QuestionType.ClosedOneAnswer,
             QuestionType.ClosedManyAnswers,
+            QuestionType.OpenedOneString,
             QuestionType.WithProgram
         };
     }
