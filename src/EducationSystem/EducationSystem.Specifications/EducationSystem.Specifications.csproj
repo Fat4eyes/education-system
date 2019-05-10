@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EducationSystem.Constants\EducationSystem.Constants.csproj" />
     <ProjectReference Include="..\EducationSystem.Database.Models\EducationSystem.Database.Models.csproj" />
+    <ProjectReference Include="..\EducationSystem.Helpers\EducationSystem.Helpers.csproj" />
   </ItemGroup>
 
 </Project>

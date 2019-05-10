@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using EducationSystem.Constants;
 using EducationSystem.Database.Models;
+using EducationSystem.Helpers;
 using EducationSystem.Specifications.Basics;
 
 namespace EducationSystem.Specifications.Themes
@@ -11,7 +11,9 @@ namespace EducationSystem.Specifications.Themes
     {
         public override Expression<Func<DatabaseTheme, bool>> ToExpression()
         {
-            return x => x.Questions.Any(y => QuestionTypes.Supported.Contains(y.Type)) &&
+            return x => x.Questions.Any(y => QuestionTypeHelper
+                            .GetSupportedTypes()
+                            .Contains(y.Type)) &&
                         x.ThemeTests
                             .Select(y => y.Test)
                             .Any(y => y.IsActive);

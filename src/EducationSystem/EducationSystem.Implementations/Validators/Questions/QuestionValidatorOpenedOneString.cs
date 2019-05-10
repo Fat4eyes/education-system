@@ -15,7 +15,7 @@ namespace EducationSystem.Implementations.Validators.Questions
 {
     public sealed class QuestionValidatorOpenedOneString : QuestionValidator, IQuestionValidatorOpenedOneString
     {
-        private const string Pattern = "[)\\,.?'\"!-/(]";
+        private const string Pattern = "[\\,.?'@#%^&_№~><`)(}{][|;\"!-+-*/]";
 
         public QuestionValidatorOpenedOneString(
             IMapper mapper,
