@@ -12,7 +12,9 @@ namespace EducationSystem.Mapping.Profiles
             CreateMap<DatabaseTest, Test>()
                 .ForMember(d => d.Themes, o => o.Ignore())
                 .ForMember(d => d.ThemesCount, o => o.MapFrom<ResolverTestThemesCount>())
-                .ForMember(d => d.QuestionsCount, o => o.MapFrom<ResolverTestQuestionsCount>());
+                .ForMember(d => d.QuestionsCount, o => o.MapFrom<ResolverTestQuestionsCount>())
+                .ForMember(d => d.PassedThemesCount, o => o.MapFrom<ResolverTestPassedThemesCount>())
+                .ForMember(d => d.PassedQuestionsCount, o => o.MapFrom<ResolverTestPassedQuestionsCount>());
 
             CreateMap<Test, DatabaseTest>()
                 .ForMember(d => d.Id, o => o.Ignore())

@@ -24,6 +24,10 @@ namespace EducationSystem.Models.Rest
 
         public int? QuestionsCount { get; set; }
 
+        public int? PassedThemesCount { get; set; }
+
+        public int? PassedQuestionsCount { get; set; }
+
         public Test Format()
         {
             Subject = Subject.Trim();
