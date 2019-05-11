@@ -43,9 +43,9 @@
 [GET]    [*] [Filter] Api/Tests/{Id}/Questions          PagedData<Question>
 [POST]   [B]          Api/Tests                         Int (Id)
 [POST]   [C]          Api/Tests/{Id}/Question           Question
-[POST]   [C]          Api/Tests/{Id}/Reset              -
 [PUT]    [B]          Api/Tests/{Id}                    -
 [DELETE] [D]          Api/Tests/{Id}                    -
+[DELETE] [C]          Api/Tests/{Id}/Results            -
 
 [GET]    [D] [Filter] Api/Themes                        PagedData<Theme>
 [GET]    [D]          Api/Themes/{Id}                   Question
