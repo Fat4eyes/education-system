@@ -233,7 +233,7 @@ namespace EducationSystem.Implementations.Services
                 new TestsByStudentId(CurrentUser.Id);
 
             if (specification.IsSatisfiedBy(test) == false)
-                throw ExceptionHelper.NoAccess();
+                throw ExceptionHelper.CreatePublicException("Указанный тест недоступен.");
         }
     }
 }

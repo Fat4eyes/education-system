@@ -39,7 +39,7 @@ namespace EducationSystem.Helpers
 
         public static Exception NoAccess()
         {
-            return CreatePublicException("Не достаточно прав для выполнения данного действия или действие запрещено.");
+            return CreatePublicException("Не достаточно прав для выполнения данного действия.");
         }
 
         public static EducationSystemException CreateException(string @private)

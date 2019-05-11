@@ -280,7 +280,7 @@ namespace EducationSystem.Implementations.Services
                 new TestsByStudentId(CurrentUser.Id);
 
             if (specification.IsSatisfiedBy(test) == false)
-                throw ExceptionHelper.NoAccess();
+                throw ExceptionHelper.CreatePublicException("Указанный тест недоступен.");
 
             var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(question.Id)) ??
                 throw ExceptionHelper.NotFound<DatabaseQuestion>(question.Id);

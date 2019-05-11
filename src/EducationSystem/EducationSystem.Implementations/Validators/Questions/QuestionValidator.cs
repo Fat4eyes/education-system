@@ -44,12 +44,12 @@ namespace EducationSystem.Implementations.Validators.Questions
                 new QuestionsByStudentId(user.Id, false);
 
             if (specification.IsSatisfiedBy(model) == false)
-                throw ExceptionHelper.NoAccess();
+                throw ExceptionHelper.CreatePublicException("Указанный вопрос недоступен или уже пройден.");
 
             var hash = await HashComputer.ComputeForQuestionAsync(model);
 
             if (string.Equals(hash, question.Hash, StringComparison.InvariantCulture) == false)
-                throw ExceptionHelper.NoAccess();
+                throw ExceptionHelper.CreatePublicException("Указанный вопрос недоступен.");
 
             return Mapper
                 .Map<Question>(model)
