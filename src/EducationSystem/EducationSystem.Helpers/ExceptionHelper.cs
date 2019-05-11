@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
-using EducationSystem.Interfaces.Factories;
+using EducationSystem.Exceptions;
 using EducationSystem.Models.Files.Basics;
 using EducationSystem.Models.Rest;
 
-namespace EducationSystem.Implementations.Factories
+namespace EducationSystem.Helpers
 {
-    public sealed class ExceptionFactory : IExceptionFactory
+    public static class ExceptionHelper
     {
         private static readonly Dictionary<Type, string> Messages = new Dictionary<Type, string>
         {
@@ -30,17 +29,29 @@ namespace EducationSystem.Implementations.Factories
             [typeof(DatabaseDiscipline)] = "Дисциплина не найдена."
         };
 
-        public Exception NotFound<TModel>(int id) where TModel : class
+        public static Exception NotFound<TModel>(int id) where TModel : class
         {
             if (Messages.TryGetValue(typeof(TModel), out var message))
-                return ExceptionHelper.CreateNotFoundException($"{message} Идентификатор: {id}.", message);
+                return CreateNotFoundException($"{message} Идентификатор: {id}.", message);
 
-            throw ExceptionHelper.CreateException($"Модель типа '{typeof(TModel)}' не поддерживается.");
+            throw CreateException($"Модель типа '{typeof(TModel)}' не поддерживается.");
         }
 
-        public Exception NoAccess()
+        public static Exception NoAccess()
         {
-            return ExceptionHelper.CreatePublicException("Не достаточно прав для выполнения данного действия или действие запрещено.");
+            return CreatePublicException("Не достаточно прав для выполнения данного действия или действие запрещено.");
         }
+
+        public static EducationSystemException CreateException(string @private)
+            => new EducationSystemException(@private);
+
+        public static EducationSystemException CreateException(string @private, string @public)
+            => new EducationSystemException(@private, CreatePublicException(@public));
+
+        public static EducationSystemNotFoundException CreateNotFoundException(string @private, string @public)
+            => new EducationSystemNotFoundException(@private, CreatePublicException(@public));
+
+        public static EducationSystemPublicException CreatePublicException(string @public)
+            => new EducationSystemPublicException(@public);
     }
 }

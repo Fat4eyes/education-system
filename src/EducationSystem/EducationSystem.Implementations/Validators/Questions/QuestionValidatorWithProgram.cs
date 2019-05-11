@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
@@ -18,14 +17,12 @@ namespace EducationSystem.Implementations.Validators.Questions
             IMapper mapper,
             IHashComputer hashComputer,
             IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseQuestion> repositoryQuestion,
             ICodeExecutor codeExecutor)
             : base(
                 mapper,
                 hashComputer,
                 executionContext,
-                exceptionFactory,
                 repositoryQuestion)
         {
             _codeExecutor = codeExecutor;

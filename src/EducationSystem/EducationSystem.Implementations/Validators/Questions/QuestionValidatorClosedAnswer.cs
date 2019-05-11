@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
-using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models.Rest;
 
@@ -18,13 +17,11 @@ namespace EducationSystem.Implementations.Validators.Questions
             IMapper mapper,
             IHashComputer hashComputer,
             IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseQuestion> repositoryQuestion)
             : base(
                 mapper,
                 hashComputer,
                 executionContext,
-                exceptionFactory,
                 repositoryQuestion)
         { }
 

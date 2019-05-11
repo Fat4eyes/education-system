@@ -4,8 +4,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Users;
@@ -17,7 +17,6 @@ namespace EducationSystem.Implementations
     {
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
-        private readonly IExceptionFactory _exceptionFactory;
         private readonly IRepository<DatabaseUser> _repositoryUser;
 
         private Lazy<Task<User>> Lazy { get; }
@@ -25,12 +24,10 @@ namespace EducationSystem.Implementations
         public ExecutionContext(
             IMapper mapper,
             IHttpContextAccessor accessor,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseUser> repositoryUser)
         {
             _mapper = mapper;
             _accessor = accessor;
-            _exceptionFactory = exceptionFactory;
             _repositoryUser = repositoryUser;
 
             Lazy = new Lazy<Task<User>>(GetCurrentUserInternalAsync);
@@ -50,7 +47,7 @@ namespace EducationSystem.Implementations
             var userId = Convert.ToInt32(value);
 
             var user = await _repositoryUser.FindFirstAsync(new UsersById(userId)) ??
-                throw _exceptionFactory.NotFound<DatabaseUser>(userId);
+                throw ExceptionHelper.NotFound<DatabaseUser>(userId);
 
             return _mapper.Map<User>(user);
         }

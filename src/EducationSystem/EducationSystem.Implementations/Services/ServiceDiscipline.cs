@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Models;
@@ -22,13 +22,11 @@ namespace EducationSystem.Implementations.Services
             IMapper mapper,
             ILogger<ServiceDiscipline> logger,
             IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseDiscipline> repositoryDiscipline)
             : base(
                 mapper,
                 logger,
-                executionContext,
-                exceptionFactory)
+                executionContext)
         {
             _repositoryDiscipline = repositoryDiscipline;
         }
@@ -67,7 +65,7 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Discipline>(Mapper.Map<List<Discipline>>(disciplines), count);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task<Discipline> GetDisciplineAsync(int id)
@@ -75,7 +73,7 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsAdmin())
             {
                 var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseDiscipline>(id);
+                    throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
 
                 return Mapper.Map<Discipline>(discipline);
             }
@@ -83,10 +81,10 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsLecturer())
             {
                 var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseDiscipline>(id);
+                    throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
 
                 if (new DisciplinesByLecturerId(CurrentUser.Id).IsSatisfiedBy(discipline) == false)
-                    throw ExceptionFactory.NoAccess();
+                    throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Discipline>(discipline);
             }
@@ -94,15 +92,15 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsStudent())
             {
                 var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseDiscipline>(id);
+                    throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
 
                 if (new DisciplinesByStudentId(CurrentUser.Id).IsSatisfiedBy(discipline) == false)
-                    throw ExceptionFactory.NoAccess();
+                    throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Discipline>(discipline);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
     }
 }

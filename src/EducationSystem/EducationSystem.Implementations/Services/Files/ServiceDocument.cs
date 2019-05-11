@@ -2,7 +2,6 @@
 using EducationSystem.Database.Models;
 using EducationSystem.Implementations.Services.Files.Basics;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
@@ -21,7 +20,6 @@ namespace EducationSystem.Implementations.Services.Files
             IHelperFolder helperFolder,
             IValidator<Document> validatorDocument,
             IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseFile> repositoryFile)
             : base(
                 mapper,
@@ -31,7 +29,6 @@ namespace EducationSystem.Implementations.Services.Files
                 helperFolder,
                 validatorDocument,
                 executionContext,
-                exceptionFactory,
                 repositoryFile)
         { }
     }

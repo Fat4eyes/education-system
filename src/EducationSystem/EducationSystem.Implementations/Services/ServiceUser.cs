@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Models.Rest;
 using Microsoft.Extensions.Logging;
@@ -13,13 +13,11 @@ namespace EducationSystem.Implementations.Services
         public ServiceUser(
             IMapper mapper,
             ILogger<ServiceUser> logger,
-            IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory)
+            IExecutionContext executionContext)
             : base(
                 mapper,
                 logger,
-                executionContext,
-                exceptionFactory)
+                executionContext)
         { }
 
         public async Task<User> GetCurrentUserAsync()
@@ -27,7 +25,7 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer() || CurrentUser.IsStudent())
                 return await ExecutionContext.GetCurrentUserAsync();
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
     }
 }

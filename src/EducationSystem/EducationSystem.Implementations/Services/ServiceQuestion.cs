@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
@@ -35,7 +36,6 @@ namespace EducationSystem.Implementations.Services
             IMapper mapper,
             ILogger<ServiceQuestion> logger,
             IValidator<Question> validatorQuestion,
-            IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseTheme> repositoryTheme,
@@ -47,8 +47,7 @@ namespace EducationSystem.Implementations.Services
             : base(
                 mapper,
                 logger,
-                executionContext,
-                exceptionFactory)
+                executionContext)
         {
             _validatorQuestion = validatorQuestion;
             _repositoryTest = repositoryTest;
@@ -98,7 +97,7 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task<Question> GetQuestionAsync(int id)
@@ -106,7 +105,7 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsAdmin())
             {
                 var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
+                    throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
                 return Mapper.Map<Question>(question);
             }
@@ -114,29 +113,29 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsLecturer())
             {
                 var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
+                    throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
                 if (new QuestionsByLecturerId(CurrentUser.Id).IsSatisfiedBy(question) == false)
-                    throw ExceptionFactory.NoAccess();
+                    throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Question>(question);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task DeleteQuestionAsync(int id)
         {
             if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
+                throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
             var user = await ExecutionContext.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && !new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(question.Theme?.Discipline))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _repositoryQuestion.RemoveAsync(question, true);
         }
@@ -144,7 +143,7 @@ namespace EducationSystem.Implementations.Services
         public async Task<int> CreateQuestionAsync(Question question)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _validatorQuestion.ValidateAsync(question.Format());
 
@@ -172,13 +171,13 @@ namespace EducationSystem.Implementations.Services
         public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
+                throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
             if (!new ThemesByLecturerId(CurrentUser.Id).IsSatisfiedBy(theme))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var ids = questions.Select(x => x.Id).ToArray();
 
@@ -198,15 +197,15 @@ namespace EducationSystem.Implementations.Services
         public async Task UpdateQuestionAsync(int id, Question question)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _validatorQuestion.ValidateAsync(question.Format());
 
             var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
+                throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
             if (!new QuestionsByLecturerId(CurrentUser.Id).IsSatisfiedBy(model))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);
 
@@ -270,10 +269,10 @@ namespace EducationSystem.Implementations.Services
         public async Task<Question> ProcessTestQuestionAsync(int id, Question question)
         {
             if (CurrentUser.IsNotStudent())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseTest>(id);
+                throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
             var specification =
                 new TestsById(id) &
@@ -281,10 +280,10 @@ namespace EducationSystem.Implementations.Services
                 new TestsByStudentId(CurrentUser.Id);
 
             if (specification.IsSatisfiedBy(test) == false)
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(question.Id)) ??
-                throw ExceptionFactory.NotFound<DatabaseQuestion>(question.Id);
+                throw ExceptionHelper.NotFound<DatabaseQuestion>(question.Id);
 
             var result = await _questionValidatorFactory
                 .GetQuestionValidator(model.Type)

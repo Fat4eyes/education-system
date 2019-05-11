@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
 using EducationSystem.Extensions;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;

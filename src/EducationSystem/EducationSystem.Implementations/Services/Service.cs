@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Models.Rest;
 using Microsoft.Extensions.Logging;
 
@@ -12,20 +11,17 @@ namespace EducationSystem.Implementations.Services
         protected IMapper Mapper { get; }
         protected ILogger<TService> Logger { get; }
         protected IExecutionContext ExecutionContext { get; }
-        protected IExceptionFactory ExceptionFactory { get; }
 
         protected User CurrentUser { get; }
 
         protected Service(
             IMapper mapper,
             ILogger<TService> logger,
-            IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory)
+            IExecutionContext executionContext)
         {
             Mapper = mapper;
             Logger = logger;
             ExecutionContext = executionContext;
-            ExceptionFactory = exceptionFactory;
 
             CurrentUser = ExecutionContext
                 .GetCurrentUserAsync()

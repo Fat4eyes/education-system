@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
@@ -16,19 +16,16 @@ namespace EducationSystem.Implementations.Validators.Questions
         protected readonly IMapper Mapper;
         protected readonly IHashComputer HashComputer;
         protected readonly IExecutionContext ExecutionContext;
-        protected readonly IExceptionFactory ExceptionFactory;
         protected readonly IRepository<DatabaseQuestion> RepositoryQuestion;
 
         protected QuestionValidator(
             IMapper mapper,
             IHashComputer hashComputer,
             IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseQuestion> repositoryQuestion)
         {
             Mapper = mapper;
             ExecutionContext = executionContext;
-            ExceptionFactory = exceptionFactory;
             HashComputer = hashComputer;
             RepositoryQuestion = repositoryQuestion;
         }
@@ -47,12 +44,12 @@ namespace EducationSystem.Implementations.Validators.Questions
                 new QuestionsByStudentId(user.Id, false);
 
             if (specification.IsSatisfiedBy(model) == false)
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var hash = await HashComputer.ComputeForQuestionAsync(model);
 
             if (string.Equals(hash, question.Hash, StringComparison.InvariantCulture) == false)
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             return Mapper
                 .Map<Question>(model)
@@ -62,7 +59,7 @@ namespace EducationSystem.Implementations.Validators.Questions
         protected async Task<DatabaseQuestion> GetQuestionModelAsync(int id)
         {
             return await RepositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseQuestion>(id);
+                throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
         }
     }
 }

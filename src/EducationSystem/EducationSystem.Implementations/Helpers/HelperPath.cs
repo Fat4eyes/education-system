@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Specifications.Files;
@@ -40,9 +40,7 @@ namespace EducationSystem.Implementations.Helpers
                 model = await _repositoryFile.FindFirstAsync(new FilesByGuid(file.Guid.Value));
 
             model = model ?? await _repositoryFile.FindFirstAsync(new FilesById(file.Id)) ??
-                throw ExceptionHelper.CreateNotFoundException(
-                    $"Файл не найден. Идентификатор файла: {file.Id}.",
-                    $"Файл не найден.");
+                throw ExceptionHelper.NotFound<DatabaseFile>(file.Id);
 
             return GetRelativeFilePath(model);
         }

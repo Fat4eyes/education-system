@@ -4,9 +4,8 @@ using AutoMapper;
 using CodeExecutionSystem.Contracts.Abstractions;
 using CodeExecutionSystem.Contracts.Data;
 using EducationSystem.Database.Models;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Programs;
@@ -21,7 +20,6 @@ namespace EducationSystem.Implementations
         private readonly ILogger<CodeExecutor> _logger;
         private readonly ICodeExecutionApi _codeExecutionApi;
         private readonly IExecutionContext _executionContext;
-        private readonly IExceptionFactory _exceptionFactory;
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
 
         public CodeExecutor(
@@ -29,14 +27,12 @@ namespace EducationSystem.Implementations
             ILogger<CodeExecutor> logger,
             ICodeExecutionApi codeExecutionApi,
             IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseProgram> repositoryProgram)
         {
             _mapper = mapper;
             _logger = logger;
             _codeExecutionApi = codeExecutionApi;
             _executionContext = executionContext;
-            _exceptionFactory = exceptionFactory;
             _repositoryProgram = repositoryProgram;
         }
 
@@ -49,15 +45,15 @@ namespace EducationSystem.Implementations
                 throw ExceptionHelper.CreatePublicException("Не указан исходный код программы.");
 
             var model = await _repositoryProgram.FindFirstAsync(new ProgramsById(program.Id)) ??
-                throw _exceptionFactory.NotFound<DatabaseProgram>(program.Id);
+                throw ExceptionHelper.NotFound<DatabaseProgram>(program.Id);
 
             var user = await _executionContext.GetCurrentUserAsync();
 
             if (user.IsStudent() && !new ProgramsByStudentId(user.Id).IsSatisfiedBy(model))
-                throw _exceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             if (user.IsLecturer() && !new ProgramsByLecturerId(user.Id).IsSatisfiedBy(model))
-                throw _exceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             _mapper.Map(_mapper.Map<Program>(model), program);
 

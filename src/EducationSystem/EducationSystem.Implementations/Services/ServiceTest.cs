@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Extensions;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
@@ -30,7 +30,6 @@ namespace EducationSystem.Implementations.Services
             IMapper mapper,
             ILogger<ServiceTest> logger,
             IValidator<Test> validatorTest,
-            IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseQuestion> repositoryQuestion,
@@ -39,8 +38,7 @@ namespace EducationSystem.Implementations.Services
             : base(
                 mapper,
                 logger,
-                executionContext,
-                exceptionFactory)
+                executionContext)
         {
             _validatorTest = validatorTest;
             _repositoryTest = repositoryTest;
@@ -96,7 +94,7 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task<Test> GetTestAsync(int id)
@@ -104,7 +102,7 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsAdmin())
             {
                 var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseTest>(id);
+                    throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
                 return Mapper.Map<Test>(test);
             }
@@ -112,10 +110,10 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsLecturer())
             {
                 var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseTest>(id);
+                    throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
                 if (new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(test) == false)
-                    throw ExceptionFactory.NoAccess();
+                    throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Test>(test);
             }
@@ -123,31 +121,31 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsStudent())
             {
                 var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseTest>(id);
+                    throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
                 var specification =
                     new TestsByStudentId(CurrentUser.Id) &
                     new TestsForStudents();
 
                 if (specification.IsSatisfiedBy(test) == false)
-                    throw ExceptionFactory.NoAccess();
+                    throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Test>(test);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task DeleteTestAsync(int id)
         {
             if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseTest>(id);
+                throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
             if (CurrentUser.IsNotAdmin() && !new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(test))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _repositoryTest.RemoveAsync(test, true);
         }
@@ -155,7 +153,7 @@ namespace EducationSystem.Implementations.Services
         public async Task<int> CreateTestAsync(Test test)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _validatorTest.ValidateAsync(test.Format());
 
@@ -169,15 +167,15 @@ namespace EducationSystem.Implementations.Services
         public async Task UpdateTestAsync(int id, Test test)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _validatorTest.ValidateAsync(test.Format());
 
             var model = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseTest>(id);
+                throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
             if (!new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(model))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
 
@@ -191,10 +189,10 @@ namespace EducationSystem.Implementations.Services
             await _repositoryTestTheme.AddAsync(model.TestThemes, true);
         }
 
-        public async Task ResetTestProgress(int id)
+        public async Task DeleteTestResultsAsync(int id)
         {
             if (CurrentUser.IsStudent() == false)
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await ValidateTestAsync(id);
 
@@ -227,7 +225,7 @@ namespace EducationSystem.Implementations.Services
         private async Task ValidateTestAsync(int id)
         {
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseTest>(id);
+                throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
             var specification =
                 new TestsById(id) &
@@ -235,7 +233,7 @@ namespace EducationSystem.Implementations.Services
                 new TestsByStudentId(CurrentUser.Id);
 
             if (specification.IsSatisfiedBy(test) == false)
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
@@ -27,15 +27,13 @@ namespace EducationSystem.Implementations.Services
             IMapper mapper,
             ILogger<ServiceTheme> logger,
             IValidator<Theme> validatorTheme,
-            IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
             IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseDiscipline> repositoryDiscipline)
             : base(
                 mapper,
                 logger,
-                executionContext,
-                exceptionFactory)
+                executionContext)
         {
             _validatorTheme = validatorTheme;
             _repositoryTheme = repositoryTheme;
@@ -67,7 +65,7 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Theme>(Mapper.Map<List<Theme>>(themes), count);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task<Theme> GetThemeAsync(int id)
@@ -75,7 +73,7 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsAdmin())
             {
                 var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseTheme>(id);
+                    throw ExceptionHelper.NotFound<DatabaseTheme>(id);
 
                 return Mapper.Map<Theme>(theme);
             }
@@ -83,27 +81,27 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsLecturer())
             {
                 var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
-                    throw ExceptionFactory.NotFound<DatabaseTheme>(id);
+                    throw ExceptionHelper.NotFound<DatabaseTheme>(id);
 
                 if (new ThemesByLecturerId(CurrentUser.Id).IsSatisfiedBy(theme) == false)
-                    throw ExceptionFactory.NoAccess();
+                    throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Theme>(theme);
             }
 
-            throw ExceptionFactory.NoAccess();
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task DeleteThemeAsync(int id)
         {
             if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseTheme>(id);
+                throw ExceptionHelper.NotFound<DatabaseTheme>(id);
 
             if (CurrentUser.IsNotAdmin() && !new ThemesByLecturerId(CurrentUser.Id).IsSatisfiedBy(theme))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _repositoryTheme.RemoveAsync(theme, true);
         }
@@ -111,7 +109,7 @@ namespace EducationSystem.Implementations.Services
         public async Task<int> CreateThemeAsync(Theme theme)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _validatorTheme.ValidateAsync(theme.Format());
 
@@ -127,13 +125,13 @@ namespace EducationSystem.Implementations.Services
         public async Task UpdateDisciplineThemesAsync(int id, List<Theme> themes)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseDiscipline>(id);
+                throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
 
             if (!new DisciplinesByLecturerId(CurrentUser.Id).IsSatisfiedBy(discipline))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var ids = themes.Select(x => x.Id).ToArray();
 
@@ -153,15 +151,15 @@ namespace EducationSystem.Implementations.Services
         public async Task UpdateThemeAsync(int id, Theme theme)
         {
             if (CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await _validatorTheme.ValidateAsync(theme.Format());
 
             var model = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseTheme>(id);
+                throw ExceptionHelper.NotFound<DatabaseTheme>(id);
 
             if (!new ThemesByLecturerId(CurrentUser.Id).IsSatisfiedBy(model))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseTheme>(theme), model);
 

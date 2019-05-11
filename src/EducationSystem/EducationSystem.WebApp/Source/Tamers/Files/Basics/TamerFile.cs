@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EducationSystem.Constants;
-using EducationSystem.Exceptions.Helpers;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Models.Files.Basics;
 using EducationSystem.WebApp.Source.Attributes;

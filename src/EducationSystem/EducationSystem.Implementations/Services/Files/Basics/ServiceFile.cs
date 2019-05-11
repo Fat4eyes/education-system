@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
+using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
-using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services.Files;
@@ -32,13 +32,11 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             IHelperFolder helperFolder,
             IValidator<TFile> validatorFile,
             IExecutionContext executionContext,
-            IExceptionFactory exceptionFactory,
             IRepository<DatabaseFile> repositoryFile)
             : base(
                 mapper,
                 logger,
-                executionContext,
-                exceptionFactory)
+                executionContext)
         {
             HelperPath = helperPath;
             HelperFile = helperFile;
@@ -50,13 +48,13 @@ namespace EducationSystem.Implementations.Services.Files.Basics
         public async Task DeleteFileAsync(int id)
         {
             if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseFile>(id);
+                throw ExceptionHelper.NotFound<DatabaseFile>(id);
 
             if (CurrentUser.IsNotAdmin() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
 
@@ -76,18 +74,18 @@ namespace EducationSystem.Implementations.Services.Files.Basics
         public async Task<TFile> GetFileAsync(int id)
         {
             if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer() && CurrentUser.IsNotStudent())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
-                throw ExceptionFactory.NotFound<DatabaseFile>(id);
+                throw ExceptionHelper.NotFound<DatabaseFile>(id);
 
             if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotStudent() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
 
             if (await HelperFile.FileExistsAsync(file) == false)
-                throw ExceptionFactory.NotFound<File>(id);
+                throw ExceptionHelper.NotFound<File>(id);
 
             return file;
         }
@@ -95,7 +93,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
         public virtual async Task<TFile> CreateFileAsync(TFile file)
         {
             if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
-                throw ExceptionFactory.NoAccess();
+                throw ExceptionHelper.NoAccess();
 
             await ValidatorFile.ValidateAsync(file);
 
