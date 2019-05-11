@@ -15,6 +15,6 @@ namespace EducationSystem.Interfaces.Services
         Task UpdateTestAsync(int id, Test test);
         Task<int> CreateTestAsync(Test test);
 
-        Task DeleteTestResultsAsync(int id);
+        Task DeleteTestProcessAsync(int id);
     }
 }

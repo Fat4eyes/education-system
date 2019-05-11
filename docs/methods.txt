@@ -45,7 +45,7 @@
 [POST]   [C]          Api/Tests/{Id}/Question           Question
 [PUT]    [B]          Api/Tests/{Id}                    -
 [DELETE] [D]          Api/Tests/{Id}                    -
-[DELETE] [C]          Api/Tests/{Id}/Results            -
+[DELETE] [C]          Api/Tests/{Id}/Process            -
 
 [GET]    [D] [Filter] Api/Themes                        PagedData<Theme>
 [GET]    [D]          Api/Themes/{Id}                   Question

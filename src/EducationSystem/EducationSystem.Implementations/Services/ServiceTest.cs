@@ -189,7 +189,7 @@ namespace EducationSystem.Implementations.Services
             await _repositoryTestTheme.AddAsync(model.TestThemes, true);
         }
 
-        public async Task DeleteTestResultsAsync(int id)
+        public async Task DeleteTestProcessAsync(int id)
         {
             if (CurrentUser.IsStudent() == false)
                 throw ExceptionHelper.NoAccess();
