@@ -16,6 +16,9 @@ export default class Question extends Model {
   public Image?: ImageFile
   public Material?: Material
   public Order?: number
+  public Hash: string = ''
+  public Save?: boolean
+  public Right?: boolean
   
   constructor(themeId?: number){
     super()

@@ -32,4 +32,10 @@ export enum FileType {
   Document = 3
 }
 
+export enum AnswerStatus {
+  Right,
+  Wrong,
+  Ignore
+}
+
 export type TUserRole = 'Admin' | 'Student' | 'Lecturer'
