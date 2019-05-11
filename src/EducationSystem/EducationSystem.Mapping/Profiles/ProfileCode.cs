@@ -36,7 +36,7 @@ namespace EducationSystem.Mapping.Profiles
                 .ForMember(d => d.Errors, o => o.MapFrom(s => s.CompilationErrors));
 
             CreateMap<TestRunResult, CodeRunResult>()
-                .ForMember(d => d.Stutus, o => o.MapFrom(s => s.ExecutionResult));
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.ExecutionResult));
         }
     }
 }

@@ -9,10 +9,10 @@ namespace EducationSystem.Models.Code
 
         public string ExpectedOutput { get; set; }
 
-        public CodeRunStatus Stutus { get; set; }
+        public CodeRunStatus Status { get; set; }
 
         public bool Success =>
-            Stutus == CodeRunStatus.Success &&
+            Status == CodeRunStatus.Success &&
             string.Equals(UserOutput, ExpectedOutput, StringComparison.InvariantCulture);
     }
 }
