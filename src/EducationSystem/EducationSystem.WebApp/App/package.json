@@ -69,6 +69,7 @@
     "js-cookie": "^2.2.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "mammoth": "^1.4.8",
     "mini-css-extract-plugin": "0.4.3",
     "monaco-editor": "^0.16.2",
     "monaco-editor-webpack-plugin": "^1.7.0",
