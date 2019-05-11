@@ -18,9 +18,7 @@ namespace EducationSystem.Specifications.Questions
         public override Expression<Func<DatabaseQuestion, bool>> ToExpression()
         {
             if (_testId.HasValue)
-            {
                 return x => x.Theme.ThemeTests.Any(y => y.TestId == _testId);
-            }
 
             return x => true;
         }

@@ -19,7 +19,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         }
 
         [HttpGet]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
         public async Task<IActionResult> GetQuestions([FromQuery] FilterQuestion filter)
         {
             return await Ok(() => _serviceQuestion.GetQuestionsAsync(filter));

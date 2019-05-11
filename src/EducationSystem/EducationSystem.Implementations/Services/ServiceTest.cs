@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Repositories;
@@ -11,6 +12,7 @@ using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models;
 using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
+using EducationSystem.Specifications.Questions;
 using EducationSystem.Specifications.Tests;
 using Microsoft.Extensions.Logging;
 
@@ -20,7 +22,9 @@ namespace EducationSystem.Implementations.Services
     {
         private readonly IValidator<Test> _validatorTest;
         private readonly IRepository<DatabaseTest> _repositoryTest;
+        private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
         private readonly IRepository<DatabaseTestTheme> _repositoryTestTheme;
+        private readonly IRepository<DatabaseQuestionStudent> _repositoryQuestionStudent;
 
         public ServiceTest(
             IMapper mapper,
@@ -29,7 +33,9 @@ namespace EducationSystem.Implementations.Services
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
-            IRepository<DatabaseTestTheme> repositoryTestTheme)
+            IRepository<DatabaseQuestion> repositoryQuestion,
+            IRepository<DatabaseTestTheme> repositoryTestTheme,
+            IRepository<DatabaseQuestionStudent> repositoryQuestionStudent)
             : base(
                 mapper,
                 logger,
@@ -38,7 +44,9 @@ namespace EducationSystem.Implementations.Services
         {
             _validatorTest = validatorTest;
             _repositoryTest = repositoryTest;
+            _repositoryQuestion = repositoryQuestion;
             _repositoryTestTheme = repositoryTestTheme;
+            _repositoryQuestionStudent = repositoryQuestionStudent;
         }
 
         public async Task<PagedData<Test>> GetTestsAsync(FilterTest filter)
@@ -181,6 +189,53 @@ namespace EducationSystem.Implementations.Services
             model.TestThemes = Mapper.Map<List<DatabaseTestTheme>>(test.Themes);
 
             await _repositoryTestTheme.AddAsync(model.TestThemes, true);
+        }
+
+        public async Task ResetTestProgress(int id)
+        {
+            if (CurrentUser.IsStudent() == false)
+                throw ExceptionFactory.NoAccess();
+
+            await ValidateTestAsync(id);
+
+            var specification =
+                new QuestionsByTestId(id) &
+                new QuestionsForStudents() &
+                new QuestionsByStudentId(CurrentUser.Id);
+
+            var questions = await _repositoryQuestion.FindAllAsync(specification);
+
+            questions.ForEach(question =>
+            {
+                var models = question.QuestionStudents
+                    .Where(x => x.StudentId == CurrentUser.Id)
+                    .ToList();
+
+                if (models.IsEmpty())
+                    return;
+
+                question.QuestionStudents = question.QuestionStudents
+                    .Except(models)
+                    .ToList();
+
+                _repositoryQuestionStudent.RemoveAsync(models);
+            });
+
+            await _repositoryQuestion.UpdateAsync(questions, true);
+        }
+
+        private async Task ValidateTestAsync(int id)
+        {
+            var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
+                throw ExceptionFactory.NotFound<DatabaseTest>(id);
+
+            var specification =
+                new TestsById(id) &
+                new TestsForStudents() &
+                new TestsByStudentId(CurrentUser.Id);
+
+            if (specification.IsSatisfiedBy(test) == false)
+                throw ExceptionFactory.NoAccess();
         }
     }
 }

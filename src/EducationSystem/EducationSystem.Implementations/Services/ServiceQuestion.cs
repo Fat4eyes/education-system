@@ -14,6 +14,7 @@ using EducationSystem.Models.Filters;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Disciplines;
 using EducationSystem.Specifications.Questions;
+using EducationSystem.Specifications.Tests;
 using EducationSystem.Specifications.Themes;
 using Microsoft.Extensions.Logging;
 
@@ -22,11 +23,13 @@ namespace EducationSystem.Implementations.Services
     public sealed class ServiceQuestion : Service<ServiceQuestion>, IServiceQuestion
     {
         private readonly IValidator<Question> _validatorQuestion;
+        private readonly IRepository<DatabaseTest> _repositoryTest;
         private readonly IRepository<DatabaseTheme> _repositoryTheme;
         private readonly IRepository<DatabaseAnswer> _repositoryAnswer;
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
         private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
         private readonly IRepository<DatabaseProgramData> _repositoryProgramData;
+        private readonly IQuestionValidatorFactory _questionValidatorFactory;
 
         public ServiceQuestion(
             IMapper mapper,
@@ -34,11 +37,13 @@ namespace EducationSystem.Implementations.Services
             IValidator<Question> validatorQuestion,
             IExceptionFactory exceptionFactory,
             IExecutionContext executionContext,
+            IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseAnswer> repositoryAnswer,
             IRepository<DatabaseProgram> repositoryProgram,
             IRepository<DatabaseQuestion> repositoryQuestion,
-            IRepository<DatabaseProgramData> repositoryProgramData)
+            IRepository<DatabaseProgramData> repositoryProgramData,
+            IQuestionValidatorFactory questionValidatorFactory)
             : base(
                 mapper,
                 logger,
@@ -46,18 +51,22 @@ namespace EducationSystem.Implementations.Services
                 exceptionFactory)
         {
             _validatorQuestion = validatorQuestion;
+            _repositoryTest = repositoryTest;
             _repositoryTheme = repositoryTheme;
             _repositoryAnswer = repositoryAnswer;
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
             _repositoryProgramData = repositoryProgramData;
+            _questionValidatorFactory = questionValidatorFactory;
         }
 
         public async Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter)
         {
             if (CurrentUser.IsAdmin())
             {
-                var specification = new QuestionsByThemeId(filter.ThemeId);
+                var specification =
+                    new QuestionsByTestId(filter.TestId) &
+                    new QuestionsByThemeId(filter.ThemeId);
 
                 var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
@@ -67,8 +76,22 @@ namespace EducationSystem.Implementations.Services
             if (CurrentUser.IsLecturer())
             {
                 var specification =
+                    new QuestionsByTestId(filter.TestId) &
                     new QuestionsByThemeId(filter.ThemeId) &
                     new QuestionsByLecturerId(CurrentUser.Id);
+
+                var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
+
+                return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
+            }
+
+            if (CurrentUser.IsStudent())
+            {
+                var specification =
+                    new QuestionsForStudents() & 
+                    new QuestionsByTestId(filter.TestId) &
+                    new QuestionsByThemeId(filter.ThemeId) &
+                    new QuestionsByStudentId(CurrentUser.Id, filter.Passed);
 
                 var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
@@ -242,6 +265,43 @@ namespace EducationSystem.Implementations.Services
                     break;
                 }
             }
+        }
+
+        public async Task<Question> ProcessTestQuestionAsync(int id, Question question)
+        {
+            if (CurrentUser.IsNotStudent())
+                throw ExceptionFactory.NoAccess();
+
+            var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
+                throw ExceptionFactory.NotFound<DatabaseTest>(id);
+
+            var specification =
+                new TestsById(id) &
+                new TestsForStudents() &
+                new TestsByStudentId(CurrentUser.Id);
+
+            if (specification.IsSatisfiedBy(test) == false)
+                throw ExceptionFactory.NoAccess();
+
+            var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(question.Id)) ??
+                throw ExceptionFactory.NotFound<DatabaseQuestion>(question.Id);
+
+            var result = await _questionValidatorFactory
+                .GetQuestionValidator(model.Type)
+                .ValidateAsync(question);
+
+            if (result.Right != true)
+                return result;
+
+            model.QuestionStudents.Add(new DatabaseQuestionStudent
+            {
+                Passed = true,
+                StudentId = CurrentUser.Id
+            });
+
+            await _repositoryQuestion.UpdateAsync(model, true);
+
+            return result;
         }
     }
 }

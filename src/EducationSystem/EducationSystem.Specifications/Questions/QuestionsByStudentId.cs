@@ -16,7 +16,7 @@ namespace EducationSystem.Specifications.Questions
             _studentId = studentId;
         }
 
-        public QuestionsByStudentId(int studentId, bool passed) : this(studentId)
+        public QuestionsByStudentId(int studentId, bool? passed) : this(studentId)
         {
             _passed = passed;
         }

@@ -31,7 +31,7 @@
 [PUT]    [D]          Api/Materials/{Id}                -
 [DELETE] [D]          Api/Materials/{Id}                -
 
-[GET]    [D] [Filter] Api/Questions                     PagedData<Question>
+[GET]    [*] [Filter] Api/Questions                     PagedData<Question>
 [GET]    [D]          Api/Questions/{Id}                Question
 [POST]   [B]          Api/Questions                     Int (Id)
 [PUT]    [B]          Api/Questions/{Id}                -
@@ -40,7 +40,10 @@
 [GET]    [*] [Filter] Api/Tests                         PagedData<Test>
 [GET]    [*]          Api/Tests/{Id}                    Question
 [GET]    [D] [Filter] Api/Tests/{Id}/Themes             PagedData<Theme>
+[GET]    [*] [Filter] Api/Tests/{Id}/Questions          PagedData<Question>
 [POST]   [B]          Api/Tests                         Int (Id)
+[POST]   [C]          Api/Tests/{Id}/Question           Question
+[POST]   [C]          Api/Tests/{Id}/Reset              -
 [PUT]    [B]          Api/Tests/{Id}                    -
 [DELETE] [D]          Api/Tests/{Id}                    -
 
@@ -51,6 +54,3 @@
 [POST]   [B]          Api/Themes                        Int (Id)
 [PUT]    [B]          Api/Themes/{Id}                   -
 [DELETE] [D]          Api/Themes/{Id}                   -
-
-[GET]    [C]          Api/Tests/{Id}/Process/Question       Question
-[POST]   [C]          Api/Tests/{Id}/Process/Question       Question

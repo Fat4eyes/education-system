@@ -62,8 +62,6 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IServiceQuestion, ServiceQuestion>();
             collection.AddTransient<IServiceMaterial, ServiceMaterial>();
             collection.AddTransient<IServiceDiscipline, ServiceDiscipline>();
-
-            collection.AddTransient<IServiceTestProcess, ServiceTestProcess>();
         }
 
         private static void RegisterHelpers(IServiceCollection collection)
@@ -106,6 +104,7 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IRepository<DatabaseDiscipline>, Repository<DatabaseDiscipline>>();
             collection.AddTransient<IRepository<DatabaseProgramData>, Repository<DatabaseProgramData>>();
             collection.AddTransient<IRepository<DatabaseMaterialFile>, Repository<DatabaseMaterialFile>>();
+            collection.AddTransient<IRepository<DatabaseQuestionStudent>, Repository<DatabaseQuestionStudent>>();
         }
 
         private static void RegisterDatabases(IServiceCollection collection, IConfiguration configuration)

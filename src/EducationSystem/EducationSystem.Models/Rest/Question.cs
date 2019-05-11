@@ -33,8 +33,6 @@ namespace EducationSystem.Models.Rest
 
         public string Hash { get; set; }
 
-        public bool? Save { get; set; }
-
         public bool? Right { get; set; }
 
         public Question SetTestId(int testId)

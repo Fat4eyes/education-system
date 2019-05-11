@@ -13,11 +13,16 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
     {
         private readonly IServiceTest _serviceTest;
         private readonly IServiceTheme _serviceTheme;
+        private readonly IServiceQuestion _serviceQuestion;
 
-        public TamerTest(IServiceTest serviceTest, IServiceTheme serviceTheme)
+        public TamerTest(
+            IServiceTest serviceTest,
+            IServiceTheme serviceTheme,
+            IServiceQuestion serviceQuestion)
         {
             _serviceTest = serviceTest;
             _serviceTheme = serviceTheme;
+            _serviceQuestion = serviceQuestion;
         }
 
         [HttpGet]
@@ -63,6 +68,29 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         public async Task<IActionResult> GetTestThemes([FromRoute] int id, [FromQuery] FilterTheme filter)
         {
             return await Ok(() => _serviceTheme.GetThemesAsync(filter.SetTestId(id)));
+        }
+
+        [HttpGet("{id:int}/Questions")]
+        [Roles(UserRoles.Admin, UserRoles.Lecturer, UserRoles.Student)]
+        public async Task<IActionResult> GetTestQuestions([FromRoute] int id, [FromQuery] FilterQuestion filter)
+        {
+            return await Ok(() => _serviceQuestion.GetQuestionsAsync(filter.SetTestId(id)));
+        }
+
+        [Transaction]
+        [HttpPost("{id:int}/Question")]
+        [Roles(UserRoles.Student)]
+        public async Task<IActionResult> ProcessTestQuestion([FromRoute] int id, [FromBody] Question question)
+        {
+            return await Ok(() => _serviceQuestion.ProcessTestQuestionAsync(id, question));
+        }
+
+        [Transaction]
+        [HttpPost("{id:int}/Reset")]
+        [Roles(UserRoles.Student)]
+        public async Task<IActionResult> ResetTestProgress([FromRoute] int id)
+        {
+            return await Ok(() => _serviceTest.ResetTestProgress(id));
         }
     }
 }

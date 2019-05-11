@@ -17,5 +17,7 @@ namespace EducationSystem.Interfaces.Services
         Task<int> CreateQuestionAsync(Question question);
 
         Task UpdateThemeQuestionsAsync(int id, List<Question> questions);
+
+        Task<Question> ProcessTestQuestionAsync(int id, Question question);
     }
 }
