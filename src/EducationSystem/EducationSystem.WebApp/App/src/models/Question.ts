@@ -4,6 +4,7 @@ import Answer from './Answer'
 import Program from './Program'
 import ImageFile from './ImageFile'
 import Material from './Material'
+import {IPagingOptions} from './PagedData'
 
 export default class Question extends Model {
   public Text: string = ''
@@ -25,6 +26,12 @@ export default class Question extends Model {
     
     this.ThemeId = themeId
   }
+}
+
+export interface IFilterQuestion extends IPagingOptions {
+  ThemeId?: number
+  TestId?: number
+  Passed?: boolean
 }
 
 export interface QuestionOptions {

@@ -38,4 +38,10 @@ export enum AnswerStatus {
   Ignore
 }
 
+export enum CodeRunStatus {
+  Success,
+  TimeExcess,
+  MemoryExcess
+}
+
 export type TUserRole = 'Admin' | 'Student' | 'Lecturer'

@@ -7,7 +7,6 @@ import {unregister} from './serviceWorker'
 import history from './history'
 import Container from './infrastructure/di/Container'
 import Fetch from './helpers/Fetch'
-
 //Providers
 import {MuiThemeProvider} from '@material-ui/core/styles'
 import {SnackbarProvider} from 'notistack'
@@ -23,9 +22,11 @@ import {FileService} from './services/FileService'
 import {MaterialService} from './services/MaterialService'
 import {NotificationService} from './services/NotificationService'
 import {UserService} from './services/UserService'
+import {TestProcessService} from './services/TestProcessService'
 
 import './index.less'
 import * as Cookies from 'js-cookie'
+
 
 const Layout = React.lazy(() => {
   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
@@ -43,6 +44,7 @@ Container.getContainer()
   .transient(FileService, 'FileService')
   .transient(MaterialService, 'MaterialService')
   .transient(UserService, 'UserService')
+  .transient(TestProcessService, 'TestProcessService')
 
 const themeCookieName = 'theme'
 
