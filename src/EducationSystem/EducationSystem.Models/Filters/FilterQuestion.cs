@@ -2,9 +2,9 @@
 {
     public class FilterQuestion : Filter
     {
-        public int? ThemeId { get; set; } = null;
+        public int? ThemeId { get; set; }
 
-        public int? TestId { get; set; } = null;
+        public int? TestId { get; set; }
 
         public bool? Passed { get; set; } = null;
 

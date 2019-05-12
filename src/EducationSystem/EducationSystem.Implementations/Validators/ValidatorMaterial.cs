@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 using EducationSystem.Extensions;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
@@ -59,7 +60,12 @@ namespace EducationSystem.Implementations.Validators
                 new FilesByIds(ids) &
                 new FilesByOwnerId(user.Id);
 
-            if ((await _repositoryFile.FindAllAsync(specification)).Count != ids.Length)
+            var files = await _repositoryFile.FindAllAsync(specification);
+
+            if (files.Any(x => x.Type != FileType.Document))
+                throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов имеют неверный тип.");
+
+            if (files.Count != ids.Length)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют или недоступны.");
         }
     }

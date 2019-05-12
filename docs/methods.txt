@@ -10,10 +10,12 @@
 
 [POST]   [*]          Api/Code/Execute                  CodeExecutionResult
 
+[GET]    [D]          Api/Documents                     PagedData<Document>
 [GET]    [*]          Api/Documents/{Id}                Document
 [GET]    [D]          Api/Documents/Extensions          []
 [POST]   [D]          Api/Documents                     Document
 [DELETE] [D]          Api/Documents/{Id}                -
+[GET]    [D]          Api/Images                        PagedData<Image>
 [GET]    [*]          Api/Images/{Id}                   Image
 [GET]    [D]          Api/Images/Extensions             []
 [POST]   [D]          Api/Images                        Image
@@ -27,8 +29,8 @@
 
 [GET]    [D] [Filter] Api/Materials                     PagedData<Material>
 [GET]    [*]          Api/Materials/{Id}                Material
-[POST]   [D]          Api/Materials                     Int (Id)
-[PUT]    [D]          Api/Materials/{Id}                -
+[POST]   [B]          Api/Materials                     Int (Id)
+[PUT]    [B]          Api/Materials/{Id}                -
 [DELETE] [D]          Api/Materials/{Id}                -
 
 [GET]    [*] [Filter] Api/Questions                     PagedData<Question>

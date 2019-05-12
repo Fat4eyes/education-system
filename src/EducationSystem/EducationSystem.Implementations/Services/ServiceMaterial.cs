@@ -66,7 +66,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Material> GetMaterialAsync(int id)
         {
-            // Студент сейчас может получить доступ к любому материалу любого преподавателя (администратора).
+            // Студент сейчас может получить доступ к любому материалу любого преподавателя.
             // Под материалом здесь понимается учебный материал.
 
             // TODO: Исправить это при необходимости.
@@ -109,7 +109,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateMaterialAsync(int id, Material material)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            if (CurrentUser.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorMaterial.ValidateAsync(material.Format());
@@ -134,7 +134,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateMaterialAsync(Material material)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            if (CurrentUser.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorMaterial.ValidateAsync(material.Format());

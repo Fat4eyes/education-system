@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -10,6 +11,8 @@ using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Interfaces.Validators;
+using EducationSystem.Models;
+using EducationSystem.Models.Filters;
 using EducationSystem.Specifications.Files;
 using Microsoft.Extensions.Logging;
 using File = EducationSystem.Models.Files.Basics.File;
@@ -43,6 +46,31 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             HelperFolder = helperFolder;
             ValidatorFile = validatorFile;
             RepositoryFile = repositoryFile;
+        }
+
+        public virtual async Task<PagedData<TFile>> GetFilesAsync(FilterFile filter)
+        {
+            if (CurrentUser.IsAdmin())
+            {
+                var specification = new FilesByType(filter.Type);
+
+                var (count, files) = await RepositoryFile.FindPaginatedAsync(specification, filter);
+
+                return new PagedData<TFile>(Mapper.Map<List<TFile>>(files), count);
+            }
+
+            if (CurrentUser.IsLecturer())
+            {
+                var specification =
+                    new FilesByType(filter.Type) &
+                    new FilesByOwnerId(CurrentUser.Id);
+
+                var (count, files) = await RepositoryFile.FindPaginatedAsync(specification, filter);
+
+                return new PagedData<TFile>(Mapper.Map<List<TFile>>(files), count);
+            }
+
+            throw ExceptionHelper.NoAccess();
         }
 
         public async Task DeleteFileAsync(int id)

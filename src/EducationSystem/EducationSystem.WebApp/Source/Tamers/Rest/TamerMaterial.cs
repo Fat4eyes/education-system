@@ -34,7 +34,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [HttpPost]
         [Transaction]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> CreateMaterial([FromBody] Material material)
         {
             return await Ok(() => _serviceMaterial.CreateMaterialAsync(material));
@@ -42,7 +42,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
 
         [Transaction]
         [HttpPut("{id:int}")]
-        [Roles(UserRoles.Admin, UserRoles.Lecturer)]
+        [Roles(UserRoles.Lecturer)]
         public async Task<IActionResult> UpdateMaterial([FromRoute] int id, [FromBody] Material material)
         {
             return await Ok(() => _serviceMaterial.UpdateMaterialAsync(id, material));
