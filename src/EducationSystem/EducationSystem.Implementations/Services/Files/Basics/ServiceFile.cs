@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -10,6 +11,8 @@ using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services.Files;
 using EducationSystem.Interfaces.Validators;
+using EducationSystem.Models;
+using EducationSystem.Models.Filters;
 using EducationSystem.Specifications.Files;
 using Microsoft.Extensions.Logging;
 using File = EducationSystem.Models.Files.Basics.File;
@@ -18,25 +21,22 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 {
     public abstract class ServiceFile<TFile> : Service<ServiceFile<TFile>>, IServiceFile<TFile> where TFile : File
     {
-        protected IHelperPath HelperPath { get; }
-        protected IHelperFile HelperFile { get; }
-        protected IHelperFolder HelperFolder { get; }
-        protected IValidator<TFile> ValidatorFile { get; }
-        protected IRepository<DatabaseFile> RepositoryFile { get; }
+        protected readonly IHelperPath HelperPath;
+        protected readonly IHelperFile HelperFile;
+        protected readonly IHelperFolder HelperFolder;
+        protected readonly IValidator<TFile> ValidatorFile;
+        protected readonly IRepository<DatabaseFile> RepositoryFile;
 
         protected ServiceFile(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceFile<TFile>> logger,
             IHelperPath helperPath,
             IHelperFile helperFile,
             IHelperFolder helperFolder,
             IValidator<TFile> validatorFile,
-            IExecutionContext executionContext,
             IRepository<DatabaseFile> repositoryFile)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             HelperPath = helperPath;
             HelperFile = helperFile;
@@ -45,15 +45,44 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             RepositoryFile = repositoryFile;
         }
 
+        public virtual async Task<PagedData<TFile>> GetFilesAsync(FilterFile filter)
+        {
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
+            {
+                var specification = new FilesByType(filter.Type);
+
+                var (count, files) = await RepositoryFile.FindPaginatedAsync(specification, filter);
+
+                return new PagedData<TFile>(Mapper.Map<List<TFile>>(files), count);
+            }
+
+            if (user.IsLecturer())
+            {
+                var specification =
+                    new FilesByType(filter.Type) &
+                    new FilesByOwnerId(user.Id);
+
+                var (count, files) = await RepositoryFile.FindPaginatedAsync(specification, filter);
+
+                return new PagedData<TFile>(Mapper.Map<List<TFile>>(files), count);
+            }
+
+            throw ExceptionHelper.NoAccess();
+        }
+
         public async Task DeleteFileAsync(int id)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseFile>(id);
 
-            if (CurrentUser.IsNotAdmin() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+            if (user.IsNotAdmin() && !new FilesByOwnerId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
@@ -73,13 +102,15 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task<TFile> GetFileAsync(int id)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer() && CurrentUser.IsNotStudent())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer() && user.IsNotStudent())
                 throw ExceptionHelper.NoAccess();
 
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseFile>(id);
 
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotStudent() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+            if (user.IsNotAdmin() && user.IsNotStudent() && !new FilesByOwnerId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
@@ -92,7 +123,9 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public virtual async Task<TFile> CreateFileAsync(TFile file)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await ValidatorFile.ValidateAsync(file);
@@ -118,7 +151,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             var model = Mapper.Map<DatabaseFile>(file);
 
             model.Guid = guid.ToString();
-            model.OwnerId = CurrentUser.Id;
+            model.OwnerId = user.Id;
 
             await RepositoryFile.AddAsync(model, true);
 

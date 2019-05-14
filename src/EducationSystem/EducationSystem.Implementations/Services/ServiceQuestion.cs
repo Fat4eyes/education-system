@@ -34,9 +34,9 @@ namespace EducationSystem.Implementations.Services
 
         public ServiceQuestion(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceQuestion> logger,
             IValidator<Question> validatorQuestion,
-            IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseAnswer> repositoryAnswer,
@@ -44,10 +44,7 @@ namespace EducationSystem.Implementations.Services
             IRepository<DatabaseQuestion> repositoryQuestion,
             IRepository<DatabaseProgramData> repositoryProgramData,
             IQuestionValidatorFactory questionValidatorFactory)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             _validatorQuestion = validatorQuestion;
             _repositoryTest = repositoryTest;
@@ -61,7 +58,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var specification =
                     new QuestionsByTestId(filter.TestId) &
@@ -72,25 +71,25 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var specification =
                     new QuestionsByTestId(filter.TestId) &
                     new QuestionsByThemeId(filter.ThemeId) &
-                    new QuestionsByLecturerId(CurrentUser.Id);
+                    new QuestionsByLecturerId(user.Id);
 
                 var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
                 return new PagedData<Question>(Mapper.Map<List<Question>>(questions), count);
             }
 
-            if (CurrentUser.IsStudent())
+            if (user.IsStudent())
             {
                 var specification =
                     new QuestionsForStudents() & 
                     new QuestionsByTestId(filter.TestId) &
                     new QuestionsByThemeId(filter.ThemeId) &
-                    new QuestionsByStudentId(CurrentUser.Id, filter.Passed);
+                    new QuestionsByStudentId(user.Id, filter.Passed);
 
                 var (count, questions) = await _repositoryQuestion.FindPaginatedAsync(specification, filter);
 
@@ -102,7 +101,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Question> GetQuestionAsync(int id)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
@@ -110,12 +111,12 @@ namespace EducationSystem.Implementations.Services
                 return Mapper.Map<Question>(question);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
-                if (new QuestionsByLecturerId(CurrentUser.Id).IsSatisfiedBy(question) == false)
+                if (new QuestionsByLecturerId(user.Id).IsSatisfiedBy(question) == false)
                     throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Question>(question);
@@ -126,13 +127,13 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteQuestionAsync(int id)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             var question = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
-
-            var user = await ExecutionContext.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && !new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(question.Theme?.Discipline))
                 throw ExceptionHelper.NoAccess();
@@ -142,7 +143,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateQuestionAsync(Question question)
         {
-            if (CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorQuestion.ValidateAsync(question.Format());
@@ -170,13 +173,15 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
         {
-            if (CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
-            if (!new ThemesByLecturerId(CurrentUser.Id).IsSatisfiedBy(theme))
+            if (!new ThemesByLecturerId(user.Id).IsSatisfiedBy(theme))
                 throw ExceptionHelper.NoAccess();
 
             var ids = questions.Select(x => x.Id).ToArray();
@@ -196,7 +201,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateQuestionAsync(int id, Question question)
         {
-            if (CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorQuestion.ValidateAsync(question.Format());
@@ -204,7 +211,7 @@ namespace EducationSystem.Implementations.Services
             var model = await _repositoryQuestion.FindFirstAsync(new QuestionsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseQuestion>(id);
 
-            if (!new QuestionsByLecturerId(CurrentUser.Id).IsSatisfiedBy(model))
+            if (!new QuestionsByLecturerId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseQuestion>(question), model);
@@ -268,7 +275,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Question> ProcessTestQuestionAsync(int id, Question question)
         {
-            if (CurrentUser.IsNotStudent())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotStudent())
                 throw ExceptionHelper.NoAccess();
 
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
@@ -277,7 +286,7 @@ namespace EducationSystem.Implementations.Services
             var specification =
                 new TestsById(id) &
                 new TestsForStudents() &
-                new TestsByStudentId(CurrentUser.Id);
+                new TestsByStudentId(user.Id);
 
             if (specification.IsSatisfiedBy(test) == false)
                 throw ExceptionHelper.CreatePublicException("Указанный тест недоступен.");
@@ -295,7 +304,7 @@ namespace EducationSystem.Implementations.Services
             model.QuestionStudents.Add(new DatabaseQuestionStudent
             {
                 Passed = true,
-                StudentId = CurrentUser.Id
+                StudentId = user.Id
             });
 
             await _repositoryQuestion.UpdateAsync(model, true);

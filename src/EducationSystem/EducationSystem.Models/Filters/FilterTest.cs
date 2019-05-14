@@ -6,7 +6,7 @@ namespace EducationSystem.Models.Filters
     {
         public string Name { get; set; } = null;
 
-        public int? DisciplineId { get; set; } = null;
+        public int? DisciplineId { get; set; }
 
         public bool OnlyActive { get; set; } = false;
 

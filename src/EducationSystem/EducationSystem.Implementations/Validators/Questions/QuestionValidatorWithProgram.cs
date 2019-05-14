@@ -15,14 +15,14 @@ namespace EducationSystem.Implementations.Validators.Questions
 
         public QuestionValidatorWithProgram(
             IMapper mapper,
+            IContext context,
             IHashComputer hashComputer,
-            IExecutionContext executionContext,
             IRepository<DatabaseQuestion> repositoryQuestion,
             ICodeExecutor codeExecutor)
             : base(
                 mapper,
+                context,
                 hashComputer,
-                executionContext,
                 repositoryQuestion)
         {
             _codeExecutor = codeExecutor;

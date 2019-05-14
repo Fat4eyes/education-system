@@ -12,14 +12,12 @@ namespace EducationSystem.Implementations.Validators
 {
     public sealed class ValidatorTheme : IValidator<Theme>
     {
-        private readonly IExecutionContext _executionContext;
+        private readonly IContext _context;
         private readonly IRepository<DatabaseDiscipline> _repositoryDiscipline;
 
-        public ValidatorTheme(
-            IExecutionContext executionContext,
-            IRepository<DatabaseDiscipline> repositoryDiscipline)
+        public ValidatorTheme(IContext context, IRepository<DatabaseDiscipline> repositoryDiscipline)
         {
-            _executionContext = executionContext;
+            _context = context;
             _repositoryDiscipline = repositoryDiscipline;
         }
 
@@ -34,7 +32,7 @@ namespace EducationSystem.Implementations.Validators
             var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(model.DisciplineId)) ??
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
 
-            var user = await _executionContext.GetCurrentUserAsync();
+            var user = await _context.GetCurrentUserAsync();
 
             if (new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline) == false)
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина недоступна.");

@@ -16,8 +16,8 @@ namespace EducationSystem.Models.Rest
 
         public Material Format()
         {
-            Name = Name.Trim();
-            Template = Template.Trim();
+            Name = Name?.Trim();
+            Template = Template?.Trim();
 
             return this;
         }

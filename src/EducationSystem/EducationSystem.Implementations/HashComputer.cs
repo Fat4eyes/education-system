@@ -10,11 +10,11 @@ namespace EducationSystem.Implementations
 {
     public sealed class HashComputer : IHashComputer
     {
-        private readonly IExecutionContext _executionContext;
+        private readonly IContext _context;
 
-        public HashComputer(IExecutionContext executionContext)
+        public HashComputer(IContext context)
         {
-            _executionContext = executionContext;
+            _context = context;
         }
 
         public string Compute(object @object)
@@ -31,7 +31,7 @@ namespace EducationSystem.Implementations
 
         public async Task<string> ComputeForQuestionAsync(DatabaseQuestion question)
         {
-            var user = await _executionContext.GetCurrentUserAsync();
+            var user = await _context.GetCurrentUserAsync();
 
             var ojbect = new
             {

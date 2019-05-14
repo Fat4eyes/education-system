@@ -28,17 +28,14 @@ namespace EducationSystem.Implementations.Services
 
         public ServiceTest(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceTest> logger,
             IValidator<Test> validatorTest,
-            IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseQuestion> repositoryQuestion,
             IRepository<DatabaseTestTheme> repositoryTestTheme,
             IRepository<DatabaseQuestionStudent> repositoryQuestionStudent)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             _validatorTest = validatorTest;
             _repositoryTest = repositoryTest;
@@ -49,7 +46,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Test>> GetTestsAsync(FilterTest filter)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var specification =
                     new TestsByName(filter.Name) &
@@ -64,13 +63,13 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var specification =
                     new TestsByName(filter.Name) &
                     new TestsByDisciplineId(filter.DisciplineId) &
                     new TestsByType(filter.TestType) &
-                    new TestsByLecturerId(CurrentUser.Id);
+                    new TestsByLecturerId(user.Id);
 
                 if (filter.OnlyActive)
                     specification = specification & new TestsByActive(true);
@@ -80,13 +79,13 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Test>(Mapper.Map<List<Test>>(tests), count);
             }
 
-            if (CurrentUser.IsStudent())
+            if (user.IsStudent())
             {
                 var specification =
                     new TestsByName(filter.Name) &
                     new TestsByDisciplineId(filter.DisciplineId) &
                     new TestsByType(filter.TestType) &
-                    new TestsByStudentId(CurrentUser.Id) &
+                    new TestsByStudentId(user.Id) &
                     new TestsForStudents();
 
                 var (count, tests) = await _repositoryTest.FindPaginatedAsync(specification, filter);
@@ -99,7 +98,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Test> GetTestAsync(int id)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseTest>(id);
@@ -107,24 +108,24 @@ namespace EducationSystem.Implementations.Services
                 return Mapper.Map<Test>(test);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
-                if (new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(test) == false)
+                if (new TestsByLecturerId(user.Id).IsSatisfiedBy(test) == false)
                     throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Test>(test);
             }
 
-            if (CurrentUser.IsStudent())
+            if (user.IsStudent())
             {
                 var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
                 var specification =
-                    new TestsByStudentId(CurrentUser.Id) &
+                    new TestsByStudentId(user.Id) &
                     new TestsForStudents();
 
                 if (specification.IsSatisfiedBy(test) == false)
@@ -138,13 +139,15 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteTestAsync(int id)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
-            if (CurrentUser.IsNotAdmin() && !new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(test))
+            if (user.IsNotAdmin() && !new TestsByLecturerId(user.Id).IsSatisfiedBy(test))
                 throw ExceptionHelper.NoAccess();
 
             await _repositoryTest.RemoveAsync(test, true);
@@ -152,7 +155,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateTestAsync(Test test)
         {
-            if (CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorTest.ValidateAsync(test.Format());
@@ -166,7 +171,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateTestAsync(int id, Test test)
         {
-            if (CurrentUser.IsNotLecturer())
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorTest.ValidateAsync(test.Format());
@@ -174,7 +181,7 @@ namespace EducationSystem.Implementations.Services
             var model = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
-            if (!new TestsByLecturerId(CurrentUser.Id).IsSatisfiedBy(model))
+            if (!new TestsByLecturerId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseTest>(test), model);
@@ -191,7 +198,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteTestProcessAsync(int id)
         {
-            if (CurrentUser.IsStudent() == false)
+            var user = await Context.GetCurrentUserAsync();
+
+            if (user.IsStudent() == false)
                 throw ExceptionHelper.NoAccess();
 
             await ValidateTestAsync(id);
@@ -199,14 +208,14 @@ namespace EducationSystem.Implementations.Services
             var specification =
                 new QuestionsByTestId(id) &
                 new QuestionsForStudents() &
-                new QuestionsByStudentId(CurrentUser.Id);
+                new QuestionsByStudentId(user.Id);
 
             var questions = await _repositoryQuestion.FindAllAsync(specification);
 
             questions.ForEach(question =>
             {
                 var models = question.QuestionStudents
-                    .Where(x => x.StudentId == CurrentUser.Id)
+                    .Where(x => x.StudentId == user.Id)
                     .ToList();
 
                 if (models.IsEmpty())
@@ -224,13 +233,15 @@ namespace EducationSystem.Implementations.Services
 
         private async Task ValidateTestAsync(int id)
         {
+            var user = await Context.GetCurrentUserAsync();
+
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseTest>(id);
 
             var specification =
                 new TestsById(id) &
                 new TestsForStudents() &
-                new TestsByStudentId(CurrentUser.Id);
+                new TestsByStudentId(user.Id);
 
             if (specification.IsSatisfiedBy(test) == false)
                 throw ExceptionHelper.CreatePublicException("Указанный тест недоступен.");

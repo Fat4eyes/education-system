@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 using EducationSystem.Extensions;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
@@ -15,17 +16,17 @@ namespace EducationSystem.Implementations.Validators
 {
     public sealed class ValidatorMaterial : IValidator<Material>
     {
+        private readonly IContext _context;
         private readonly IHelperFile _helperFile;
-        private readonly IExecutionContext _executionContext;
         private readonly IRepository<DatabaseFile> _repositoryFile;
 
         public ValidatorMaterial(
+            IContext context,
             IHelperFile helperFile,
-            IExecutionContext executionContext,
             IRepository<DatabaseFile> repositoryFile)
         {
+            _context = context;
             _helperFile = helperFile;
-            _executionContext = executionContext;
             _repositoryFile = repositoryFile;
         }
 
@@ -53,13 +54,18 @@ namespace EducationSystem.Implementations.Validators
                 .Select(x => x.Id)
                 .ToArray();
 
-            var user = await _executionContext.GetCurrentUserAsync();
+            var user = await _context.GetCurrentUserAsync();
 
             var specification =
                 new FilesByIds(ids) &
                 new FilesByOwnerId(user.Id);
 
-            if ((await _repositoryFile.FindAllAsync(specification)).Count != ids.Length)
+            var files = await _repositoryFile.FindAllAsync(specification);
+
+            if (files.Any(x => x.Type != FileType.Document))
+                throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов имеют неверный тип.");
+
+            if (files.Count != ids.Length)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют или недоступны.");
         }
     }

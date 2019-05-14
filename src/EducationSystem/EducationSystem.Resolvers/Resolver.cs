@@ -6,15 +6,15 @@ namespace EducationSystem.Resolvers
 {
     public abstract class Resolver
     {
-        protected IExecutionContext ExecutionContext { get; }
+        protected readonly IContext Context;
 
-        protected User CurrentUser { get; }
+        protected readonly User CurrentUser;
 
-        protected Resolver(IExecutionContext executionContext)
+        protected Resolver(IContext context)
         {
-            ExecutionContext = executionContext;
+            Context = context;
 
-            CurrentUser = ExecutionContext
+            CurrentUser = Context
                 .GetCurrentUserAsync()
                 .WaitTask();
         }

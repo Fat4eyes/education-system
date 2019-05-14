@@ -30,7 +30,7 @@ namespace EducationSystem.Models.Rest
 
         public Test Format()
         {
-            Subject = Subject.Trim();
+            Subject = Subject?.Trim();
 
             return this;
         }

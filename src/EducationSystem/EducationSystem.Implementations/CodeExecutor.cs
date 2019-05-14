@@ -17,22 +17,22 @@ namespace EducationSystem.Implementations
     public sealed class CodeExecutor : ICodeExecutor
     {
         private readonly IMapper _mapper;
+        private readonly IContext _context;
         private readonly ILogger<CodeExecutor> _logger;
         private readonly ICodeExecutionApi _codeExecutionApi;
-        private readonly IExecutionContext _executionContext;
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
 
         public CodeExecutor(
             IMapper mapper,
+            IContext context,
             ILogger<CodeExecutor> logger,
             ICodeExecutionApi codeExecutionApi,
-            IExecutionContext executionContext,
             IRepository<DatabaseProgram> repositoryProgram)
         {
             _mapper = mapper;
+            _context = context;
             _logger = logger;
             _codeExecutionApi = codeExecutionApi;
-            _executionContext = executionContext;
             _repositoryProgram = repositoryProgram;
         }
 
@@ -47,7 +47,7 @@ namespace EducationSystem.Implementations
             var model = await _repositoryProgram.FindFirstAsync(new ProgramsById(program.Id)) ??
                 throw ExceptionHelper.NotFound<DatabaseProgram>(program.Id);
 
-            var user = await _executionContext.GetCurrentUserAsync();
+            var user = await _context.GetCurrentUserAsync();
 
             if (user.IsStudent() && !new ProgramsByStudentId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();

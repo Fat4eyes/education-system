@@ -18,21 +18,21 @@ namespace EducationSystem.Implementations.Validators
 {
     public sealed class ValidatorQuestion : IValidator<Question>
     {
+        private readonly IContext _context;
         private readonly IHelperFile _helperFile;
-        private readonly IExecutionContext _executionContext;
         private readonly IRepository<DatabaseFile> _repositoryFile;
         private readonly IRepository<DatabaseTheme> _repositoryTheme;
         private readonly IRepository<DatabaseMaterial> _repositoryMaterial;
 
         public ValidatorQuestion(
+            IContext context,
             IHelperFile helperFile,
-            IExecutionContext executionContext,
             IRepository<DatabaseFile> repositoryFile,
             IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseMaterial> repositoryMaterial)
         {
+            _context = context;
             _helperFile = helperFile;
-            _executionContext = executionContext;
             _repositoryFile = repositoryFile;
             _repositoryTheme = repositoryTheme;
             _repositoryMaterial = repositoryMaterial;
@@ -67,7 +67,7 @@ namespace EducationSystem.Implementations.Validators
             var theme = await _repositoryTheme.FindFirstAsync(new ThemesById(model.ThemeId.Value)) ??
                 throw ExceptionHelper.CreatePublicException("Указанная тема не существует.");
 
-            var user = await _executionContext.GetCurrentUserAsync();
+            var user = await _context.GetCurrentUserAsync();
 
             if (new ThemesByLecturerId(user.Id).IsSatisfiedBy(theme) == false)
                 throw ExceptionHelper.CreatePublicException("Указанная тема недоступна.");

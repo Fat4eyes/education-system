@@ -15,7 +15,7 @@ namespace EducationSystem.Models.Rest
 
         public Theme Format()
         {
-            Name = Name.Trim();
+            Name = Name?.Trim();
 
             return this;
         }

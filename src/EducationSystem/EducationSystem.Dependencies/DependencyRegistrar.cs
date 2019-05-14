@@ -33,13 +33,14 @@ namespace EducationSystem.Dependencies
 
             RegisterDatabases(collection, configuration);
 
-            collection.AddScoped<IExecutionContext, ExecutionContext>();
+            collection.AddScoped<IContext, Context>();
 
             collection.AddTransient<ICodeExecutor, CodeExecutor>();
             collection.AddTransient<IHashComputer, HashComputer>();
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IQuestionValidatorFactory, QuestionValidatorFactory>();
 
+            // TODO: Потом удалить. Представляет собой реализацию фейковых ответов.
             collection.AddTransient<ICodeExecutionApi, CodeExecutionApi>();
 
             collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
