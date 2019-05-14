@@ -45,13 +45,13 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreatStudent);
+                .ReturnsAsync(Creator.CreateStudent);
 
             await ServiceDiscipline.GetDisciplinesAsync(new FilterDiscipline());
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreatEmployee);
+                .ReturnsAsync(Creator.CreateEmployee);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceDiscipline.GetDisciplinesAsync(new FilterDiscipline()));
@@ -79,13 +79,13 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreatStudent);
+                .ReturnsAsync(Creator.CreateStudent);
 
             await ServiceDiscipline.GetDisciplineAsync(999);
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreatEmployee);
+                .ReturnsAsync(Creator.CreateEmployee);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceDiscipline.GetDisciplineAsync(999));
@@ -114,7 +114,7 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreatStudent);
+                .ReturnsAsync(Creator.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceDiscipline.GetDisciplineAsync(999));

@@ -33,7 +33,7 @@ namespace EducationSystem.Tests
             };
         }
 
-        public static User CreatStudent()
+        public static User CreateStudent()
         {
             return new User
             {
@@ -45,7 +45,7 @@ namespace EducationSystem.Tests
             };
         }
 
-        public static User CreatEmployee()
+        public static User CreateEmployee()
         {
             return new User
             {
