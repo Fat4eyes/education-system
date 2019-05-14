@@ -110,18 +110,18 @@ namespace EducationSystem.Tests
 
         #region DatabaseDiscipline
 
-        public static List<DatabaseDiscipline> CreateDisciplines()
+        public static List<DatabaseDiscipline> CreateDatabaseDisciplines()
         {
             return new List<DatabaseDiscipline>
             {
-                CreateDiscipline(),
-                CreateDiscipline(),
-                CreateDiscipline(9, 9),
-                CreateDiscipline(9)
+                CreateDatabaseDiscipline(),
+                CreateDatabaseDiscipline(),
+                CreateDatabaseDiscipline(9, 9),
+                CreateDatabaseDiscipline(9)
             };
         }
 
-        public static DatabaseDiscipline CreateDiscipline(int studentId = 3, int lecturerId = 2)
+        public static DatabaseDiscipline CreateDatabaseDiscipline(int studentId = 3, int lecturerId = 2)
         {
             return new DatabaseDiscipline
             {
@@ -188,6 +188,15 @@ namespace EducationSystem.Tests
                     }
                 }
             };
+        }
+
+        #endregion
+
+        #region DatabaseMaterial
+
+        public static DatabaseMaterial CreateDatabaseMaterial(int ownerId)
+        {
+            return new DatabaseMaterial { OwnerId = ownerId };
         }
 
         #endregion

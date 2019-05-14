@@ -29,52 +29,11 @@ namespace EducationSystem.Tests.Services
         }
 
         [Fact]
-        public async Task GetDisciplines()
-        {
-            var filter = new FilterDiscipline();
-
-            RepositoryDiscipline
-                .Setup(x => x.FindPaginatedAsync(It.IsAny<ISpecification<DatabaseDiscipline>>(), filter))
-                .ReturnsAsync((4, Creator.CreateDisciplines()));
-
-            Context
-                .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
-
-            var data = await ServiceDiscipline.GetDisciplinesAsync(filter);
-
-            Assert.Equal(4, data.Count);
-
-            Context
-                .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
-
-            data = await ServiceDiscipline.GetDisciplinesAsync(filter);
-
-            Assert.Equal(4, data.Count);
-
-            Context
-                .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
-
-            data = await ServiceDiscipline.GetDisciplinesAsync(filter);
-
-            Assert.Equal(4, data.Count);
-
-            Context
-                .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateEmployee);
-
-            await Assert.ThrowsAsync<EducationSystemPublicException>
-                (() => ServiceDiscipline.GetDisciplinesAsync(filter));
-        }
-
-        [Fact]
-        public async Task GetDiscipline_Found()
+        public async Task GetDiscipline()
         {
             RepositoryDiscipline
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseDiscipline>>()))
-                .ReturnsAsync(Creator.CreateDiscipline());
+                .ReturnsAsync(Creator.CreateDatabaseDiscipline());
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
@@ -93,13 +52,6 @@ namespace EducationSystem.Tests.Services
                 .ReturnsAsync(Creator.CreateStudent);
 
             await ServiceDiscipline.GetDisciplineAsync(999);
-
-            Context
-                .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateEmployee);
-
-            await Assert.ThrowsAsync<EducationSystemPublicException>
-                (() => ServiceDiscipline.GetDisciplineAsync(999));
         }
 
         [Fact]
