@@ -5,7 +5,8 @@ import {createStyles, WithStyles, withStyles} from '@material-ui/core'
 
 export const styles = () => createStyles({
   root: {
-    position: 'relative'
+    position: 'relative',
+    width: '100%'
   },
   shadowTop: {
     position: 'absolute',
@@ -25,7 +26,11 @@ export const styles = () => createStyles({
   }
 })
 
-type TProps = WithStyles<typeof styles>
+interface IProps {
+  spacing?: number
+}
+
+type TProps = WithStyles<typeof styles> & IProps
 
 interface IState {
   scrollTop: number
@@ -50,8 +55,8 @@ class Scrollbar extends Component<TProps, IState> {
   }
 
   render() {
-    const {classes} = this.props
-    return <div className={classes.root}>
+    const {classes, spacing} = this.props
+    return <div className={classes.root} style={spacing ? {padding: spacing} : undefined}>
       <Scrollbars onUpdate={this.handleUpdate} {...this.props}/>
       <div ref={this._refs.shadowTop} className={classes.shadowTop}/>
       <div ref={this._refs.shadowBottom} className={classes.shadowBottom}/>

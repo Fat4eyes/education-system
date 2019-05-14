@@ -14,6 +14,8 @@ import {FileType} from '../../common/enums'
 import FileUpload from '../stuff/FileUpload'
 import 'draft-js-alignment-plugin/lib/plugin.css'
 import 'draft-js-focus-plugin/lib/plugin.css'
+import {MtBlock} from '../stuff/Margin'
+import Scrollbar from '../stuff/Scrollbar'
 
 const EmptyHtmlString = '<p><br></p>'
 
@@ -61,7 +63,7 @@ class MaterialEditor extends Component {
     const contentStateWithEntity = contentState.createEntity(
       'image',
       'IMMUTABLE',
-      {src: `${window.location.origin}/${fileModel.Path}`} )
+      {src: `${window.location.origin}/${fileModel.Path}`})
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
     const newEditorState = EditorState.set(
       this.state.editorState,
@@ -87,16 +89,21 @@ class MaterialEditor extends Component {
           </Grid>
         </Paper>
       </Grid>
+      <MtBlock/>
       <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
         <Paper className={classes.root} onClick={() => this.editor.focus()}>
-          <AlignmentTool/>
-          <Editor
-            onTab={this.handleTab}
-            editorState={this.state.editorState}
-            onChange={this.handleChange}
-            plugins={plugins}
-            ref={element => this.editor = element}
-          />
+          <Scrollbar className={classes.scrollbar}>
+            <div className={classes.editor}>
+              <AlignmentTool/>
+              <Editor
+                onTab={this.handleTab}
+                editorState={this.state.editorState}
+                onChange={this.handleChange}
+                plugins={plugins}
+                ref={element => this.editor = element}
+              />
+            </div>
+          </Scrollbar>
         </Paper>
       </Grid>
     </>

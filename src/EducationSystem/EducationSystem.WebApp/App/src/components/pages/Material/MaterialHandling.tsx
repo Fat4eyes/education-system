@@ -1,18 +1,21 @@
 import * as React from 'react'
-import {ChangeEvent, Component} from 'react'
-import {Button, Collapse, Grid, TextField, Typography, withStyles, WithStyles} from '@material-ui/core'
+import {ChangeEvent, ChangeEventHandler, Component} from 'react'
+import {Button, Chip, Collapse, Grid, TextField, Typography, withStyles, WithStyles} from '@material-ui/core'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import MaterialStyles from './MaterialStyles'
 import IFileService from '../../../services/FileService'
 import {inject} from '../../../infrastructure/di/inject'
 import Material from '../../../models/Material'
 import DocumentFile from '../../../models/DocumentFile'
-import FileUpload from '../../stuff/FileUpload'
+import FileUpload, {FileInput} from '../../stuff/FileUpload'
 import {FileType} from '../../../common/enums'
 import MaterialEditor from '../../MaterialEditor/MaterialEditor'
 import IMaterialService from '../../../services/MaterialService'
 import Block from '../../Blocks/Block'
 import INotificationService from '../../../services/NotificationService'
+import {MtBlock} from '../../stuff/Margin'
+import NoteAddIcon from '@material-ui/icons/NoteAdd'
+import {Guid} from '../../../helpers/guid'
 
 interface IProps {
   match?: {
@@ -120,8 +123,14 @@ class MaterialHandling extends Component<TProps, IState> {
 
     return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
-        <Block>
-          <Grid item xs={12} container spacing={16}>
+        <Block partial>
+          <Grid item xs={12} container className={classes.header} zeroMinWidth wrap='nowrap'>
+            <Typography variant='subtitle1' className={classes.headerText} noWrap>
+              {this.state.Model.Id ? 'Редактирование' : 'Создание'} материала
+            </Typography>
+          </Grid>
+          <MtBlock value={2}/>
+          <Grid item xs={12} container>
             <TextField fullWidth
                        label='Название'
                        required
@@ -130,15 +139,17 @@ class MaterialHandling extends Component<TProps, IState> {
                        onChange={this.handleModel}
             />
           </Grid>
-          <Grid item xs={12} container spacing={16}>
-            <Button onClick={this.handleMaterialEditorVisible}>
+          <MtBlock value={2}/>
+          <Grid item xs={12} container>
+            <Button onClick={this.handleMaterialEditorVisible} className={classes.openEditorButton}>
               <Typography noWrap variant='subtitle1'>
                 {this.state.IsMaterialEditorOpen ? 'Закрыть ' : 'Открыть '} редактор
               </Typography>
             </Button>
           </Grid>
           <Collapse timeout={500} in={this.state.IsMaterialEditorOpen}>
-            <Grid item xs={12} container spacing={16}>
+            <MtBlock value={2}/>
+            <Grid item xs={12} container>
               {!this.state.IsLoading &&
               <MaterialEditor
                 export={(html: string) => this.handleModel({target: {name: 'Template', value: html}})}
@@ -147,31 +158,60 @@ class MaterialHandling extends Component<TProps, IState> {
               }
             </Grid>
           </Collapse>
-          <Grid item xs={12} container spacing={16}>
-            {this.state.Model.Files.map((file: DocumentFile, index: number) =>
-              <Grid item xs={12} key={file.Id!} container alignItems='center'>
-                <Grid item>
-                  <FileUpload onLoad={this.handleFile(index)} fileModel={file} type={FileType.Document}/>
-                </Grid>
-                <Grid item xs container wrap='nowrap' zeroMinWidth>
-                  <Typography noWrap variant='subtitle1'>
-                    {file.Name}
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
-            <Grid item xs container alignItems='center'>
-              <Grid item>
-                <FileUpload onLoad={this.handleFile()} type={FileType.Document}/>
-              </Grid>
-              <Grid item xs container wrap='nowrap' zeroMinWidth>
+          <MtBlock value={2}/>
+          {this.state.IsMaterialEditorOpen && <>
+            <Grid item xs={12} container>
+              <Button onClick={this.handleMaterialEditorVisible} className={classes.openEditorButton}>
                 <Typography noWrap variant='subtitle1'>
-                  Прикрепить документ
+                  {this.state.IsMaterialEditorOpen ? 'Закрыть ' : 'Открыть '} редактор
                 </Typography>
+              </Button>
+            </Grid>
+            <MtBlock value={2}/>
+          </>}
+          <Grid item xs={12} container>
+            <Grid item xs container alignItems='center'>
+              <Grid item xs={12}>
+                <FileUpload onLoad={this.handleFile()} type={FileType.Document}>
+                  {(handleAdd: ChangeEventHandler, extensions: string[]) => {
+                    if (!extensions) return <></>
+                    const id = Guid.create()
+                    return <>
+                      <FileInput extensions={extensions} id={id} onChange={handleAdd}/>
+                      <label htmlFor={id} style={{width: '100%'}}>
+                        <Button component='span' className={classes.openEditorButton}>
+                          <Typography noWrap variant='subtitle1'>
+                            Прикрепить документ
+                          </Typography>
+                        </Button>
+                      </label>
+                    </>
+                  }}
+                </FileUpload>
               </Grid>
             </Grid>
-            <Grid item xs={12} container spacing={16}>
-              <Button onClick={this.handleSubmit}>
+            <MtBlock/>
+            <Grid item xs={12} container>
+              {this.state.Model.Files.map((file: DocumentFile, index: number) =>
+                <Grid item key={file.Id || index}>
+                  <FileUpload onLoad={this.handleFile(index)} fileModel={file} type={FileType.Document}>
+                    {(deleteHandler: () => void) =>
+                      <Chip
+                        className={classes.chip}
+                        key={file.Id || index}
+                        icon={<NoteAddIcon/>}
+                        label={file.Name}
+                        onDelete={deleteHandler}
+                        variant='outlined'
+                      />
+                    }
+                  </FileUpload>
+                </Grid>
+              )}
+            </Grid>
+            <MtBlock value={2}/>
+            <Grid item xs={12} container>
+              <Button onClick={this.handleSubmit} variant='outlined'>
                 <Typography noWrap variant='subtitle1'>
                   Сохранить
                 </Typography>

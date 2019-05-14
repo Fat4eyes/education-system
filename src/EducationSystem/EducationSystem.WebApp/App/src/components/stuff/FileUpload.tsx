@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Component} from 'react'
+import {ChangeEventHandler, Component, FunctionComponent} from 'react'
 import {createStyles, Grid, IconButton, withStyles, WithStyles} from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
@@ -7,7 +7,6 @@ import Clear from '@material-ui/icons/Clear'
 import IFileService from '../../services/FileService'
 import {inject} from '../../infrastructure/di/inject'
 import FileModel from '../../models/FileModel'
-import {If} from '../core'
 import {FileType} from '../../common/enums'
 import {Guid} from '../../helpers/guid'
 
@@ -30,6 +29,21 @@ interface IState {
   fileModel?: FileModel,
   extensions: Array<string>
 }
+
+interface IFileInputProps {
+  extensions: string[]
+  id: string
+  onChange: ChangeEventHandler
+}
+
+export const FileInput: FunctionComponent<IFileInputProps> = (props: IFileInputProps) =>
+  <input
+    accept={props.extensions.join(', ')}
+    style={{display: 'none'}}
+    id={props.id}
+    onChange={props.onChange}
+    type="file"
+  />
 
 class FileUpload extends Component<TProps, IState> {
   @inject
@@ -81,36 +95,43 @@ class FileUpload extends Component<TProps, IState> {
   }
 
   render() {
-    const {classes} = this.props
+    const {classes, children} = this.props
 
     const id = Guid.create()
 
-    return <Grid item xs={12} container>
-      <If condition={this.state.extensions.length > 0 || this.props.fileModel} orElse={<></>}>
-        <If condition={this.state.fileModel} orElse={
-          <Grid item xs={6}>
-            <input
-              accept={this.state.extensions.join(', ')}
-              className={classes.input}
-              id={id}
-              onChange={this.handleAdd}
-              type="file"
-            />
+    console.log(children, typeof children)
+
+
+    if (this.state.extensions.length > 0 || this.props.fileModel) {
+      if (this.state.fileModel) {
+        return <Grid item xs={12} container>
+          {(typeof children === 'function')
+            ? children(this.handleDelete)
+            : <Grid item xs={6}>
+              <IconButton component="span" onClick={this.handleDelete}>
+                <Clear/>
+              </IconButton>
+            </Grid>
+          }
+        </Grid>
+      }
+
+      return <Grid item xs={12} container>
+        {(typeof children === 'function')
+          ? children(this.handleAdd, this.state.extensions)
+          : <Grid item xs={6}>
+            <FileInput extensions={this.state.extensions} id={id} onChange={this.handleAdd}/>
             <label htmlFor={id}>
               <IconButton component="span">
                 {this.props.type == FileType.Image && <PhotoCameraIcon/> || <NoteAddIcon/>}
               </IconButton>
             </label>
           </Grid>
-        }>
-          <Grid item xs={6}>
-            <IconButton component="span" onClick={this.handleDelete}>
-              <Clear/>
-            </IconButton>
-          </Grid>
-        </If>
-      </If>
-    </Grid>
+        }
+      </Grid>
+    }
+
+    return <></>
   }
 }
 
