@@ -7,6 +7,7 @@ namespace EducationSystem.Constants
         public const string Admin = nameof(Admin);
         public const string Student = nameof(Student);
         public const string Lecturer = nameof(Lecturer);
+        public const string Employee = nameof(Employee);
 
         public static bool IsStudentRole(string name) =>
             string.Equals(Student, name, StringComparison.InvariantCultureIgnoreCase);
