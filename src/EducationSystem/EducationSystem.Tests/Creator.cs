@@ -141,7 +141,7 @@ namespace EducationSystem.Tests
             {
                 StudyPlans = new List<DatabaseStudyPlan>
                 {
-                    CreaateDatabaseStudyPlan()
+                    CreateDatabaseStudyPlan()
                 }
             };
         }
@@ -150,7 +150,7 @@ namespace EducationSystem.Tests
 
         #region DatabaseStudyPlan
 
-        public static DatabaseStudyPlan CreaateDatabaseStudyPlan()
+        public static DatabaseStudyPlan CreateDatabaseStudyPlan()
         {
             return new DatabaseStudyPlan
             {
