@@ -41,7 +41,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Material>> GetMaterialsAsync(FilterMaterial filter)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var specification = new MaterialsByName(filter.Name);
 
@@ -50,11 +52,11 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Material>(Mapper.Map<List<Material>>(materials), count);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var specification =
                     new MaterialsByName(filter.Name) &
-                    new MaterialsByOwnerId(CurrentUser.Id);
+                    new MaterialsByOwnerId(user.Id);
 
                 var (count, materials) = await _repositoryMaterial.FindPaginatedAsync(specification, filter);
 
@@ -71,7 +73,9 @@ namespace EducationSystem.Implementations.Services
 
             // TODO: Исправить это при необходимости.
 
-            if (CurrentUser.IsAdmin() || CurrentUser.IsStudent())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsAdmin() || user.IsStudent())
             {
                 var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseMaterial>(id);
@@ -79,12 +83,12 @@ namespace EducationSystem.Implementations.Services
                 return Mapper.Map<Material>(material);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseMaterial>(id);
 
-                if (new MaterialsByOwnerId(CurrentUser.Id).IsSatisfiedBy(material) == false)
+                if (new MaterialsByOwnerId(user.Id).IsSatisfiedBy(material) == false)
                     throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Material>(material);
@@ -95,13 +99,15 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteMaterialAsync(int id)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             var material = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseMaterial>(id);
 
-            if (CurrentUser.IsNotAdmin() && !new MaterialsByOwnerId(CurrentUser.Id).IsSatisfiedBy(material))
+            if (user.IsNotAdmin() && !new MaterialsByOwnerId(user.Id).IsSatisfiedBy(material))
                 throw ExceptionHelper.NoAccess();
 
             await _repositoryMaterial.RemoveAsync(material, true);
@@ -109,7 +115,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateMaterialAsync(int id, Material material)
         {
-            if (CurrentUser.IsNotLecturer())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorMaterial.ValidateAsync(material.Format());
@@ -117,7 +125,7 @@ namespace EducationSystem.Implementations.Services
             var model = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseMaterial>(id);
 
-            if (!new MaterialsByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+            if (!new MaterialsByOwnerId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseMaterial>(material), model);
@@ -134,14 +142,16 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateMaterialAsync(Material material)
         {
-            if (CurrentUser.IsNotLecturer())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await _validatorMaterial.ValidateAsync(material.Format());
 
             var model = Mapper.Map<DatabaseMaterial>(material);
 
-            model.OwnerId = CurrentUser.Id;
+            model.OwnerId = user.Id;
 
             await _repositoryMaterial.AddAsync(model, true);
 

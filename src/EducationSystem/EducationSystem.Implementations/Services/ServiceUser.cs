@@ -22,8 +22,10 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<User> GetCurrentUserAsync()
         {
-            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer() || CurrentUser.IsStudent())
-                return await ExecutionContext.GetCurrentUserAsync();
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsAdmin() || user.IsLecturer() || user.IsStudent())
+                return user;
 
             throw ExceptionHelper.NoAccess();
         }

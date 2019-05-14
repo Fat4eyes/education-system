@@ -33,7 +33,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Discipline>> GetDisciplinesAsync(FilterDiscipline filter)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var specification = new DisciplinesByName(filter.Name);
 
@@ -42,22 +44,22 @@ namespace EducationSystem.Implementations.Services
                 return new PagedData<Discipline>(Mapper.Map<List<Discipline>>(disciplines), count);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var specification =
                     new DisciplinesByName(filter.Name) &
-                    new DisciplinesByLecturerId(CurrentUser.Id);
+                    new DisciplinesByLecturerId(user.Id);
 
                 var (count, disciplines) = await _repositoryDiscipline.FindPaginatedAsync(specification, filter);
 
                 return new PagedData<Discipline>(Mapper.Map<List<Discipline>>(disciplines), count);
             }
 
-            if (CurrentUser.IsStudent())
+            if (user.IsStudent())
             {
                 var specification =
                     new DisciplinesByName(filter.Name) &
-                    new DisciplinesByStudentId(CurrentUser.Id) &
+                    new DisciplinesByStudentId(user.Id) &
                     new DisciplinesForStudents();
 
                 var (count, disciplines) = await _repositoryDiscipline.FindPaginatedAsync(specification, filter);
@@ -70,7 +72,9 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Discipline> GetDisciplineAsync(int id)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
@@ -78,23 +82,23 @@ namespace EducationSystem.Implementations.Services
                 return Mapper.Map<Discipline>(discipline);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
 
-                if (new DisciplinesByLecturerId(CurrentUser.Id).IsSatisfiedBy(discipline) == false)
+                if (new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline) == false)
                     throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Discipline>(discipline);
             }
 
-            if (CurrentUser.IsStudent())
+            if (user.IsStudent())
             {
                 var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
                     throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
 
-                if (new DisciplinesByStudentId(CurrentUser.Id).IsSatisfiedBy(discipline) == false)
+                if (new DisciplinesByStudentId(user.Id).IsSatisfiedBy(discipline) == false)
                     throw ExceptionHelper.NoAccess();
 
                 return Mapper.Map<Discipline>(discipline);

@@ -50,7 +50,9 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public virtual async Task<PagedData<TFile>> GetFilesAsync(FilterFile filter)
         {
-            if (CurrentUser.IsAdmin())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsAdmin())
             {
                 var specification = new FilesByType(filter.Type);
 
@@ -59,11 +61,11 @@ namespace EducationSystem.Implementations.Services.Files.Basics
                 return new PagedData<TFile>(Mapper.Map<List<TFile>>(files), count);
             }
 
-            if (CurrentUser.IsLecturer())
+            if (user.IsLecturer())
             {
                 var specification =
                     new FilesByType(filter.Type) &
-                    new FilesByOwnerId(CurrentUser.Id);
+                    new FilesByOwnerId(user.Id);
 
                 var (count, files) = await RepositoryFile.FindPaginatedAsync(specification, filter);
 
@@ -75,13 +77,15 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task DeleteFileAsync(int id)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseFile>(id);
 
-            if (CurrentUser.IsNotAdmin() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+            if (user.IsNotAdmin() && !new FilesByOwnerId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
@@ -101,13 +105,15 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task<TFile> GetFileAsync(int id)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer() && CurrentUser.IsNotStudent())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer() && user.IsNotStudent())
                 throw ExceptionHelper.NoAccess();
 
             var model = await RepositoryFile.FindFirstAsync(new FilesById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseFile>(id);
 
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotStudent() && !new FilesByOwnerId(CurrentUser.Id).IsSatisfiedBy(model))
+            if (user.IsNotAdmin() && user.IsNotStudent() && !new FilesByOwnerId(user.Id).IsSatisfiedBy(model))
                 throw ExceptionHelper.NoAccess();
 
             var file = Mapper.Map<TFile>(model);
@@ -120,7 +126,9 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public virtual async Task<TFile> CreateFileAsync(TFile file)
         {
-            if (CurrentUser.IsNotAdmin() && CurrentUser.IsNotLecturer())
+            var user = await ExecutionContext.GetCurrentUserAsync();
+
+            if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
 
             await ValidatorFile.ValidateAsync(file);
@@ -146,7 +154,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
             var model = Mapper.Map<DatabaseFile>(file);
 
             model.Guid = guid.ToString();
-            model.OwnerId = CurrentUser.Id;
+            model.OwnerId = user.Id;
 
             await RepositoryFile.AddAsync(model, true);
 

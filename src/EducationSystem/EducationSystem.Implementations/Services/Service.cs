@@ -1,18 +1,14 @@
 ﻿using AutoMapper;
-using EducationSystem.Extensions;
 using EducationSystem.Interfaces;
-using EducationSystem.Models.Rest;
 using Microsoft.Extensions.Logging;
 
 namespace EducationSystem.Implementations.Services
 {
     public abstract class Service<TService> where TService : class
     {
-        protected IMapper Mapper { get; }
-        protected ILogger<TService> Logger { get; }
-        protected IExecutionContext ExecutionContext { get; }
-
-        protected User CurrentUser { get; }
+        protected readonly IMapper Mapper;
+        protected readonly ILogger<TService> Logger;
+        protected readonly IExecutionContext ExecutionContext;
 
         protected Service(
             IMapper mapper,
@@ -22,10 +18,6 @@ namespace EducationSystem.Implementations.Services
             Mapper = mapper;
             Logger = logger;
             ExecutionContext = executionContext;
-
-            CurrentUser = ExecutionContext
-                .GetCurrentUserAsync()
-                .WaitTask();
         }
     }
 }
