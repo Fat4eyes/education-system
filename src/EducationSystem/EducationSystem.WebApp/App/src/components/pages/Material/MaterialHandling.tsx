@@ -157,9 +157,7 @@ class MaterialHandling extends Component<TProps, IState> {
               />
               }
             </Grid>
-          </Collapse>
-          <MtBlock value={2}/>
-          {this.state.IsMaterialEditorOpen && <>
+            <MtBlock value={2}/>
             <Grid item xs={12} container>
               <Button onClick={this.handleMaterialEditorVisible} className={classes.openEditorButton}>
                 <Typography noWrap variant='subtitle1'>
@@ -167,8 +165,8 @@ class MaterialHandling extends Component<TProps, IState> {
                 </Typography>
               </Button>
             </Grid>
-            <MtBlock value={2}/>
-          </>}
+          </Collapse>
+          <MtBlock value={2}/>
           <Grid item xs={12} container>
             <Grid item xs container alignItems='center'>
               <Grid item xs={12}>
