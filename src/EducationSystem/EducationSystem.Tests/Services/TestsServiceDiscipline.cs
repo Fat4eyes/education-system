@@ -29,41 +29,52 @@ namespace EducationSystem.Tests.Services
         }
 
         [Fact]
-        public async Task GetDisciplines_Access()
+        public async Task GetDisciplines()
         {
+            var filter = new FilterDiscipline();
+
+            RepositoryDiscipline
+                .Setup(x => x.FindPaginatedAsync(It.IsAny<ISpecification<DatabaseDiscipline>>(), filter))
+                .ReturnsAsync((4, Creator.CreateDisciplines()));
+
             Context
                 .Setup(x => x.GetCurrentUserAsync())
                 .ReturnsAsync(Creator.CreateAdmin);
 
-            await ServiceDiscipline.GetDisciplinesAsync(new FilterDiscipline());
+            var data = await ServiceDiscipline.GetDisciplinesAsync(filter);
+
+            Assert.Equal(4, data.Count);
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
                 .ReturnsAsync(Creator.CreateLecturer);
 
-            await ServiceDiscipline.GetDisciplinesAsync(new FilterDiscipline());
+            data = await ServiceDiscipline.GetDisciplinesAsync(filter);
+
+            Assert.Equal(4, data.Count);
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
                 .ReturnsAsync(Creator.CreateStudent);
 
-            await ServiceDiscipline.GetDisciplinesAsync(new FilterDiscipline());
+            data = await ServiceDiscipline.GetDisciplinesAsync(filter);
+
+            Assert.Equal(4, data.Count);
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
                 .ReturnsAsync(Creator.CreateEmployee);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
-                (() => ServiceDiscipline.GetDisciplinesAsync(new FilterDiscipline()));
+                (() => ServiceDiscipline.GetDisciplinesAsync(filter));
         }
 
         [Fact]
-        public async Task GetDiscipline_Access()
+        public async Task GetDiscipline_Found()
         {
-
             RepositoryDiscipline
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseDiscipline>>()))
-                .ReturnsAsync(Creator.CreateDiscipline);
+                .ReturnsAsync(Creator.CreateDiscipline());
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())

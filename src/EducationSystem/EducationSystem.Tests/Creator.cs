@@ -110,7 +110,18 @@ namespace EducationSystem.Tests
 
         #region DatabaseDiscipline
 
-        public static DatabaseDiscipline CreateDiscipline()
+        public static List<DatabaseDiscipline> CreateDisciplines()
+        {
+            return new List<DatabaseDiscipline>
+            {
+                CreateDiscipline(),
+                CreateDiscipline(),
+                CreateDiscipline(9, 9),
+                CreateDiscipline(9)
+            };
+        }
+
+        public static DatabaseDiscipline CreateDiscipline(int studentId = 3, int lecturerId = 2)
         {
             return new DatabaseDiscipline
             {
@@ -118,14 +129,14 @@ namespace EducationSystem.Tests
                 {
                     new DatabaseStudyProfileDiscipline
                     {
-                        StudyProfile = CreateDatabaseStudyProfile()
+                        StudyProfile = CreateDatabaseStudyProfile(studentId)
                     }
                 },
                 Lecturers = new List<DatabaseDisciplineLecturer>
                 {
                     new DatabaseDisciplineLecturer
                     {
-                        LecturerId = CreateDatabaseLecturer().Id
+                        LecturerId = lecturerId
                     }
                 }
             };
@@ -135,13 +146,13 @@ namespace EducationSystem.Tests
 
         #region DatabaseStudyProfile
 
-        public static DatabaseStudyProfile CreateDatabaseStudyProfile()
+        public static DatabaseStudyProfile CreateDatabaseStudyProfile(int studentId)
         {
             return new DatabaseStudyProfile
             {
                 StudyPlans = new List<DatabaseStudyPlan>
                 {
-                    CreateDatabaseStudyPlan()
+                    CreateDatabaseStudyPlan(studentId)
                 }
             };
         }
@@ -150,13 +161,13 @@ namespace EducationSystem.Tests
 
         #region DatabaseStudyPlan
 
-        public static DatabaseStudyPlan CreateDatabaseStudyPlan()
+        public static DatabaseStudyPlan CreateDatabaseStudyPlan(int studentId)
         {
             return new DatabaseStudyPlan
             {
                 Groups = new List<DatabaseGroup>
                 {
-                    CreateDatabaseGroup()
+                    CreateDatabaseGroup(studentId)
                 }
             };
         }
@@ -165,7 +176,7 @@ namespace EducationSystem.Tests
 
         #region DatabaseGroup
 
-        public static DatabaseGroup CreateDatabaseGroup()
+        public static DatabaseGroup CreateDatabaseGroup(int studentId)
         {
             return new DatabaseGroup
             {
@@ -173,7 +184,7 @@ namespace EducationSystem.Tests
                 {
                     new DatabaseStudentGroup
                     {
-                        StudentId = CreateDatabaseStudent().Id
+                        StudentId = studentId
                     }
                 }
             };
