@@ -9,6 +9,7 @@ namespace EducationSystem.Mapping
         {
             expression.AddProfile<ProfileUser>();
             expression.AddProfile<ProfileDiscipline>();
+            expression.AddProfile<ProfileMaterial>();
             expression.AddProfile<ProfileGroup>();
             expression.AddProfile<ProfileTest>();
             expression.AddProfile<ProfileTheme>();

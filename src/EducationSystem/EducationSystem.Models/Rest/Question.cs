@@ -49,9 +49,9 @@ namespace EducationSystem.Models.Rest
 
         public Question Format()
         {
-            Text = Text.Trim();
+            Text = Text?.Trim();
 
-            Answers?.ForEach(x => x.Text = x.Text.Trim());
+            Answers?.ForEach(x => x.Text = x.Text?.Trim());
 
             if (Program == null)
                 return this;

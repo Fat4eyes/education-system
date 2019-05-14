@@ -132,5 +132,81 @@ namespace EducationSystem.Tests.Services
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceMaterial.DeleteMaterialAsync(999));
         }
+
+        [Fact]
+        public async Task UpdateMaterial_NoAccess()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateAdmin);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateStudent);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryMaterial
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
+                .ReturnsAsync(Creator.CreateDatabaseMaterial(1));
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
+        }
+
+        [Fact]
+        public async Task UpdateMaterial_NotFound()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryMaterial
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
+                .ReturnsAsync((DatabaseMaterial) null);
+
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>
+                (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
+        }
+
+        [Fact]
+        public async Task CreateMaterial_NoAccess()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateAdmin);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceMaterial.CreateMaterialAsync(new Material()));
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateStudent);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceMaterial.CreateMaterialAsync(new Material()));
+        }
+
+        [Fact]
+        public async Task CreateMaterial()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryMaterial
+                .Setup(x => x.AddAsync(It.Is<DatabaseMaterial>(y => y.OwnerId == 2), true))
+                .ReturnsAsync(new DatabaseMaterial());
+
+            await ServiceMaterial.CreateMaterialAsync(new Material());
+        }
     }
 }
