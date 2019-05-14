@@ -9,8 +9,7 @@ namespace EducationSystem.Resolvers
 {
     public class ResolverTestPassedQuestionsCount : Resolver, IValueResolver<DatabaseTest, Test, int?>
     {
-        public ResolverTestPassedQuestionsCount(IExecutionContext executionContext)
-            : base(executionContext) { }
+        public ResolverTestPassedQuestionsCount(IContext context) : base(context) { }
 
         public int? Resolve(DatabaseTest source, Test destination, int? member, ResolutionContext context)
         {

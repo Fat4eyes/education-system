@@ -10,8 +10,7 @@ namespace EducationSystem.Resolvers
 {
     public sealed class ResolverQuestionAnswers : Resolver, IValueResolver<DatabaseQuestion, Question, List<Answer>>
     {
-        public ResolverQuestionAnswers(IExecutionContext executionContext)
-            : base(executionContext) { }
+        public ResolverQuestionAnswers(IContext context) : base(context) { }
 
         public List<Answer> Resolve(DatabaseQuestion source, Question destination, List<Answer> member, ResolutionContext context)
         {

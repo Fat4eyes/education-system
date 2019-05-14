@@ -3,7 +3,7 @@ using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Interfaces
 {
-    public interface IExecutionContext
+    public interface IContext
     {
         Task<User> GetCurrentUserAsync();
     }

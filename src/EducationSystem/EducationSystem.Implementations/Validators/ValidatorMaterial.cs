@@ -16,17 +16,17 @@ namespace EducationSystem.Implementations.Validators
 {
     public sealed class ValidatorMaterial : IValidator<Material>
     {
+        private readonly IContext _context;
         private readonly IHelperFile _helperFile;
-        private readonly IExecutionContext _executionContext;
         private readonly IRepository<DatabaseFile> _repositoryFile;
 
         public ValidatorMaterial(
+            IContext context,
             IHelperFile helperFile,
-            IExecutionContext executionContext,
             IRepository<DatabaseFile> repositoryFile)
         {
+            _context = context;
             _helperFile = helperFile;
-            _executionContext = executionContext;
             _repositoryFile = repositoryFile;
         }
 
@@ -54,7 +54,7 @@ namespace EducationSystem.Implementations.Validators
                 .Select(x => x.Id)
                 .ToArray();
 
-            var user = await _executionContext.GetCurrentUserAsync();
+            var user = await _context.GetCurrentUserAsync();
 
             var specification =
                 new FilesByIds(ids) &

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace EducationSystem.Implementations
 {
-    public sealed class ExecutionContext : IExecutionContext
+    public sealed class Context : IContext
     {
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _accessor;
@@ -21,7 +21,7 @@ namespace EducationSystem.Implementations
 
         private Lazy<Task<User>> Lazy { get; }
 
-        public ExecutionContext(
+        public Context(
             IMapper mapper,
             IHttpContextAccessor accessor,
             IRepository<DatabaseUser> repositoryUser)

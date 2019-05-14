@@ -10,13 +10,13 @@ namespace EducationSystem.Implementations.Validators.Questions
     {
         public QuestionValidatorClosedManyAnswers(
             IMapper mapper,
+            IContext context,
             IHashComputer hashComputer,
-            IExecutionContext executionContext,
             IRepository<DatabaseQuestion> repositoryQuestion)
             : base(
                 mapper,
+                context,
                 hashComputer,
-                executionContext,
                 repositoryQuestion)
         { }
     }

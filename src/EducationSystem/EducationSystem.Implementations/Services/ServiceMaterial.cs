@@ -24,15 +24,12 @@ namespace EducationSystem.Implementations.Services
 
         public ServiceMaterial(
             IMapper mapper,
-            IExecutionContext executionContext,
+            IContext context,
             ILogger<ServiceMaterial> logger,
             IValidator<Material> validatorMaterial,
             IRepository<DatabaseMaterial> repositoryMaterial,
             IRepository<DatabaseMaterialFile> repositoryMaterialFile)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             _validatorMaterial = validatorMaterial;
             _repositoryMaterial = repositoryMaterial;
@@ -41,7 +38,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Material>> GetMaterialsAsync(FilterMaterial filter)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -73,7 +70,7 @@ namespace EducationSystem.Implementations.Services
 
             // TODO: Исправить это при необходимости.
 
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin() || user.IsStudent())
             {
@@ -99,7 +96,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteMaterialAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -115,7 +112,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateMaterialAsync(int id, Material material)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -142,7 +139,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateMaterialAsync(Material material)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();

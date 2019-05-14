@@ -9,8 +9,7 @@ namespace EducationSystem.Resolvers
 {
     public sealed class ResolverTestPassedThemesCount : Resolver, IValueResolver<DatabaseTest, Test, int?>
     {
-        public ResolverTestPassedThemesCount(IExecutionContext executionContext)
-            : base(executionContext) { }
+        public ResolverTestPassedThemesCount(IContext context) : base(context) { }
 
         public int? Resolve(DatabaseTest source, Test destination, int? member, ResolutionContext context)
         {

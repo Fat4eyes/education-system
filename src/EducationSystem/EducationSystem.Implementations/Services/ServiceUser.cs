@@ -12,17 +12,14 @@ namespace EducationSystem.Implementations.Services
     {
         public ServiceUser(
             IMapper mapper,
-            ILogger<ServiceUser> logger,
-            IExecutionContext executionContext)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            IContext context,
+            ILogger<ServiceUser> logger)
+            : base(mapper, context, logger)
         { }
 
         public async Task<User> GetCurrentUserAsync()
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin() || user.IsLecturer() || user.IsStudent())
                 return user;

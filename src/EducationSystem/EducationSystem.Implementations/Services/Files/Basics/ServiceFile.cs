@@ -21,25 +21,22 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 {
     public abstract class ServiceFile<TFile> : Service<ServiceFile<TFile>>, IServiceFile<TFile> where TFile : File
     {
-        protected IHelperPath HelperPath { get; }
-        protected IHelperFile HelperFile { get; }
-        protected IHelperFolder HelperFolder { get; }
-        protected IValidator<TFile> ValidatorFile { get; }
-        protected IRepository<DatabaseFile> RepositoryFile { get; }
+        protected readonly IHelperPath HelperPath;
+        protected readonly IHelperFile HelperFile;
+        protected readonly IHelperFolder HelperFolder;
+        protected readonly IValidator<TFile> ValidatorFile;
+        protected readonly IRepository<DatabaseFile> RepositoryFile;
 
         protected ServiceFile(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceFile<TFile>> logger,
             IHelperPath helperPath,
             IHelperFile helperFile,
             IHelperFolder helperFolder,
             IValidator<TFile> validatorFile,
-            IExecutionContext executionContext,
             IRepository<DatabaseFile> repositoryFile)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             HelperPath = helperPath;
             HelperFile = helperFile;
@@ -50,7 +47,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public virtual async Task<PagedData<TFile>> GetFilesAsync(FilterFile filter)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -77,7 +74,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task DeleteFileAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -105,7 +102,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public async Task<TFile> GetFileAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && user.IsNotLecturer() && user.IsNotStudent())
                 throw ExceptionHelper.NoAccess();
@@ -126,7 +123,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
         public virtual async Task<TFile> CreateFileAsync(TFile file)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();

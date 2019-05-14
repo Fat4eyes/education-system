@@ -28,17 +28,14 @@ namespace EducationSystem.Implementations.Services
 
         public ServiceTest(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceTest> logger,
             IValidator<Test> validatorTest,
-            IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseQuestion> repositoryQuestion,
             IRepository<DatabaseTestTheme> repositoryTestTheme,
             IRepository<DatabaseQuestionStudent> repositoryQuestionStudent)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             _validatorTest = validatorTest;
             _repositoryTest = repositoryTest;
@@ -49,7 +46,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Test>> GetTestsAsync(FilterTest filter)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -101,7 +98,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Test> GetTestAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -142,7 +139,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteTestAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -158,7 +155,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateTestAsync(Test test)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -174,7 +171,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateTestAsync(int id, Test test)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -201,7 +198,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteTestProcessAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsStudent() == false)
                 throw ExceptionHelper.NoAccess();
@@ -236,7 +233,7 @@ namespace EducationSystem.Implementations.Services
 
         private async Task ValidateTestAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             var test = await _repositoryTest.FindFirstAsync(new TestsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseTest>(id);

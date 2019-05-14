@@ -20,20 +20,17 @@ namespace EducationSystem.Implementations.Services
 
         public ServiceDiscipline(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceDiscipline> logger,
-            IExecutionContext executionContext,
             IRepository<DatabaseDiscipline> repositoryDiscipline)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             _repositoryDiscipline = repositoryDiscipline;
         }
 
         public async Task<PagedData<Discipline>> GetDisciplinesAsync(FilterDiscipline filter)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -72,7 +69,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Discipline> GetDisciplineAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {

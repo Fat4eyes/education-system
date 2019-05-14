@@ -34,9 +34,9 @@ namespace EducationSystem.Implementations.Services
 
         public ServiceQuestion(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceQuestion> logger,
             IValidator<Question> validatorQuestion,
-            IExecutionContext executionContext,
             IRepository<DatabaseTest> repositoryTest,
             IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseAnswer> repositoryAnswer,
@@ -44,10 +44,7 @@ namespace EducationSystem.Implementations.Services
             IRepository<DatabaseQuestion> repositoryQuestion,
             IRepository<DatabaseProgramData> repositoryProgramData,
             IQuestionValidatorFactory questionValidatorFactory)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             _validatorQuestion = validatorQuestion;
             _repositoryTest = repositoryTest;
@@ -61,7 +58,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Question>> GetQuestionsAsync(FilterQuestion filter)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -104,7 +101,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Question> GetQuestionAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -130,7 +127,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteQuestionAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -146,7 +143,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateQuestionAsync(Question question)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -176,7 +173,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateThemeQuestionsAsync(int id, List<Question> questions)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -204,7 +201,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateQuestionAsync(int id, Question question)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -278,7 +275,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Question> ProcessTestQuestionAsync(int id, Question question)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotStudent())
                 throw ExceptionHelper.NoAccess();

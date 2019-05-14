@@ -10,10 +10,7 @@ namespace EducationSystem.Resolvers
     {
         private readonly IHashComputer _hashComputer;
 
-        public ResolverQuestionHash(
-            IExecutionContext executionContext,
-            IHashComputer hashComputer)
-            : base(executionContext)
+        public ResolverQuestionHash(IContext context, IHashComputer hashComputer) : base(context)
         {
             _hashComputer = hashComputer;
         }

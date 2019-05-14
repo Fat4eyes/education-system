@@ -15,17 +15,17 @@ namespace EducationSystem.Implementations.Validators.Questions
     {
         protected readonly IMapper Mapper;
         protected readonly IHashComputer HashComputer;
-        protected readonly IExecutionContext ExecutionContext;
+        protected readonly IContext Context;
         protected readonly IRepository<DatabaseQuestion> RepositoryQuestion;
 
         protected QuestionValidator(
             IMapper mapper,
+            IContext context,
             IHashComputer hashComputer,
-            IExecutionContext executionContext,
             IRepository<DatabaseQuestion> repositoryQuestion)
         {
             Mapper = mapper;
-            ExecutionContext = executionContext;
+            Context = context;
             HashComputer = hashComputer;
             RepositoryQuestion = repositoryQuestion;
         }
@@ -35,7 +35,7 @@ namespace EducationSystem.Implementations.Validators.Questions
             if (question == null)
                 throw new ArgumentNullException(nameof(question));
 
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
             var model = await GetQuestionModelAsync(question.Id);
 
             var specification =

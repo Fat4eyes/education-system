@@ -33,7 +33,7 @@ namespace EducationSystem.Dependencies
 
             RegisterDatabases(collection, configuration);
 
-            collection.AddScoped<IExecutionContext, ExecutionContext>();
+            collection.AddScoped<IContext, Context>();
 
             collection.AddTransient<ICodeExecutor, CodeExecutor>();
             collection.AddTransient<IHashComputer, HashComputer>();

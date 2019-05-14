@@ -25,15 +25,12 @@ namespace EducationSystem.Implementations.Services
 
         public ServiceTheme(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceTheme> logger,
             IValidator<Theme> validatorTheme,
-            IExecutionContext executionContext,
             IRepository<DatabaseTheme> repositoryTheme,
             IRepository<DatabaseDiscipline> repositoryDiscipline)
-            : base(
-                mapper,
-                logger,
-                executionContext)
+            : base(mapper, context, logger)
         {
             _validatorTheme = validatorTheme;
             _repositoryTheme = repositoryTheme;
@@ -42,7 +39,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<PagedData<Theme>> GetThemesAsync(FilterTheme filter)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -72,7 +69,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<Theme> GetThemeAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsAdmin())
             {
@@ -98,7 +95,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task DeleteThemeAsync(int id)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotAdmin() && user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -114,7 +111,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task<int> CreateThemeAsync(Theme theme)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -132,7 +129,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateDisciplineThemesAsync(int id, List<Theme> themes)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();
@@ -160,7 +157,7 @@ namespace EducationSystem.Implementations.Services
 
         public async Task UpdateThemeAsync(int id, Theme theme)
         {
-            var user = await ExecutionContext.GetCurrentUserAsync();
+            var user = await Context.GetCurrentUserAsync();
 
             if (user.IsNotLecturer())
                 throw ExceptionHelper.NoAccess();

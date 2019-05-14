@@ -7,17 +7,14 @@ namespace EducationSystem.Implementations.Services
     public abstract class Service<TService> where TService : class
     {
         protected readonly IMapper Mapper;
+        protected readonly IContext Context;
         protected readonly ILogger<TService> Logger;
-        protected readonly IExecutionContext ExecutionContext;
 
-        protected Service(
-            IMapper mapper,
-            ILogger<TService> logger,
-            IExecutionContext executionContext)
+        protected Service(IMapper mapper, IContext context, ILogger<TService> logger)
         {
             Mapper = mapper;
             Logger = logger;
-            ExecutionContext = executionContext;
+            Context = context;
         }
     }
 }

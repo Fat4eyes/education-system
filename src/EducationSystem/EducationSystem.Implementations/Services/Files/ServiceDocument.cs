@@ -18,21 +18,21 @@ namespace EducationSystem.Implementations.Services.Files
     {
         public ServiceDocument(
             IMapper mapper,
+            IContext context,
             ILogger<ServiceDocument> logger,
             IHelperPath helperPath,
             IHelperFile helperFile,
             IHelperFolder helperFolder,
             IValidator<Document> validatorDocument,
-            IExecutionContext executionContext,
             IRepository<DatabaseFile> repositoryFile)
             : base(
                 mapper,
+                context,
                 logger,
                 helperPath,
                 helperFile,
                 helperFolder,
                 validatorDocument,
-                executionContext,
                 repositoryFile)
         { }
 
