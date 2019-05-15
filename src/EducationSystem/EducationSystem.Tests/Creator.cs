@@ -201,6 +201,30 @@ namespace EducationSystem.Tests
 
         #endregion
 
+        #region DatabaseQuestion
+
+        public static DatabaseQuestion CreateDatabaseQuestion(int studentId = 3, int lecturerId = 2)
+        {
+            return new DatabaseQuestion
+            {
+                Theme = CreateDatabaseTheme(studentId, lecturerId)
+            };
+        }
+
+        #endregion
+
+        #region DatabaseTheme
+
+        public static DatabaseTheme CreateDatabaseTheme(int studentId = 3, int lecturerId = 2)
+        {
+            return new DatabaseTheme
+            {
+                Discipline = CreateDatabaseDiscipline()
+            };
+        }
+
+        #endregion
+
         public static Role CreateRole(string name) => new Role { Name = name };
 
         public static DatabaseRole CreateDatabaseRole(string name) => new DatabaseRole { Name = name };
