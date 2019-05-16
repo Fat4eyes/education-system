@@ -67,5 +67,167 @@ namespace EducationSystem.Tests.Services
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.GetQuestionAsync(999));
         }
+
+        [Fact]
+        public async Task DeleteQuestion()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateAdmin);
+
+            RepositoryQuestion
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
+                .ReturnsAsync(Creator.CreateDatabaseQuestion());
+
+            await ServiceQuestion.DeleteQuestionAsync(999);
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryQuestion
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
+                .ReturnsAsync(Creator.CreateDatabaseQuestion());
+
+            await ServiceQuestion.DeleteQuestionAsync(999);
+        }
+
+        [Fact]
+        public async Task DeleteQuestion_Lecturer_NoAccess()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryQuestion
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
+                .ReturnsAsync(Creator.CreateDatabaseQuestion(lecturerId: 1));
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceQuestion.DeleteQuestionAsync(999));
+        }
+
+        [Fact]
+        public async Task DeleteQuestion_Student_NoAccess()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateStudent);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceQuestion.DeleteQuestionAsync(999));
+        }
+
+        [Fact]
+        public async Task DeleteQuestion_NotFound()
+        {
+            RepositoryQuestion
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
+                .ReturnsAsync((DatabaseQuestion) null);
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateAdmin);
+
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>
+                (() => ServiceQuestion.DeleteQuestionAsync(999));
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>
+                (() => ServiceQuestion.DeleteQuestionAsync(999));
+        }
+
+        [Fact]
+        public async Task CreateQuestion()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryQuestion
+                .Setup(x => x.AddAsync(It.Is<DatabaseQuestion>(y => y.Order == int.MaxValue), true))
+                .ReturnsAsync(new DatabaseQuestion());
+
+            await ServiceQuestion.CreateQuestionAsync(new Question());
+        }
+
+        [Fact]
+        public async Task CreateQuestion_NoAccess()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateStudent);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceQuestion.CreateQuestionAsync(new Question()));
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateStudent);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceQuestion.CreateQuestionAsync(new Question()));
+        }
+
+        [Fact]
+        public async Task UpdateQuestion()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryQuestion
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
+                .ReturnsAsync(Creator.CreateDatabaseQuestion());
+
+            await ServiceQuestion.UpdateQuestionAsync(999, new Question());
+        }
+
+        [Fact]
+        public async Task UpdateQuestion_NoAccess()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateAdmin);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceQuestion.UpdateQuestionAsync(999, new Question()));
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateStudent);
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceQuestion.UpdateQuestionAsync(999, new Question()));
+
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryQuestion
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
+                .ReturnsAsync(Creator.CreateDatabaseQuestion(lecturerId: 1));
+
+            await Assert.ThrowsAsync<EducationSystemPublicException>
+                (() => ServiceQuestion.UpdateQuestionAsync(999, new Question()));
+        }
+
+        [Fact]
+        public async Task UpdateQuestion_NotFound()
+        {
+            Context
+                .Setup(x => x.GetCurrentUserAsync())
+                .ReturnsAsync(Creator.CreateLecturer);
+
+            RepositoryQuestion
+                .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
+                .ReturnsAsync((DatabaseQuestion) null);
+
+            await Assert.ThrowsAsync<EducationSystemNotFoundException>
+                (() => ServiceQuestion.UpdateQuestionAsync(999, new Question()));
+        }
     }
 }

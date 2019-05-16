@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Constants;
 using EducationSystem.Database.Models;
+using EducationSystem.Enums;
 using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Tests
@@ -203,12 +204,17 @@ namespace EducationSystem.Tests
 
         #region DatabaseQuestion
 
-        public static DatabaseQuestion CreateDatabaseQuestion(int studentId = 3, int lecturerId = 2)
+        public static DatabaseQuestion CreateDatabaseQuestion(int studentId = 3, int lecturerId = 2, bool withTheme = true)
         {
-            return new DatabaseQuestion
+            var question = new DatabaseQuestion
             {
-                Theme = CreateDatabaseTheme(studentId, lecturerId)
+                Type = QuestionType.ClosedManyAnswers,
             };
+
+            if (withTheme)
+                question.Theme = CreateDatabaseTheme(studentId, lecturerId);
+
+            return question;
         }
 
         #endregion
@@ -219,7 +225,42 @@ namespace EducationSystem.Tests
         {
             return new DatabaseTheme
             {
-                Discipline = CreateDatabaseDiscipline()
+                Discipline = CreateDatabaseDiscipline(studentId, lecturerId),
+                Questions = new List<DatabaseQuestion>
+                {
+                    CreateDatabaseQuestion(studentId, lecturerId, false),
+                    CreateDatabaseQuestion(studentId, lecturerId, false),
+                    CreateDatabaseQuestion(studentId, lecturerId, false)
+                }
+            };
+        }
+
+        #endregion
+
+        #region DatabaseTest
+
+        public static DatabaseTest CreateDatabaseTest(bool isActive = false, int studentId = 2, int lecturerId = 2)
+        {
+            return new DatabaseTest
+            {
+                IsActive = isActive,
+                Discipline = CreateDatabaseDiscipline(studentId, lecturerId),
+                TestThemes = new List<DatabaseTestTheme>
+                {
+                    CreateDatabaseTestTheme(studentId, lecturerId)
+                }
+            };
+        }
+
+        #endregion
+
+        #region DatabaseTestTheme
+
+        public static DatabaseTestTheme CreateDatabaseTestTheme(int studentId = 3, int lecturerId = 3)
+        {
+            return new DatabaseTestTheme
+            {
+                Theme = CreateDatabaseTheme(studentId, lecturerId)
             };
         }
 

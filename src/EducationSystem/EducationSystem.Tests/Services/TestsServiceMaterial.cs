@@ -37,7 +37,7 @@ namespace EducationSystem.Tests.Services
         {
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(2));
+                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 2));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
@@ -73,7 +73,7 @@ namespace EducationSystem.Tests.Services
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(1));
+                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.GetMaterialAsync(999));
@@ -99,7 +99,7 @@ namespace EducationSystem.Tests.Services
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(1));
+                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.DeleteMaterialAsync(999));
@@ -108,7 +108,7 @@ namespace EducationSystem.Tests.Services
         [Fact]
         public async Task DeleteMaterial_Lecturer()
         {
-            var material = Creator.CreateDatabaseMaterial(2);
+            var material = Creator.CreateDatabaseMaterial(ownerId: 2);
             var materials = new List<DatabaseMaterial> { material };
 
             Context
@@ -132,7 +132,7 @@ namespace EducationSystem.Tests.Services
         [Fact]
         public async Task DeleteMaterial_Admin()
         {
-            var material = Creator.CreateDatabaseMaterial(2);
+            var material = Creator.CreateDatabaseMaterial(ownerId: 2);
             var materials = new List<DatabaseMaterial> { material };
 
             Context
@@ -198,7 +198,7 @@ namespace EducationSystem.Tests.Services
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(1));
+                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
