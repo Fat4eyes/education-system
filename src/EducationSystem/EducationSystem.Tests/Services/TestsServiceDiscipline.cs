@@ -4,7 +4,6 @@ using EducationSystem.Exceptions;
 using EducationSystem.Implementations.Services;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
-using EducationSystem.Models.Filters;
 using EducationSystem.Specifications;
 using Moq;
 using Xunit;
