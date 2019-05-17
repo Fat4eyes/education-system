@@ -96,12 +96,7 @@ class FileUpload extends Component<TProps, IState> {
 
   render() {
     const {classes, children} = this.props
-
     const id = Guid.create()
-
-    console.log(children, typeof children)
-
-
     if (this.state.extensions.length > 0 || this.props.fileModel) {
       if (this.state.fileModel) {
         return <Grid item xs={12} container>

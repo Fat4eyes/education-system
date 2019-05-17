@@ -62,8 +62,6 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
   handleOpen = (id: number) => async () => {
     let currentDiscipline = this.state.Items.find(d => d.Id === id)
 
-    console.log(currentDiscipline)
-
     if (!currentDiscipline) return
 
     if (!currentDiscipline.Tests || !currentDiscipline.Tests.length) {

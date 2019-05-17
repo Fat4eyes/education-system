@@ -12,6 +12,8 @@ import ITestService from '../../../../services/TestService'
 import QuestionBlock from './QuestionBlock'
 import {getHandleQuestionStrategy, IHandleQuestionStrategy, NullHandleQuestionStrategy} from './HandleQuestionStrategy'
 import {indexOf, shuffle} from '../../../../helpers/ArrayHelpers'
+import {MtBlock} from '../../../stuff/Margin'
+import MaterialBlock from './MaterialBlock'
 
 type TProps = WithStyles<typeof TestStyles> & RouteComponentProps<{ id: string }>
 
@@ -22,7 +24,8 @@ interface IState {
   IsFinish: boolean
   Strategy: IHandleQuestionStrategy
   Mode?: boolean
-  NeedSave: boolean
+  NeedSave: boolean,
+  ShowMaterial: boolean
 }
 
 class Test extends Component<TProps, IState> {
@@ -36,7 +39,8 @@ class Test extends Component<TProps, IState> {
       IsFinish: false,
       Strategy: NullHandleQuestionStrategy,
       NeedSave: true,
-      Questions: []
+      Questions: [],
+      ShowMaterial: false
     }
   }
 
@@ -68,14 +72,15 @@ class Test extends Component<TProps, IState> {
       }
     }
 
-    let newQuestion = questions[index]
+    let newQuestion = questions.find(q => q.Material !== undefined) || questions[index]
     let strategy = getHandleQuestionStrategy(newQuestion.Type)
 
     this.setState({
       Question: strategy.preprocess(newQuestion),
       Questions: questions,
       Strategy: strategy,
-      Mode: true
+      Mode: true,
+      ShowMaterial: false
     })
   }
 
@@ -124,12 +129,14 @@ class Test extends Component<TProps, IState> {
     if (!this.state.Question || this.state.IsFinish) return
     this.setState({Question: this.state.Strategy.process(this.state.Question, value, id)})
   }
+  
+  handleMaterial = () => this.setState(state => ({ShowMaterial: !state.ShowMaterial}))
 
   render(): React.ReactNode {
     let {classes} = this.props
 
     return <Grid container justify='center' spacing={40}>
-      <Grid item xs={12} md={10} lg={8}>
+      <Grid item xs={12} lg={10}>
         <Block partial>
           {
             this.state.IsFinish &&
@@ -145,14 +152,28 @@ class Test extends Component<TProps, IState> {
               <Grid item xs={12}>
                 <QuestionBlock model={this.state.Question} setAnswer={this.handleAnswer} mode={this.state.Mode!}/>
               </Grid>
+              <MtBlock value={2}/>
               <Grid item xs={12} container>
-                {this.state.Mode === true && <Button onClick={this.checkQuestion}>Проверить</Button>}
-                {this.state.Mode === false && <Button onClick={this.getQuestion}>Следующий</Button>}
+                {this.state.Mode === true && <Button onClick={this.checkQuestion} variant='outlined'>Проверить</Button>}
+                {this.state.Mode === false && <Button onClick={this.getQuestion} variant='outlined'>Следующий</Button>}
+                <Grid item xs/>
+                {
+                  this.state.Question.Material && 
+                  <Button onClick={this.handleMaterial} variant='outlined'>
+                    {this.state.ShowMaterial ? 'Скрыть' : 'Показать'} материал
+                  </Button>
+                }
               </Grid>
             </>
           }
         </Block>
       </Grid>
+      {
+        this.state.ShowMaterial && this.state.Question && this.state.Question.Material &&
+        <Grid item xs={12} lg={10}>
+            <MaterialBlock model={this.state.Question.Material}/>
+        </Grid>
+      }
     </Grid>
   }
 }

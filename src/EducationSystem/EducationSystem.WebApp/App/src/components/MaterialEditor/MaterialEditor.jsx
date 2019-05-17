@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, useState} from 'react'
 import Editor from 'draft-js-plugins-editor'
 import MaterialEditorStyles from './MaterialEditorStyles'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -111,3 +111,14 @@ class MaterialEditor extends Component {
 }
 
 export default MaterialEditor
+
+export const ReadOnlyEditor = ({html}) => {
+  const createState = html => EditorState.createWithContent(stateFromHTML(html))
+  const plugins = [staticToolbarPlugin, ...imagePlugins]
+  return <Editor
+    editorState={createState(html)}
+    onChange={() => {}}
+    plugins={plugins}
+    readOnly
+  />
+}
