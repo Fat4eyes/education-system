@@ -137,7 +137,7 @@ namespace EducationSystem.Implementations.Services
             var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseDiscipline>(id);
 
-            if (!new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline))
+            if (new DisciplinesByLecturerId(user.Id).IsSatisfiedBy(discipline) == false)
                 throw ExceptionHelper.NoAccess();
 
             var ids = themes.Select(x => x.Id).ToArray();
@@ -167,7 +167,7 @@ namespace EducationSystem.Implementations.Services
             var model = await _repositoryTheme.FindFirstAsync(new ThemesById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseTheme>(id);
 
-            if (!new ThemesByLecturerId(user.Id).IsSatisfiedBy(model))
+            if (new ThemesByLecturerId(user.Id).IsSatisfiedBy(model) == false)
                 throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseTheme>(theme), model);
