@@ -1,1 +1,1 @@
-web: cd \$HOME/heroku_output && dotnet ./${PROJECT_DLL}
+web: cd \$HOME/heroku_output && dotnet EducationSystem.WebApp.dll
