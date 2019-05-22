@@ -67,7 +67,6 @@ const MaterialBlock: FunctionComponent<TProps> = ({classes, model}: TProps) => {
         </Grid>
       }
     </Grid>
-
   </Block>
 }
 

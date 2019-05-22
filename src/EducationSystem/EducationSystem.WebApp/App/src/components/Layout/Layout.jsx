@@ -20,7 +20,7 @@ import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import Grow from '../stuff/Grow'
 import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
-import Routes from './Routes'
+import Routes, {routes} from './Routes'
 import {If, SimpleLink} from '../core'
 import ListItem from '@material-ui/core/ListItem'
 import classNames from 'classnames'
@@ -76,27 +76,27 @@ class Layout extends PureComponent {
       <LeftMenuItem component={SimpleLink} to='/' Icon={HomeIcon} tooltip='Главная'
                     closeOnClick={closeOnClick}/>
       <If condition={isAuthenticated}>
-        <LeftMenuItem component={SimpleLink} to='/account' Icon={AccountIcon} tooltip='Профиль'
+        <LeftMenuItem component={SimpleLink} to={routes.account} Icon={AccountIcon} tooltip='Профиль'
                       closeOnClick={closeOnClick}/>
       </If>
       {
         User.Roles && <>
           <If condition={User.Roles.Admin || User.Roles.Lecturer}>
-            <LeftMenuItem component={SimpleLink} to='/tests' Icon={QuestionIcon} tooltip='Тесты'
+            <LeftMenuItem component={SimpleLink} to={routes.tests} Icon={QuestionIcon} tooltip='Тесты'
                           closeOnClick={closeOnClick}/>
           </If>
           <If condition={User.Roles.Lecturer}>
-            <LeftMenuItem component={SimpleLink} to='/createtest' Icon={PlaylistAddIcon} tooltip='Добавить тест'
+            <LeftMenuItem component={SimpleLink} to={routes.createTest} Icon={PlaylistAddIcon} tooltip='Добавить тест'
                           closeOnClick={closeOnClick}/>
           </If>
           <If condition={User.Roles.Admin || User.Roles.Lecturer}>
-            <LeftMenuItem component={SimpleLink} to='/themes' Icon={PlaylistAddIcon} tooltip='Темы'
+            <LeftMenuItem component={SimpleLink} to={routes.themes} Icon={PlaylistAddIcon} tooltip='Темы'
                           closeOnClick={closeOnClick}/>
-            <LeftMenuItem component={SimpleLink} to='/materials' Icon={PlaylistAddIcon} tooltip='Темы'
+            <LeftMenuItem component={SimpleLink} to={routes.createMaterial} Icon={PlaylistAddIcon} tooltip='Темы'
                           closeOnClick={closeOnClick}/>
           </If>
           <If condition={User.Roles.Student}>
-            <LeftMenuItem component={SimpleLink} to='/student' Icon={QuestionIcon} tooltip='Тесты'
+            <LeftMenuItem component={SimpleLink} to={routes.studentTests} Icon={QuestionIcon} tooltip='Тесты'
                           closeOnClick={closeOnClick}/>
           </If>
         </>
@@ -117,7 +117,7 @@ class Layout extends PureComponent {
           </Typography>
           <Grow/>
           <If condition={isAuthenticated} orElse={
-            <IconButton className={classes.rightMenuIcon} component={SimpleLink} to='/signin' color='inherit'>
+            <IconButton className={classes.rightMenuIcon} component={SimpleLink} to={routes.signIn} color='inherit'>
               <AccountIcon/>
             </IconButton>
           }>
@@ -131,7 +131,7 @@ class Layout extends PureComponent {
                   anchorEl={this.state.MenuAnchor}
                   open={!!this.state.MenuAnchor}
                   onClose={this.handleMenu()}>
-              <MenuItem component={SimpleLink} to='/account' onClick={this.handleMenu()}>Профиль</MenuItem>
+              <MenuItem component={SimpleLink} to={routes.account} onClick={this.handleMenu()}>Профиль</MenuItem>
               <MenuItem onClick={this.handleMenu(signOut)}>Выйти</MenuItem>
             </Menu>
           </If>

@@ -24,6 +24,7 @@ import classNames from 'classnames'
 import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider'
 import {TAuthProps} from '../../../providers/AuthProvider/AuthProviderTypes'
 import Modal from '../../stuff/Modal'
+import {routes} from '../../Layout/Routes'
 
 type TProps = WithStyles<typeof ThemesPageStyles> & TNotifierProps & TAuthProps
 
@@ -186,11 +187,10 @@ class ThemesPage extends Component<TProps, IState> {
     const disciplineSelected = !!this.state.Discipline
     const isLecturer = User && User.Roles && User.Roles.Lecturer
 
-    if (this.state.NeedRedirect && this.state.SelectedThemeId)
-      return <Redirect to={
-        `/question/${this.state.SelectedThemeId}` +
-        (this.state.SelectedQuestionId ? `/${this.state.SelectedQuestionId}` : '')
-      }/>
+    if (this.state.NeedRedirect && this.state.SelectedThemeId) {
+      const {SelectedQuestionId: id, SelectedThemeId: themeId} = this.state
+      return <Redirect to={id ? routes.editQuestion(themeId, id) : routes.createQuestion(themeId)}/>
+    }
 
     const AddButton = ({onClick}: { onClick: () => void }) => <RowHeader onClick={onClick}>
       <Grid item xs={12} container alignItems='center' justify='center' wrap='nowrap' zeroMinWidth>

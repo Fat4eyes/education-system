@@ -15,6 +15,7 @@ import {Link} from 'react-router-dom'
 import {inject} from '../../../../infrastructure/di/inject'
 import ITestService from '../../../../services/TestService'
 import IDisciplineService from '../../../../services/DisciplineService'
+import {routes} from '../../../Layout/Routes'
 
 interface IProps {}
 
@@ -135,7 +136,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
                                   </Grid>
                                   <Grid item>
                                     <IconButton component={
-                                      (props: any) => <Link to={`/student/test/${test.Id!}`} {...props}/>
+                                      (props: any) => <Link to={routes.studentTest(test.Id!)} {...props}/>
                                     }>
                                       <PlayIcon/>
                                     </IconButton>

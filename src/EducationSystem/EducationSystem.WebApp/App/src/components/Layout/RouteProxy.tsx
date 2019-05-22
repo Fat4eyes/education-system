@@ -5,6 +5,7 @@ import {TAuthProps} from '../../providers/AuthProvider/AuthProviderTypes'
 import {TUserRole} from '../../common/enums'
 import {Redirect, Route, RouteProps} from 'react-router'
 import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
+import {Guid} from '../../helpers/guid'
 
 interface IProps extends RouteProps {
   roles?: Array<TUserRole>
@@ -22,7 +23,7 @@ interface IPageProps {
 
 class Page extends Component<IPageProps> {
   componentDidMount(): void {
-    document.title = `Система обучения - ${this.props.title}`
+    document.title = `Система обучения – ${this.props.title}`
   }
 
   render() {
@@ -39,7 +40,7 @@ class RouteProxy extends Component<TProps> {
   render() {
     const {roles, auth, notifier, component, title, ...rest} = this.props
 
-    return <Route
+    return <Route key={Guid.create()}
       {...rest}
       render={
         props => {

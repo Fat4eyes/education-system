@@ -3,6 +3,7 @@ import {Redirect, Route} from 'react-router-dom'
 import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
 import {withSnackbar} from 'notistack'
 import Snackbar from '../../helpers/Snackbar'
+import {routes} from './Routes'
 
 @withSnackbar
 @withAuthenticated
@@ -32,7 +33,7 @@ class ProtectedRoute extends Component {
 
     const handlePrivateRender = props => auth.checkAuth(userRole)
       ? <Component {...props} />
-      : <Redirect to={{pathname: userRole ? '/' : '/signin', state: {from: props.location}}}/>
+      : <Redirect to={{pathname: userRole ? routes.home : routes.signIn, state: {from: props.location}}}/>
 
     return <Route {...rest} render={handlePrivateRender}/>
   }

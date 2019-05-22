@@ -23,6 +23,7 @@ import Filter from './Filter'
 import {withAuthenticated} from '../../../../providers/AuthProvider/AuthProvider'
 import {TAuthProps} from '../../../../providers/AuthProvider/AuthProviderTypes'
 import Modal from '../../../stuff/Modal'
+import {routes} from '../../../Layout/Routes'
 
 type TProps = TNotifierProps & WithStyles<typeof TestsTableStyles> & TAuthProps
 
@@ -242,7 +243,7 @@ class TestsTable extends TableComponent<Test, TProps, IState> {
                   {
                     User && User.Roles && User.Roles.Lecturer &&
                     <Grid item>
-                      <IconButton component={props => <SimpleLink to={`/edittest/${test.Id}`} {...props}/>}>
+                      <IconButton component={props => <SimpleLink to={routes.editTest(test.Id)} {...props}/>}>
                         <EditIcon fontSize='small' color='action'/>
                       </IconButton>
                     </Grid>

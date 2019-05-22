@@ -6,11 +6,7 @@ class Home extends React.Component {
   }
 
   render() {
-    return <div style={{
-      backgroundImage: 'url("https://zakazposterov.ru/fotooboi/z/fotooboi-e-31025-stariy-persidskiy-kover-s-uzorom-vid-sverhu-zakazposterov-ru_z.jpg   ")',
-      width: '95vw',
-      height: '80vh'
-    }}/>
+    return <div/>
   }
 }
 
