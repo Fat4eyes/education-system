@@ -13,9 +13,12 @@ import MaterialEditor from '../../MaterialEditor/MaterialEditor'
 import IMaterialService from '../../../services/MaterialService'
 import Block from '../../Blocks/Block'
 import INotificationService from '../../../services/NotificationService'
-import {MtBlock} from '../../stuff/Margin'
+import {MrBlock, MtBlock} from '../../stuff/Margin'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import {Guid} from '../../../helpers/guid'
+import withWidth, {isWidthDown, WithWidth} from '@material-ui/core/withWidth/withWidth'
+import {PopoverProps} from '@material-ui/core/Popover'
+import FileSelect from './FileSelect'
 
 interface IProps {
   match?: {
@@ -26,14 +29,15 @@ interface IProps {
   onMaterialSave: (material?: Material) => void
 }
 
-type TProps = WithStyles<typeof MaterialStyles> & InjectedNotistackProps & IProps
+type TProps = WithStyles<typeof MaterialStyles> & InjectedNotistackProps & IProps & WithWidth
 
 interface IState {
   Model: Material,
   IsMaterialEditorOpen: boolean,
-  IsLoading: boolean
+  IsLoading: boolean,
+  FileSelectAnchor: PopoverProps['anchorEl'],
+  Documents: Array<DocumentFile>
 }
-
 
 class MaterialHandling extends Component<TProps, IState> {
   @inject private FileService?: IFileService
@@ -46,7 +50,9 @@ class MaterialHandling extends Component<TProps, IState> {
     this.state = {
       Model: new Material(),
       IsMaterialEditorOpen: false,
-      IsLoading: false
+      IsLoading: false,
+      FileSelectAnchor: null,
+      Documents: []
     }
   }
 
@@ -117,9 +123,26 @@ class MaterialHandling extends Component<TProps, IState> {
 
     result && this.props.onMaterialSave && this.props.onMaterialSave(material)
   }
+  
+  handleFileSelect = async (anchorEl: PopoverProps['anchorEl']) => {
+    if (!anchorEl) return this.setState({FileSelectAnchor: anchorEl})
+    
+    if (!this.state.Documents.length) {
+      const {data, success} = await this.FileService!.getAll(FileType.Document, {All: true})
+      if (data && success) {
+        return this.setState({
+          Documents: data.Items,
+          FileSelectAnchor: anchorEl
+        })
+      } 
+    } else {
+      return this.setState({FileSelectAnchor: anchorEl})
+    }
+  }
 
   render(): React.ReactNode {
-    let {classes} = this.props
+    let {classes, width} = this.props
+    let isSmallScreen = isWidthDown('md', width);
 
     return <Grid container justify='center' spacing={16}>
       <Grid item xs={12} md={10} lg={8}>
@@ -169,7 +192,7 @@ class MaterialHandling extends Component<TProps, IState> {
           <MtBlock value={2}/>
           <Grid item xs={12} container>
             <Grid item xs container alignItems='center'>
-              <Grid item xs={12}>
+              <Grid item xs={12} md>
                 <FileUpload onLoad={this.handleFile()} type={FileType.Document}>
                   {(handleAdd: ChangeEventHandler, extensions: string[]) => {
                     if (!extensions) return <></>
@@ -179,13 +202,33 @@ class MaterialHandling extends Component<TProps, IState> {
                       <label htmlFor={id} style={{width: '100%'}}>
                         <Button component='span' className={classes.openEditorButton}>
                           <Typography noWrap variant='subtitle1'>
-                            Прикрепить документ
+                            Загрузить документ
                           </Typography>
                         </Button>
                       </label>
                     </>
                   }}
                 </FileUpload>
+              </Grid>
+              {isSmallScreen ? <MtBlock/> : <MrBlock/>}
+              <Grid item xs={12} md>
+                <Button component='span' 
+                        className={classes.openEditorButton} 
+                        onClick={e => this.handleFileSelect(e.currentTarget)}
+                >
+                  <Typography noWrap variant='subtitle1'>
+                    Прикрепить документ
+                  </Typography>
+                </Button>
+                <FileSelect
+                  documents={this.state.Documents}
+                  onClose={(file?: DocumentFile) => {
+                    this.handleFileSelect(null)
+                    this.handleFile()(file)
+                  }}
+                  anchorEl={this.state.FileSelectAnchor}
+                  isOpen={this.state.FileSelectAnchor !== null}
+                />
               </Grid>
             </Grid>
             <MtBlock/>
@@ -222,4 +265,4 @@ class MaterialHandling extends Component<TProps, IState> {
   }
 }
 
-export default withSnackbar(withStyles(MaterialStyles)(MaterialHandling) as any)
+export default withWidth()(withSnackbar(withStyles(MaterialStyles)(MaterialHandling))) as any

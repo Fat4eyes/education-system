@@ -4,11 +4,14 @@ import ProtectedFetch from '../helpers/ProtectedFetch'
 import {inject} from '../infrastructure/di/inject'
 import INotificationService from './NotificationService'
 import {getResult, IResult} from './IServices'
+import IPagedData, {IPagingOptions} from '../models/PagedData'
+import UrlBuilder from '../helpers/UrlBuilder'
 
 export default interface IFileService {
-  add(form: FormData, type: FileType): Promise<IResult<FileModel>>,
-  delete(id: number, type: FileType): Promise<any>,
+  add(form: FormData, type: FileType): Promise<IResult<FileModel>>
+  delete(id: number, type: FileType): Promise<any>
   getExtensions(type: FileType): Promise<IResult<Array<string>>>
+  getAll(type: FileType, options?: IPagingOptions): Promise<IResult<IPagedData<FileModel>>>
 }
 
 export class FileService implements IFileService {
@@ -59,4 +62,20 @@ export class FileService implements IFileService {
     this.NotificationService!.showError(`${FileType[type]} не поддерживается`)
     return getResult()
   }
+
+  async getAll(type: FileType, options?: IPagingOptions): Promise<IResult<IPagedData<FileModel>>> {
+    switch (type) {
+      case FileType.Image:
+        return getResult(
+          await ProtectedFetch.get(UrlBuilder.Build(`/api/images`, {...options, Type: type}))
+        )
+      case FileType.Document:
+        return getResult(
+          await ProtectedFetch.get(UrlBuilder.Build(`/api/documents`, {...options, Type: type}))
+        )
+    }
+    this.NotificationService!.showError(`${FileType[type]} не поддерживается`)
+    return getResult()
+  }
+
 }

@@ -93,16 +93,16 @@ export const dark = () => createMuiTheme({
   ...base,
   palette: {
     primary: {
-      light: '#89a2a4',
-      main: '#282729',
-      dark: '#161616',
+      light: '#35424e',
+      main: '#26313b',
+      dark: '#12171c',
       contrastText: '#ffffff',
     },
     secondary: {
-      light: '#efefef',
-      main: '#bdbdbd',
-      dark: '#8d8d8d',
-      contrastText: '#000000',
+      light: '#97deff',
+      main: '#35424e',
+      dark: '#090909',
+      contrastText: '#ffffff',
     }
   },
 })
