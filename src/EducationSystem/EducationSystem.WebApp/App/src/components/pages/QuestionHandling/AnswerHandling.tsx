@@ -20,6 +20,7 @@ import MonacoEditor from 'react-monaco-editor'
 import Program from '../../../models/Program'
 import {VTextField} from '../../core'
 import ProgramData from '../../../models/ProgramData'
+import {MtBlock} from '../../stuff/Margin'
 
 interface TAnswersHandlingProps {
   type: QuestionType,
@@ -115,6 +116,7 @@ class ClosedManyAnswers extends BaseAnswers<IClosedManyAnswersState> {
           <AddIcon/>
         </IconButton>
       </Grid>
+      <MtBlock/>
       {this.state.Answers.map((answer: Answer, index: number) =>
         <Grid item xs={12} container zeroMinWidth wrap='nowrap' key={index}>
           <Grid item xs={1}><Typography noWrap variant='subtitle1'>{index + 1}</Typography></Grid>

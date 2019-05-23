@@ -1,13 +1,13 @@
 import * as React from 'react'
 import {ChangeEvent, Component} from 'react'
 import {
-  Button,
+  Button, Collapse,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
   Select,
-  TextField,
+  TextField, Typography,
   withStyles,
   WithStyles
 } from '@material-ui/core'
@@ -27,6 +27,7 @@ import MaterialSelect from '../../Table/MaterialSelect'
 import Material from '../../../models/Material'
 import Block from '../../Blocks/Block'
 import INotificationService from '../../../services/NotificationService'
+import {MtBlock} from '../../stuff/Margin'
 
 interface IProps {
   match: {
@@ -39,7 +40,10 @@ interface IProps {
 
 type TProps = WithStyles<typeof QuestionHandlingStyle> & IProps
 
-interface IState {Model: Question}
+interface IState {
+  Model: Question,
+  IsMaterialSelectOpen: boolean
+}
 
 class QuestionHandling extends Component<TProps, IState> {
   @inject private QuestionService?: IQuestionService
@@ -50,7 +54,8 @@ class QuestionHandling extends Component<TProps, IState> {
     super(props)
 
     this.state = {
-      Model: new Question(this.props.match.params.themeId)
+      Model: new Question(this.props.match.params.themeId),
+      IsMaterialSelectOpen: false
     } as IState
   }
 
@@ -141,6 +146,8 @@ class QuestionHandling extends Component<TProps, IState> {
       }
     }))
   }
+  
+  handleMaterialSelectOpen = () => this.setState(state => ({IsMaterialSelectOpen: !state.IsMaterialSelectOpen}))
 
   render(): React.ReactNode {
     let {classes} = this.props
@@ -189,19 +196,22 @@ class QuestionHandling extends Component<TProps, IState> {
 
     return <Grid container justify='center'>
       <Grid item xs={12} md={10} lg={8}>
-        <Block>
-          <Grid item xs={12} container spacing={16}>
-            <HandledInputs/>
-            <Grid item xs={12}>
-              <MaterialSelect onSelectMaterial={this.handleMaterialSelect}
-                              selectedMaterial={this.state.Model.Material}/>
-            </Grid>
+        <Block partial>
+          <Grid item xs={12} container className={classes.header} zeroMinWidth wrap='nowrap'>
+            <Typography variant='subtitle1' className={classes.headerText} noWrap>
+              {this.state.Model.Id ? 'Редактирование' : 'Создание'} вопроса
+            </Typography>
           </Grid>
+          <MtBlock value={2}/>
           <Grid item xs={12} container spacing={16}>
             <Grid item xs={12}>
               <TextField name='Text' label='Текст вопроса' required multiline fullWidth rows={5}
                          value={this.state.Model.Text} onChange={this.handleModel}/>
             </Grid>
+          </Grid>
+          <MtBlock value={2}/>
+          <Grid item xs={12} container spacing={16}>
+            <HandledInputs/>
           </Grid>
           <Grid item xs={12} container spacing={16}>
             <Grid item>
@@ -216,8 +226,25 @@ class QuestionHandling extends Component<TProps, IState> {
                              handleProgram={this.handleProgram}
             />
           </Grid>
-          <Grid item xs={12} container spacing={16}>
-            <Button onClick={this.handleSubmit}>
+          <MtBlock value={2}/>
+          <Grid item xs={12} container>
+            <Grid item xs={12}>
+              <Button onClick={this.handleMaterialSelectOpen} className={classes.openButton}>
+                <Typography noWrap variant='subtitle1'>
+                  {this.state.IsMaterialSelectOpen ? 'Закрыть ' : 'Открыть '} выбор материала
+                </Typography>
+              </Button>
+            </Grid>
+            <MtBlock value={2}/>
+            <Grid item xs={12}>
+              <Collapse timeout={500} in={this.state.IsMaterialSelectOpen}>
+                <MaterialSelect onSelectMaterial={this.handleMaterialSelect} selectedMaterial={this.state.Model.Material}/>
+              </Collapse>
+            </Grid>
+          </Grid>
+          <MtBlock value={2}/>
+          <Grid item xs={12} container>
+            <Button onClick={this.handleSubmit} variant='outlined'>
               {this.state.Model.Id ? 'Обновить вопрос' : 'Добавить вопрос'}
             </Button>
           </Grid>

@@ -1,13 +1,12 @@
 import TableComponent from './TableComponent'
 import Material from '../../models/Material'
 import {ITableState} from './IHandleTable'
-import IPagedData, {IPagingOptions} from '../../models/PagedData'
+import {IPagingOptions} from '../../models/PagedData'
 import IMaterialService from '../../services/MaterialService'
 import {inject} from '../../infrastructure/di/inject'
 import {TNotifierProps, withNotifier} from '../../providers/NotificationProvider'
 import * as React from 'react'
 import {ChangeEvent} from 'react'
-import {Exception} from '../../helpers'
 import {Chip, createStyles, Grid, TextField, Theme, Typography, WithStyles, withStyles} from '@material-ui/core'
 import RowHeader from './RowHeader'
 import {TablePagination} from '../core'
@@ -60,7 +59,7 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
       ...this.firstPageOptions,
       ...param
     }, this.getNameFilter(this.state.Name))
-    
+
     if (success && data) {
       this.setState({
         Count: data.Count,
@@ -89,7 +88,7 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
         {
           selectedMaterial &&
           <Chip
-            classes={{label:classes.chipLabel}}
+            classes={{label: classes.chipLabel}}
             label={<Grid container wrap='nowrap' zeroMinWidth>
               <Typography noWrap variant='subtitle1'>
                 {selectedMaterial.Name}
@@ -113,19 +112,22 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
                 margin='none'
               />
             </Grid>
-            <Grid item xs={12}>
-              <TablePagination
-                page={this.state.Page}
-                count={{
-                  all: this.state.Count,
-                  perPage: this.state.CountPerPage,
-                  current: this.state.Items.length
-                }}
-                onPageChange={this.handleChangePage}
-                onCountPerPageChange={this.handleChangeRowsPerPage}
-                showChangeCountPerPageBlock
-              />
-            </Grid>
+            {
+              this.state.Count > this.state.Items.length &&
+              <Grid item xs={12}>
+                <TablePagination
+                  page={this.state.Page}
+                  count={{
+                    all: this.state.Count,
+                    perPage: this.state.CountPerPage,
+                    current: this.state.Items.length
+                  }}
+                  onPageChange={this.handleChangePage}
+                  onCountPerPageChange={this.handleChangeRowsPerPage}
+                  showChangeCountPerPageBlock
+                />
+              </Grid>
+            }
             <Grid item xs={12}>
               {this.state.Items.map((material: Material) =>
                 <RowHeader
