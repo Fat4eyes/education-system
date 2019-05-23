@@ -85,11 +85,13 @@ const ClosedAnswersBase = withStyles(styles)((
           <Grid item>
             {children(answer)}
           </Grid>
-          <AnswerTextBlock text={answer.Text} className={classNames({
-            [classes.isRight]: !mode && answer.Status === AnswerStatus.Right,
-            [classes.isWrong]: !mode && answer.Status === AnswerStatus.Wrong,
-            [classes.isIgnored]: !mode && answer.Status === AnswerStatus.Ignore
-          })}/>
+          <Grid item xs>
+            <AnswerTextBlock text={answer.Text} className={classNames({
+              [classes.isRight]: !mode && answer.Status === AnswerStatus.Right,
+              [classes.isWrong]: !mode && answer.Status === AnswerStatus.Wrong,
+              [classes.isIgnored]: !mode && answer.Status === AnswerStatus.Ignore
+            })}/>
+          </Grid>
         </Grid>
       )}
     </>

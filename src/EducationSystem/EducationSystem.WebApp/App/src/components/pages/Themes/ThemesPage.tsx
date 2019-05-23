@@ -292,7 +292,7 @@ class ThemesPage extends Component<TProps, IState> {
                     <SortableArrayItem key={theme.Id} index={index} value={
                       <>
                         {
-                          this.state.EditThemeId !== theme.Id
+                          !this.state.EditThemeId || this.state.EditThemeId !== theme.Id
                             ? <>
                               <Grid item xs container zeroMinWidth alignItems='center'
                                     onClick={() => this.handleTheme.select(theme.Id!)}

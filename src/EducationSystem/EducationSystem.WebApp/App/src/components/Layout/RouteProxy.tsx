@@ -40,7 +40,7 @@ class RouteProxy extends Component<TProps> {
   render() {
     const {roles, auth, notifier, component, title, ...rest} = this.props
 
-    return <Route key={Guid.create()}
+    return <Route
       {...rest}
       render={
         props => {

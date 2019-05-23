@@ -46,13 +46,13 @@ const Routes = () =>
     <Route exact path={routes.signIn} component={SignIn}/>
     <RouteProxy exact path={routes.account} component={Account} roles={['Admin', 'Lecturer', 'Student']} title='Профиль'/>
     <RouteProxy exact path={routes.tests} component={Tests} roles={['Admin', 'Lecturer']} title='Тесты'/> 
-    <RouteProxy exact path={routes.createTest} component={HandleTest} roles={['Admin', 'Lecturer']} title='Создание теста'/>
-    <RouteProxy exact path={routes.editTest()} component={HandleTest} roles={['Admin', 'Lecturer']} title='Редактирование теста'/>
+    <RouteProxy key='CreateTest' exact path={routes.createTest} component={HandleTest} roles={['Admin', 'Lecturer']} title='Создание теста'/>
+    <RouteProxy key='EditTest' exact path={routes.editTest()} component={HandleTest} roles={['Admin', 'Lecturer']} title='Редактирование теста'/>
     <RouteProxy exact path={routes.themes} component={ThemesPage} roles={['Admin', 'Lecturer']} title='Темы'/>
-    <RouteProxy exact path={routes.editQuestion()} component={QuestionHandling} roles={['Admin', 'Lecturer']} title='Редактирование вопроса'/>
-    <RouteProxy exact path={routes.createQuestion()} component={QuestionHandling} roles={['Admin', 'Lecturer']} title='Создание вопроса'/>
-    <RouteProxy exact path={routes.editMaterial()} component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Редактирование материала'/>
-    <RouteProxy exact path={routes.createMaterial} component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Создание материала'/>
+    <RouteProxy key='EditQuestion' exact path={routes.editQuestion()} component={QuestionHandling} roles={['Admin', 'Lecturer']} title='Редактирование вопроса'/>
+    <RouteProxy key='CreateQuestion' exact path={routes.createQuestion()} component={QuestionHandling} roles={['Admin', 'Lecturer']} title='Создание вопроса'/>
+    <RouteProxy key='EditMaterial' exact path={routes.editMaterial()} component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Редактирование материала'/>
+    <RouteProxy key='CreateMaterial' exact path={routes.createMaterial} component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Создание материала'/>
     <RouteProxy exact path={routes.studentTests} component={TestSelect} roles={['Student']} title='Выбор теста'/>
     <RouteProxy exact path={routes.studentTest()} component={Test} roles={['Student']} title='Обучение'/>
   </Switch>
