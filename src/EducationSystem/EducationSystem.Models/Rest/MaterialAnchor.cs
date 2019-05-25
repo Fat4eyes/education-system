@@ -1,6 +1,6 @@
 ﻿using EducationSystem.Models.Rest.Basics;
 
-namespace EducationSystem.Models
+namespace EducationSystem.Models.Rest
 {
     public class MaterialAnchor : Model
     {

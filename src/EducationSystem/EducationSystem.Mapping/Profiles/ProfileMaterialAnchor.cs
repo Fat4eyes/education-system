@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EducationSystem.Database.Models;
-using EducationSystem.Models;
+using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Mapping.Profiles
 {
