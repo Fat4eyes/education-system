@@ -21,6 +21,12 @@ namespace EducationSystem.Models.Rest
             Name = Name?.Trim();
             Template = Template?.Trim();
 
+            Anchors?.ForEach(x =>
+            {
+                x.Name = x.Name?.Trim();
+                x.Token = x.Token?.Trim();
+            });
+
             return this;
         }
     }
