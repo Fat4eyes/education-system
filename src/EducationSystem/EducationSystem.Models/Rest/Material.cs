@@ -14,6 +14,8 @@ namespace EducationSystem.Models.Rest
 
         public List<Document> Files { get; set; }
 
+        public List<MaterialAnchor> Anchors { get; set; }
+
         public Material Format()
         {
             Name = Name?.Trim();

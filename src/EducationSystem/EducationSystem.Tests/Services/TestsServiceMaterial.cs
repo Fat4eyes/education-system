@@ -20,6 +20,7 @@ namespace EducationSystem.Tests.Services
         protected readonly Mock<IValidator<Material>> ValidatorMaterial = new Mock<IValidator<Material>>();
         protected readonly Mock<IRepository<DatabaseMaterial>> RepositoryMaterial = new Mock<IRepository<DatabaseMaterial>>();
         protected readonly Mock<IRepository<DatabaseMaterialFile>> RepositoryMaterialFile = new Mock<IRepository<DatabaseMaterialFile>>();
+        protected readonly Mock<IRepository<DatabaseMaterialAnchor>> RepositoryMaterialAnchor = new Mock<IRepository<DatabaseMaterialAnchor>>();
 
         public TestsServiceMaterial()
         {
@@ -29,7 +30,8 @@ namespace EducationSystem.Tests.Services
                 Logger.Object,
                 ValidatorMaterial.Object,
                 RepositoryMaterial.Object,
-                RepositoryMaterialFile.Object);
+                RepositoryMaterialFile.Object,
+                RepositoryMaterialAnchor.Object);
         }
 
         [Fact]

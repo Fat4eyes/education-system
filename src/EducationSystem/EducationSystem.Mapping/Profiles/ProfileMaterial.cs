@@ -21,7 +21,8 @@ namespace EducationSystem.Mapping.Profiles
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Files, o => o.Ignore())
                 .ForMember(d => d.OwnerId, o => o.Ignore())
-                .ForMember(d => d.Owner, o => o.Ignore());
+                .ForMember(d => d.Owner, o => o.Ignore())
+                .ForMember(d => d.Anchors, o => o.Ignore());
         }
     }
 }

@@ -21,6 +21,7 @@ namespace EducationSystem.Implementations.Services
         private readonly IValidator<Material> _validatorMaterial;
         private readonly IRepository<DatabaseMaterial> _repositoryMaterial;
         private readonly IRepository<DatabaseMaterialFile> _repositoryMaterialFile;
+        private readonly IRepository<DatabaseMaterialAnchor> _repositoryMaterialAnchor;
 
         public ServiceMaterial(
             IMapper mapper,
@@ -28,12 +29,14 @@ namespace EducationSystem.Implementations.Services
             ILogger<ServiceMaterial> logger,
             IValidator<Material> validatorMaterial,
             IRepository<DatabaseMaterial> repositoryMaterial,
-            IRepository<DatabaseMaterialFile> repositoryMaterialFile)
+            IRepository<DatabaseMaterialFile> repositoryMaterialFile,
+            IRepository<DatabaseMaterialAnchor> repositoryMaterialAnchor)
             : base(mapper, context, logger)
         {
             _validatorMaterial = validatorMaterial;
             _repositoryMaterial = repositoryMaterial;
             _repositoryMaterialFile = repositoryMaterialFile;
+            _repositoryMaterialAnchor = repositoryMaterialAnchor;
         }
 
         public async Task<PagedData<Material>> GetMaterialsAsync(FilterMaterial filter)
@@ -134,7 +137,12 @@ namespace EducationSystem.Implementations.Services
 
             model.Files = Mapper.Map<List<DatabaseMaterialFile>>(material.Files);
 
-            await _repositoryMaterialFile.AddAsync(model.Files, true);
+            if (model.Anchors.Any())
+                await _repositoryMaterialAnchor.RemoveAsync(model.Anchors, true);
+
+            model.Anchors = Mapper.Map<List<DatabaseMaterialAnchor>>(material.Anchors);
+
+            await _repositoryMaterialAnchor.AddAsync(model.Anchors, true);
         }
 
         public async Task<int> CreateMaterialAsync(Material material)

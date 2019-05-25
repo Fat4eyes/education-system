@@ -29,6 +29,9 @@ namespace EducationSystem.Implementations.Validators
             if (string.IsNullOrWhiteSpace(model.Name))
                 throw ExceptionHelper.CreatePublicException("Не указано название темы.");
 
+            if (model.Name.Length > 200)
+                throw ExceptionHelper.CreatePublicException("Название темы не может превышать 200 символов.");
+
             var discipline = await _repositoryDiscipline.FindFirstAsync(new DisciplinesById(model.DisciplineId)) ??
                 throw ExceptionHelper.CreatePublicException("Указанная дисциплина не существует.");
 

@@ -38,6 +38,9 @@ namespace EducationSystem.Implementations.Validators
             if (string.IsNullOrWhiteSpace(model.Name))
                 throw ExceptionHelper.CreatePublicException("Не указано название материала.");
 
+            if (model.Name.Length > 255)
+                throw ExceptionHelper.CreatePublicException("Название материала не может превышать 255 символов.");
+
             if (string.IsNullOrWhiteSpace(model.Template))
                 throw ExceptionHelper.CreatePublicException("Не указан шаблон материала.");
 
@@ -67,6 +70,18 @@ namespace EducationSystem.Implementations.Validators
 
             if (files.Count != ids.Length)
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют или недоступны.");
+
+            if (model.Anchors.IsEmpty())
+                return;
+
+            if (model.Anchors.Any(x => string.IsNullOrWhiteSpace(x.Token) || string.IsNullOrWhiteSpace(x.Name)))
+                throw ExceptionHelper.CreatePublicException("Один или несколько указанных якорей не заполнены.");
+
+            if (model.Anchors.Any(x =>  x.Token.Length > 255 || x.Name.Length > 255))
+                throw ExceptionHelper.CreatePublicException("Один или несколько указанных якорей заполнены некорректно.");
+
+            if (model.Anchors.GroupBy(x => x.Token).Any(x => x.Count() > 1))
+                throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся якоря.");
         }
     }
 }

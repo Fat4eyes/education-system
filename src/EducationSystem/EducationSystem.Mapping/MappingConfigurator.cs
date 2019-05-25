@@ -20,6 +20,7 @@ namespace EducationSystem.Mapping
             expression.AddProfile<ProfileRole>();
             expression.AddProfile<ProfileFile>();
             expression.AddProfile<ProfileCode>();
+            expression.AddProfile<ProfileMaterialAnchor>();
 
             expression.AllowNullCollections = true;
             expression.ForAllMaps(Configure);

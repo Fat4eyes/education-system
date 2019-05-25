@@ -37,6 +37,9 @@ namespace EducationSystem.Implementations.Validators
             if (string.IsNullOrWhiteSpace(model.Subject))
                 throw ExceptionHelper.CreatePublicException("Не указано название теста.");
 
+            if (model.Subject.Length > 200)
+                throw ExceptionHelper.CreatePublicException("Название теста не может превышать 200 символов.");
+
             if (model.TotalTime.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указано общее время теста.");
 

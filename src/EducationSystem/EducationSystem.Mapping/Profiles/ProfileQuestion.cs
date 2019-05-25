@@ -31,8 +31,10 @@ namespace EducationSystem.Mapping.Profiles
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Order, o => o.Ignore())
                 .ForMember(d => d.Theme, o => o.Ignore())
+                .ForMember(d => d.Image, o => o.Ignore())
                 .ForMember(d => d.Answers, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
+                .ForMember(d => d.Material, o => o.Ignore())
                 .ForMember(d => d.QuestionStudents, o => o.Ignore());
         }
     }

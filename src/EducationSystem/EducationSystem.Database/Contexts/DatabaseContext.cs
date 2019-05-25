@@ -25,6 +25,7 @@ namespace EducationSystem.Database.Contexts
         public DbSet<DatabaseStudyProfile> StudyProfiles { get; set; }
         public DbSet<DatabaseProgramData> ParametersSets { get; set; }
         public DbSet<DatabaseMaterialFile> MaterialFiles { get; set; }
+        public DbSet<DatabaseMaterialAnchor> MaterialAnchors { get; set; }
         public DbSet<DatabaseQuestionStudent> QuestionStudents { get; set; }
         public DbSet<DatabaseDisciplineLecturer> DisciplineLecturers { get; set; }
         public DbSet<DatabaseStudyProfileDiscipline> StudyProfileDisciplines { get; set; }
@@ -222,6 +223,12 @@ namespace EducationSystem.Database.Contexts
             builder
                 .Entity<DatabaseMaterial>()
                 .HasMany(x => x.Files)
+                .WithOne(x => x.Material)
+                .HasForeignKey(x => x.MaterialId);
+
+            builder
+                .Entity<DatabaseMaterial>()
+                .HasMany(x => x.Anchors)
                 .WithOne(x => x.Material)
                 .HasForeignKey(x => x.MaterialId);
         }

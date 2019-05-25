@@ -21,5 +21,8 @@ namespace EducationSystem.Database.Models
 
         public virtual List<DatabaseMaterialFile> Files { get; set; }
             = new List<DatabaseMaterialFile>();
+
+        public virtual List<DatabaseMaterialAnchor> Anchors { get; set; }
+            = new List<DatabaseMaterialAnchor>();
     }
 }
