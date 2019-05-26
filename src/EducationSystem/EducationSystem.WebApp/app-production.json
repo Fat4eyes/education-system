@@ -18,5 +18,6 @@
     "Audience": "Education-System-Audience",
     "SecretKey": "Education-System-Secret-Key"
   },
-  "CodeExecutionApiPath": "_"
+  "CodeExecutionApiPath": "_",
+  "CodeAnalysisApiPath": "_"
 }

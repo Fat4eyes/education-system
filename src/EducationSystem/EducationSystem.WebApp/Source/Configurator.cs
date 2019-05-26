@@ -35,6 +35,9 @@ namespace EducationSystem.WebApp.Source
 
             services.AddSpaStaticFiles(ConfigurationHelper.ConfigureSpaStaticFiles);
 
+            // Использовать при развертывании на реальном сервере.
+            // services.AddCodeExecutionSystem();
+
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(x => ConfigurationHelper.ConfigureJwtBearer(x, Configuration));

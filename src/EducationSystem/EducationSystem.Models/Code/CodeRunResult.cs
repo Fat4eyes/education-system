@@ -11,8 +11,21 @@ namespace EducationSystem.Models.Code
 
         public CodeRunStatus Status { get; set; }
 
-        public bool Success =>
-            Status == CodeRunStatus.Success &&
-            string.Equals(UserOutput, ExpectedOutput, StringComparison.InvariantCulture);
+        public bool Success => IsSuccess();
+
+        private bool IsSuccess()
+        {
+            bool IsSuccessStatus()
+            {
+                return Status == CodeRunStatus.Success;
+            }
+
+            bool IsSameOutput()
+            {
+                return string.Equals(UserOutput, ExpectedOutput, StringComparison.InvariantCulture);
+            }
+
+            return IsSuccessStatus() && IsSameOutput();
+        }
     }
 }
