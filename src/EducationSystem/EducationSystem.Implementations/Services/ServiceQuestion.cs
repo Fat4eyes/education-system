@@ -329,7 +329,8 @@ namespace EducationSystem.Implementations.Services
                 ? Mapper.Map<List<DatabaseQuestionMaterialAnchor>>(question.MaterialAnchors)
                 : null;
 
-            await _repositoryQuestionMaterialAnchor.UpdateAsync(model.MaterialAnchors, true);
+            if (model.MaterialAnchors.IsNotEmpty())
+                await _repositoryQuestionMaterialAnchor.UpdateAsync(model.MaterialAnchors, true);
         }
     }
 }
