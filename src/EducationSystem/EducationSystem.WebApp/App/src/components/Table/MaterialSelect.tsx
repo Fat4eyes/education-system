@@ -1,5 +1,5 @@
 import TableComponent from './TableComponent'
-import Material from '../../models/Material'
+import Material, {IMaterialAnchor} from '../../models/Material'
 import {ITableState} from './IHandleTable'
 import {IPagingOptions} from '../../models/PagedData'
 import IMaterialService from '../../services/MaterialService'
@@ -7,19 +7,48 @@ import {inject} from '../../infrastructure/di/inject'
 import {TNotifierProps, withNotifier} from '../../providers/NotificationProvider'
 import * as React from 'react'
 import {ChangeEvent} from 'react'
-import {Chip, createStyles, Grid, TextField, Theme, Typography, WithStyles, withStyles} from '@material-ui/core'
+import {
+  Chip,
+  createStyles,
+  FormControl,
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Theme,
+  Typography,
+  WithStyles,
+  withStyles
+} from '@material-ui/core'
 import RowHeader from './RowHeader'
 import {TablePagination} from '../core'
+import {SelectProps} from '@material-ui/core/Select'
 
 const styles = (theme: Theme) => createStyles({
   chipLabel: {
-    maxWidth: '50vw'
+    maxWidth: '50vw',
+    margin: 'auto'
+  },
+  chip: {
+    width: '100%'
+  },
+  selectMenu: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    '& div': {
+      padding: theme.spacing.unit,
+      margin: theme.spacing.unit
+    }
   }
 })
 
 interface IProps {
   selectedMaterial?: Material
   onSelectMaterial: (material?: Material) => void
+  selectedAnchors: Array<IMaterialAnchor>
+  handleSelectAnchors: ({target: {name, value}}: ChangeEvent<HTMLInputElement> | any) => void
 }
 
 type TProps = TNotifierProps & IProps & WithStyles<typeof styles>
@@ -80,6 +109,18 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
     let {selectedMaterial} = this.props
     return selectedMaterial && selectedMaterial.Id === material.Id
   }
+  
+  renderSelectValues = (ids: SelectProps['value']): React.ReactNode => {
+    if (!this.props.selectedMaterial) return
+    
+    const anchors = this.props.selectedMaterial
+      .Anchors.filter((anchor: IMaterialAnchor) => (ids as Array<number>).includes(anchor.Id as number))
+
+    return <>
+      {anchors.map((anchor: IMaterialAnchor) => <Chip key={anchor.Id} label={anchor.Name}/>)}
+    </>
+  }
+
 
   render(): React.ReactNode {
     const {selectedMaterial, onSelectMaterial, classes} = this.props
@@ -87,16 +128,43 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
       <Grid item xs={12}>
         {
           selectedMaterial &&
-          <Chip
-            classes={{label: classes.chipLabel}}
-            label={<Grid container wrap='nowrap' zeroMinWidth>
-              <Typography noWrap variant='subtitle1'>
-                {selectedMaterial.Name}
-              </Typography>
-            </Grid>}
-            onDelete={() => onSelectMaterial()}
-            variant='outlined'
-          />
+          <Grid container>
+            <Chip
+              classes={{label: classes.chipLabel}}
+              className={classes.chip}
+              label={<Grid item xs container wrap='nowrap' zeroMinWidth>
+                <Typography noWrap variant='subtitle1'>
+                  {selectedMaterial.Name}
+                </Typography>
+              </Grid>}
+              onDelete={() => onSelectMaterial()}
+              variant='outlined'
+            />
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor='select-multiple-chip'>Якоря</InputLabel>
+                <Select
+                  multiple
+                  name='Anchors'
+                  value={this.props.selectedAnchors.map(a => a.Id)}
+                  onChange={this.props.handleSelectAnchors}
+                  input={
+                    <Input id='select-multiple-chip'/>
+                  }
+                  renderValue={this.renderSelectValues}
+                  classes={{
+                    selectMenu: classes.selectMenu
+                  }}
+                >
+                  {selectedMaterial.Anchors.map((anchor: IMaterialAnchor) =>
+                    <MenuItem key={anchor.Id} value={anchor.Id}>
+                      {anchor.Name}
+                    </MenuItem>
+                  )}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
         }
         {
           !selectedMaterial &&

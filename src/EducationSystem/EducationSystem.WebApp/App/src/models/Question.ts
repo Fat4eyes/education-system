@@ -3,7 +3,7 @@ import {QuestionComplexityType, QuestionType} from '../common/enums'
 import Answer from './Answer'
 import Program from './Program'
 import ImageFile from './ImageFile'
-import Material from './Material'
+import Material, {IMaterialAnchor} from './Material'
 import {IPagingOptions} from './PagedData'
 
 export default class Question extends Model {
@@ -20,6 +20,7 @@ export default class Question extends Model {
   public Hash: string = ''
   public Save?: boolean
   public Right?: boolean
+  public MaterialAnchors: Array<IMaterialAnchor> = []
   
   constructor(themeId?: number){
     super()

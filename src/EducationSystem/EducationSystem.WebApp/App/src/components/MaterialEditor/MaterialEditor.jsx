@@ -15,6 +15,7 @@ import Scrollbar from '../stuff/Scrollbar'
 import {getAnchor, setAnchor} from './MaterialEditorTools'
 import {withNotifier} from '../../providers/NotificationProvider'
 import './anchor.less'
+import '../stuff/CommonStyles.less'
 import {Guid} from '../../helpers/guid'
 import EditorToolbar from './EditorToolbar'
 

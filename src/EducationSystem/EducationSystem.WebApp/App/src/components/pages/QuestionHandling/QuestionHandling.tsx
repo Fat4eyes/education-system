@@ -24,7 +24,7 @@ import FileUpload from '../../stuff/FileUpload'
 import IFileService from '../../../services/FileService'
 import FileModel from '../../../models/FileModel'
 import MaterialSelect from '../../Table/MaterialSelect'
-import Material from '../../../models/Material'
+import Material, {IMaterialAnchor} from '../../../models/Material'
 import Block from '../../Blocks/Block'
 import INotificationService from '../../../services/NotificationService'
 import {MtBlock} from '../../stuff/Margin'
@@ -42,7 +42,8 @@ type TProps = WithStyles<typeof QuestionHandlingStyle> & IProps
 
 interface IState {
   Model: Question,
-  IsMaterialSelectOpen: boolean
+  IsMaterialSelectOpen: boolean,
+  SelectedAnchors: Array<number>
 }
 
 class QuestionHandling extends Component<TProps, IState> {
@@ -70,6 +71,7 @@ class QuestionHandling extends Component<TProps, IState> {
       this.setState({
         Model: {
           Answers: [],
+          MaterialAnchors: [],
           ...data
         }
       })
@@ -142,13 +144,25 @@ class QuestionHandling extends Component<TProps, IState> {
     this.setState(state => ({
       Model: {
         ...state.Model,
-        Material: material
+        Material: material,
+        MaterialAnchors: !material ? [] : state.Model.MaterialAnchors
       }
     }))
   }
   
   handleMaterialSelectOpen = () => this.setState(state => ({IsMaterialSelectOpen: !state.IsMaterialSelectOpen}))
 
+  handleSelectAnchors = ({target: {value}}: ChangeEvent<HTMLInputElement> | any) => {
+    this.setState(state => ({
+      Model: {
+        ...state.Model,
+        MaterialAnchors: state.Model.Material!
+          .Anchors.filter((anchor: IMaterialAnchor) => (value as Array<number>).includes(anchor.Id))
+      },
+      SelectedAnchors: [...value]
+    }))
+  }
+  
   render(): React.ReactNode {
     let {classes} = this.props
 
@@ -238,7 +252,12 @@ class QuestionHandling extends Component<TProps, IState> {
             <MtBlock value={2}/>
             <Grid item xs={12}>
               <Collapse timeout={500} in={this.state.IsMaterialSelectOpen}>
-                <MaterialSelect onSelectMaterial={this.handleMaterialSelect} selectedMaterial={this.state.Model.Material}/>
+                <MaterialSelect 
+                  onSelectMaterial={this.handleMaterialSelect} 
+                  selectedMaterial={this.state.Model.Material}
+                  handleSelectAnchors={this.handleSelectAnchors}
+                  selectedAnchors={this.state.Model.MaterialAnchors}
+                />
               </Collapse>
             </Grid>
           </Grid>
