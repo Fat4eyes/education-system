@@ -9,6 +9,7 @@
 [POST]   [*]          Api/Token/Check                   -
 
 [POST]   [*]          Api/Code/Execute                  CodeExecutionResult
+[POST]   [*]          Api/Code/Analyze                  CodeAnalysisResult
 
 [GET]    [D]          Api/Documents                     PagedData<Document>
 [GET]    [*]          Api/Documents/{Id}                Document
