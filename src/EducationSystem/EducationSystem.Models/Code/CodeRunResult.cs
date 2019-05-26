@@ -22,7 +22,7 @@ namespace EducationSystem.Models.Code
 
             bool IsSameOutput()
             {
-                return string.Equals(UserOutput, ExpectedOutput, StringComparison.InvariantCulture);
+                return string.Equals(UserOutput.Trim(), ExpectedOutput.Trim(), StringComparison.InvariantCulture);
             }
 
             return IsSuccessStatus() && IsSameOutput();
