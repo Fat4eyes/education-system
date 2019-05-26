@@ -6,7 +6,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRightOutlined'
 import {If} from '../core'
 import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
-import withWidth, {isWidthDown} from '@material-ui/core/withWidth'
+import withWidth from '@material-ui/core/withWidth'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
 
 const TablePagination = (props) => {
@@ -16,11 +16,8 @@ const TablePagination = (props) => {
     onPageChange,
     onCountPerPageChange,
     showChangeCountPerPageBlock,
-    classes,
-    width
+    classes
   } = props
-
-  let isXs = isWidthDown('xs', width)
 
   const leftPage = page > 0 ? page - 1 : 0
   const PreviousPage = () => (

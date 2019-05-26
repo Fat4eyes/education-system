@@ -1,41 +1,44 @@
-import React, {Component, useState} from 'react'
+import React, {Component} from 'react'
 import Editor from 'draft-js-plugins-editor'
 import MaterialEditorStyles from './MaterialEditorStyles'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {AtomicBlockUtils, EditorState, Modifier, RichUtils} from 'draft-js'
+import {AtomicBlockUtils, convertFromRaw, convertToRaw, EditorState, Modifier, RichUtils} from 'draft-js'
 import {Paper} from '@material-ui/core'
 import withWidth from '@material-ui/core/withWidth'
 import Grid from '@material-ui/core/Grid'
-import {StaticToolbar, staticToolbarPlugin} from './StaticToolbar/StaticToolbar'
-import {stateToHTML} from 'draft-js-export-html'
-import {stateFromHTML} from 'draft-js-import-html'
+import {staticToolbarPlugin} from './StaticToolbar/StaticToolbar'
 import {AlignmentTool, plugins as imagePlugins} from './Image/Image'
-import {FileType} from '../../common/enums'
-import FileUpload from '../stuff/FileUpload'
 import 'draft-js-alignment-plugin/lib/plugin.css'
 import 'draft-js-focus-plugin/lib/plugin.css'
 import {MtBlock} from '../stuff/Margin'
 import Scrollbar from '../stuff/Scrollbar'
-
-const EmptyHtmlString = '<p><br></p>'
+import {getAnchor, setAnchor} from './MaterialEditorTools'
+import {withNotifier} from '../../providers/NotificationProvider'
+import './anchor.less'
+import {Guid} from '../../helpers/guid'
+import EditorToolbar from './EditorToolbar'
 
 @withWidth()
 @withStyles(MaterialEditorStyles)
+@withNotifier
 class MaterialEditor extends Component {
   constructor(props) {
     super(props)
     this.state = {
       editorState: !this.props.import
         ? EditorState.createEmpty()
-        : EditorState.createWithContent(stateFromHTML(this.props.import))
+        : EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.import))),
+      isAnchorMenuOpen: false,
+      anchorName: ''
     }
-    this.toolbarRef = React.createRef()
   }
 
-  handleChange = editorState => this.setState({editorState}, () => {
+  handleChange = editorState => this.setState({
+    editorState
+  }, () => {
     if (this.props.export) {
-      let html = stateToHTML(this.state.editorState.getCurrentContent())
-      this.props.export(html === EmptyHtmlString ? '' : html)
+      let json = JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+      this.props.export(json)
     }
   })
   handleTab = e => {
@@ -72,6 +75,50 @@ class MaterialEditor extends Component {
     this.setState({editorState: AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')})
   }
 
+  handleAnchor = {
+    open: () => this.setState({isAnchorMenuOpen: true}),
+    close: () => this.setState({isAnchorMenuOpen: false}),
+    change: ({target: {value}}) => this.setState({anchorName: value}),
+    save: () => {
+      const anchor = {
+        Name: Guid.create(),//this.state.anchorName,
+        Token: getAnchor(this.state.editorState)
+      }
+
+      if (!anchor.Name.length) this.props.notifier.error('Введите название якоря')
+      else {
+        this.props.setAnchor && this.props.setAnchor(anchor)
+        this.handleAnchor.close()
+      }
+    }
+  }
+
+  handleSetAnchor = anchorName => {
+    if (!anchorName.length)
+      return this.props.notifier.error('Введите название якоря')
+
+    const anchor = {
+      Name: anchorName,
+      Token: getAnchor(this.state.editorState)
+    }
+
+    this.props.setAnchor && this.props.setAnchor(anchor)
+    
+    return true
+  }
+
+  handleRemoveAnchor = token => {
+    this.props.removeAnchor && this.props.removeAnchor(token)
+  }
+  
+  componentDidMount() {
+    setAnchor(this.props.materialAnchors, this.props.removeAnchor)
+  }
+
+  componentDidUpdate(oldProps) {
+    setAnchor(this.props.materialAnchors, this.props.removeAnchor)
+  }
+
   render() {
     const {classes} = this.props
     const plugins = [staticToolbarPlugin, ...imagePlugins]
@@ -79,22 +126,20 @@ class MaterialEditor extends Component {
     return <>
       <Grid item xs={12}>
         <Paper className={classes.toolbarPaper}>
-          <Grid container justify='center' alignItems='center'>
-            <Grid item>
-              <StaticToolbar/>
-            </Grid>
-            <Grid item xs>
-              <FileUpload type={FileType.Image} onLoad={this.handleLoadImage}/>
-            </Grid>
-          </Grid>
+          <EditorToolbar
+            editorState={this.state.editorState}
+            onLoadImage={this.handleLoadImage}
+            onSetAnchor={this.handleSetAnchor}
+            onRemove={this.handleRemoveAnchor}
+          />
         </Paper>
       </Grid>
       <MtBlock/>
       <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
         <Paper className={classes.root} onClick={() => this.editor.focus()}>
+          <AlignmentTool/>
           <Scrollbar className={classes.scrollbar}>
             <div className={classes.editor}>
-              <AlignmentTool/>
               <Editor
                 onTab={this.handleTab}
                 editorState={this.state.editorState}
@@ -113,7 +158,7 @@ class MaterialEditor extends Component {
 export default MaterialEditor
 
 export const ReadOnlyEditor = ({html}) => {
-  const createState = html => EditorState.createWithContent(stateFromHTML(html))
+  const createState = html => EditorState.createWithContent(convertFromRaw(JSON.parse(html)))
   const plugins = [staticToolbarPlugin, ...imagePlugins]
   return <Editor
     editorState={createState(html)}

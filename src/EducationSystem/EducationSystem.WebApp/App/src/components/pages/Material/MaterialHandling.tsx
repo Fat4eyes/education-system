@@ -5,7 +5,7 @@ import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import MaterialStyles from './MaterialStyles'
 import IFileService from '../../../services/FileService'
 import {inject} from '../../../infrastructure/di/inject'
-import Material from '../../../models/Material'
+import Material, {IMaterialAnchor} from '../../../models/Material'
 import DocumentFile from '../../../models/DocumentFile'
 import FileUpload, {FileInput} from '../../stuff/FileUpload'
 import {FileType} from '../../../common/enums'
@@ -177,6 +177,21 @@ class MaterialHandling extends Component<TProps, IState> {
               <MaterialEditor
                 export={(html: string) => this.handleModel({target: {name: 'Template', value: html}})}
                 import={this.state.Model.Template}
+                setAnchor={(anchor: IMaterialAnchor) => this.setState(state => ({
+                  Model: {
+                    ...state.Model,
+                    Anchors: [...state.Model.Anchors, anchor]
+                  }
+                }))}
+                removeAnchor={(token: string) => {
+                  return this.setState(state => ({
+                    Model: {
+                      ...state.Model,
+                      Anchors: [...state.Model.Anchors.filter(a => a.Token !== token)]
+                    }
+                  }))
+                }}
+                materialAnchors={this.state.Model.Anchors}
               />
               }
             </Grid>
