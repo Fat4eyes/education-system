@@ -4,8 +4,10 @@ using EducationSystem.Enums;
 using EducationSystem.Mapping.Converts;
 using EducationSystem.Models.Code;
 using EducationSystem.Models.Rest;
-using ExecutionResult = CodeExecutionSystem.Contracts.Data.CodeExecutionResult;
+using ExternalCodeExecutionResult = CodeExecutionSystem.Contracts.Data.CodeExecutionResult;
+using ExternalCodeAnalysisResult = CodeExecutionSystem.Contracts.Data.CodeAnalysisResult;
 using CodeExecutionResult = EducationSystem.Models.Code.CodeExecutionResult;
+using CodeAnalysisResult = EducationSystem.Models.Code.CodeAnalysisResult;
 
 namespace EducationSystem.Mapping.Profiles
 {
@@ -32,11 +34,20 @@ namespace EducationSystem.Mapping.Profiles
 
             // Ответ.
 
-            CreateMap<ExecutionResult, CodeExecutionResult>()
+            CreateMap<ExternalCodeExecutionResult, CodeExecutionResult>()
                 .ForMember(d => d.Errors, o => o.MapFrom(s => s.CompilationErrors));
 
             CreateMap<TestRunResult, CodeRunResult>()
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.ExecutionResult));
+
+            CreateMap<ExternalCodeAnalysisResult, CodeAnalysisResult>()
+                .ForMember(d => d.Success, o => o.MapFrom(s => s.IsSuccessful))
+                .ForMember(d => d.Messages, o => o.MapFrom(s => s.AnalysisResults));
+
+            CreateMap<AnalysisResult, CodeAnalysisMessage>()
+                .ForMember(d => d.Text, o => o.MapFrom(s => s.Message))
+                .ForMember(d => d.IsError, o => o.MapFrom(s => s.Level == Level.Error))
+                .ForMember(d => d.IsWarning, o => o.MapFrom(s => s.Level == Level.Warning));
         }
     }
 }
