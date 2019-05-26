@@ -36,6 +36,7 @@ namespace EducationSystem.Dependencies
             collection.AddScoped<IContext, Context>();
 
             collection.AddTransient<ICodeExecutor, CodeExecutor>();
+            collection.AddTransient<ICodeAnalyzer, CodeAnalyzer>();
             collection.AddTransient<IHashComputer, HashComputer>();
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IQuestionValidatorFactory, QuestionValidatorFactory>();
