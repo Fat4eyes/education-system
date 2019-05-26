@@ -35,6 +35,9 @@ namespace EducationSystem.Models.Rest
 
         public bool? Right { get; set; }
 
+        public List<MaterialAnchor> MaterialAnchors { get; set; }
+            = new List<MaterialAnchor>();
+
         public Question SetTestId(int testId)
         {
             TestId = testId;

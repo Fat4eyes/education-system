@@ -106,6 +106,7 @@ namespace EducationSystem.Dependencies
             collection.AddTransient<IRepository<DatabaseMaterialFile>, Repository<DatabaseMaterialFile>>();
             collection.AddTransient<IRepository<DatabaseMaterialAnchor>, Repository<DatabaseMaterialAnchor>>();
             collection.AddTransient<IRepository<DatabaseQuestionStudent>, Repository<DatabaseQuestionStudent>>();
+            collection.AddTransient<IRepository<DatabaseQuestionMaterialAnchor>, Repository<DatabaseQuestionMaterialAnchor>>();
         }
 
         private static void RegisterDatabases(IServiceCollection collection, IConfiguration configuration)

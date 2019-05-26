@@ -11,6 +11,7 @@ using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Files;
+using EducationSystem.Specifications.MaterialAnchors;
 using EducationSystem.Specifications.Materials;
 using EducationSystem.Specifications.Themes;
 
@@ -20,22 +21,26 @@ namespace EducationSystem.Implementations.Validators
     {
         private readonly IContext _context;
         private readonly IHelperFile _helperFile;
+
         private readonly IRepository<DatabaseFile> _repositoryFile;
         private readonly IRepository<DatabaseTheme> _repositoryTheme;
         private readonly IRepository<DatabaseMaterial> _repositoryMaterial;
+        private readonly IRepository<DatabaseMaterialAnchor> _repositoryMaterialAnchor;
 
         public ValidatorQuestion(
             IContext context,
             IHelperFile helperFile,
             IRepository<DatabaseFile> repositoryFile,
             IRepository<DatabaseTheme> repositoryTheme,
-            IRepository<DatabaseMaterial> repositoryMaterial)
+            IRepository<DatabaseMaterial> repositoryMaterial,
+            IRepository<DatabaseMaterialAnchor> repositoryMaterialAnchor)
         {
             _context = context;
             _helperFile = helperFile;
             _repositoryFile = repositoryFile;
             _repositoryTheme = repositoryTheme;
             _repositoryMaterial = repositoryMaterial;
+            _repositoryMaterialAnchor = repositoryMaterialAnchor;
         }
 
         public async Task ValidateAsync(Question model)
@@ -91,6 +96,20 @@ namespace EducationSystem.Implementations.Validators
 
                 if (new MaterialsByOwnerId(user.Id).IsSatisfiedBy(material) == false)
                     throw ExceptionHelper.CreatePublicException("Указанный материал недоступен.");
+
+                if (model.MaterialAnchors.IsNotEmpty())
+                {
+                    var ids = model.MaterialAnchors
+                        .Select(x => x.Id)
+                        .ToArray();
+
+                    var specification =
+                        new MaterialAnchorsByIds(ids) &
+                        new MaterialAnchorsByMaterialId(material.Id);
+
+                    if ((await _repositoryMaterialAnchor.FindAllAsync(specification)).Count != ids.Length)
+                        throw ExceptionHelper.CreatePublicException("Один или несколько выбранных якорей не существуют или недоступны.");
+                }
             }
 
             ValidateByQuestionType(model);

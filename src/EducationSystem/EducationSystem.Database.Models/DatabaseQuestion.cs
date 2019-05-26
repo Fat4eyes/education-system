@@ -48,5 +48,8 @@ namespace EducationSystem.Database.Models
 
         public virtual List<DatabaseQuestionStudent> QuestionStudents { get; set; }
             = new List<DatabaseQuestionStudent>();
+
+        public virtual List<DatabaseQuestionMaterialAnchor> MaterialAnchors { get; set; }
+            = new List<DatabaseQuestionMaterialAnchor>();
     }
 }

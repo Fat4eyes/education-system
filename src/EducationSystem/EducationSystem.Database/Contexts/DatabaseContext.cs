@@ -29,6 +29,7 @@ namespace EducationSystem.Database.Contexts
         public DbSet<DatabaseQuestionStudent> QuestionStudents { get; set; }
         public DbSet<DatabaseDisciplineLecturer> DisciplineLecturers { get; set; }
         public DbSet<DatabaseStudyProfileDiscipline> StudyProfileDisciplines { get; set; }
+        public DbSet<DatabaseQuestionMaterialAnchor> QuestionMaterialAnchors { get; set; }
 
         public DatabaseContext(DbContextOptions options) : base(options)
         {
@@ -175,6 +176,12 @@ namespace EducationSystem.Database.Contexts
             builder
                 .Entity<DatabaseQuestion>()
                 .HasMany(x => x.QuestionStudents)
+                .WithOne(x => x.Question)
+                .HasForeignKey(x => x.QuestionId);
+
+            builder
+                .Entity<DatabaseQuestion>()
+                .HasMany(x => x.MaterialAnchors)
                 .WithOne(x => x.Question)
                 .HasForeignKey(x => x.QuestionId);
         }

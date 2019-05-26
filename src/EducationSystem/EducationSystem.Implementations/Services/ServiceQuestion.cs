@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Enums;
+using EducationSystem.Extensions;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Factories;
@@ -30,6 +31,7 @@ namespace EducationSystem.Implementations.Services
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
         private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
         private readonly IRepository<DatabaseProgramData> _repositoryProgramData;
+        private readonly IRepository<DatabaseQuestionMaterialAnchor> _repositoryQuestionMaterialAnchor;
         private readonly IQuestionValidatorFactory _questionValidatorFactory;
 
         public ServiceQuestion(
@@ -42,7 +44,8 @@ namespace EducationSystem.Implementations.Services
             IRepository<DatabaseAnswer> repositoryAnswer,
             IRepository<DatabaseProgram> repositoryProgram,
             IRepository<DatabaseQuestion> repositoryQuestion,
-            IRepository<DatabaseProgramData> repositoryProgramData,
+            IRepository<DatabaseProgramData> repositoryProgramData, 
+            IRepository<DatabaseQuestionMaterialAnchor> repositoryQuestionMaterialAnchor,
             IQuestionValidatorFactory questionValidatorFactory)
             : base(mapper, context, logger)
         {
@@ -53,6 +56,7 @@ namespace EducationSystem.Implementations.Services
             _repositoryProgram = repositoryProgram;
             _repositoryQuestion = repositoryQuestion;
             _repositoryProgramData = repositoryProgramData;
+            _repositoryQuestionMaterialAnchor = repositoryQuestionMaterialAnchor;
             _questionValidatorFactory = questionValidatorFactory;
         }
 
@@ -154,6 +158,8 @@ namespace EducationSystem.Implementations.Services
 
             model.Order = int.MaxValue;
 
+            await ProcessMaterialAnchorsAsync(model, question);
+
             switch (question.Type)
             {
                 case QuestionType.OpenedOneString:
@@ -222,6 +228,8 @@ namespace EducationSystem.Implementations.Services
             model.Answers = null;
 
             await _repositoryQuestion.UpdateAsync(model, true);
+
+            await ProcessMaterialAnchorsAsync(model, question);
 
             switch (question.Type)
             {
@@ -310,6 +318,18 @@ namespace EducationSystem.Implementations.Services
             await _repositoryQuestion.UpdateAsync(model, true);
 
             return result;
+        }
+
+        private async Task ProcessMaterialAnchorsAsync(DatabaseQuestion model, Question question)
+        {
+            if (model.MaterialAnchors.Any())
+                await _repositoryQuestionMaterialAnchor.RemoveAsync(model.MaterialAnchors, true);
+
+            model.MaterialAnchors = question.Material != null && question.MaterialAnchors.IsNotEmpty()
+                ? Mapper.Map<List<DatabaseQuestionMaterialAnchor>>(question.MaterialAnchors)
+                : null;
+
+            await _repositoryQuestionMaterialAnchor.UpdateAsync(model.MaterialAnchors, true);
         }
     }
 }

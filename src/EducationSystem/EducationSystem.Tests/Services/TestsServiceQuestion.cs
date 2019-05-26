@@ -24,6 +24,8 @@ namespace EducationSystem.Tests.Services
         protected readonly Mock<IRepository<DatabaseProgram>> RepositoryProgram = new Mock<IRepository<DatabaseProgram>>();
         protected readonly Mock<IRepository<DatabaseQuestion>> RepositoryQuestion = new Mock<IRepository<DatabaseQuestion>>();
         protected readonly Mock<IRepository<DatabaseProgramData>> RepositoryProgramData = new Mock<IRepository<DatabaseProgramData>>();
+        protected readonly Mock<IRepository<DatabaseQuestionMaterialAnchor>> RepositoryQuestionMaterialAnchor = new Mock<IRepository<DatabaseQuestionMaterialAnchor>>();
+
         protected readonly Mock<IQuestionValidatorFactory> QuestionValidatorFactory = new Mock<IQuestionValidatorFactory>();
 
         public TestsServiceQuestion()
@@ -39,6 +41,7 @@ namespace EducationSystem.Tests.Services
                 RepositoryProgram.Object,
                 RepositoryQuestion.Object,
                 RepositoryProgramData.Object,
+                RepositoryQuestionMaterialAnchor.Object,
                 QuestionValidatorFactory.Object);
         }
 

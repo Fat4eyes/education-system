@@ -14,6 +14,12 @@ namespace EducationSystem.Mapping.Profiles
                 .ForMember(d => d.Id, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())
                 .ForMember(d => d.MaterialId, o => o.Ignore());
+
+            CreateMap<MaterialAnchor, DatabaseQuestionMaterialAnchor>()
+                .ForMember(d => d.Id, o => o.Ignore())
+                .ForMember(d => d.Question, o => o.Ignore())
+                .ForMember(d => d.QuestionId, o => o.Ignore())
+                .ForMember(d => d.MaterialAnchorId, o => o.MapFrom(s => s.Id));
         }
     }
 }

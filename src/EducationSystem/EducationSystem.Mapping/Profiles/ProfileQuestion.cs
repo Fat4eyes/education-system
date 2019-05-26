@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Models.Rest;
 using EducationSystem.Resolvers;
@@ -12,6 +13,7 @@ namespace EducationSystem.Mapping.Profiles
             CreateMap<DatabaseQuestion, Question>()
                 .ForMember(d => d.Answers, o => o.MapFrom<ResolverQuestionAnswers>())
                 .ForMember(d => d.Hash, o => o.MapFrom<ResolverQuestionHash>())
+                .ForMember(d => d.MaterialAnchors, o => o.MapFrom(s => s.MaterialAnchors.Select(x => x.MaterialAnchor)))
                 .ForMember(d => d.TestId, o => o.Ignore())
                 .ForMember(d => d.Right, o => o.Ignore());
 
@@ -21,6 +23,7 @@ namespace EducationSystem.Mapping.Profiles
                 .ForMember(d => d.Theme, o => o.Ignore())
                 .ForMember(d => d.Image, o => o.Ignore())
                 .ForMember(d => d.Answers, o => o.Ignore())
+                .ForMember(d => d.MaterialAnchors, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())
                 .ForMember(d => d.QuestionStudents, o => o.Ignore())
@@ -33,6 +36,7 @@ namespace EducationSystem.Mapping.Profiles
                 .ForMember(d => d.Theme, o => o.Ignore())
                 .ForMember(d => d.Image, o => o.Ignore())
                 .ForMember(d => d.Answers, o => o.Ignore())
+                .ForMember(d => d.MaterialAnchors, o => o.Ignore())
                 .ForMember(d => d.Program, o => o.Ignore())
                 .ForMember(d => d.Material, o => o.Ignore())
                 .ForMember(d => d.QuestionStudents, o => o.Ignore());
