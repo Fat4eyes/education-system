@@ -78,7 +78,10 @@ namespace EducationSystem.Implementations.Validators
                 throw ExceptionHelper.CreatePublicException("Один или несколько указанных якорей не заполнены.");
 
             if (model.Anchors.Any(x =>  x.Token.Length > 255 || x.Name.Length > 255))
-                throw ExceptionHelper.CreatePublicException("Один или несколько указанных якорей заполнены некорректно.");
+                throw ExceptionHelper.CreatePublicException(
+                    "Один или несколько указанных якорей заполнены некорректно. " +
+                    "Максимальная длина токена: 255 символов. " +
+                    "Максимальная длина названия: 255 символов.");
 
             if (model.Anchors.GroupBy(x => x.Token).Any(x => x.Count() > 1))
                 throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся якоря.");

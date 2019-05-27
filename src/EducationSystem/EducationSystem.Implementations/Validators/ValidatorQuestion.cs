@@ -55,10 +55,12 @@ namespace EducationSystem.Implementations.Validators
                 throw ExceptionHelper.CreatePublicException("Не указано время ответа на вопрос.");
 
             // Секунды.
-            // От 1 до 3600 секунд.
-            // От 1 секунды до 1 часа.
-            if (model.Time.Value < 1 || model.Time.Value > 60 * 60)
-                throw ExceptionHelper.CreatePublicException("Указано некорректное время ответа на вопрос.");
+            // От 10 до 3600 секунд.
+            // От 10 секунды до 1 часа.
+            if (model.Time.Value < 5 || model.Time.Value > 60 * 60)
+                throw ExceptionHelper.CreatePublicException(
+                    "Указано некорректное время ответа на вопрос. " +
+                    "Минимальное: 10 секунд. Максималньое: 1 час.");
 
             if (model.Type.HasValue == false)
                 throw ExceptionHelper.CreatePublicException("Не указан тип вопроса.");
@@ -132,7 +134,8 @@ namespace EducationSystem.Implementations.Validators
                 // От 1 до 60 секунд.
                 if (question.Program.TimeLimit.Value < 1 || question.Program.TimeLimit.Value > 60)
                     throw ExceptionHelper.CreatePublicException(
-                        "Для программы указано некорректное ограничение по времени.");
+                        "Для программы указано некорректное ограничение по времени. " +
+                        "Минимальное: 1 секунда. Максимальное: 60 секунд.");
 
                 if (question.Program.MemoryLimit.HasValue == false)
                     throw ExceptionHelper.CreatePublicException("Для программы не указано ограничение по памяти.");
@@ -140,7 +143,10 @@ namespace EducationSystem.Implementations.Validators
                 // Килобайты.
                 // От 5 до 10 мегабайтов.
                 if (question.Program.MemoryLimit.Value < 5120 || question.Program.MemoryLimit.Value > 10240)
-                    throw ExceptionHelper.CreatePublicException("Для программы указано некорректное ограничение по памяти.");
+                    throw ExceptionHelper.CreatePublicException(
+                        "Для программы указано некорректное ограничение по памяти. " +
+                        "Минимальное: 5120 килобайтов (5 мегабайтов). " +
+                        "Максимальное: 10240 килобайтов (10 мегабайтов).");
 
                 if (question.Program.LanguageType.HasValue == false)
                     throw ExceptionHelper.CreatePublicException("Для программы не указан язык программирования.");
