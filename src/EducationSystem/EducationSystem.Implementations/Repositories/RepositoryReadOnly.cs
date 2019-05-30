@@ -40,5 +40,15 @@ namespace EducationSystem.Implementations.Repositories
         {
             return Entities.FirstOrDefaultAsync(specification.ToExpression());
         }
+
+        public int GetCount(ISpecification<TEntity> specification)
+        {
+            return Entities.Count(specification.ToExpression());
+        }
+
+        public Task<int> GetCountAsync(ISpecification<TEntity> specification)
+        {
+            return Entities.CountAsync(specification.ToExpression());
+        }
     }
 }

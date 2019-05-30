@@ -13,5 +13,9 @@ namespace EducationSystem.Interfaces.Repositories
         Task<(int Count, List<TEntity> Items)> FindPaginatedAsync(ISpecification<TEntity> specification, Filter filter);
 
         Task<TEntity> FindFirstAsync(ISpecification<TEntity> specification);
+
+        int GetCount(ISpecification<TEntity> specification);
+
+        Task<int> GetCountAsync(ISpecification<TEntity> specification);
     }
 }

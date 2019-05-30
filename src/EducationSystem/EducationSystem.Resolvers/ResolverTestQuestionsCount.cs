@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Questions;
 
@@ -9,36 +9,35 @@ namespace EducationSystem.Resolvers
 {
     public class ResolverTestQuestionsCount : Resolver, IValueResolver<DatabaseTest, Test, int?>
     {
-        public ResolverTestQuestionsCount(IContext context) : base(context) { }
+        private readonly IRepository<DatabaseQuestion> _repositoryQuestion;
+
+        public ResolverTestQuestionsCount(IContext context, IRepository<DatabaseQuestion> repositoryQuestion) : base(context)
+        {
+            _repositoryQuestion = repositoryQuestion;
+        }
 
         public int? Resolve(DatabaseTest source, Test destination, int? member, ResolutionContext context)
         {
             if (CurrentUser.IsAdmin())
-            {
-                return source.TestThemes
-                    .Select(x => x.Theme)
-                    .SelectMany(x => x.Questions)
-                    .Count();
-            }
+                return _repositoryQuestion.GetCount(new QuestionsByTestId(source.Id));
             
             if (CurrentUser.IsLecturer())
             {
-                return source.TestThemes
-                    .Select(x => x.Theme)
-                    .SelectMany(x => x.Questions)
-                    .Count(new QuestionsByLecturerId(CurrentUser.Id));
+                var specification =
+                    new QuestionsByTestId(source.Id) &
+                    new QuestionsByLecturerId(CurrentUser.Id);
+
+                return _repositoryQuestion.GetCount(specification);
             }
 
             if (CurrentUser.IsStudent())
             {
                 var specification =
+                    new QuestionsByTestId(source.Id) &
                     new QuestionsForStudents() &
                     new QuestionsByStudentId(CurrentUser.Id);
 
-                return source.TestThemes
-                    .Select(x => x.Theme)
-                    .SelectMany(x => x.Questions)
-                    .Count(specification);
+                return _repositoryQuestion.GetCount(specification);
             }
 
             return null;

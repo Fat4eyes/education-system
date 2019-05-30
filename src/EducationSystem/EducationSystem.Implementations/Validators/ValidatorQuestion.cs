@@ -109,7 +109,7 @@ namespace EducationSystem.Implementations.Validators
                         new MaterialAnchorsByIds(ids) &
                         new MaterialAnchorsByMaterialId(material.Id);
 
-                    if ((await _repositoryMaterialAnchor.FindAllAsync(specification)).Count != ids.Length)
+                    if (await _repositoryMaterialAnchor.GetCountAsync(specification) != ids.Length)
                         throw ExceptionHelper.CreatePublicException("Один или несколько выбранных якорей не существуют или недоступны.");
                 }
             }

@@ -17,6 +17,7 @@ namespace EducationSystem.Implementations.Repositories
         public override Task<List<DatabaseQuestion>> FindAllAsync(ISpecification<DatabaseQuestion> specification)
         {
             return Entities
+                .Include(x => x.Answers)
                 .Where(specification.ToExpression())
                 .OrderBy(x => x.Theme.Order)
                 .ThenBy(x => x.Order)
@@ -27,6 +28,7 @@ namespace EducationSystem.Implementations.Repositories
             (ISpecification<DatabaseQuestion> specification, Filter filter)
         {
             return Entities
+                .Include(x => x.Answers)
                 .Where(specification.ToExpression())
                 .OrderBy(x => x.Theme.Order)
                 .ThenBy(x => x.Order)
@@ -36,6 +38,7 @@ namespace EducationSystem.Implementations.Repositories
         public override Task<DatabaseQuestion> FindFirstAsync(ISpecification<DatabaseQuestion> specification)
         {
             return Entities
+                .Include(x => x.Answers)
                 .OrderBy(x => x.Theme.Order)
                 .ThenBy(x => x.Order)
                 .FirstOrDefaultAsync(specification.ToExpression());

@@ -74,7 +74,7 @@ namespace EducationSystem.Implementations.Validators
                 new ThemesByIds(ids) &
                 new ThemesByLecturerId(user.Id);
 
-            if ((await _repositoryTheme.FindAllAsync(specification)).Count != ids.Length)
+            if (await _repositoryTheme.GetCountAsync(specification) != ids.Length)
                 throw ExceptionHelper.CreatePublicException("Одна или несколько выбранных тем не существуют или недоступны.");
         }
     }
