@@ -7,7 +7,7 @@ const SimpleLink = props => {
     {...props}
     exact
     activeStyle={{
-      color: props.theme.palette.primary.main
+      color: props.theme.palette.secondary.light
     }}
   />
 }

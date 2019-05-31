@@ -14,6 +14,9 @@ import RowHeader from './RowHeader'
 import ClearIcon from '@material-ui/icons/Clear'
 import Modal from '../stuff/Modal'
 
+// @ts-ignore
+import decode from 'decode-html'
+
 interface IProps {
   themeId: number,
   loadCallback: () => void,
@@ -92,15 +95,15 @@ class QuestionTable extends Component<TProps, IState> {
         <SortableArrayContainer onSortEnd={this.handleSort} useDragHandle>
           {this.state.Items.map((question: Question, index: number) =>
             <SortableArrayItem key={question.Id} index={index} value={
-              <>
+              <Grid container justify='space-between'>
                 <Grid item xs container zeroMinWidth
                       onClick={() => this.props.handleClick(question.Id!)}>
                   <Typography variant='subtitle1'>
-                    {question.Text}
+                    {decode(question.Text)}
                   </Typography>
                 </Grid>
                 <ClearIcon color='action' onClick={this.handleModal(question.Id)}/>
-              </>
+              </Grid>
             }
             />
           )}
@@ -113,7 +116,7 @@ class QuestionTable extends Component<TProps, IState> {
             <RowHeader>
               <Grid item xs container zeroMinWidth alignItems='center'>
                 <Typography variant='subtitle1'>
-                  {question.Text}
+                  {decode(question.Text)}
                 </Typography>
               </Grid>
               <ClearIcon color='action' onClick={this.handleModal(question.Id)}/>

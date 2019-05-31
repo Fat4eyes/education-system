@@ -50,7 +50,12 @@ const OpenedOneStringStrategy: IHandleQuestionStrategy = {
     if (!question.Answers[0]) question.Answers.push(new Answer(answer.toString()))
     else question.Answers[0].Text = answer.toString()
     return {...question}
-  }
+  },
+  preprocess(question: Question): Question {
+    if (!question.Answers) question.Answers = []
+    else shuffle(question.Answers)
+    return {...question}
+  },
 }
 
 const WithProgramStrategy: IHandleQuestionStrategy = {
@@ -58,7 +63,7 @@ const WithProgramStrategy: IHandleQuestionStrategy = {
   process(question: Question, answer: boolean | string): Question {
     let program = question.Program
     if (!program) return {...question}
-    program.Template = answer.toString()
+    program.Source = answer.toString()
     return {...question, Program: {...program}}
   },
   preprocess(question: Question): Question {

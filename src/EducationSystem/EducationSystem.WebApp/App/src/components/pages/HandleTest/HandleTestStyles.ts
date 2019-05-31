@@ -1,5 +1,5 @@
 import {createStyles, Theme} from '@material-ui/core'
-import {breadcrumbsStyles} from '../../stuff/CommonStyles'
+import {breadcrumbsStyles, important} from '../../stuff/CommonStyles'
 
 const HandleTestStyles = (theme: Theme) => createStyles({
   paper: {
@@ -11,7 +11,7 @@ const HandleTestStyles = (theme: Theme) => createStyles({
   },
   buttonBlock: {
     marginTop: theme.spacing.unit * 3,
-    
+
     '& button': {
       marginRight: theme.spacing.unit * 3
     }
@@ -23,6 +23,13 @@ const HandleTestStyles = (theme: Theme) => createStyles({
     '& div': {
       padding: theme.spacing.unit,
       margin: theme.spacing.unit
+    }
+  },
+  inputsBlock: {
+    margin: 0 + important,
+    '&>div': {
+      paddingTop: 0 + important,
+      paddingBottom: 0 + important
     }
   }
 })

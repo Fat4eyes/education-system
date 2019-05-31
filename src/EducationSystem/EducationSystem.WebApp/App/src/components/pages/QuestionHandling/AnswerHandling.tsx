@@ -1,8 +1,16 @@
 import * as React from 'react'
-import {ChangeEvent, Component} from 'react'
+import {ChangeEvent, Component, Fragment} from 'react'
 import {LanguageType, QuestionType} from '../../../common/enums'
+import Answer from '../../../models/Answer'
+import AddIcon from '@material-ui/icons/Add'
+import ClearIcon from '@material-ui/icons/Clear'
+import MonacoEditor from 'react-monaco-editor'
+import Program from '../../../models/Program'
+import ProgramData from '../../../models/ProgramData'
+import {MtBlock} from '../../stuff/Margin'
+import Input from '../../stuff/Input'
 import {
-  Button,
+  Divider,
   FormControl,
   Grid,
   IconButton,
@@ -10,23 +18,16 @@ import {
   MenuItem,
   Select,
   Switch,
-  TextField,
   Typography
 } from '@material-ui/core'
-import Answer from '../../../models/Answer'
-import AddIcon from '@material-ui/icons/Add'
-import ClearIcon from '@material-ui/icons/Clear'
-import MonacoEditor from 'react-monaco-editor'
-import Program from '../../../models/Program'
-import {VTextField} from '../../core'
-import ProgramData from '../../../models/ProgramData'
-import {MtBlock} from '../../stuff/Margin'
+import Button from '../../stuff/Button'
 
 interface TAnswersHandlingProps {
   type: QuestionType,
   incomingAnswers: Array<Answer>
   handleAnswers: (answers: Array<Answer>) => void
   handleProgram: (program: Program) => void
+  inputsBlockStyles: any
 }
 
 interface IClosedManyAnswersState {
@@ -102,38 +103,61 @@ class ClosedManyAnswers extends BaseAnswers<IClosedManyAnswersState> {
   }
 
   render(): React.ReactNode {
-    return <Grid item xs={12}>
+    return <Grid item xs={12} container className={this.props.inputsBlockStyles} spacing={8}>
+      <MtBlock value={2}/>
       <Grid item xs={12} container zeroMinWidth wrap='nowrap'>
-        <TextField
-          fullWidth
-          label='Варианты ответов'
-          required
-          name='Text'
-          value={this.state.Text}
-          onChange={this.handleInput}
-        />
-        <IconButton onClick={this.handleAddAnswer}>
+        <FormControl fullWidth>
+          <InputLabel shrink htmlFor='Text'>
+            Варианты ответов:
+          </InputLabel>
+          <Input
+            value={this.state.Text}
+            name='Text'
+            onChange={this.handleInput}
+            fullWidth
+          />
+        </FormControl>
+        <IconButton onClick={this.handleAddAnswer} style={{marginTop: 20}}>
           <AddIcon/>
         </IconButton>
       </Grid>
-      <MtBlock/>
-      {this.state.Answers.map((answer: Answer, index: number) =>
-        <Grid item xs={12} container zeroMinWidth wrap='nowrap' key={index}>
-          <Grid item xs={1}><Typography noWrap variant='subtitle1'>{index + 1}</Typography></Grid>
-          <Grid item xs container zeroMinWidth wrap='nowrap'>
-            <Typography noWrap variant='subtitle1'>{answer.Text}</Typography>
+      <MtBlock value={2}/>
+      {this.state.Answers.map((answer: Answer, index: number) => <Fragment key={index}>
+          <Grid item xs={12} container
+                zeroMinWidth wrap='nowrap'
+                className={this.props.inputsBlockStyles} spacing={8}
+                alignItems='center'
+          >
+            <Grid item xs={1}>
+              <Typography noWrap variant='subtitle1'>
+                {index + 1}
+              </Typography>
+            </Grid>
+            <Grid item xs container zeroMinWidth wrap='nowrap'>
+              <Typography noWrap variant='subtitle1'>
+                {answer.Text}
+              </Typography>
+            </Grid>
+            {
+              this.props.type !== QuestionType.OpenedOneString &&
+              <Grid item>
+                <Switch checked={!!answer.IsRight} onChange={() => this.handleChangeAnswer(index)}/>
+              </Grid>
+            }
+            <Grid item>
+              <IconButton onClick={() => this.handleDeleteAnswer(index)}>
+                <ClearIcon/>
+              </IconButton>
+            </Grid>
           </Grid>
-          {this.props.type !== QuestionType.OpenedOneString &&
-          <Grid item xs={2}>
-            <Switch checked={!!answer.IsRight} onChange={() => this.handleChangeAnswer(index)}/>
-          </Grid>
+          {
+            index < this.state.Answers.length - 1 && <>
+              <MtBlock value={0.5}/>
+              <Divider style={{width: '100%'}}/>
+              <MtBlock value={0.5}/>
+            </>
           }
-          <Grid item>
-            <IconButton onClick={() => this.handleDeleteAnswer(index)}>
-              <ClearIcon/>
-            </IconButton>
-          </Grid>
-        </Grid>
+        </Fragment>
       )}
     </Grid>
   }
@@ -199,59 +223,66 @@ class WithProgram extends Component<TAnswersHandlingProps, IWithProgramState> {
   }
   handleAddParametrs = () => {
     let {Input, ExpectedOutput} = this.state
-    
+
     if (Input && ExpectedOutput) {
       let programData = new ProgramData(Input, ExpectedOutput)
-      this.handleModel({target: {
-        name: 'ProgramDatas', 
-        value: [...this.state.Model.ProgramDatas, programData]
-      }}, true)
+      this.handleModel({
+        target: {
+          name: 'ProgramDatas',
+          value: [...this.state.Model.ProgramDatas, programData]
+        }
+      }, true)
     }
   }
   handleDeleteParametrs = (index: number) => {
     this.state.Model.ProgramDatas.splice(index, 1)
-    this.handleModel({target: {
+    this.handleModel({
+      target: {
         name: 'ProgramDatas',
         value: [...this.state.Model.ProgramDatas]
-      }}, true)
+      }
+    }, true)
   }
 
   render(): React.ReactNode {
     return <Grid item xs={12}>
-      <Grid item xs={12} container spacing={16}>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <VTextField
-            name='TimeLimit'
-            type='number'
-            label='Лимит времени'
-            value={this.state.Model.TimeLimit}
-            onChange={this.handleModel}
-            margin='normal' required fullWidth
-            validators={{
-              max: {value: 60, message: '< 60 >'},
-              required: true
-            }}
-          />
+      <Grid item xs={12} container className={this.props.inputsBlockStyles} spacing={8}>
+        <MtBlock value={2}/>
+        <Grid item xs={3}>
+          <FormControl fullWidth>
+            <InputLabel shrink htmlFor='TimeLimit'>
+              Лимит времени:
+            </InputLabel>
+            <Input
+              value={this.state.Model.TimeLimit}
+              name='TimeLimit'
+              onChange={this.handleModel}
+              fullWidth
+            />
+          </FormControl>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <VTextField
-            name='MemoryLimit'
-            type='number'
-            label='Лимит памяти'
-            value={this.state.Model.MemoryLimit}
-            onChange={this.handleModel}
-            margin='normal' required fullWidth
-            validators={{
-              max: {value: 10000, message: '< 10000 >'},
-              required: true
-            }}
-          />
+        <Grid item xs={3}>
+          <FormControl fullWidth>
+            <InputLabel shrink htmlFor='MemoryLimit'>
+              Лимит памяти:
+            </InputLabel>
+            <Input
+              value={this.state.Model.MemoryLimit}
+              name='MemoryLimit'
+              onChange={this.handleModel}
+              fullWidth
+            />
+          </FormControl>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <FormControl fullWidth margin='normal' required>
+        <Grid item xs={6}>
+          <FormControl fullWidth required>
             <InputLabel htmlFor='LanguageType'>Язык программирования</InputLabel>
-            <Select name='LanguageType' value={this.state.Model.LanguageType} onChange={(e) => this.handleModel(e)}>
-              <MenuItem value={LanguageType.CPP}>{LanguageType[LanguageType.CPP]}</MenuItem>
+            <Select name='LanguageType'
+                    value={this.state.Model.LanguageType}
+                    onChange={(e) => this.handleModel(e)}
+                    input={<Input id='Type'/>}
+            >
+              <MenuItem value={LanguageType.CPP}>C++</MenuItem>
               <MenuItem value={LanguageType.PHP}>{LanguageType[LanguageType.PHP]}</MenuItem>
               <MenuItem value={LanguageType.Pascal}>{LanguageType[LanguageType.Pascal]}</MenuItem>
               <MenuItem value={LanguageType.JavaScript}>{LanguageType[LanguageType.JavaScript]}</MenuItem>
@@ -259,7 +290,8 @@ class WithProgram extends Component<TAnswersHandlingProps, IWithProgramState> {
           </FormControl>
         </Grid>
       </Grid>
-      <Grid item xs={12} container spacing={16}>
+      <MtBlock value={2}/>
+      <Grid item xs={12} container className={this.props.inputsBlockStyles} spacing={8}>
         <MonacoEditor
           height='500'
           language={LanguageType[this.state.Model.LanguageType!].toLowerCase()}
@@ -274,35 +306,72 @@ class WithProgram extends Component<TAnswersHandlingProps, IWithProgramState> {
           onChange={value => this.handleModel({target: {name: 'Template', value: value}})}
         />
       </Grid>
-      <Grid item xs={12} container spacing={16}>
+      <MtBlock value={2}/>
+      <Grid item xs={12} container className={this.props.inputsBlockStyles} spacing={8}>
         <Grid item xs={6}>
-          <TextField name='Input' label='Входные параметры' required multiline fullWidth rows={4}
-                     value={this.state.Input} onChange={this.handleInput}/>
+          <FormControl fullWidth>
+            <InputLabel shrink htmlFor='Input'>
+              Входные параметры:
+            </InputLabel>
+            <Input
+              value={this.state.Input}
+              name='Input'
+              onChange={this.handleInput}
+              multiline
+              rows={4}
+              fullWidth
+            />
+          </FormControl>
         </Grid>
         <Grid item xs={6}>
-          <TextField name='ExpectedOutput' label='Выходной параметр' required multiline fullWidth rows={4}
-                     value={this.state.ExpectedOutput} onChange={this.handleInput}/>
+          <FormControl fullWidth>
+            <InputLabel shrink htmlFor='ExpectedOutput'>
+              Выходной параметр:
+            </InputLabel>
+            <Input
+              value={this.state.ExpectedOutput}
+              name='ExpectedOutput'
+              onChange={this.handleInput}
+              multiline
+              rows={4}
+              fullWidth
+            />
+          </FormControl>
         </Grid>
+        <MtBlock value={2}/>
         <Grid item xs={12}>
-          <Button onClick={this.handleAddParametrs}>Добавить параметры</Button>
+          <Button mainColor='blue' onClick={this.handleAddParametrs}>Добавить параметры</Button>
         </Grid>
       </Grid>
-      <Grid item xs={12} container spacing={16}>
+      <MtBlock value={2}/>
+      <Grid item xs={12} container className={this.props.inputsBlockStyles} spacing={8}>
         {this.state.Model.ProgramDatas.map((programData: ProgramData, index: number) =>
-          <Grid item xs={12} container zeroMinWidth wrap='nowrap' key={index}>
-            <Grid item xs={1}><Typography noWrap variant='subtitle1'>{index + 1}</Typography></Grid>
-            <Grid item xs container zeroMinWidth wrap='nowrap'>
-              <Typography noWrap variant='subtitle1'>{programData.Input}</Typography>
+          <Fragment key={index}>
+            <Grid item xs={12} container 
+                  zeroMinWidth wrap='nowrap' className={this.props.inputsBlockStyles} spacing={8}
+                  alignItems='center'
+            >
+              <Grid item xs={1}><Typography noWrap variant='subtitle1'>{index + 1}</Typography></Grid>
+              <Grid item xs container zeroMinWidth wrap='nowrap'>
+                <Typography noWrap variant='subtitle1'>{programData.Input}</Typography>
+              </Grid>
+              <Grid item xs container zeroMinWidth wrap='nowrap'>
+                <Typography noWrap variant='subtitle1'>{programData.ExpectedOutput}</Typography>
+              </Grid>
+              <Grid item>
+                <IconButton onClick={() => this.handleDeleteParametrs(index)}>
+                  <ClearIcon/>
+                </IconButton>
+              </Grid>
             </Grid>
-            <Grid item xs container zeroMinWidth wrap='nowrap'>
-              <Typography noWrap variant='subtitle1'>{programData.ExpectedOutput}</Typography>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => this.handleDeleteParametrs(index)}>
-                <ClearIcon/>
-              </IconButton>
-            </Grid>
-          </Grid>
+            {
+              index < this.state.Model.ProgramDatas.length - 1 && <>
+                <MtBlock value={0.5}/>
+                <Divider style={{width: '100%'}}/>
+                <MtBlock value={0.5}/>
+              </>
+            }
+          </Fragment>
         )}
       </Grid>
     </Grid>

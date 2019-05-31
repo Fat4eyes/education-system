@@ -8,7 +8,7 @@ export interface ITableState<T> {
 
 export const getDefaultTableState = <T>(): ITableState<T> => ({
   Count: 0,
-  CountPerPage: 10,
+  CountPerPage: 20,
   Page: 0,
   Items: [],
   IsLoading: false

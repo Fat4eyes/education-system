@@ -1,6 +1,6 @@
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import {ITableState} from './IHandleTable'
-import {Grid, TextField, Typography} from '@material-ui/core'
+import {FormControl, Grid, InputLabel, Typography} from '@material-ui/core'
 import {IPagingOptions} from '../../models/PagedData'
 import RowHeader from './RowHeader'
 import TableComponent from './TableComponent'
@@ -10,7 +10,10 @@ import {ChangeEvent} from 'react'
 import Discipline from '../../models/Discipline'
 import {inject} from '../../infrastructure/di/inject'
 import {TablePagination} from '../core'
-import BlockContent from '../Blocks/BlockContent'
+import Input from '../stuff/Input'
+import {MtBlock} from '../stuff/Margin'
+import {PBlock} from '../Blocks/Block'
+import {IsMobileAsFuncChild} from '../stuff/OnMobile'
 
 interface IProps extends InjectedNotistackProps {
   handleClick: any
@@ -31,7 +34,7 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
 
     this.state = {
       Count: 0,
-      CountPerPage: 10,
+      CountPerPage: 20,
       Page: 0,
       Items: [],
       IsLoading: false,
@@ -74,44 +77,52 @@ class DisciplineTable extends TableComponent<Discipline, IProps, IState> {
   render() {
     return <Grid item xs={12} container justify='center'>
       <Grid item xs={12}>
-        <BlockContent bottom>
-          <TextField
-            autoFocus
-            label='Название дисциплины'
-            placeholder='Название дисциплины (больше 3 символов)'
-            value={this.state.Name}
-            onChange={this.handleName}
-            fullWidth
-            margin='none'
-          />
-        </BlockContent>
+        <IsMobileAsFuncChild>
+          {(isMobile: boolean) =>
+            <PBlock left={isMobile}>
+              <FormControl fullWidth>
+                <InputLabel shrink htmlFor='Name'>
+                  Название дисциплины:
+                </InputLabel>
+                <Input
+                  value={this.state.Name}
+                  name='Name'
+                  onChange={this.handleName}
+                  fullWidth
+                />
+              </FormControl>
+            </PBlock>
+          }
+        </IsMobileAsFuncChild>
       </Grid>
+      {
+        this.state.Count > this.state.Items.length && <>
+          <MtBlock value={4}/>
+          <Grid item xs={12}>
+            <TablePagination
+              count={{
+                all: this.state.Count,
+                perPage: this.state.CountPerPage,
+                current: this.state.Items.length
+              }}
+              page={this.state.Page}
+              onPageChange={this.handleChangePage}
+              onCountPerPageChange={this.handleChangeRowsPerPage}
+            />
+          </Grid>
+        </>
+      }
+      <MtBlock value={4}/>
       <Grid item xs={12}>
-        <BlockContent bottom>
-          <TablePagination
-            count={{
-              all: this.state.Count,
-              perPage: this.state.CountPerPage,
-              current: this.state.Items.length
-            }}
-            page={this.state.Page}
-            onPageChange={this.handleChangePage}
-            onCountPerPageChange={this.handleChangeRowsPerPage}
-          />
-        </BlockContent>
-      </Grid>
-      <Grid item xs={12}>
-        <BlockContent bottom>
-          {this.state.Items.map((d: Discipline) =>
-            <RowHeader key={d.Id} onClick={() => this.props.handleClick(d)}>
-              <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
-                <Typography noWrap variant='subtitle1'>
-                  {d.Name}
-                </Typography>
-              </Grid>
-            </RowHeader>
-          )}
-        </BlockContent>
+        {this.state.Items.map((d: Discipline) =>
+          <RowHeader key={d.Id} onClick={() => this.props.handleClick(d)}>
+            <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
+              <Typography noWrap variant='subtitle1'>
+                {d.Name}
+              </Typography>
+            </Grid>
+          </RowHeader>
+        )}
       </Grid>
     </Grid>
   }

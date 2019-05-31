@@ -135,7 +135,7 @@ class Test extends Component<TProps, IState> {
   render(): React.ReactNode {
     let {classes} = this.props
 
-    return <Grid container justify='center' spacing={40}>
+    return <Grid container justify='center'>
       <Grid item xs={12} lg={10}>
         <Block partial>
           {

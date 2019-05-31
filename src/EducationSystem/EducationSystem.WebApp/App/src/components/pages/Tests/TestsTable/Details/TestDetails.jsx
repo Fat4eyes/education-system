@@ -5,7 +5,7 @@ import If from '../../../../stuff/If'
 import PropTypes from 'prop-types'
 
 const TestDetails = ({test, handleDetailsLoad, classes, ...props}) => {
-  return <Grid container className={classes.root} justify='flex-end' spacing={8}>
+  return <Grid container className={classes.root} justify='flex-end'>
     <Grid item xs={12}>
       {/*TODO Информация по тесту, управляющие кнопки, что-то еще?*/}
       <Typography variant='subtitle1'>

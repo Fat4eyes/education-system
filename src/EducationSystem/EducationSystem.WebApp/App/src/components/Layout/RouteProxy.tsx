@@ -5,7 +5,6 @@ import {TAuthProps} from '../../providers/AuthProvider/AuthProviderTypes'
 import {TUserRole} from '../../common/enums'
 import {Redirect, Route, RouteProps} from 'react-router'
 import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
-import {Guid} from '../../helpers/guid'
 
 interface IProps extends RouteProps {
   roles?: Array<TUserRole>

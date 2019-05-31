@@ -25,6 +25,8 @@ import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider'
 import {TAuthProps} from '../../../providers/AuthProvider/AuthProviderTypes'
 import Modal from '../../stuff/Modal'
 import {routes} from '../../Layout/Routes'
+import AddButton from '../../stuff/AddButton'
+import {MtBlock} from '../../stuff/Margin'
 
 type TProps = WithStyles<typeof ThemesPageStyles> & TNotifierProps & TAuthProps
 
@@ -121,7 +123,7 @@ class ThemesPage extends Component<TProps, IState> {
         this.setState({
           ShowAddBlock: false,
           Theme: new Theme(),
-          Items: [...this.state.Items, theme]
+          Items: [...this.state.Items, {...theme, Id: data}]
         })
       }
 
@@ -191,16 +193,7 @@ class ThemesPage extends Component<TProps, IState> {
       const {SelectedQuestionId: id, SelectedThemeId: themeId} = this.state
       return <Redirect to={id ? routes.editQuestion(themeId, id) : routes.createQuestion(themeId)}/>
     }
-
-    const AddButton = ({onClick}: { onClick: () => void }) => <RowHeader onClick={onClick}>
-      <Grid item xs={12} container alignItems='center' justify='center' wrap='nowrap' zeroMinWidth>
-        <AddIcon/>
-        <Typography noWrap variant='subtitle1'>
-          Добавить
-        </Typography>
-      </Grid>
-    </RowHeader>
-
+    
     const BreadcrumbsHeader = () =>
       <Grid item xs={12} className={classes.header} container zeroMinWidth wrap='nowrap' alignItems='center'>
         <Breadcrumbs separator={
@@ -240,14 +233,13 @@ class ThemesPage extends Component<TProps, IState> {
         </Breadcrumbs>
       </Grid>
 
-    return <Grid container justify='center' spacing={16}>
-      <Grid item xs={12} md={10} lg={8}>
+    return <Grid container justify='center'>
+      <Grid item xs={12}>
         <Block partial>
           <BreadcrumbsHeader/>
-          <Grid item xs={12} className={classes.mt2Unit}/>
+          <MtBlock value={this.state.ShowDisciplinesTable ? 3 : 4}/>
           <Grid item xs={12}>
             <Collapse timeout={500} in={this.state.ShowDisciplinesTable}>
-              <Grid item xs={12} className={classes.mt2Unit}/>
               <DisciplineTable handleClick={this.handleChangeDiscipline}/>
             </Collapse>
           </Grid>

@@ -23,12 +23,20 @@ import EditorToolbar from './EditorToolbar'
 @withStyles(MaterialEditorStyles)
 @withNotifier
 class MaterialEditor extends Component {
+  _getStateFromImpot = content => {
+    if (!content) return EditorState.createEmpty()
+
+    try {
+      return EditorState.createWithContent(convertFromRaw(JSON.parse(content)))
+    } catch {
+      return EditorState.createEmpty()
+    }
+  }
+
   constructor(props) {
     super(props)
     this.state = {
-      editorState: !this.props.import
-        ? EditorState.createEmpty()
-        : EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.import))),
+      editorState: this._getStateFromImpot(this.props.import),
       isAnchorMenuOpen: false,
       anchorName: ''
     }
@@ -104,14 +112,14 @@ class MaterialEditor extends Component {
     }
 
     this.props.setAnchor && this.props.setAnchor(anchor)
-    
+
     return true
   }
 
   handleRemoveAnchor = token => {
     this.props.removeAnchor && this.props.removeAnchor(token)
   }
-  
+
   componentDidMount() {
     setAnchor(this.props.materialAnchors, this.props.removeAnchor)
   }

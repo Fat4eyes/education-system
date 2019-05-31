@@ -12,6 +12,7 @@ export default interface IMaterialService {
   update(material: Material): Promise<boolean>
   get(id: number): Promise<IResult<Material>>
   getAll(options?: IPagingOptions, filter?: INameFilter): Promise<IResult<IPagedData<Material>>>
+  delete(id: number): Promise<boolean>
 }
 
 export class MaterialService implements IMaterialService {
@@ -31,6 +32,14 @@ export class MaterialService implements IMaterialService {
     let result = await ProtectedFetch.get(UrlBuilder.Build(`/api/materials`, {...options, ...filter}))
 
     return getResult(result)
+  }
+
+  async delete(id: number): Promise<boolean> {
+    if (!!(await ProtectedFetch.delete(`/api/materials/${id}`))) {
+      this.NotificationService!.showSuccess('Материал успешно удален')
+      return true
+    }
+    return false
   }
 
   async update(material: Material): Promise<boolean> {

@@ -8,7 +8,8 @@ const QuestionHandlingStyle = (theme: Theme) => createStyles({
     backgroundColor: theme.palette.grey['50']
   },
   image: {
-    height: 100,
+    maxHeight: 117,
+    width: '100%',
   },
   openButton: {
     padding: 0 + important,
@@ -20,6 +21,16 @@ const QuestionHandlingStyle = (theme: Theme) => createStyles({
   },
   chip: {
     margin: '6px 12px'
+  },
+  inputsBlock: {
+    margin: 0 + important,
+    '&>div': {
+      paddingTop: 0 + important,
+      paddingBottom: 0 + important
+    }
+  },
+  addPhotoButton: {
+    
   }
 })
 

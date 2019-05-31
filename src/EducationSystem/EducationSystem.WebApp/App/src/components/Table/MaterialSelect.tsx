@@ -12,11 +12,9 @@ import {
   createStyles,
   FormControl,
   Grid,
-  Input,
   InputLabel,
   MenuItem,
   Select,
-  TextField,
   Theme,
   Typography,
   WithStyles,
@@ -25,6 +23,8 @@ import {
 import RowHeader from './RowHeader'
 import {TablePagination} from '../core'
 import {SelectProps} from '@material-ui/core/Select'
+import Input from '../stuff/Input'
+import {MtBlock} from '../stuff/Margin'
 
 const styles = (theme: Theme) => createStyles({
   chipLabel: {
@@ -109,10 +109,10 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
     let {selectedMaterial} = this.props
     return selectedMaterial && selectedMaterial.Id === material.Id
   }
-  
+
   renderSelectValues = (ids: SelectProps['value']): React.ReactNode => {
     if (!this.props.selectedMaterial) return
-    
+
     const anchors = this.props.selectedMaterial
       .Anchors.filter((anchor: IMaterialAnchor) => (ids as Array<number>).includes(anchor.Id as number))
 
@@ -124,11 +124,13 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
 
   render(): React.ReactNode {
     const {selectedMaterial, onSelectMaterial, classes} = this.props
-    return <Grid container justify='center' spacing={16}>
+    // @ts-ignore
+    return <Grid container justify='center'>
       <Grid item xs={12}>
         {
           selectedMaterial &&
           <Grid container>
+            <MtBlock value={2}/>
             <Chip
               classes={{label: classes.chipLabel}}
               className={classes.chip}
@@ -140,46 +142,53 @@ class MaterialSelect extends TableComponent<Material, TProps, IState> {
               onDelete={() => onSelectMaterial()}
               variant='outlined'
             />
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor='select-multiple-chip'>Якоря</InputLabel>
-                <Select
-                  multiple
-                  name='Anchors'
-                  value={this.props.selectedAnchors.map(a => a.Id)}
-                  onChange={this.props.handleSelectAnchors}
-                  input={
-                    <Input id='select-multiple-chip'/>
-                  }
-                  renderValue={this.renderSelectValues}
-                  classes={{
-                    selectMenu: classes.selectMenu
-                  }}
-                >
-                  {selectedMaterial.Anchors.map((anchor: IMaterialAnchor) =>
-                    <MenuItem key={anchor.Id} value={anchor.Id}>
-                      {anchor.Name}
-                    </MenuItem>
-                  )}
-                </Select>
-              </FormControl>
-            </Grid>
+            {
+              selectedMaterial.Anchors && selectedMaterial.Anchors.length && <>
+                <MtBlock value={2}/>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel htmlFor='select-multiple-chip'>Якоря:</InputLabel>
+                    <Select
+                      multiple
+                      name='Anchors'
+                      value={this.props.selectedAnchors.map(a => a.Id)}
+                      onChange={this.props.handleSelectAnchors}
+                      input={
+                        <Input id='select-multiple-chip'/>
+                      }
+                      renderValue={this.renderSelectValues}
+                      classes={{
+                        selectMenu: classes.selectMenu
+                      }}
+                    >
+                      {selectedMaterial.Anchors.map((anchor: IMaterialAnchor) =>
+                        <MenuItem key={anchor.Id} value={anchor.Id}>
+                          {anchor.Name}
+                        </MenuItem>
+                      )}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </>
+            }
           </Grid>
         }
         {
           !selectedMaterial &&
           <Grid container>
             <Grid item xs={12}>
-              <TextField
-                label='Название материала'
-                placeholder='Название материала (больше 3 символов)'
-                value={this.state.Name}
-                onChange={this.handleName}
-                style={{marginBottom: 4}}
-                fullWidth
-                margin='none'
-              />
+              <FormControl fullWidth>
+                <InputLabel shrink>
+                  Название материала:
+                </InputLabel>
+                <Input
+                  value={this.state.Name}
+                  onChange={this.handleName}
+                  fullWidth
+                />
+              </FormControl>
             </Grid>
+            <MtBlock value={2}/>
             {
               this.state.Count > this.state.Items.length &&
               <Grid item xs={12}>

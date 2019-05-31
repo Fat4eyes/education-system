@@ -11,6 +11,7 @@ import MaterialHandling from '../pages/Material/MaterialHandling'
 import RouteProxy from './RouteProxy'
 import TestSelect from '../pages/student/tests/TestSelect'
 import Test from '../pages/student/test/Test'
+import Materials from '../pages/Materials/Materials'
 
 export const routes = {
     home: 
@@ -30,6 +31,8 @@ export const routes = {
       `/themes/${themeId}/questions/create`,
     editQuestion: (themeId: string|number = ':themeId', id: string|number = ':id') => 
       `/themes/${themeId}/questions/${id}/edit`,
+    materials:
+      '/materials',
     createMaterial: 
       '/materials/create',
     editMaterial: (id: string|number = ':id') => 
@@ -51,6 +54,7 @@ const Routes = () =>
     <RouteProxy exact path={routes.themes} component={ThemesPage} roles={['Admin', 'Lecturer']} title='Темы'/>
     <RouteProxy key='EditQuestion' exact path={routes.editQuestion()} component={QuestionHandling} roles={['Admin', 'Lecturer']} title='Редактирование вопроса'/>
     <RouteProxy key='CreateQuestion' exact path={routes.createQuestion()} component={QuestionHandling} roles={['Admin', 'Lecturer']} title='Создание вопроса'/>
+    <RouteProxy exact path={routes.materials} component={Materials} roles={['Admin', 'Lecturer']} title='Материалы'/>
     <RouteProxy key='EditMaterial' exact path={routes.editMaterial()} component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Редактирование материала'/>
     <RouteProxy key='CreateMaterial' exact path={routes.createMaterial} component={MaterialHandling} roles={['Admin', 'Lecturer']} title='Создание материала'/>
     <RouteProxy exact path={routes.studentTests} component={TestSelect} roles={['Student']} title='Выбор теста'/>

@@ -1,10 +1,10 @@
 import React from 'react'
 import {If} from '../core'
-import {Typography, withStyles} from '@material-ui/core'
+import {FormControl, Typography, withStyles} from '@material-ui/core'
 import VTextField from './VTextField'
 import MaskedInput from 'react-text-mask'
-import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
+import Input from './Input'
 
 const styles = () => ({
   root: {
@@ -18,7 +18,6 @@ const styles = () => ({
     width: '100%'
   },
   label: {
-    fontSize: '0.75rem',
     height: 16
   },
   input: {
@@ -29,15 +28,14 @@ const styles = () => ({
 @withStyles(styles)
 class VMaskedField extends VTextField {
   render() {
-    let {onChange, id, label, required, mask, styles = {}, classes, ...rest} = this.props
+    let {onChange, id, label, mask, styles = {}, classes, ...rest} = this.props
 
     const TextMask = ({inputRef, onChange, ...rest}) =>
       <MaskedInput {...rest} mask={mask} showMask ref={ref => inputRef(ref ? ref.inputElement : null)}/>
 
-    return <div className={classes.root}>
+    return <FormControl className={classes.root}>
       <InputLabel
         htmlFor={id}
-        required={!!required}
         error={!this.state.isValid}
         className={classes.label}
         style={{...styles.label}}
@@ -60,7 +58,7 @@ class VMaskedField extends VTextField {
           {this.state.error}
         </Typography>
       </If>
-    </div>
+    </FormControl>
   }
 }
 

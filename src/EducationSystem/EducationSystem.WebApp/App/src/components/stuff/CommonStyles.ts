@@ -4,6 +4,12 @@ export const important = ' !important'
 
 export const onHover = (styles: any) => ({'&:hover': styles})
 
+export const onMobile = (theme: Theme) => (styles: any) => ({
+  [theme.breakpoints.down('sm')]: styles
+})
+
+export const getBaseContentPadding = (theme: Theme) => theme.spacing.unit * 5
+
 export const headerStyles = (theme: Theme) => ({
   header: {
     backgroundColor: theme.palette.primary.main,

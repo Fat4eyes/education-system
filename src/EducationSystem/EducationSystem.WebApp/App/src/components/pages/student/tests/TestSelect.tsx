@@ -83,7 +83,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
   render(): React.ReactNode {
     let {classes} = this.props
 
-    return <Grid container justify='center' spacing={40}>
+    return <Grid container justify='center'>
       <Grid item xs={12} md={10} lg={8}>
         <Block partial>
           {
@@ -112,7 +112,7 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
                   this.state.Opened.find(id => id === discipline.Id!) && discipline.Tests &&
                   <Grid item xs={12} className={classes.body}>
                     <Grid item xs={12} className={classes.mt2Unit}/>
-                    <Grid container className={classes.mainBodyBlock} spacing={16}>
+                    <Grid container className={classes.mainBodyBlock}>
                       {
                         discipline.Tests.map((test: Test) =>
                           <Grid item xs={12} md={6} lg={4} key={test.Id!} className={classes.clikableBlock}>

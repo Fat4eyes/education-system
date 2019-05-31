@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {ChangeEvent, ChangeEventHandler, Component} from 'react'
-import {Button, Chip, Collapse, Grid, TextField, Typography, withStyles, WithStyles} from '@material-ui/core'
+import {Chip, FormControl, Grid, InputLabel, Typography, withStyles, WithStyles} from '@material-ui/core'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import MaterialStyles from './MaterialStyles'
 import IFileService from '../../../services/FileService'
@@ -19,6 +19,8 @@ import {Guid} from '../../../helpers/guid'
 import withWidth, {isWidthDown, WithWidth} from '@material-ui/core/withWidth/withWidth'
 import {PopoverProps} from '@material-ui/core/Popover'
 import FileSelect from './FileSelect'
+import Input from '../../stuff/Input'
+import Button from '../../stuff/Button'
 
 interface IProps {
   match?: {
@@ -36,7 +38,8 @@ interface IState {
   IsMaterialEditorOpen: boolean,
   IsLoading: boolean,
   FileSelectAnchor: PopoverProps['anchorEl'],
-  Documents: Array<DocumentFile>
+  Documents: Array<DocumentFile>,
+  SelectedDocumentsIds: Array<number>,
 }
 
 class MaterialHandling extends Component<TProps, IState> {
@@ -52,7 +55,8 @@ class MaterialHandling extends Component<TProps, IState> {
       IsMaterialEditorOpen: false,
       IsLoading: false,
       FileSelectAnchor: null,
-      Documents: []
+      Documents: [],
+      SelectedDocumentsIds: []
     }
   }
 
@@ -89,19 +93,26 @@ class MaterialHandling extends Component<TProps, IState> {
     }))
   }
 
-  handleFile = (index?: number) => (file?: DocumentFile) => {
+  handleFile = (index?: number) => (file?: DocumentFile, isExists?: boolean) => {
     if (file) {
       return this.setState(state => ({
         Model: {
           ...state.Model,
           Files: [...state.Model.Files, file]
-        }
+        },
+        SelectedDocumentsIds: isExists ? [...state.SelectedDocumentsIds, file.Id!] : state.SelectedDocumentsIds
       }))
     }
 
     if (index !== undefined) {
-      this.state.Model.Files.splice(index, 1)
-      return this.forceUpdate()
+      let file = this.state.Model.Files[index]
+
+      return this.setState(state => ({
+        Model: {
+          ...state.Model,
+          Files: state.Model.Files.filter(f => f.Id !== file.Id)
+        }
+      }))
     }
   }
 
@@ -123,18 +134,18 @@ class MaterialHandling extends Component<TProps, IState> {
 
     result && this.props.onMaterialSave && this.props.onMaterialSave(material)
   }
-  
+
   handleFileSelect = async (anchorEl: PopoverProps['anchorEl']) => {
     if (!anchorEl) return this.setState({FileSelectAnchor: anchorEl})
-    
+
     if (!this.state.Documents.length) {
       const {data, success} = await this.FileService!.getAll(FileType.Document, {All: true})
       if (data && success) {
-        return this.setState({
-          Documents: data.Items,
+        return this.setState(state => ({
+          Documents: data.Items.filter(m => !state.Model.Files.find(f => f.Id === m.Id)),
           FileSelectAnchor: anchorEl
-        })
-      } 
+        }))
+      }
     } else {
       return this.setState({FileSelectAnchor: anchorEl})
     }
@@ -142,68 +153,54 @@ class MaterialHandling extends Component<TProps, IState> {
 
   render(): React.ReactNode {
     let {classes, width} = this.props
-    let isSmallScreen = isWidthDown('md', width);
+    let isSmallScreen = isWidthDown('md', width)
 
-    return <Grid container justify='center' spacing={16}>
-      <Grid item xs={12} md={10} lg={8}>
+    return <Grid container justify='center'>
+      <Grid item xs={12}>
         <Block partial>
           <Grid item xs={12} container className={classes.header} zeroMinWidth wrap='nowrap'>
             <Typography variant='subtitle1' className={classes.headerText} noWrap>
               {this.state.Model.Id ? 'Редактирование' : 'Создание'} материала
             </Typography>
           </Grid>
-          <MtBlock value={2}/>
+          <MtBlock value={3}/>
           <Grid item xs={12} container>
-            <TextField fullWidth
-                       label='Название'
-                       required
-                       name='Name'
-                       value={this.state.Model.Name}
-                       onChange={this.handleModel}
-            />
+            <FormControl fullWidth>
+              <InputLabel shrink htmlFor='Text'>
+                Название:
+              </InputLabel>
+              <Input
+                value={this.state.Model.Name}
+                name='Name'
+                onChange={this.handleModel}
+                fullWidth
+              />
+            </FormControl>
           </Grid>
           <MtBlock value={2}/>
           <Grid item xs={12} container>
-            <Button onClick={this.handleMaterialEditorVisible} className={classes.openEditorButton}>
-              <Typography noWrap variant='subtitle1'>
-                {this.state.IsMaterialEditorOpen ? 'Закрыть ' : 'Открыть '} редактор
-              </Typography>
-            </Button>
-          </Grid>
-          <Collapse timeout={500} in={this.state.IsMaterialEditorOpen}>
-            <MtBlock value={2}/>
-            <Grid item xs={12} container>
-              {!this.state.IsLoading &&
-              <MaterialEditor
-                export={(html: string) => this.handleModel({target: {name: 'Template', value: html}})}
-                import={this.state.Model.Template}
-                setAnchor={(anchor: IMaterialAnchor) => this.setState(state => ({
+            {!this.state.IsLoading &&
+            <MaterialEditor
+              export={(html: string) => this.handleModel({target: {name: 'Template', value: html}})}
+              import={this.state.Model.Template}
+              setAnchor={(anchor: IMaterialAnchor) => this.setState(state => ({
+                Model: {
+                  ...state.Model,
+                  Anchors: [...state.Model.Anchors, anchor]
+                }
+              }))}
+              removeAnchor={(token: string) => {
+                return this.setState(state => ({
                   Model: {
                     ...state.Model,
-                    Anchors: [...state.Model.Anchors, anchor]
+                    Anchors: [...state.Model.Anchors.filter(a => a.Token !== token)]
                   }
-                }))}
-                removeAnchor={(token: string) => {
-                  return this.setState(state => ({
-                    Model: {
-                      ...state.Model,
-                      Anchors: [...state.Model.Anchors.filter(a => a.Token !== token)]
-                    }
-                  }))
-                }}
-                materialAnchors={this.state.Model.Anchors}
-              />
-              }
-            </Grid>
-            <MtBlock value={2}/>
-            <Grid item xs={12} container>
-              <Button onClick={this.handleMaterialEditorVisible} className={classes.openEditorButton}>
-                <Typography noWrap variant='subtitle1'>
-                  {this.state.IsMaterialEditorOpen ? 'Закрыть ' : 'Открыть '} редактор
-                </Typography>
-              </Button>
-            </Grid>
-          </Collapse>
+                }))
+              }}
+              materialAnchors={this.state.Model.Anchors}
+            />
+            }
+          </Grid>
           <MtBlock value={2}/>
           <Grid item xs={12} container>
             <Grid item xs container alignItems='center'>
@@ -215,7 +212,7 @@ class MaterialHandling extends Component<TProps, IState> {
                     return <>
                       <FileInput extensions={extensions} id={id} onChange={handleAdd}/>
                       <label htmlFor={id} style={{width: '100%'}}>
-                        <Button component='span' className={classes.openEditorButton}>
+                        <Button className={classes.openEditorButton}>
                           <Typography noWrap variant='subtitle1'>
                             Загрузить документ
                           </Typography>
@@ -227,8 +224,7 @@ class MaterialHandling extends Component<TProps, IState> {
               </Grid>
               {isSmallScreen ? <MtBlock/> : <MrBlock/>}
               <Grid item xs={12} md>
-                <Button component='span' 
-                        className={classes.openEditorButton} 
+                <Button className={classes.openEditorButton}
                         onClick={e => this.handleFileSelect(e.currentTarget)}
                 >
                   <Typography noWrap variant='subtitle1'>
@@ -239,7 +235,7 @@ class MaterialHandling extends Component<TProps, IState> {
                   documents={this.state.Documents}
                   onClose={(file?: DocumentFile) => {
                     this.handleFileSelect(null)
-                    this.handleFile()(file)
+                    this.handleFile()(file, true)
                   }}
                   anchorEl={this.state.FileSelectAnchor}
                   isOpen={this.state.FileSelectAnchor !== null}
@@ -250,18 +246,28 @@ class MaterialHandling extends Component<TProps, IState> {
             <Grid item xs={12} container>
               {this.state.Model.Files.map((file: DocumentFile, index: number) =>
                 <Grid item key={file.Id || index}>
-                  <FileUpload onLoad={this.handleFile(index)} fileModel={file} type={FileType.Document}>
-                    {(deleteHandler: () => void) =>
-                      <Chip
-                        className={classes.chip}
-                        key={file.Id || index}
-                        icon={<NoteAddIcon/>}
-                        label={file.Name}
-                        onDelete={deleteHandler}
-                        variant='outlined'
-                      />
-                    }
-                  </FileUpload>
+                  {this.state.SelectedDocumentsIds.includes(file.Id!)
+                    ? <Chip
+                      className={classes.chip}
+                      key={file.Id || index}
+                      icon={<NoteAddIcon/>}
+                      label={file.Name}
+                      onDelete={this.handleFile(index)}
+                      variant='outlined'
+                    />
+                    : <FileUpload onLoad={this.handleFile(index)} fileModel={file} type={FileType.Document}>
+                      {(deleteHandler: () => void) =>
+                        <Chip
+                          className={classes.chip}
+                          key={file.Id || index}
+                          icon={<NoteAddIcon/>}
+                          label={file.Name}
+                          onDelete={deleteHandler}
+                          variant='outlined'
+                        />
+                      }
+                    </FileUpload>
+                  }
                 </Grid>
               )}
             </Grid>

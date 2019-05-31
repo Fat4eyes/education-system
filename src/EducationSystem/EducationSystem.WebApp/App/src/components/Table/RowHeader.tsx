@@ -2,6 +2,7 @@ import {createStyles, Grid, Theme, WithStyles, withStyles} from '@material-ui/co
 import * as React from 'react'
 import {ReactNode} from 'react'
 import classNames from 'classnames'
+import {GridProps} from '@material-ui/core/Grid'
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -18,7 +19,7 @@ const styles = (theme: Theme) => createStyles({
   }
 })
 
-interface IRowProps extends WithStyles<typeof styles> {
+interface IRowProps extends GridProps {
   children?: ReactNode,
   selected?: boolean,
 
@@ -26,7 +27,7 @@ interface IRowProps extends WithStyles<typeof styles> {
 }
 
 
-const RowHeader = ({classes, children, selected = false, ...rest}: IRowProps) =>
+const RowHeader = ({classes, children, selected = false, ...rest}: IRowProps & WithStyles<typeof styles>) =>
   <Grid container zeroMinWidth wrap='nowrap' className={classNames(classes.root, {
     [classes.selected]: selected
   })} {...rest}>

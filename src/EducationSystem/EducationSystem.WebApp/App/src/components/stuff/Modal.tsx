@@ -1,7 +1,6 @@
 import * as React from 'react'
-import {FunctionComponent} from 'react'
+import {FunctionComponent, PropsWithChildren} from 'react'
 import {
-  Button,
   createStyles,
   Grid,
   Modal as ModalWindow,
@@ -11,7 +10,8 @@ import {
   WithStyles
 } from '@material-ui/core'
 import Block from '../Blocks/Block'
-import {MtBlock} from './Margin'
+import {MrBlock, MtBlock} from './Margin'
+import Button from './Button'
 
 export const styles = (theme: Theme) => createStyles({
   root: {
@@ -51,14 +51,15 @@ const Modal: FunctionComponent<TProps> = ({classes, isOpen, onClose, onNo, onYes
           </Typography>
         </Grid>
         <MtBlock value={2}/>
-        <Grid item xs={12} container spacing={8}>
-          <Grid item xs={6}>
-            <Button variant='outlined' fullWidth onClick={onYes}>
+        <Grid item xs={12} container justify='center'>
+          <Grid item>
+            <Button mainColor='blue' variant='outlined' fullWidth onClick={onYes}>
               Да
             </Button>
           </Grid>
-          <Grid item xs={6}>
-            <Button variant='outlined' fullWidth onClick={onNo}>
+          <MrBlock value={2}/>
+          <Grid item>
+            <Button mainColor='blue' variant='outlined' fullWidth onClick={onNo}>
               Нет
             </Button>
           </Grid>
@@ -68,3 +69,20 @@ const Modal: FunctionComponent<TProps> = ({classes, isOpen, onClose, onNo, onYes
   </ModalWindow>
 
 export default withStyles(styles)(Modal) as FunctionComponent<IProps>
+
+interface IEmptyModalProps {
+  isOpen: boolean
+  onClose: any,
+  width?: string,
+  height?: string
+}
+
+export const EmptyModal = withStyles(styles)(
+  ({classes, isOpen, onClose, children, width = '50vw', height = '50vh'}
+  : PropsWithChildren<IEmptyModalProps & WithStyles<typeof styles>>) =>
+  <ModalWindow open={isOpen} onClose={onClose}>
+    <div className={classes.root} style={{width: width, height: height}}>
+      {children}
+    </div>
+  </ModalWindow>
+) as FunctionComponent<PropsWithChildren<IEmptyModalProps>>

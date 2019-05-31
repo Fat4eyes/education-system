@@ -57,7 +57,7 @@ class Scrollbar extends Component<TProps, IState> {
   render() {
     const {classes, spacing} = this.props
     return <div className={classes.root} style={spacing ? {padding: spacing} : undefined}>
-      <Scrollbars onUpdate={this.handleUpdate} {...this.props}/>
+      <Scrollbars autoHide onUpdate={this.handleUpdate} {...this.props}/>
       <div ref={this._refs.shadowTop} className={classes.shadowTop}/>
       <div ref={this._refs.shadowBottom} className={classes.shadowBottom}/>
     </div>

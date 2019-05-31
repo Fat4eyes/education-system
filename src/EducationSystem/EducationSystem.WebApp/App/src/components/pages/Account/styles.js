@@ -1,3 +1,5 @@
+import {onMobile} from '../../stuff/CommonStyles'
+
 const styles = theme => ({
   grid: {},
   icon: {
@@ -28,6 +30,11 @@ const styles = theme => ({
   },
   mt2Unit: {
     marginTop: theme.spacing.unit * 2
+  },
+  fullNameText: {
+    ...onMobile(theme)({
+      fontSize: '1.1rem'
+    })
   }
 });
 

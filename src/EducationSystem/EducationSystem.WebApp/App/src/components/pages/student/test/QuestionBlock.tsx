@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Fragment, FunctionComponent, ReactNode} from 'react'
+import {Fragment, FunctionComponent, ReactNode, useState} from 'react'
 import {
   Checkbox,
   createStyles,
@@ -21,6 +21,7 @@ import MonacoEditor from 'react-monaco-editor'
 import {MtBlock} from '../../../stuff/Margin'
 import {GridSize} from '@material-ui/core/Grid'
 import {ICodeRunResult} from '../../../../models/Program'
+import {EmptyModal} from '../../../stuff/Modal'
 
 const styles = (theme: Theme) => createStyles({
   root: {},
@@ -32,6 +33,12 @@ const styles = (theme: Theme) => createStyles({
   },
   isWrong: {
     color: red[500]
+  },
+  image: {
+    '&>img': {
+      maxWidth: '100%',
+      height: 'auto'
+    }
   }
 })
 
@@ -50,27 +57,40 @@ const AnswerTextBlock = ({text, xs, ...props}: { text: string | number, xs?: Gri
     </Typography>
   </Grid>
 
-const QuestionBlock = (props: IProps) => {
-  const {model} = props
+const QuestionBlock = withStyles(styles)((
+  ({classes, ...props}: TProps) => {
+    const {model} = props
 
-  const answerBlock = () => {
-    switch (model.Type) {
-      case QuestionType.ClosedManyAnswers:
-        return <ClosedManyAnswers {...props}/>
-      case QuestionType.ClosedOneAnswer:
-        return <ClosedOneAnswer {...props}/>
-      case QuestionType.OpenedOneString:
-        return <OpenedOneString {...props}/>
-      case QuestionType.WithProgram:
-        return <WithProgram {...props}/>
+    const answerBlock = () => {
+      switch (model.Type) {
+        case QuestionType.ClosedManyAnswers:
+          return <ClosedManyAnswers {...props}/>
+        case QuestionType.ClosedOneAnswer:
+          return <ClosedOneAnswer {...props}/>
+        case QuestionType.OpenedOneString:
+          return <OpenedOneString {...props}/>
+        case QuestionType.WithProgram:
+          return <WithProgram {...props}/>
+      }
     }
-  }
 
-  return <Grid container>
-    <AnswerTextBlock text={model.Text} xs={12} align='center'/>
-    {answerBlock()}
-  </Grid>
-}
+    return <Grid container>
+      <AnswerTextBlock text={model.Text} xs={12} align='center'/>
+      {
+        model.Image && <>
+          <MtBlock/>
+          <Grid item xs={3}>
+            <a href={'/' + model.Image.Path} target='_blank' className={classes.image}>
+              <img src={'/' + model.Image.Path} alt={model.Image.Name}/>
+            </a>
+          </Grid>
+        </>
+      }
+      <MtBlock/>
+      {answerBlock()}
+    </Grid>
+  }
+) as FunctionComponent<IProps>)
 
 
 type TAnswerControl = {
@@ -134,7 +154,7 @@ const ClosedOneAnswer = withStyles(styles)((
 
 const OpenedOneString = withStyles(styles)((
   ({model, setAnswer, mode}: TProps) => {
-    const answer = model.Answers[0] || new Answer('')
+    const answer = model.Answers.length ? model.Answers[0] : new Answer('')
     return <Grid item xs={12} container alignItems='center'>
       <TextField
         fullWidth
@@ -225,7 +245,7 @@ const WithProgram = withStyles(styles)((
           roundedSelection: false,
           cursorStyle: 'line',
           automaticLayout: false,
-          readOnly: mode
+          readOnly: !mode
         }}
         onChange={code => setAnswer(code)}
       />

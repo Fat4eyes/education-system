@@ -9,21 +9,26 @@ import ITestService from '../../../../services/TestService'
 import {inject} from '../../../../infrastructure/di/inject'
 import Discipline from '../../../../models/Discipline'
 import IDisciplineService from '../../../../services/DisciplineService'
-import {Collapse, Grid, IconButton, Typography, WithStyles, withStyles} from '@material-ui/core'
+import {Collapse, Divider, Grid, Tooltip, Typography, WithStyles, withStyles} from '@material-ui/core'
 import TestsTableStyles from './TestsTableStyles'
-import Block from '../../../Blocks/Block'
+import Block, {PBlock} from '../../../Blocks/Block'
 import {MrBlock, MtBlock} from '../../../stuff/Margin'
-import {SimpleLink, TablePagination} from '../../../core'
+import {TablePagination} from '../../../core'
 import RowHeader from '../../../Table/RowHeader'
 import {TestType} from '../../../../common/enums'
-import EditIcon from '@material-ui/icons/Edit'
 import ClearIcon from '@material-ui/icons/Clear'
+import EditIcon from '@material-ui/icons/Edit'
 import BlockHeader from '../../../Blocks/BlockHeader'
 import Filter from './Filter'
 import {withAuthenticated} from '../../../../providers/AuthProvider/AuthProvider'
 import {TAuthProps} from '../../../../providers/AuthProvider/AuthProviderTypes'
 import Modal from '../../../stuff/Modal'
+import {IsMobileAsFuncChild} from '../../../stuff/OnMobile'
 import {routes} from '../../../Layout/Routes'
+import {Redirect} from 'react-router'
+import AddButton from '../../../stuff/AddButton'
+import ReplyIcon from '@material-ui/icons/Reply'
+import {testingSystemRoutes} from '../../../../routes'
 
 type TProps = TNotifierProps & WithStyles<typeof TestsTableStyles> & TAuthProps
 
@@ -38,6 +43,7 @@ interface IState extends ITableState<Test> {
   Filter: IFilterState,
   DetalizedTestId?: number
   DeletableTestId?: number
+  RedirectTo?: string
 }
 
 class TestsTable extends TableComponent<Test, TProps, IState> {
@@ -135,7 +141,7 @@ class TestsTable extends TableComponent<Test, TProps, IState> {
       return this.setState({
         Filter: {
           ...this.state.Filter,
-          [name]: (!!isChecked ? checked : (value || null))
+          [name]: (isChecked ? checked : (value || null))
         },
         Page: 0
       }, this.getTableData)
@@ -154,11 +160,29 @@ class TestsTable extends TableComponent<Test, TProps, IState> {
     }
   }
 
+  handleRedirect = (id: number) => this.setState({RedirectTo: routes.editTest(id)})
+
   render(): React.ReactNode {
     const {classes, auth: {User}} = this.props
 
-    return <Grid container justify='space-around' className={classes.main} spacing={16}>
-      <Grid item xs={12} md={4} lg={3}>
+    if (this.state.RedirectTo) return <Redirect to={this.state.RedirectTo}/>
+
+    const DividerInternal = () => <Divider className={classes.divider}/>
+
+    const TestTableInternal = ({isMobile}: { isMobile: boolean }) => <>
+      <BlockHeader>
+        <Typography noWrap variant='subtitle1' component='span'>
+          Тесты
+        </Typography>
+        <Grid item xs/>
+        <Tooltip title='Система тестирования – Тесты' placement='bottom-start'>
+          <a href={testingSystemRoutes.tests()} target='_blank'>
+            <ReplyIcon color='action' className={classes.colorWhite}/>
+          </a>
+        </Tooltip>
+      </BlockHeader>
+      <MtBlock value={3}/>
+      <PBlock left={isMobile}>
         <Filter
           handleInput={this.handleFilter.input}
           DisciplineId={this.state.Filter.DisciplineId || 0}
@@ -166,98 +190,103 @@ class TestsTable extends TableComponent<Test, TProps, IState> {
           IsActive={this.state.Filter.IsActive}
           Name={this.state.Filter.Name}
           handleSearch={this.handleFilter.search}
+          IsMobile={isMobile}
         />
-      </Grid>
-      <Grid item xs={12} md={8} lg={9}>
-        <Block partial>
-          <BlockHeader>
-            <Typography noWrap variant='subtitle1' component='span'>
-              Тесты
-            </Typography>
-          </BlockHeader>
-          <MtBlock value={2}/>
-          <TablePagination
-            count={{
-              all: this.state.Count,
-              perPage: this.state.CountPerPage,
-              current: this.state.Items.length
-            }}
-            page={this.state.Page}
-            onPageChange={this.handleChangePage}
-            onCountPerPageChange={this.handleChangeRowsPerPage}
-          />
-          <MtBlock value={2}/>
-          {this.state.Items.map((test: Test, index: number) =>
-            <Grid item xs={12} container key={test.Id || index}>
-              <Grid item xs={12}>
-                <RowHeader key={test.Id} onClick={this.handleTest.details(test)}>
-                  <Grid item xs={12} container wrap='nowrap' zeroMinWidth>
-                    <Typography noWrap variant='subtitle1'>
-                      {test.Subject}
-                    </Typography>
-                  </Grid>
-                </RowHeader>
-              </Grid>
-              <Collapse timeout={500} in={this.state.DetalizedTestId === test.Id} className={classes.collapse}>
-                <Grid item xs={12} className={classes.rowDetails} container>
-                  <Grid item>
-                    <Grid item xs={12}>
-                      <Typography noWrap className={classes.rowDetailsHeader}>
-                        Название
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography noWrap variant='subtitle1'>
-                        {test.Subject}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <MrBlock value={3}/>
-                  <Grid item>
-                    <Grid item xs={12}>
-                      <Typography noWrap className={classes.rowDetailsHeader}>
-                        Тип
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography noWrap variant='subtitle1'>
-                        {test.Type === TestType.Teaching && 'Обучение'}
-                        {test.Type === TestType.Control && 'Контроль знаний'}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <MrBlock value={3}/>
-                  <Grid item>
-                    <Grid item xs={12}>
-                      <Typography noWrap className={classes.rowDetailsHeader}>
-                        Доступен для студента
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography noWrap variant='subtitle1'>
-                        {test.IsActive ? 'Да' : 'Нет'}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs/>
-                  {
-                    User && User.Roles && User.Roles.Lecturer &&
-                    <Grid item>
-                      <IconButton component={props => <SimpleLink to={routes.editTest(test.Id)} {...props}/>}>
-                        <EditIcon fontSize='small' color='action'/>
-                      </IconButton>
-                    </Grid>
-                  }
-                  <Grid item>
-                    <IconButton onClick={this.handleTest.modal(test.Id)}>
-                      <ClearIcon fontSize='small' color='action'/>
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Collapse>
+        {
+          this.state.Count > this.state.Items.length && <>
+            <MtBlock value={4}/>
+            <Grid item xs={12}>
+              <TablePagination
+                count={{
+                  all: this.state.Count,
+                  perPage: this.state.CountPerPage,
+                  current: this.state.Items.length
+                }}
+                page={this.state.Page}
+                onPageChange={this.handleChangePage}
+                onCountPerPageChange={this.handleChangeRowsPerPage}
+              />
             </Grid>
-          )}
-        </Block>
+          </>
+        }
+      </PBlock>
+      <MtBlock value={isMobile ? 4 : 1}/>
+      {
+        User && User.Roles && User.Roles.Lecturer &&
+        <Grid item xs={12}>
+          <AddButton onClick={() => this.setState({RedirectTo: routes.createTest})}/>
+        </Grid>
+      }
+      {this.state.Items.map((test: Test, index: number) =>
+        <Grid item xs={12} container key={test.Id || index}>
+          <Grid item xs={12}>
+            <RowHeader key={test.Id} onClick={this.handleTest.details(test)} alignItems='center'>
+              <Grid item xs container wrap='nowrap' zeroMinWidth>
+                <Typography noWrap variant='subtitle1'>
+                  {test.Subject}
+                </Typography>
+              </Grid>
+              <Grid item xs={1}/>
+              {
+                User && User.Roles && User.Roles.Lecturer && <>
+                  <EditIcon fontSize='small' color='action' onClick={() => this.handleRedirect(test.Id!)}/>
+                  <MrBlock/>
+                </>
+              }
+              <ClearIcon color='action' onClick={this.handleTest.modal(test.Id)}/>
+            </RowHeader>
+          </Grid>
+          <Collapse timeout={500} in={this.state.DetalizedTestId === test.Id} className={classes.collapse}>
+            <Grid item xs={12} className={classes.rowDetails} container alignItems='center'>
+              <Grid item xs={3}>
+                <Typography className={classes.rowDetailsHeader}>
+                  Название
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography>
+                  {test.Subject}
+                </Typography>
+              </Grid>
+              <DividerInternal/>
+              <Grid item xs={3}>
+                <Typography className={classes.rowDetailsHeader}>
+                  Тип
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography>
+                  {test.Type === TestType.Teaching && 'Обучение'}
+                  {test.Type === TestType.Control && 'Контроль знаний'}
+                </Typography>
+              </Grid>
+              <DividerInternal/>
+              <Grid item xs={3}>
+                <Typography className={classes.rowDetailsHeader}>
+                  Активен
+                </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography>
+                  {test.IsActive ? 'Да' : 'Нет'}
+                </Typography>
+              </Grid>
+              <DividerInternal/>
+            </Grid>
+          </Collapse>
+        </Grid>
+      )}
+    </>
+
+    return <Grid container justify='space-around' className={classes.main}>
+      <Grid item xs={12} lg={12} xl={12} className={classes.testsBlock}>
+        <IsMobileAsFuncChild>
+          {(isMobile: boolean) =>
+            <Block partial={!isMobile} empty={isMobile} topBot={isMobile}>
+              <TestTableInternal isMobile={isMobile}/>
+            </Block>
+          }
+        </IsMobileAsFuncChild>
       </Grid>
       <Modal
         isOpen={!!this.state.DeletableTestId}

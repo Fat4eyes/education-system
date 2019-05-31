@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Grid, Select, Typography} from '@material-ui/core'
+import {Grid, Select, Typography} from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeftOutlined'
 import ChevronRightIcon from '@material-ui/icons/ChevronRightOutlined'
@@ -8,6 +8,8 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 import withWidth from '@material-ui/core/withWidth'
 import OutlinedInput from '@material-ui/core/OutlinedInput'
+import Button from './Button'
+import {MrBlock} from './Margin'
 
 const TablePagination = (props) => {
   const {
@@ -21,7 +23,8 @@ const TablePagination = (props) => {
 
   const leftPage = page > 0 ? page - 1 : 0
   const PreviousPage = () => (
-    <Button size='large' variant='outlined' className={classes.fab} disabled={count.perPage > count.all || page === 0}
+    <Button mainColor='blue' size='large'
+            disabled={count.perPage > count.all || page === 0}
             onClick={() => page !== leftPage && onPageChange(leftPage)}>
       <ChevronLeftIcon/>
     </Button>
@@ -29,7 +32,7 @@ const TablePagination = (props) => {
 
   const rightPage = page + 1 < count.all / count.perPage ? page + 1 : page
   const NextPage = () => (
-    <Button size='large' variant='outlined'
+    <Button mainColor='blue' size='large'
             disabled={count.perPage > count.all || page >= (count.all / count.perPage - 1)}
             onClick={() => page !== rightPage && onPageChange(rightPage)}>
       <ChevronRightIcon/>
@@ -38,14 +41,18 @@ const TablePagination = (props) => {
 
   const handleSelect = ({target: {value}}) => onCountPerPageChange(value)
 
-  return <Grid container alignItems='center' spacing={16}>
+  return <Grid container alignItems='center'>
     <If condition={!!count.current} orElse={<Grid item xs/>}>
       {
-        count.all > count.perPage &&
-        <Grid item>
-          <PreviousPage/>
-          <NextPage/>
-        </Grid>
+        count.all > count.perPage && <>
+          <Grid item>
+            <PreviousPage/>
+          </Grid>
+          <MrBlock/>
+          <Grid item>
+            <NextPage/>
+          </Grid>
+        </>
       }
       <Grid item xs/>
       <Grid item>

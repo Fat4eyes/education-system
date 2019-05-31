@@ -1,4 +1,6 @@
-import {createStyles, Theme} from '@material-ui/core'
+import {createStyles, Divider, Theme} from '@material-ui/core'
+import {getBaseContentPadding, onMobile} from '../../../stuff/CommonStyles'
+import * as React from 'react'
 
 const TestsTableStyles = (theme: Theme) => {
   const userSelectNone = {
@@ -12,13 +14,10 @@ const TestsTableStyles = (theme: Theme) => {
   
   return createStyles({
     main: {
-      [theme.breakpoints.down('md')]: {
+      flexDirection: 'row-reverse',
+      ...onMobile(theme)({
         flexDirection: 'row'
-      },
-      [theme.breakpoints.up('md')]: {
-        flexDirection: 'row-reverse'
-      }
-
+      })
     },
     header: {
       backgroundColor: theme.palette.primary.main,
@@ -72,9 +71,7 @@ const TestsTableStyles = (theme: Theme) => {
     },
     rowDetails: {
       backgroundColor: theme.palette.grey['50'],
-      padding: `${theme.spacing.unit * 2}px`,
-      borderBottom: `1px solid`,
-      borderBottomColor: theme.palette.grey['500'],
+      padding: `${theme.spacing.unit * 2}px`
     },
     rowDetailsHeader: {
       color: theme.palette.primary.main
@@ -86,6 +83,20 @@ const TestsTableStyles = (theme: Theme) => {
       left: `50%`,
       transform: `translate(-50%, -50%)`,
       padding: 1
+    },
+    testsBlock: {
+      // paddingRight: getBaseContentPadding(theme),
+      // ...onMobile(theme)({
+      //   paddingRight: 0
+      // })
+    },
+    divider: {
+      width: '100%',
+      marginTop: theme.spacing.unit * 0.3,
+      marginBottom: theme.spacing.unit * 0.3
+    },
+    colorWhite: {
+      color: theme.palette.common.white
     }
   })
 }

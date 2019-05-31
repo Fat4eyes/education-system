@@ -29,8 +29,7 @@ class SignIn extends Component {
     if (this.props.auth.checkAuth()) return <Redirect to={this.props.location.state || '/'}/>
 
     return <Grid container justify='center' className={classes.root} onKeyDown={this.handleKeyDown}>
-      <Grid container item xs={10} sm={9} md={6} lg={4} justify='center' className={classes.form} direction='column'
-            spacing={16}>
+      <Grid container item xs={10} sm={9} md={6} lg={4} justify='center' className={classes.form} direction='column'>
         <Grid item xs>
           <Avatar className={classes.marginAuto}><LockOutlinedIcon/></Avatar>
         </Grid>

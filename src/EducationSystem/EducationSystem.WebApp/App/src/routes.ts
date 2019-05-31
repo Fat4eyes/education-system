@@ -1,3 +1,5 @@
+import environment from './environment'
+
 export const authRoutes = {
   signIn: '/api/token/generate',
   check: '/api/token/check'
@@ -59,4 +61,11 @@ export const studentRoutes = {
   getDisciplines: () => '/api/students/current/disciplines',
   getTestData: (testId: number) => `/api/students/current/tests/${testId}/data`,
   getTestExecution: (testId: number) => `/api/students/current/tests/${testId}/execution`,
+}
+
+export const testingSystemRoutes = {
+  // @ts-ignore
+  main: () => environment.TestingSystemUrl,
+  disciplines: () => testingSystemRoutes.main() + 'admin/disciplines',
+  tests: () => testingSystemRoutes.main() + 'admin/tests'
 }

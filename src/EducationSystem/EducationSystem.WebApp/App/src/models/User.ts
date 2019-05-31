@@ -1,7 +1,7 @@
 import Model from './Model'
 import {TUserRole} from '../common/enums'
 
-type TRoles = {
+export type TRoles = {
   [propName in TUserRole]?: boolean
 }
 

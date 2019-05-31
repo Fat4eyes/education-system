@@ -1,14 +1,12 @@
 import React, {Component} from 'react'
 import {withAuthenticated} from '../../../providers/AuthProvider/AuthProvider'
 import {withSnackbar} from 'notistack'
-import {Grid, Tooltip, Typography, withStyles} from '@material-ui/core'
-import AccountIcon from '@material-ui/icons/AccountCircleOutlined'
-import CheckIcon from '@material-ui/icons/Check'
+import {Grid, Typography, withStyles} from '@material-ui/core'
 import {Handlers} from '../../../helpers'
 import styles from './styles'
 import Block from '../../Blocks/Block'
-import {isWidthDown} from '@material-ui/core/withWidth'
 import withWidth from '@material-ui/core/withWidth/withWidth'
+import {MtBlock} from '../../stuff/Margin'
 
 @withWidth()
 @withSnackbar
@@ -16,50 +14,22 @@ import withWidth from '@material-ui/core/withWidth/withWidth'
 @withAuthenticated
 class Account extends Component {
   render() {
-    let {classes, auth: {User}, width} = this.props
-    let isXs = isWidthDown('xs', width)
+    let {classes, auth: {User}} = this.props
 
-    return <Grid container justify='center' spacing={24} className={classes.grid}>
-      <Grid item xl={7} sm={10} xs={12} container spacing={24}>
-        <Grid item xs>
+    return <Grid container justify='center' className={classes.grid}>
+      <Grid item xs={12} container>
+        <Grid item xs={12}>
           <Block>
-            <Grid container alignItems='center' wrap="nowrap" spacing={16}>
-              <Grid item>
-                <AccountIcon color='primary' fontSize='large'/>
-              </Grid>
-              <Grid item xs>
-                <Typography variant='h6' inline color='inherit'>
-                  {Handlers.getFullName(User)}
-                </Typography>
-              </Grid>
+            <Grid container alignItems='center' wrap='nowrap' justify='center'>
+              <Typography variant='h5' inline color='inherit' className={classes.fullNameText}>
+                {Handlers.getFullName(User)}
+              </Typography>
             </Grid>
           </Block>
         </Grid>
-        {
-          User.Active &&
-          <Grid item xs={isXs}>
-            <Block>
-              {
-                isXs
-                  ? <Grid container alignItems='center' wrap="nowrap" spacing={16}>
-                    <Grid item>
-                      <CheckIcon color='primary' fontSize='large'/>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography inline color='inherit'>
-                        Учетная запись подтверждена
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  : <Tooltip title='Учетная запись подтверждена'>
-                    <CheckIcon color='primary' fontSize='large'/>
-                  </Tooltip>
-              }
-            </Block>
-          </Grid>
-        }
       </Grid>
-      <Grid item xl={7} sm={10} xs={12} container spacing={24}>
+      <MtBlock value={5}/>
+      <Grid item xs={12} container>
         <Grid item xs={12}>
           <Block partial>
             <Grid item xs={12} className={classes.header}>

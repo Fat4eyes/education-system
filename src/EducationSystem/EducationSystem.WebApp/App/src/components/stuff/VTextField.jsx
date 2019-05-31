@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {If} from '../core'
-import {Typography} from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
+import {FormControl, InputLabel, Typography} from '@material-ui/core'
+import Input from './Input'
 
 class VTextField extends Component {
   constructor(props) {
@@ -61,36 +61,36 @@ class VTextField extends Component {
   handleChange = ({target: {value}}) => {
     const {validators: {min, max, required}, type} = this.props
 
-    switch (type) {
-      case 'duration':
-        const [minutes, seconds] = value.split(':')
-        const currentTimeInSeconds = minutes * 60 + seconds
-
-        if ((min && currentTimeInSeconds > min.value) ||
-          (max && currentTimeInSeconds < max.value) ||
-          (required && currentTimeInSeconds > 0)) {
-          this.setState({isValid: true, error: ''})
-        }
-        break
-      default:
-        if ((min && value.length > min.value) ||
-          (max && value.length < max.value) ||
-          (required && !!value.length)) {
-          this.setState({isValid: true, error: ''})
-        }
-        break
+    if (type === 'duration') {
+      const [minutes, seconds] = value.split(':')
+      const currentTimeInSeconds = minutes * 60 + seconds
+      if ((min && currentTimeInSeconds > min.value) ||
+        (max && currentTimeInSeconds < max.value) ||
+        (required && currentTimeInSeconds > 0)) {
+        this.setState({isValid: true, error: ''})
+      }
+    } else {
+      if ((min && value.length > min.value) ||
+        (max && value.length < max.value) ||
+        (required && !!value.length)) {
+        this.setState({isValid: true, error: ''})
+      }
     }
-  } 
+  }
 
   render() {
-    let {classes, value, onChange, ...rest} = this.props
-    return <>
-      <TextField
+    let {classes, value, onChange, label, name, ...rest} = this.props
+    return <FormControl>
+      <InputLabel shrink htmlFor={name}>
+        {label}
+      </InputLabel>
+      <Input
         value={value}
         onChange={e => {
           this.handleChange(e)
           onChange(e)
         }}
+        name={name}
         onBlur={this.handleBlur}
         {...rest}
         error={!this.state.isValid}
@@ -100,7 +100,7 @@ class VTextField extends Component {
           {this.state.error}
         </Typography>
       </If>
-    </>
+    </FormControl>
   }
 }
 

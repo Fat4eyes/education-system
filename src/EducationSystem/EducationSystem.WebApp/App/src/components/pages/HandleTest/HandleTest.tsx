@@ -3,11 +3,9 @@ import {ChangeEvent, Component} from 'react'
 import Grid from '@material-ui/core/Grid'
 import Test from '../../../models/Test'
 import {
-  Button,
   Chip,
   Collapse,
   FormControl,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -24,7 +22,7 @@ import {SelectProps} from '@material-ui/core/Select'
 import {TestType} from '../../../common/enums'
 import Discipline from '../../../models/Discipline'
 import DisciplineTable from '../../Table/DisciplineTable'
-import Block from '../../Blocks/Block'
+import Block, {PBlock} from '../../Blocks/Block'
 import {RouteComponentProps} from 'react-router'
 import ITestService from '../../../services/TestService'
 import IThemeService from '../../../services/ThemeService'
@@ -33,6 +31,9 @@ import IDisciplineService from '../../../services/DisciplineService'
 import {Breadcrumbs} from '@material-ui/lab'
 import classNames from 'classnames'
 import {MtBlock} from '../../stuff/Margin'
+import {IsMobileAsFuncChild} from '../../stuff/OnMobile'
+import Input from '../../stuff/Input'
+import Button from '../../stuff/Button'
 
 type RouteParam = { id: string }
 type TProps = WithStyles<typeof HandleTestStyles> & RouteComponentProps<RouteParam>
@@ -134,13 +135,13 @@ class HandleTest extends Component<TProps, IState> {
   handleSubmit = async () => {
     if (this.state.Model.Id) {
       if (await this.TestService!.update(this.state.Model)) {
-        this.NotificationService!.showSuccess(`Тест "${this.state.Model.Subject}" успешно обновлен`)
+        this.NotificationService!.showSuccess(`Тест '${this.state.Model.Subject}' успешно обновлен`)
       }
     } else {
       const {data, success} = await this.TestService!.add(this.state.Model)
 
       if (success && data) {
-        this.NotificationService!.showSuccess(`Тест "${this.state.Model.Subject}" успешно добавлен`)
+        this.NotificationService!.showSuccess(`Тест '${this.state.Model.Subject}' успешно добавлен`)
         this.setState(initState)
       }
     }
@@ -191,138 +192,152 @@ class HandleTest extends Component<TProps, IState> {
         </Breadcrumbs>
       </Grid>
 
-    return <Grid container justify='center' spacing={16}>
-      <Grid item xs={12} md={10} lg={8}>
-        <Block partial>
-          <BreadcrumbsHeader/>
-          <MtBlock value={2}/>
-          <Grid item xs={12}>
-            <Collapse timeout={500} in={this.state.ShowDisciplinesTable}>
-              <Grid container>
-                <DisciplineTable handleClick={this.handleChangeDiscipline}/>
+    return <Grid container justify='center'>
+      <Grid item xs={12}>
+        <IsMobileAsFuncChild>
+          {(isMobile: boolean) =>
+            <Block partial={!isMobile} empty={isMobile} topBot={isMobile}>
+              <BreadcrumbsHeader/>
+              <MtBlock value={4}/>
+              <Grid item xs={12}>
+                <Collapse timeout={500} in={this.state.ShowDisciplinesTable}>
+                  <Grid container>
+                    <DisciplineTable handleClick={this.handleChangeDiscipline}/>
+                  </Grid>
+                </Collapse>
               </Grid>
-            </Collapse>
-          </Grid>
-          <Grid item xs={12}>
-            <Collapse timeout={500} in={!this.state.ShowDisciplinesTable}>
-              <Grid container>
-                <Grid item xs={12} container spacing={16}>
-                  <Grid item xs={12} container direction='column'>
-                    <VTextField
-                      id='Subject' name='Subject' label='Название'
-                      value={this.state.Model.Subject}
-                      onChange={this.handleModel}
-                      margin='normal' required fullWidth
-                      validators={{
-                        max: {value: 255, message: 'Название не должно привышать 255 символов'},
-                        required: true
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <TotalTimeInput
-                      id='TotalTime' name='TotalTime' label='Длительность теста'
-                      value={this.state.Model.TotalTime}
-                      onChange={this.handleModel}
-                      required
-                      type='duration'
-                      validators={{
-                        max: {value: 3600, message: 'Тест не может быть больше 60 минут'}
-                      }}
-                      mask={[/[0-9]/, /[0-9]/, ':', /[0-5]/, /[0-9]/]}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <FormControl fullWidth margin='normal'>
-                      <InputLabel htmlFor='Attempts'>Количество попыток</InputLabel>
-                      <Select name='Attempts'
-                              value={this.state.Model.Attempts}
+              <Grid item xs={12}>
+                <Collapse timeout={500} in={!this.state.ShowDisciplinesTable}>
+                  <Grid container>
+                    <PBlock left={isMobile}>
+                      <Grid item xs={12} container spacing={8} className={classes.inputsBlock}>
+                        <Grid item xs={12} container direction='column'>
+                          <VTextField
+                            id='Subject'
+                            name='Subject'
+                            label='Название'
+                            value={this.state.Model.Subject}
+                            onChange={this.handleModel}
+                            required
+                            fullWidth
+                            validators={{
+                              max: {value: 255, message: 'Название не должно привышать 255 символов'},
+                              required: true
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6} lg={3} style={{}}>
+                          <TotalTimeInput
+                            id='TotalTime'
+                            name='TotalTime'
+                            label='Длительность'
+                            value={this.state.Model.TotalTime}
+                            onChange={this.handleModel}
+                            required
+                            type='duration'
+                            validators={{
+                              max: {value: 3600, message: 'Тест не может быть больше 60 минут'}
+                            }}
+                            mask={[/[0-9]/, /[0-9]/, ':', /[0-5]/, /[0-9]/]}
+                          />
+                        </Grid>
+                        <Grid item xs={12} md={6} lg={3}>
+                          <FormControl fullWidth margin='normal'>
+                            <InputLabel htmlFor='Attempts'>Попытки</InputLabel>
+                            <Select name='Attempts'
+                                    value={this.state.Model.Attempts}
+                                    onChange={this.handleModel}
+                                    input={<Input id='Attempts'/>}
+                            >
+                              {this.renderAttempts(1, 10)}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6} lg={3}>
+                          <FormControl fullWidth margin='normal'>
+                            <InputLabel htmlFor='Type'>Тип</InputLabel>
+                            <Select
+                              name='Type'
+                              value={this.state.Model.Type}
                               onChange={this.handleModel}
-                              input={<Input id="Attempts"/>}
-                      >
-                        {this.renderAttempts(1, 10)}
-                      </Select>
-                    </FormControl>
+                              input={
+                                <Input id='Type'/>
+                              }
+                            >
+                              <MenuItem value={TestType.Control}>
+                                Контрольный
+                              </MenuItem>
+                              <MenuItem value={TestType.Teaching}>
+                                Обучающий
+                              </MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={6} lg={3}>
+                          <FormControl fullWidth margin='normal'>
+                            <InputLabel htmlFor='IsActive'>Активный</InputLabel>
+                            <Select
+                              name='IsActive'
+                              value={Number(this.state.Model.IsActive)}
+                              onChange={(e: any) => {
+                                e.target.value = !!e.target.value
+                                this.handleModel(e)
+                              }}
+                              input={
+                                <Input id='IsActive'/>
+                              }
+                            >
+                              <MenuItem value={0}>
+                                Нет
+                              </MenuItem>
+                              <MenuItem value={1}>
+                                Да
+                              </MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+                      <MtBlock/>
+                      <Grid item xs={12} container spacing={8} className={classes.inputsBlock}>
+                        <Grid item xs={12}>
+                          <FormControl fullWidth>
+                            <InputLabel shrink>Темы</InputLabel>
+                            <Select
+                              multiple
+                              name='Themes'
+                              value={this.state.SelectedThemes}
+                              onChange={this.handleSelect}
+                              input={
+                                <Input id='select-multiple-chip'/>
+                              }
+                              renderValue={this.renderSelectValues}
+                              classes={{
+                                selectMenu: classes.selectMenu
+                              }}
+                            >
+                              {this.state.AvailableThemes.map((theme: Theme) =>
+                                <MenuItem key={theme.Id} value={theme.Id}>
+                                  {theme.Name}
+                                </MenuItem>
+                              )}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+                      <Grid container className={classes.buttonBlock}>
+                        <Grid item>
+                          <Button mainColor='blue' onClick={this.handleSubmit}>
+                            {this.state.Model.Id ? 'Обновить' : 'Добавить'}
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </PBlock>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <FormControl fullWidth margin='normal'>
-                      <InputLabel htmlFor='Type'>Тип</InputLabel>
-                      <Select
-                        name='Type'
-                        value={this.state.Model.Type}
-                        onChange={this.handleModel}
-                        input={
-                          <Input id="Type"/>
-                        }
-                      >
-                        <MenuItem value={TestType.Control}>
-                          Контрольный
-                        </MenuItem>
-                        <MenuItem value={TestType.Teaching}>
-                          Обучающий
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4} lg={3}>
-                    <FormControl fullWidth margin='normal'>
-                      <InputLabel htmlFor='IsActive'>Активный</InputLabel>
-                      <Select
-                        name='IsActive'
-                        value={Number(this.state.Model.IsActive)}
-                        onChange={(e: any) => {
-                          e.target.value = !!e.target.value
-                          this.handleModel(e)
-                        }}
-                        input={
-                          <Input id="IsActive"/>
-                        }
-                      >
-                        <MenuItem value={0}>
-                          Нет
-                        </MenuItem>
-                        <MenuItem value={1}>
-                          Да
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl fullWidth>
-                      <InputLabel htmlFor="select-multiple-chip">Темы</InputLabel>
-                      <Select
-                        multiple
-                        name='Themes'
-                        value={this.state.SelectedThemes}
-                        onChange={this.handleSelect}
-                        input={
-                          <Input id="select-multiple-chip"/>
-                        }
-                        renderValue={this.renderSelectValues}
-                        classes={{
-                          selectMenu: classes.selectMenu
-                        }}
-                      >
-                        {this.state.AvailableThemes.map((theme: Theme) =>
-                          <MenuItem key={theme.Id} value={theme.Id}>
-                            {theme.Name}
-                          </MenuItem>
-                        )}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Grid container className={classes.buttonBlock}>
-                  <Grid item>
-                    <Button variant='contained' color='primary' onClick={this.handleSubmit}>
-                      {this.state.Model.Id ? 'Обновить' : 'Добавить'}
-                    </Button>
-                  </Grid>
-                </Grid>
+                </Collapse>
               </Grid>
-            </Collapse>
-          </Grid>
-        </Block>
+            </Block>
+          }
+        </IsMobileAsFuncChild>
       </Grid>
     </Grid>
   }

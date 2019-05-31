@@ -26,13 +26,14 @@ import {TestProcessService} from './services/TestProcessService'
 
 import './index.less'
 import * as Cookies from 'js-cookie'
+import Layout from './components/NewLayout/Layout'
 
 
-const Layout = React.lazy(() => {
-  return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
-    setTimeout(() => resolve(import('./components/Layout/Layout')), 500)
-  })
-})
+// const Layout = React.lazy(() => {
+//   return new Promise<any>(resolve => { //TODO Задержка для дев-тестирования 
+//     setTimeout(() => resolve(import('./components/Layout/Layout')), 500)
+//   })
+// })
 
 unregister()
 
@@ -52,9 +53,9 @@ const themeCookieName = 'theme'
 window.availableThemes = themesNames
 
 const App = () => {
-  const getThemeByName = (name: string = 'blue') => {
+  const getThemeByName = (name: string = 'dark') => {
     if (!themesNames.includes(name)) {
-      name = 'blue'
+      name = 'dark'
     }
 
     // @ts-ignore
@@ -66,7 +67,7 @@ const App = () => {
   const [theme, setThemes] = useState(initTheme())
 
   // @ts-ignore
-  window.setTheme = (themeName: string = 'blue') => {
+  window.setTheme = (themeName: string = 'dark') => {
     let {name, theme} = getThemeByName(themeName)
     Cookies.set(themeCookieName, name)
     setThemes(theme())
