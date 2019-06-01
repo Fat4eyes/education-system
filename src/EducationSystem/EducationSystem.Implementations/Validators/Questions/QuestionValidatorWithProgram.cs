@@ -36,6 +36,15 @@ namespace EducationSystem.Implementations.Validators.Questions
             if (question.Program == null)
                 throw ExceptionHelper.CreatePublicException("Не указана программа.");
 
+            if (string.IsNullOrWhiteSpace(question.Program.Source))
+                throw ExceptionHelper.CreatePublicException("Не указан исходный код программы.");
+
+            if (result.Program == null)
+                throw ExceptionHelper.CreatePublicException("Не удалось найти программу в вопросе.");
+
+            if (result.Program.Id != question.Program.Id)
+                throw ExceptionHelper.CreatePublicException("Указанная программа не принадлежит текущему вопросу.");
+
             var response = await _codeRunner.RunAsync(question.Program);
 
             if (response?.CodeExecutionResult == null)
