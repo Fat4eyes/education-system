@@ -68,7 +68,7 @@ const WithProgramStrategy: IHandleQuestionStrategy = {
   },
   preprocess(question: Question): Question {
     if (!question.Program) return question
-    question.Program.Source = question.Program.Template.toString()
+    question.Program.Source = question.Program.Template || ''
     return {...question}
   }
 }
