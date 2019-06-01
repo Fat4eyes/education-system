@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Fragment, FunctionComponent, ReactNode, useState} from 'react'
+import {Fragment, FunctionComponent, ReactNode} from 'react'
 import {
   Checkbox,
   createStyles,
@@ -21,7 +21,6 @@ import MonacoEditor from 'react-monaco-editor'
 import {MtBlock} from '../../../stuff/Margin'
 import {GridSize} from '@material-ui/core/Grid'
 import {ICodeRunResult} from '../../../../models/Program'
-import {EmptyModal} from '../../../stuff/Modal'
 
 const styles = (theme: Theme) => createStyles({
   root: {},

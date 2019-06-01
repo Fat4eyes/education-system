@@ -43,22 +43,20 @@ export class TestProcessService implements ITestProcessService {
         return getResult(await ProtectedFetch.post(routes.process(id), JSON.stringify(question)))
       case QuestionType.WithProgram:
         if (!question.Program) return getResult()
-        let codeExecutionResult = await ProtectedFetch.post(routes.execute(), JSON.stringify(question.Program))
-        if (codeExecutionResult) {
-          let errors = (codeExecutionResult as ICodeExecutionResult).Errors
-          if (!errors) (codeExecutionResult as ICodeExecutionResult).Errors = []
-          let results = (codeExecutionResult as ICodeExecutionResult).Results
-          if (!results) (codeExecutionResult as ICodeExecutionResult).Results = []
-        }
+        let data = await ProtectedFetch.post(routes.process(id), JSON.stringify(question))
+        if (!data || !data.Program || !data.Program.CodeExecutionResult) return getResult()
         
-        let result: Question = {
-          ...question,
+        return getResult(<Question>{
+          ...data,
           Program: {
-            ...question.Program,
-            CodeExecutionResult: codeExecutionResult
+            ...data.Program,
+            CodeExecutionResult: {
+              Errors: [],
+              Results: [],
+              ...data.Program.CodeExecutionResult,
+            }
           }
-        }
-        return getResult(result)
+        })
     }
   }
 

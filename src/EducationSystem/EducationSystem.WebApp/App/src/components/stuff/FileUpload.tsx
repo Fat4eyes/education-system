@@ -37,13 +37,10 @@ interface IFileInputProps {
 }
 
 export const FileInput: FunctionComponent<IFileInputProps> = (props: IFileInputProps) =>
-  <input
-    accept={props.extensions.join(', ')}
-    style={{display: 'none'}}
-    id={props.id}
-    onChange={props.onChange}
-    type="file"
-  />
+  props.extensions.join
+    ? <input accept={props.extensions.join(', ')} style={{display: 'none'}} id={props.id} onChange={props.onChange}
+             type="file"/>
+    : <input style={{display: 'none'}} id={props.id} onChange={props.onChange} type="file"/>
 
 class FileUpload extends Component<TProps, IState> {
   @inject
@@ -101,7 +98,7 @@ class FileUpload extends Component<TProps, IState> {
       if (this.state.fileModel) {
         return <Grid item xs={12} container>
           {(typeof children === 'function')
-            ? children(this.handleDelete)
+            ? children(this.handleDelete, id)
             : <Grid item xs={6}>
               <IconButton component="span" onClick={this.handleDelete}>
                 <Clear/>
@@ -113,7 +110,7 @@ class FileUpload extends Component<TProps, IState> {
 
       return <Grid item xs={12} container>
         {(typeof children === 'function')
-          ? children(this.handleAdd, this.state.extensions)
+          ? children(this.handleAdd, this.state.extensions, id)
           : <Grid item xs={6}>
             <FileInput extensions={this.state.extensions} id={id} onChange={this.handleAdd}/>
             <label htmlFor={id}>

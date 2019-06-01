@@ -10,6 +10,9 @@ const styles = (theme: Theme) => {
     borderRadius: 3,
     padding: `${theme.spacing.unit * 0.6}px ${theme.spacing.unit * 4}px`,
     color: theme.palette.common.white,
+    '& span, & h6': {
+      color: theme.palette.common.white
+    }
   }
   
   return createStyles({

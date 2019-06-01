@@ -1,26 +1,23 @@
 import * as React from 'react'
-import {ChangeEvent, ChangeEventHandler, Component} from 'react'
-import {Chip, FormControl, Grid, InputLabel, Typography, withStyles, WithStyles} from '@material-ui/core'
+import {ChangeEvent, Component} from 'react'
+import {FormControl, Grid, InputLabel, Typography, withStyles, WithStyles} from '@material-ui/core'
 import {InjectedNotistackProps, withSnackbar} from 'notistack'
 import MaterialStyles from './MaterialStyles'
 import IFileService from '../../../services/FileService'
 import {inject} from '../../../infrastructure/di/inject'
 import Material, {IMaterialAnchor} from '../../../models/Material'
 import DocumentFile from '../../../models/DocumentFile'
-import FileUpload, {FileInput} from '../../stuff/FileUpload'
 import {FileType} from '../../../common/enums'
 import MaterialEditor from '../../MaterialEditor/MaterialEditor'
 import IMaterialService from '../../../services/MaterialService'
 import Block from '../../Blocks/Block'
 import INotificationService from '../../../services/NotificationService'
-import {MrBlock, MtBlock} from '../../stuff/Margin'
-import NoteAddIcon from '@material-ui/icons/NoteAdd'
-import {Guid} from '../../../helpers/guid'
-import withWidth, {isWidthDown, WithWidth} from '@material-ui/core/withWidth/withWidth'
+import {MtBlock} from '../../stuff/Margin'
+import withWidth, {WithWidth} from '@material-ui/core/withWidth/withWidth'
 import {PopoverProps} from '@material-ui/core/Popover'
-import FileSelect from './FileSelect'
 import Input from '../../stuff/Input'
 import Button from '../../stuff/Button'
+import FileHandler from './FileHandler'
 
 interface IProps {
   match?: {
@@ -35,7 +32,6 @@ type TProps = WithStyles<typeof MaterialStyles> & InjectedNotistackProps & IProp
 
 interface IState {
   Model: Material,
-  IsMaterialEditorOpen: boolean,
   IsLoading: boolean,
   FileSelectAnchor: PopoverProps['anchorEl'],
   Documents: Array<DocumentFile>,
@@ -52,7 +48,6 @@ class MaterialHandling extends Component<TProps, IState> {
 
     this.state = {
       Model: new Material(),
-      IsMaterialEditorOpen: false,
       IsLoading: false,
       FileSelectAnchor: null,
       Documents: [],
@@ -86,34 +81,23 @@ class MaterialHandling extends Component<TProps, IState> {
       }
     }))
   }
-
-  handleMaterialEditorVisible = () => {
-    this.setState(state => ({
-      IsMaterialEditorOpen: !state.IsMaterialEditorOpen
+  
+  handleAddFile = (file: DocumentFile) => {
+    return this.setState(state => ({
+      Model: {
+        ...state.Model,
+        Files: [...state.Model.Files, file]
+      }
     }))
   }
 
-  handleFile = (index?: number) => (file?: DocumentFile, isExists?: boolean) => {
-    if (file) {
-      return this.setState(state => ({
-        Model: {
-          ...state.Model,
-          Files: [...state.Model.Files, file]
-        },
-        SelectedDocumentsIds: isExists ? [...state.SelectedDocumentsIds, file.Id!] : state.SelectedDocumentsIds
-      }))
-    }
-
-    if (index !== undefined) {
-      let file = this.state.Model.Files[index]
-
-      return this.setState(state => ({
-        Model: {
-          ...state.Model,
-          Files: state.Model.Files.filter(f => f.Id !== file.Id)
-        }
-      }))
-    }
+  handleRemoveFile = (file: DocumentFile) => {
+    return this.setState(state => ({
+      Model: {
+        ...state.Model,
+        Files: state.Model.Files.filter(f => f.Id !== file.Id)
+      }
+    }))
   }
 
   handleSubmit = async () => {
@@ -135,25 +119,8 @@ class MaterialHandling extends Component<TProps, IState> {
     result && this.props.onMaterialSave && this.props.onMaterialSave(material)
   }
 
-  handleFileSelect = async (anchorEl: PopoverProps['anchorEl']) => {
-    if (!anchorEl) return this.setState({FileSelectAnchor: anchorEl})
-
-    if (!this.state.Documents.length) {
-      const {data, success} = await this.FileService!.getAll(FileType.Document, {All: true})
-      if (data && success) {
-        return this.setState(state => ({
-          Documents: data.Items.filter(m => !state.Model.Files.find(f => f.Id === m.Id)),
-          FileSelectAnchor: anchorEl
-        }))
-      }
-    } else {
-      return this.setState({FileSelectAnchor: anchorEl})
-    }
-  }
-
   render(): React.ReactNode {
-    let {classes, width} = this.props
-    let isSmallScreen = isWidthDown('md', width)
+    let {classes} = this.props
 
     return <Grid container justify='center'>
       <Grid item xs={12}>
@@ -203,74 +170,12 @@ class MaterialHandling extends Component<TProps, IState> {
           </Grid>
           <MtBlock value={2}/>
           <Grid item xs={12} container>
-            <Grid item xs container alignItems='center'>
-              <Grid item xs={12} md>
-                <FileUpload onLoad={this.handleFile()} type={FileType.Document}>
-                  {(handleAdd: ChangeEventHandler, extensions: string[]) => {
-                    if (!extensions) return <></>
-                    const id = Guid.create()
-                    return <>
-                      <FileInput extensions={extensions} id={id} onChange={handleAdd}/>
-                      <label htmlFor={id} style={{width: '100%'}}>
-                        <Button className={classes.openEditorButton}>
-                          <Typography noWrap variant='subtitle1'>
-                            Загрузить документ
-                          </Typography>
-                        </Button>
-                      </label>
-                    </>
-                  }}
-                </FileUpload>
-              </Grid>
-              {isSmallScreen ? <MtBlock/> : <MrBlock/>}
-              <Grid item xs={12} md>
-                <Button className={classes.openEditorButton}
-                        onClick={e => this.handleFileSelect(e.currentTarget)}
-                >
-                  <Typography noWrap variant='subtitle1'>
-                    Прикрепить документ
-                  </Typography>
-                </Button>
-                <FileSelect
-                  documents={this.state.Documents}
-                  onClose={(file?: DocumentFile) => {
-                    this.handleFileSelect(null)
-                    this.handleFile()(file, true)
-                  }}
-                  anchorEl={this.state.FileSelectAnchor}
-                  isOpen={this.state.FileSelectAnchor !== null}
-                />
-              </Grid>
-            </Grid>
-            <MtBlock/>
-            <Grid item xs={12} container>
-              {this.state.Model.Files.map((file: DocumentFile, index: number) =>
-                <Grid item key={file.Id || index}>
-                  {this.state.SelectedDocumentsIds.includes(file.Id!)
-                    ? <Chip
-                      className={classes.chip}
-                      key={file.Id || index}
-                      icon={<NoteAddIcon/>}
-                      label={file.Name}
-                      onDelete={this.handleFile(index)}
-                      variant='outlined'
-                    />
-                    : <FileUpload onLoad={this.handleFile(index)} fileModel={file} type={FileType.Document}>
-                      {(deleteHandler: () => void) =>
-                        <Chip
-                          className={classes.chip}
-                          key={file.Id || index}
-                          icon={<NoteAddIcon/>}
-                          label={file.Name}
-                          onDelete={deleteHandler}
-                          variant='outlined'
-                        />
-                      }
-                    </FileUpload>
-                  }
-                </Grid>
-              )}
-            </Grid>
+            <FileHandler
+              handleAddFile={this.handleAddFile}
+              handleRemoveFile={this.handleRemoveFile}
+              fileService={this.FileService!}
+              files={this.state.Model.Files}
+            />
             <MtBlock value={2}/>
             <Grid item xs={12} container>
               <Button onClick={this.handleSubmit} variant='outlined'>

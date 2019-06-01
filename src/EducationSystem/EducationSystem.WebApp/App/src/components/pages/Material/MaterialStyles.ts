@@ -9,17 +9,6 @@ const MaterialStyles = (theme: Theme) => createStyles({
   },
   image: {
     height: 100
-  },
-  openEditorButton: {
-    padding: 0 + important,
-    width: '100%',
-    backgroundColor: theme.palette.grey['300'],
-    ...onHover({
-      backgroundColor: theme.palette.grey['400']
-    })
-  },
-  chip: {
-    margin: '6px 12px'
   }
 })
 
