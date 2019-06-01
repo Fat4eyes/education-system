@@ -15,45 +15,51 @@ class VTextField extends Component {
   }
 
   handleBlur = ({target: {value}}) => {
-    const {validators: {min, max, required}, type} = this.props
-    switch (type) {
-      case 'duration':
-        const [minutes, seconds] = value.split(':')
-        const currentTimeInSeconds = Number(minutes) * 60 + Number(seconds)
-        if (min && currentTimeInSeconds < min.value) {
-          return this.setState({isValid: false, error: min.message})
-        }
-        if (max && currentTimeInSeconds > max.value) {
-          return this.setState({isValid: false, error: max.message})
-        }
-        if (required && !currentTimeInSeconds) {
-          return this.setState({isValid: false, error: ''})
-        }
-        break
-      case 'number':
-        value = Number(value)
-        if (min && value < Number(min)) {
-          return this.setState({isValid: false, error: min.message})
-        }
-        if (max && value > Number(max)) {
-          return this.setState({isValid: false, error: max.message})
-        }
-        if (required && value === 0) {
-          return this.setState({isValid: false, error: ''})
-        }
-        break
-      default:
-        if (min && value.length < min.value) {
-          return this.setState({isValid: false, error: min.message})
-        }
-        if (max && value.length > max.value) {
-          return this.setState({isValid: false, error: max.message})
-        }
-        if (required && !value.length) {
-          return this.setState({isValid: false, error: ''})
-        }
-        break
+    try {
+      const {validators: {min, max, required}, type} = this.props
+      switch (type) {
+        case 'duration':
+          const [minutes, seconds] = value.split(':')
+          const currentTimeInSeconds = Number(minutes) * 60 + Number(seconds)
+          if (min && currentTimeInSeconds < min.value) {
+            return this.setState({isValid: false, error: min.message})
+          }
+          if (max && currentTimeInSeconds > max.value) {
+            return this.setState({isValid: false, error: max.message})
+          }
+          if (required && !currentTimeInSeconds) {
+            return this.setState({isValid: false, error: ''})
+          }
+          break
+        case 'number':
+          value = Number(value)
+          if (min && value < Number(min)) {
+            return this.setState({isValid: false, error: min.message})
+          }
+          if (max && value > Number(max)) {
+            return this.setState({isValid: false, error: max.message})
+          }
+          if (required && value === 0) {
+            return this.setState({isValid: false, error: ''})
+          }
+          break
+        default:
+          if (min && value.length < min.value) {
+            return this.setState({isValid: false, error: min.message})
+          }
+          if (max && value.length > max.value) {
+            return this.setState({isValid: false, error: max.message})
+          }
+          if (required && !value.length) {
+            return this.setState({isValid: false, error: ''})
+          }
+          break
+      } 
     }
+    catch (e) {
+      
+    }
+    
 
     this.setState({isValid: true, error: ''})
   }
