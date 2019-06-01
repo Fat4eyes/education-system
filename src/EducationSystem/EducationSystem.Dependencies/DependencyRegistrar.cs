@@ -39,6 +39,7 @@ namespace EducationSystem.Dependencies
 
             collection.AddTransient<ICodeExecutor, CodeExecutor>();
             collection.AddTransient<ICodeAnalyzer, CodeAnalyzer>();
+            collection.AddTransient<ICodeRunner, CodeRunner>();
             collection.AddTransient<IHashComputer, HashComputer>();
             collection.AddTransient<ITokenGenerator, TokenGenerator>();
             collection.AddTransient<IQuestionValidatorFactory, QuestionValidatorFactory>();
