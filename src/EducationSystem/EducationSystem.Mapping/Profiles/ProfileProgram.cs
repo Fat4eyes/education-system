@@ -9,10 +9,12 @@ namespace EducationSystem.Mapping.Profiles
         public ProfileProgram()
         {
             CreateMap<DatabaseProgram, Program>()
-                .ForMember(d => d.Source, o => o.Ignore());
+                .ForMember(d => d.Source, o => o.Ignore())
+                .ForMember(d => d.CodeRunningResult, o => o.Ignore());
 
             CreateMap<Program, Program>()
-                .ForMember(d => d.Source, o => o.Ignore());
+                .ForMember(d => d.Source, o => o.Ignore())
+                .ForMember(d => d.CodeRunningResult, o => o.Ignore());
 
             CreateMap<Program, DatabaseProgram>()
                 .ForMember(d => d.Id, o => o.Ignore())

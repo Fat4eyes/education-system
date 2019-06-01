@@ -6,37 +6,38 @@ using CodeExecutionSystem.Contracts.Data;
 using EducationSystem.Database.Models;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Code;
 using EducationSystem.Interfaces.Repositories;
+using EducationSystem.Models.Code;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Programs;
 using Microsoft.Extensions.Logging;
-using CodeExecutionResult = EducationSystem.Models.Code.CodeExecutionResult;
 
-namespace EducationSystem.Implementations
+namespace EducationSystem.Implementations.Code
 {
-    public sealed class CodeExecutor : ICodeExecutor
+    public sealed class CodeRunner : ICodeRunner
     {
         private readonly IMapper _mapper;
         private readonly IContext _context;
         private readonly ILogger<CodeExecutor> _logger;
-        private readonly ICodeExecutionApi _codeExecutionApi;
+        private readonly ICodeTesterApi _codeTesterApi;
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
 
-        public CodeExecutor(
+        public CodeRunner(
             IMapper mapper,
             IContext context,
             ILogger<CodeExecutor> logger,
-            ICodeExecutionApi codeExecutionApi,
+            ICodeTesterApi codeTesterApi,
             IRepository<DatabaseProgram> repositoryProgram)
         {
             _mapper = mapper;
             _context = context;
             _logger = logger;
-            _codeExecutionApi = codeExecutionApi;
+            _codeTesterApi = codeTesterApi;
             _repositoryProgram = repositoryProgram;
         }
 
-        public async Task<CodeExecutionResult> ExecuteAsync(Program program)
+        public async Task<CodeRunningResult> RunAsync(Program program)
         {
             if (program == null)
                 throw ExceptionHelper.CreatePublicException("Не указана программа.");
@@ -61,18 +62,18 @@ namespace EducationSystem.Implementations
             {
                 var code = _mapper.Map<TestingCode>(program);
 
-                var response = await _codeExecutionApi.ExecuteCodeAsync(code);
+                var response = await _codeTesterApi.TestCode(code);
 
-                return _mapper.Map<CodeExecutionResult>(response);
+                return _mapper.Map<CodeRunningResult>(response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Не удалось выполнить запрос на выполнение кода. " +
+                    $"Не удалось выполнить запрос на запуск кода. " +
                     $"Идентификатор пользователя: {user.Id}. " +
                     $"Идентификатор программы: {program.Id}.", ex);
 
-                throw ExceptionHelper.CreatePublicException("Не удалось выполнить запрос на выполнение кода.");
+                throw ExceptionHelper.CreatePublicException("Не удалось выполнить запрос на запуск кода.");
             }
         }
     }

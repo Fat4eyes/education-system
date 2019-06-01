@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using CodeExecutionSystem.Contracts.Abstractions;
 using CodeExecutionSystem.Contracts.Data;
 
-namespace EducationSystem.Implementations
+namespace EducationSystem.Implementations.Code
 {
     public sealed class CodeAnalysisApi : ICodeAnalysisApi
     {

@@ -2,6 +2,7 @@
 using EducationSystem.Database;
 using EducationSystem.Database.Models;
 using EducationSystem.Implementations;
+using EducationSystem.Implementations.Code;
 using EducationSystem.Implementations.Factories;
 using EducationSystem.Implementations.Helpers;
 using EducationSystem.Implementations.Repositories;
@@ -11,6 +12,7 @@ using EducationSystem.Implementations.Validators;
 using EducationSystem.Implementations.Validators.Files;
 using EducationSystem.Implementations.Validators.Questions;
 using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Code;
 using EducationSystem.Interfaces.Factories;
 using EducationSystem.Interfaces.Helpers;
 using EducationSystem.Interfaces.Repositories;
@@ -44,6 +46,7 @@ namespace EducationSystem.Dependencies
             // TODO: Потом удалить. Представляет собой реализацию фейковых ответов.
             collection.AddTransient<ICodeAnalysisApi, CodeAnalysisApi>();
             collection.AddTransient<ICodeExecutionApi, CodeExecutionApi>();
+            collection.AddTransient<ICodeTesterApi, CodeTesterApi>();
 
             collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

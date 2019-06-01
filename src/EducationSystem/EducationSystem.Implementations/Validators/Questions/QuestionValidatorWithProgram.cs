@@ -3,6 +3,7 @@ using AutoMapper;
 using EducationSystem.Database.Models;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Code;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
@@ -11,21 +12,21 @@ namespace EducationSystem.Implementations.Validators.Questions
 {
     public sealed class QuestionValidatorWithProgram : QuestionValidator, IQuestionValidatorWithProgram
     {
-        private readonly ICodeExecutor _codeExecutor;
+        private readonly ICodeRunner _codeRunner;
 
         public QuestionValidatorWithProgram(
             IMapper mapper,
             IContext context,
             IHashComputer hashComputer,
             IRepository<DatabaseQuestion> repositoryQuestion,
-            ICodeExecutor codeExecutor)
+            ICodeRunner codeRunner)
             : base(
                 mapper,
                 context,
                 hashComputer,
                 repositoryQuestion)
         {
-            _codeExecutor = codeExecutor;
+            _codeRunner = codeRunner;
         }
 
         public override async Task<Question> ValidateAsync(Question question)
@@ -38,9 +39,14 @@ namespace EducationSystem.Implementations.Validators.Questions
             if (string.IsNullOrWhiteSpace(question.Program.Source))
                 throw ExceptionHelper.CreatePublicException("Не указан исходный код программы.");
 
-            var response = await _codeExecutor.ExecuteAsync(question.Program);
+            var response = await _codeRunner.RunAsync(question.Program);
 
-            return result.SetRight(response.Success);
+            if (response?.CodeExecutionResult == null)
+                return result.SetRight(false);
+
+            return result
+                .SetCodeRunningResult(response)
+                .SetRight(response.CodeExecutionResult.Success);
         }
     }
 }

@@ -158,7 +158,8 @@ namespace EducationSystem.Implementations.Services
 
             model.Order = int.MaxValue;
 
-            await ProcessMaterialAnchorsAsync(model, question);
+            if (question.Material != null && question.MaterialAnchors.IsNotEmpty())
+                model.MaterialAnchors = Mapper.Map<List<DatabaseQuestionMaterialAnchor>>(question.MaterialAnchors);
 
             switch (question.Type)
             {
@@ -229,7 +230,15 @@ namespace EducationSystem.Implementations.Services
 
             await _repositoryQuestion.UpdateAsync(model, true);
 
-            await ProcessMaterialAnchorsAsync(model, question);
+            if (model.MaterialAnchors.Any())
+                await _repositoryQuestionMaterialAnchor.RemoveAsync(model.MaterialAnchors, true);
+
+            model.MaterialAnchors = question.Material != null && question.MaterialAnchors.IsNotEmpty()
+                ? Mapper.Map<List<DatabaseQuestionMaterialAnchor>>(question.MaterialAnchors)
+                : null;
+
+            if (model.MaterialAnchors.IsNotEmpty())
+                await _repositoryQuestionMaterialAnchor.UpdateAsync(model.MaterialAnchors, true);
 
             switch (question.Type)
             {
@@ -318,19 +327,6 @@ namespace EducationSystem.Implementations.Services
             await _repositoryQuestion.UpdateAsync(model, true);
 
             return result;
-        }
-
-        private async Task ProcessMaterialAnchorsAsync(DatabaseQuestion model, Question question)
-        {
-            if (model.MaterialAnchors.Any())
-                await _repositoryQuestionMaterialAnchor.RemoveAsync(model.MaterialAnchors, true);
-
-            model.MaterialAnchors = question.Material != null && question.MaterialAnchors.IsNotEmpty()
-                ? Mapper.Map<List<DatabaseQuestionMaterialAnchor>>(question.MaterialAnchors)
-                : null;
-
-            if (model.MaterialAnchors.IsNotEmpty())
-                await _repositoryQuestionMaterialAnchor.UpdateAsync(model.MaterialAnchors, true);
         }
     }
 }

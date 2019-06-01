@@ -48,6 +48,8 @@ namespace EducationSystem.Mapping.Profiles
                 .ForMember(d => d.Text, o => o.MapFrom(s => s.Message))
                 .ForMember(d => d.IsError, o => o.MapFrom(s => s.Level == Level.Error))
                 .ForMember(d => d.IsWarning, o => o.MapFrom(s => s.Level == Level.Warning));
+
+            CreateMap<CodeTestingResult, CodeRunningResult>();
         }
     }
 }

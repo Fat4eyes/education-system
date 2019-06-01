@@ -6,37 +6,38 @@ using CodeExecutionSystem.Contracts.Data;
 using EducationSystem.Database.Models;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
+using EducationSystem.Interfaces.Code;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications.Programs;
 using Microsoft.Extensions.Logging;
-using CodeAnalysisResult = EducationSystem.Models.Code.CodeAnalysisResult;
+using CodeExecutionResult = EducationSystem.Models.Code.CodeExecutionResult;
 
-namespace EducationSystem.Implementations
+namespace EducationSystem.Implementations.Code
 {
-    public sealed class CodeAnalyzer : ICodeAnalyzer
+    public sealed class CodeExecutor : ICodeExecutor
     {
         private readonly IMapper _mapper;
         private readonly IContext _context;
-        private readonly ILogger<CodeAnalyzer> _logger;
-        private readonly ICodeAnalysisApi _codeAnalysisApi;
+        private readonly ILogger<CodeExecutor> _logger;
+        private readonly ICodeExecutionApi _codeExecutionApi;
         private readonly IRepository<DatabaseProgram> _repositoryProgram;
 
-        public CodeAnalyzer(
+        public CodeExecutor(
             IMapper mapper,
             IContext context,
-            ILogger<CodeAnalyzer> logger,
-            ICodeAnalysisApi codeAnalysisApi,
+            ILogger<CodeExecutor> logger,
+            ICodeExecutionApi codeExecutionApi,
             IRepository<DatabaseProgram> repositoryProgram)
         {
             _mapper = mapper;
             _context = context;
             _logger = logger;
-            _codeAnalysisApi = codeAnalysisApi;
+            _codeExecutionApi = codeExecutionApi;
             _repositoryProgram = repositoryProgram;
         }
 
-        public async Task<CodeAnalysisResult> AnalyzeAsync(Program program)
+        public async Task<CodeExecutionResult> ExecuteAsync(Program program)
         {
             if (program == null)
                 throw ExceptionHelper.CreatePublicException("Не указана программа.");
@@ -61,18 +62,18 @@ namespace EducationSystem.Implementations
             {
                 var code = _mapper.Map<TestingCode>(program);
 
-                var response = await _codeAnalysisApi.AnalyzeCodeAsync(code);
+                var response = await _codeExecutionApi.ExecuteCodeAsync(code);
 
-                return _mapper.Map<CodeAnalysisResult>(response);
+                return _mapper.Map<CodeExecutionResult>(response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(
-                    $"Не удалось выполнить запрос на анализ кода. " +
+                    $"Не удалось выполнить запрос на выполнение кода. " +
                     $"Идентификатор пользователя: {user.Id}. " +
                     $"Идентификатор программы: {program.Id}.", ex);
 
-                throw ExceptionHelper.CreatePublicException("Не удалось выполнить запрос на анализ кода.");
+                throw ExceptionHelper.CreatePublicException("Не удалось выполнить запрос на выполнение кода.");
             }
         }
     }

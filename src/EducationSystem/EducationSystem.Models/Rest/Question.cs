@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EducationSystem.Enums;
+using EducationSystem.Models.Code;
 using EducationSystem.Models.Files;
 using EducationSystem.Models.Rest.Basics;
 
@@ -47,6 +48,16 @@ namespace EducationSystem.Models.Rest
         public Question SetRight(bool right)
         {
             Right = right;
+            return this;
+        }
+
+        public Question SetCodeRunningResult(CodeRunningResult result)
+        {
+            if (Program == null)
+                return this;
+
+            Program.SetCodeRunningResult(result);
+
             return this;
         }
 
