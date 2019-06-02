@@ -13,7 +13,7 @@
     }
   },
   "TokenParameters": {
-    "LifeTimeInMinutes": 60,
+    "LifeTimeInMinutes": 90,
     "Issuer": "Education-System-Issuer",
     "Audience": "Education-System-Audience",
     "SecretKey": "Education-System-Secret-Key"

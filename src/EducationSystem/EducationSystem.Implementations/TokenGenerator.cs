@@ -69,10 +69,9 @@ namespace EducationSystem.Implementations
 
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
             };
-
-            claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role));
 
             var identity = new ClaimsIdentity(claims, "Token",
                 ClaimsIdentity.DefaultNameClaimType,

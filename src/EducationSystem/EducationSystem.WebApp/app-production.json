@@ -13,10 +13,10 @@
     }
   },
   "TokenParameters": {
-    "LifeTimeInMinutes": 60,
-    "Issuer": "Education-System-Issuer",
-    "Audience": "Education-System-Audience",
-    "SecretKey": "Education-System-Secret-Key"
+    "LifeTimeInMinutes": 90,
+    "Issuer": "Issuer-KcXfEZ3Y4vXg21X",
+    "Audience": "Audience-AkuLmN5TOqvZJsh",
+    "SecretKey": "qafPfEBOXMohsHtp4wXYmW0VZGKBgPhKx0B810uYw8db7CXkCq2Wa37woLFe"
   },
   "CodeTesterApiPath": "_",
   "CodeExecutionApiPath": "_",
