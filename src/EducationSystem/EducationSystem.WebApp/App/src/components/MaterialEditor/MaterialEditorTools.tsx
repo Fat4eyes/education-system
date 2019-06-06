@@ -41,7 +41,21 @@ export const setAnchor = (anchors: IMaterialAnchor[], onRemove: (token: string) 
 
 export const moveToAnchor = (anchorKey: string) => {
   const contentBlock = findAnchor(anchorKey)
+  
   if (contentBlock) {
+    // @ts-ignore
+    let oldColor = contentBlock.style.backgroundColor
+    let newColor = 'rgba(245,104,104,0.17)'
+    
+    let count = 10
+    let intervalId = setInterval(() => {
+      count-- < 0 && clearInterval(intervalId)
+
+      // @ts-ignore
+      contentBlock.style.backgroundColor = contentBlock.style.backgroundColor === oldColor
+        ? newColor : oldColor
+      
+    }, 250)
     contentBlock.scrollIntoView({
       block: 'center'
     })

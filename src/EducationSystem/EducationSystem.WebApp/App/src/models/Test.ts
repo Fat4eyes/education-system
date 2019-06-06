@@ -15,6 +15,8 @@ export default class Test extends Model {
   public Themes: Array<Theme> = []
   public ThemesCount: number = 0
   public QuestionsCount: number = 0
+  public PassedThemesCount?: number = 0
+  public PassedQuestionsCount?: number = 0
   
   constructor(disciplineId?: number) {
     super()

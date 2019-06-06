@@ -18,7 +18,6 @@ import {withAuthenticated} from '../../providers/AuthProvider/AuthProvider'
 import Button from '../stuff/Button'
 import {SimpleLink} from '../core'
 import {routes} from '../Layout/Routes'
-import * as Handlers from '../../helpers/Handlers'
 import {headerHeight} from './Layout'
 import {MrBlock} from '../stuff/Margin'
 

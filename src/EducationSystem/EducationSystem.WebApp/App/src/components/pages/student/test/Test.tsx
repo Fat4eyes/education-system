@@ -1,7 +1,7 @@
-import {Button, Grid, Typography, WithStyles, withStyles} from '@material-ui/core'
+import {Grid, Typography, WithStyles, withStyles} from '@material-ui/core'
 import {TestStyles} from './TestStyles'
 import * as React from 'react'
-import {Component} from 'react'
+import {Component, createRef} from 'react'
 import Block from '../../../Blocks/Block'
 import {RouteComponentProps} from 'react-router'
 import {inject} from '../../../../infrastructure/di/inject'
@@ -11,9 +11,11 @@ import ITestProcessService from '../../../../services/TestProcessService'
 import ITestService from '../../../../services/TestService'
 import QuestionBlock from './QuestionBlock'
 import {getHandleQuestionStrategy, IHandleQuestionStrategy, NullHandleQuestionStrategy} from './HandleQuestionStrategy'
-import {indexOf, shuffle} from '../../../../helpers/ArrayHelpers'
+import {indexOf} from '../../../../helpers/ArrayHelpers'
 import {MtBlock} from '../../../stuff/Margin'
 import MaterialBlock from './MaterialBlock'
+import Button from '../../../stuff/Button'
+import BlockHeader from '../../../Blocks/BlockHeader'
 
 type TProps = WithStyles<typeof TestStyles> & RouteComponentProps<{ id: string }>
 
@@ -31,6 +33,7 @@ interface IState {
 class Test extends Component<TProps, IState> {
   @inject private TestProcessService?: ITestProcessService
   @inject private TestService?: ITestService
+  private _rootRef = createRef<HTMLDivElement>()
 
   constructor(props: TProps) {
     super(props)
@@ -54,6 +57,7 @@ class Test extends Component<TProps, IState> {
 
       if (success) {
         if (!data || data.Count === 0) {
+          console.log('asdasdasd')
           return this.setState({IsFinish: true})
         } else {
           data.Items.sort((a, b) => a.Id !== undefined && b.Id !== undefined && a.Id > b.Id ? 1 : -1)
@@ -68,11 +72,10 @@ class Test extends Component<TProps, IState> {
       if (oldIndex !== -1) index = oldIndex + 1
       if (oldIndex === questions.length - 1) {
         index = 0
-        shuffle(questions)
       }
     }
 
-    let newQuestion = questions.find(q => q.Material !== undefined) || questions[index]
+    let newQuestion = questions[index]
     let strategy = getHandleQuestionStrategy(newQuestion.Type)
 
     this.setState({
@@ -123,58 +126,84 @@ class Test extends Component<TProps, IState> {
         Test: data
       }, this.getQuestion)
     }
+
+    this._rootRef.current && this._rootRef.current.focus()
+  }
+
+  componentDidUpdate(): void {
+    this._rootRef.current && this._rootRef.current.focus()
   }
 
   handleAnswer = (value: boolean | string, id?: number) => {
     if (!this.state.Question || this.state.IsFinish) return
     this.setState({Question: this.state.Strategy.process(this.state.Question, value, id)})
   }
-  
+
   handleMaterial = () => this.setState(state => ({ShowMaterial: !state.ShowMaterial}))
+
+  handleKeyPress = (event: any) => {
+    if (event.key === 'Enter') return this.state.Mode === true
+      ? this.checkQuestion()
+      : this.getQuestion()
+  }
 
   render(): React.ReactNode {
     let {classes} = this.props
-
-    return <Grid container justify='center'>
-      <Grid item xs={12} lg={10}>
-        <Block partial>
-          {
-            this.state.IsFinish &&
-            <Grid item xs={12} container zeroMinWidth wrap='nowrap'>
-              <Typography align='center' color='inherit'>
-                Тест пройден
+    
+    return <div className={classes.root} onKeyPress={this.handleKeyPress} tabIndex={0} ref={this._rootRef}>
+      <Grid container justify='center'>
+        <Grid item xs={12}>
+          <Block partial>
+            <BlockHeader>
+              <Typography noWrap variant='subtitle1' component='span'>
+                {this.state.Test ? this.state.Test.Subject : ''}
               </Typography>
-            </Grid>
+            </BlockHeader>
+            <MtBlock value={4}/>
+            {
+              this.state.IsFinish &&
+              <Grid item xs={12} container zeroMinWidth wrap='nowrap'>
+                <Typography align='center' color='inherit'>
+                  Тест пройден
+                </Typography>
+              </Grid>
 
-          }
-          {
-            this.state.Question && <>
-              <Grid item xs={12}>
-                <QuestionBlock model={this.state.Question} setAnswer={this.handleAnswer} mode={this.state.Mode!}/>
-              </Grid>
-              <MtBlock value={2}/>
-              <Grid item xs={12} container>
-                {this.state.Mode === true && <Button onClick={this.checkQuestion} variant='outlined'>Проверить</Button>}
-                {this.state.Mode === false && <Button onClick={this.getQuestion} variant='outlined'>Следующий</Button>}
-                <Grid item xs/>
-                {
-                  this.state.Question.Material && 
-                  <Button onClick={this.handleMaterial} variant='outlined'>
-                    {this.state.ShowMaterial ? 'Скрыть' : 'Показать'} материал
-                  </Button>
-                }
-              </Grid>
-            </>
-          }
-        </Block>
-      </Grid>
-      {
-        this.state.ShowMaterial && this.state.Question && this.state.Question.Material &&
-        <Grid item xs={12} lg={10}>
-            <MaterialBlock model={this.state.Question.Material}/>
+            }
+            {
+              this.state.Question && !this.state.IsFinish && <>
+                <Grid item xs={12}>
+                  <QuestionBlock model={this.state.Question} setAnswer={this.handleAnswer} mode={this.state.Mode!}/>
+                </Grid>
+                <MtBlock value={2}/>
+                <Grid item xs={12} container>
+                  {this.state.Mode === true &&
+                  <Button onClick={this.checkQuestion} variant='outlined'>Проверить</Button>}
+                  {this.state.Mode === false &&
+                  <Button onClick={this.getQuestion} variant='outlined'>Следующий</Button>}
+                  <Grid item xs/>
+                  {
+                    this.state.Question.Material &&
+                    <Button onClick={this.handleMaterial} variant='outlined'>
+                      {this.state.ShowMaterial ? 'Скрыть' : 'Показать'} материал
+                    </Button>
+                  }
+                </Grid>
+              </>
+            }
+          </Block>
         </Grid>
-      }
-    </Grid>
+        {
+          this.state.ShowMaterial && this.state.Question && this.state.Question.Material && <>
+            <MtBlock value={4}/>
+            <Grid item xs={12}>
+              <MaterialBlock model={this.state.Question.Material} anchors={this.state.Question.MaterialAnchors}/>
+            </Grid>
+          </>
+        }
+      </Grid>
+
+    </div>
+
   }
 }
 

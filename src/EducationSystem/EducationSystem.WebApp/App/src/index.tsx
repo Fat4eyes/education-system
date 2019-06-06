@@ -1,4 +1,4 @@
-import React, {Suspense, useState} from 'react'
+  import React, {Suspense, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {Router} from 'react-router-dom'
 import {Loading} from './components/core'

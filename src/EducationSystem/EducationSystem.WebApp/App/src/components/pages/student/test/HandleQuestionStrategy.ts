@@ -15,7 +15,7 @@ export const NullHandleQuestionStrategy: IHandleQuestionStrategy = {
   postprocess: (question: Question): Question => question
 }
 
-const ClosedManyAnswersStrategy: IHandleQuestionStrategy = {
+export const ClosedManyAnswersStrategy: IHandleQuestionStrategy = {
   process(question: Question, answer: boolean | string, id?: number): Question {
     if (!id) return question
     let current = question.Answers.find(a => a.Id === id)
@@ -35,7 +35,7 @@ const ClosedManyAnswersStrategy: IHandleQuestionStrategy = {
   }
 }
 
-const ClosedOneAnswerStrategy: IHandleQuestionStrategy = {
+export const ClosedOneAnswerStrategy: IHandleQuestionStrategy = {
   ...ClosedManyAnswersStrategy,
   process(question: Question, answer: boolean | string, id?: number): Question {
     if (!id) return question
@@ -44,7 +44,7 @@ const ClosedOneAnswerStrategy: IHandleQuestionStrategy = {
   }
 }
 
-const OpenedOneStringStrategy: IHandleQuestionStrategy = {
+export const OpenedOneStringStrategy: IHandleQuestionStrategy = {
   ...NullHandleQuestionStrategy,
   process(question: Question, answer: boolean | string): Question {
     if (!question.Answers[0]) question.Answers.push(new Answer(answer.toString()))
@@ -58,7 +58,7 @@ const OpenedOneStringStrategy: IHandleQuestionStrategy = {
   },
 }
 
-const WithProgramStrategy: IHandleQuestionStrategy = {
+export const WithProgramStrategy: IHandleQuestionStrategy = {
   ...NullHandleQuestionStrategy,
   process(question: Question, answer: boolean | string): Question {
     let program = question.Program

@@ -13,7 +13,8 @@ const routes = {
   update: (id: number) => `/api/tests/${id}`,
   delete: (id: number) => `/api/tests/${id}`,
   getAll: () => `/api/tests`,
-  getByDisciplineId: (id: number) => `/api/disciplines/${id}/tests`
+  getByDisciplineId: (id: number) => `/api/disciplines/${id}/tests`,
+  resetProcess: (id: number) => `/api/tests/${id}/process`
 }
 
 export default interface ITestService {
@@ -23,10 +24,19 @@ export default interface ITestService {
   get(id: number): Promise<IResult<Test>>
   delete(id: number): Promise<boolean>
   getByDisciplineId(disciplineId: number, options: IPagingOptions): Promise<IResult<IPagedData<Test>>>
+  resetProcess(id: number): Promise<boolean>
 }
 
 export class TestService implements ITestService {
   @inject private NotificationService?: INotificationService
+  
+  async resetProcess(id: number): Promise<boolean> {
+    if (!!(await ProtectedFetch.delete(routes.resetProcess(id)))) {
+      this.NotificationService!.showSuccess('Прогресс успешно сброшен')
+      return true
+    }
+    return false
+  }
   
   async add(test: Test): Promise<IResult<number>> {
     //TODO validation

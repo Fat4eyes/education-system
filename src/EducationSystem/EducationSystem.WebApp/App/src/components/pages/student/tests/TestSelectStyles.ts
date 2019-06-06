@@ -9,13 +9,13 @@ export const TestSelectStyles = (theme: Theme) => createStyles({
     color: theme.palette.primary.contrastText
   },
   body: {
-    padding: `${theme.spacing.unit}px 0 !important`
+    padding: `${theme.spacing.unit * 4}px 0 !important`
   },
   mt2Unit: {
     marginTop: theme.spacing.unit * 2
   },
   mainBodyBlock: {
-    padding: `0 ${theme.spacing.unit * 3}px !important`
+    padding: `0 ${theme.spacing.unit * 4  }px !important`
   },
   clikableBlock: {
     cursor: 'pointer',

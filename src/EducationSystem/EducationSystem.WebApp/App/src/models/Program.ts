@@ -12,7 +12,28 @@ export default class Program extends Model {
   public TimeLimit: number = 0
   public MemoryLimit: number = 0
   public ProgramDatas: Array<ProgramData> = []
-  public CodeExecutionResult?: ICodeExecutionResult
+  public CodeRunningResult?: ICodeRunningResult
+}
+
+export interface ICodeRunningResult {
+  CodeAnalysisResult: ICodeAnalysisResult
+  CodeExecutionResult: ICodeExecutionResult
+  Score: number
+}
+
+export interface ICodeAnalysisResult
+{
+  Success: boolean
+  Messages: ICodeAnalysisMessage[];
+}
+
+export interface ICodeAnalysisMessage
+{
+  IsError: boolean
+  IsWarning: boolean
+  Text: string
+  Line: number
+  Column: number
 }
 
 export interface ICodeExecutionResult {

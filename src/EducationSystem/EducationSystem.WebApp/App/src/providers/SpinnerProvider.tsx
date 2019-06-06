@@ -1,6 +1,8 @@
 import * as React from 'react'
 import {Component, createContext} from 'react'
 import {CircularProgress, createStyles, Theme, withStyles, WithStyles} from '@material-ui/core'
+import {drawerWidth, headerHeight} from '../components/NewLayout/Layout'
+import {onMobile} from '../components/stuff/CommonStyles'
 
 interface ISpinnerProvider {
   set: (value?: boolean) => void
@@ -30,15 +32,18 @@ const styles = (theme: Theme) => createStyles({
   root: {
     backgroundColor: `rgba(255, 254, 254, 0.8)`,
     position: 'fixed',
-    top: 58,
-    left: 0,
+    ...onMobile(theme)({
+      left: 0,
+    }),
+    top: headerHeight,
+    left: drawerWidth,
     height: '100%',
     width: '100%',  
     '& > div': {
       opacity: 1,
       position: 'absolute',
       top: `45%`,
-      left: `50%`,
+      left: `44%`,
       transform: `translate(-45%, -50%)`
     }
   }

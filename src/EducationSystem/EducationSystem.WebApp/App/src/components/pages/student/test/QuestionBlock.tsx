@@ -2,8 +2,8 @@ import * as React from 'react'
 import {Fragment, FunctionComponent, ReactNode} from 'react'
 import {
   Checkbox,
-  createStyles,
-  Grid,
+  createStyles, FormControl,
+  Grid, InputLabel,
   Radio,
   TextField,
   Theme,
@@ -21,6 +21,7 @@ import MonacoEditor from 'react-monaco-editor'
 import {MtBlock} from '../../../stuff/Margin'
 import {GridSize} from '@material-ui/core/Grid'
 import {ICodeRunResult} from '../../../../models/Program'
+import Input from '../../../stuff/Input'
 
 const styles = (theme: Theme) => createStyles({
   root: {},
@@ -74,7 +75,7 @@ const QuestionBlock = withStyles(styles)((
     }
 
     return <Grid container>
-      <AnswerTextBlock text={model.Text} xs={12} align='center'/>
+      <AnswerTextBlock text={model.Text} xs={12}/>
       {
         model.Image && <>
           <MtBlock/>
@@ -152,17 +153,26 @@ const ClosedOneAnswer = withStyles(styles)((
 ) as FunctionComponent<TProps>)
 
 const OpenedOneString = withStyles(styles)((
-  ({model, setAnswer, mode}: TProps) => {
+  ({model, setAnswer, mode, classes}: TProps) => {
     const answer = model.Answers.length ? model.Answers[0] : new Answer('')
     return <Grid item xs={12} container alignItems='center'>
-      <TextField
-        fullWidth
-        label='Ответ'
-        value={answer.Text}
-        onChange={({target: {value}}) => setAnswer(value)}
-        disabled={!mode}
-        error={!mode && model.Right === false}
-      />
+      <FormControl fullWidth>
+        <InputLabel shrink htmlFor='Text'>
+          Ответ:
+        </InputLabel>
+        <Input
+          autoFocus={true}
+          value={answer.Text}
+          name='Text'
+          onChange={({target: {value}}) => setAnswer(value)}
+          fullWidth
+          disabled={!mode}
+          className={classNames({
+            [classes.isRight]: answer.Status === AnswerStatus.Right,
+            [classes.isWrong]: answer.Status === AnswerStatus.Wrong
+          })}
+        />
+      </FormControl>
     </Grid>
   }
 ) as FunctionComponent<TProps>)
@@ -172,19 +182,19 @@ const WithProgram = withStyles(styles)((
     const {Program: program} = model
     if (!program) return <></>
 
-    const {CodeExecutionResult: result} = program
+    let codeExecutionResult = program.CodeRunningResult ? program.CodeRunningResult.CodeExecutionResult : false
 
     return <Grid item xs={12} container>
       {
-        !mode && result && <>
+        !mode && codeExecutionResult && <>
           <MtBlock value={2}/>
-          <AnswerTextBlock text={result.Success ? 'Правильно' : 'Неправильно'} xs={12}/>
+          <AnswerTextBlock text={codeExecutionResult.Success ? 'Правильно' : 'Неправильно'} xs={12}/>
           {
-            !!result.Errors.length && <>
+            !!codeExecutionResult.Errors.length && <>
               <MtBlock value={2}/>
               <AnswerTextBlock text='Ошибки:' xs={12}/>
               <MtBlock value={1}/>
-              {result.Errors.map((error: string, index: number) =>
+              {codeExecutionResult.Errors.map((error: string, index: number) =>
                 <Grid item xs={12} container key={index}>
                   <AnswerTextBlock text={index + 1} xs={1}/>
                   <AnswerTextBlock text={error} xs={11} key={index} className={classes.isWrong}/>
@@ -194,14 +204,14 @@ const WithProgram = withStyles(styles)((
           }
           <MtBlock value={2}/>
           {
-            result.Results.length && <>
+            codeExecutionResult.Results.length && <>
               <AnswerTextBlock text='Тестовые кейсы:' xs={12}/>
               <MtBlock/>
               <Grid item xs={12} container>
                 <AnswerTextBlock text='Пользовательские данные' xs={6}/>
                 <AnswerTextBlock text='Ожидаемые данные' xs={6}/>
                 <MtBlock/>
-                {result.Results.map((runResult: ICodeRunResult, index: number) =>
+                {codeExecutionResult.Results.map((runResult: ICodeRunResult, index: number) =>
                   <Fragment key={index}>
                     <Grid item xs={12} container>
                       <AnswerTextBlock text={index + 1} xs={1}/>

@@ -1,6 +1,5 @@
-import {createStyles, Divider, Theme} from '@material-ui/core'
-import {getBaseContentPadding, onMobile} from '../../../stuff/CommonStyles'
-import * as React from 'react'
+import {createStyles, Theme} from '@material-ui/core'
+import {onMobile} from '../../../stuff/CommonStyles'
 
 const TestsTableStyles = (theme: Theme) => {
   const userSelectNone = {
@@ -11,7 +10,7 @@ const TestsTableStyles = (theme: Theme) => {
     '-ms-user-select': 'none',
     'user-select': 'none'
   }
-  
+
   return createStyles({
     main: {
       flexDirection: 'row-reverse',
@@ -28,7 +27,7 @@ const TestsTableStyles = (theme: Theme) => {
       color: theme.palette.primary.contrastText
     },
     paper: {
-      padding: theme.spacing.unit * 4.5,
+      padding: theme.spacing.unit * 4.5
     },
     loading: {
       width: 100,

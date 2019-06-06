@@ -1,4 +1,4 @@
-import {Grid, IconButton, Typography, WithStyles, withStyles} from '@material-ui/core'
+import {Grid, Typography, WithStyles, withStyles} from '@material-ui/core'
 import {TestSelectStyles} from './TestSelectStyles'
 import Discipline from '../../../../models/Discipline'
 import TableComponent from '../../../Table/TableComponent'
@@ -10,12 +10,11 @@ import Block from '../../../Blocks/Block'
 import Test from '../../../../models/Test'
 import TestData from '../../../../models/TestData'
 import {TablePagination} from '../../../core'
-import PlayIcon from '@material-ui/icons/PlayArrow'
-import {Link} from 'react-router-dom'
 import {inject} from '../../../../infrastructure/di/inject'
 import ITestService from '../../../../services/TestService'
 import IDisciplineService from '../../../../services/DisciplineService'
-import {routes} from '../../../Layout/Routes'
+import TestBlock from './TestBlock'
+import {MtBlock} from '../../../stuff/Margin'
 
 interface IProps {}
 
@@ -79,12 +78,19 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
         : [...state.Opened, id]
     }))
   }
+  
+  handleResetTestPropcess = async (test: Test) => {
+    if (await this.TestService!.resetProcess(test.Id!)) {
+      test.PassedQuestionsCount = test.PassedThemesCount = 0
+      this.forceUpdate()
+    } 
+  }
 
   render(): React.ReactNode {
     let {classes} = this.props
 
     return <Grid container justify='center'>
-      <Grid item xs={12} md={10} lg={8}>
+      <Grid item xs={12}>
         <Block partial>
           {
             !!this.state.Items.length || <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
@@ -111,53 +117,24 @@ class TestSelect extends TableComponent<Discipline, TProps, IState> {
                 {
                   this.state.Opened.find(id => id === discipline.Id!) && discipline.Tests &&
                   <Grid item xs={12} className={classes.body}>
-                    <Grid item xs={12} className={classes.mt2Unit}/>
                     <Grid container className={classes.mainBodyBlock}>
-                      {
-                        discipline.Tests.map((test: Test) =>
-                          <Grid item xs={12} md={6} lg={4} key={test.Id!} className={classes.clikableBlock}>
-                            <Block partial>
-                              <Grid container className={classes.bodyBlock}>
-                                <Grid item xs={12} container justify='center'>
-                                  <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
-                                    <Typography align='center' color='inherit'>
-                                      <b>{test.Subject}</b>
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
-                                    <Typography align='center' color='inherit'>
-                                      Количество вопросов: {test.QuestionsCount}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12} container zeroMinWidth wrap='nowrap' justify='center'>
-                                    <Typography align='center' color='inherit'>
-                                      Количество тем: {test.ThemesCount}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item>
-                                    <IconButton component={
-                                      (props: any) => <Link to={routes.studentTest(test.Id!)} {...props}/>
-                                    }>
-                                      <PlayIcon/>
-                                    </IconButton>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </Block>
-                          </Grid>
-                        )
-                      }
+                      {discipline.Tests.map((test: Test, index: number) =>
+                        <Fragment key={test.Id!}>
+                          <TestBlock test={test} resetTestProcess={this.handleResetTestPropcess}/>
+                          {index < discipline.Tests.length - 1 && <MtBlock value={2}/>}
+                        </Fragment>
+                      )}
                     </Grid>
                   </Grid>
                 }
-                {index !== this.state.Items.length - 1 && <Grid item xs={12} className={classes.mt2Unit}/>}
+                {index !== this.state.Items.length - 1 && <MtBlock value={2}/>}
               </Fragment>
             )
           }
           {
             this.state.Count > this.state.CountPerPage &&
             <>
-              <Grid item xs={12} className={classes.mt2Unit}/>
+              <MtBlock value={2}/>
               <Grid item xs={12}>
                 <TablePagination
                   count={{
