@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Extensions;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Repositories;
@@ -125,7 +126,7 @@ namespace EducationSystem.Implementations.Services
             var model = await _repositoryMaterial.FindFirstAsync(new MaterialsById(id)) ??
                 throw ExceptionHelper.NotFound<DatabaseMaterial>(id);
 
-            if (!new MaterialsByOwnerId(user.Id).IsSatisfiedBy(model))
+            if (new MaterialsByOwnerId(user.Id).IsSatisfiedBy(model) == false)
                 throw ExceptionHelper.NoAccess();
 
             Mapper.Map(Mapper.Map<DatabaseMaterial>(material), model);
@@ -137,12 +138,7 @@ namespace EducationSystem.Implementations.Services
 
             model.Files = Mapper.Map<List<DatabaseMaterialFile>>(material.Files);
 
-            if (model.Anchors.Any())
-                await _repositoryMaterialAnchor.RemoveAsync(model.Anchors, true);
-
-            model.Anchors = Mapper.Map<List<DatabaseMaterialAnchor>>(material.Anchors);
-
-            await _repositoryMaterialAnchor.AddAsync(model.Anchors, true);
+            await ProcessAnchorsAsync(material, model);
         }
 
         public async Task<int> CreateMaterialAsync(Material material)
@@ -161,6 +157,85 @@ namespace EducationSystem.Implementations.Services
             await _repositoryMaterial.AddAsync(model, true);
 
             return model.Id;
+        }
+
+        private async Task ProcessAnchorsAsync(Material material, DatabaseMaterial model)
+        {
+            await RemoveAnchorsAsync(material, model);
+            await UpdateAnchorsAsync(material, model);
+            await InsertAnchorsAsync(material, model);
+
+            await _repositoryMaterial.UpdateAsync(model, true);
+        }
+
+        private async Task RemoveAnchorsAsync(Material material, DatabaseMaterial model)
+        {
+            if (material.Anchors.IsEmpty())
+            {
+                if (model.Anchors.IsNotEmpty())
+                    await _repositoryMaterialAnchor.RemoveAsync(model.Anchors, true);
+
+                return;
+            }
+
+            var ids = material.Anchors
+                .Where(x => x.Id > 0)
+                .Select(x => x.Id)
+                .ToArray();
+
+            var anchors = model.Anchors
+                .Where(x => !ids.Contains(x.Id))
+                .ToArray();
+
+            if (anchors.Any())
+                await _repositoryMaterialAnchor.RemoveAsync(anchors, true);
+        }
+
+        private async Task UpdateAnchorsAsync(Material material, DatabaseMaterial model)
+        {
+            if (material.Anchors.IsEmpty())
+                return;
+
+            var ids = material.Anchors
+                .Select(x => x.Id)
+                .ToArray();
+
+            MaterialAnchor GetAnchor(int id)
+            {
+                return material.Anchors.First(y => y.Id == id);
+            }
+
+            var anchors = model.Anchors
+                .Where(x => ids.Contains(x.Id))
+                .Select(x => Mapper.Map(GetAnchor(x.Id), x))
+                .ToArray();
+
+            if (anchors.IsNotEmpty())
+                await _repositoryMaterialAnchor.UpdateAsync(anchors, true);
+        }
+
+        private async Task InsertAnchorsAsync(Material material, DatabaseMaterial model)
+        {
+            if (material.Anchors.IsEmpty())
+                return;
+
+            var ids = model.Anchors
+                .Select(x => x.Id)
+                .ToArray();
+
+            var anchors = material.Anchors
+                .Where(x => !ids.Contains(x.Id))
+                .Select(Mapper.Map<DatabaseMaterialAnchor>)
+                .ToList();
+
+            if (anchors.IsEmpty())
+                return;
+
+            anchors.ForEach(x => x.MaterialId = model.Id);
+
+            await _repositoryMaterialAnchor.AddAsync(anchors, true);
+
+            model.Anchors.AddRange(anchors);
         }
     }
 }

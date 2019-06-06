@@ -44,47 +44,47 @@ namespace EducationSystem.Implementations.Validators
             if (string.IsNullOrWhiteSpace(model.Template))
                 throw ExceptionHelper.CreatePublicException("Не указан шаблон материала.");
 
-            if (model.Files.IsEmpty())
-                return;
+            if (model.Files.IsNotEmpty())
+            {
+                if (model.Files.GroupBy(x => x.Id).Any(x => x.Count() > 1))
+                    throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся файлы.");
 
-            if (model.Files.GroupBy(x => x.Id).Any(x => x.Count() > 1))
-                throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся файлы.");
+                if (await model.Files.AllAsync(x => _helperFile.FileExistsAsync(x)) == false)
+                    throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
 
-            if (await model.Files.AllAsync(x => _helperFile.FileExistsAsync(x)) == false)
-                throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют.");
+                var ids = model.Files
+                    .Select(x => x.Id)
+                    .ToArray();
 
-            var ids = model.Files
-                .Select(x => x.Id)
-                .ToArray();
+                var user = await _context.GetCurrentUserAsync();
 
-            var user = await _context.GetCurrentUserAsync();
+                var specification =
+                    new FilesByIds(ids) &
+                    new FilesByOwnerId(user.Id);
 
-            var specification =
-                new FilesByIds(ids) &
-                new FilesByOwnerId(user.Id);
+                var files = await _repositoryFile.FindAllAsync(specification);
 
-            var files = await _repositoryFile.FindAllAsync(specification);
+                if (files.Any(x => x.Type != FileType.Document))
+                    throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов имеют неверный тип.");
 
-            if (files.Any(x => x.Type != FileType.Document))
-                throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов имеют неверный тип.");
+                if (files.Count != ids.Length)
+                    throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют или недоступны.");
+            }
 
-            if (files.Count != ids.Length)
-                throw ExceptionHelper.CreatePublicException("Один или несколько указанных файлов не существуют или недоступны.");
+            if (model.Anchors.IsNotEmpty())
+            {
+                if (model.Anchors.Any(x => string.IsNullOrWhiteSpace(x.Token) || string.IsNullOrWhiteSpace(x.Name)))
+                    throw ExceptionHelper.CreatePublicException("Один или несколько указанных якорей не заполнены.");
 
-            if (model.Anchors.IsEmpty())
-                return;
+                if (model.Anchors.Any(x => x.Token.Length > 255 || x.Name.Length > 255))
+                    throw ExceptionHelper.CreatePublicException(
+                        "Один или несколько указанных якорей заполнены некорректно. " +
+                        "Максимальная длина токена: 255 символов. " +
+                        "Максимальная длина названия: 255 символов.");
 
-            if (model.Anchors.Any(x => string.IsNullOrWhiteSpace(x.Token) || string.IsNullOrWhiteSpace(x.Name)))
-                throw ExceptionHelper.CreatePublicException("Один или несколько указанных якорей не заполнены.");
-
-            if (model.Anchors.Any(x =>  x.Token.Length > 255 || x.Name.Length > 255))
-                throw ExceptionHelper.CreatePublicException(
-                    "Один или несколько указанных якорей заполнены некорректно. " +
-                    "Максимальная длина токена: 255 символов. " +
-                    "Максимальная длина названия: 255 символов.");
-
-            if (model.Anchors.GroupBy(x => x.Token).Any(x => x.Count() > 1))
-                throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся якоря.");
+                if (model.Anchors.GroupBy(x => x.Token).Any(x => x.Count() > 1))
+                    throw ExceptionHelper.CreatePublicException("В материале указаны повторяющиеся якоря.");
+            }
         }
     }
 }
