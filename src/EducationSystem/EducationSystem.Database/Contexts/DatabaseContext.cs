@@ -64,6 +64,11 @@ namespace EducationSystem.Database.Contexts
                 .Entity<DatabaseQuestionStudent>()
                 .Property(x => x.Passed)
                 .HasConversion<int>();
+
+            builder
+                .Entity<DatabaseUser>()
+                .Property(x => x.Active)
+                .HasConversion<int>();
         }
 
         private static void BuildUserRole(ModelBuilder builder)

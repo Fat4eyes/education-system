@@ -23,7 +23,7 @@ namespace EducationSystem.Database.Models
         public virtual string Password { get; set; }
 
         [Column("active")]
-        public virtual int Active { get; set; }
+        public virtual bool Active { get; set; }
 
         public virtual List<DatabaseUserRole> UserRoles { get; set; }
             = new List<DatabaseUserRole>();
