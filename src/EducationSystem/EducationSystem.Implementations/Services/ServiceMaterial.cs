@@ -179,7 +179,6 @@ namespace EducationSystem.Implementations.Services
             }
 
             var ids = material.Anchors
-                .Where(x => x.Id > 0)
                 .Select(x => x.Id)
                 .ToArray();
 
