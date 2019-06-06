@@ -88,9 +88,9 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
         [Transaction]
         [HttpDelete("{id:int}/Process")]
         [Roles(UserRoles.Student)]
-        public async Task<IActionResult> DeleteTestProcess([FromRoute] int id)
+        public async Task<IActionResult> ResetTestProcess([FromRoute] int id)
         {
-            return await Ok(() => _serviceTest.DeleteTestProcessAsync(id));
+            return await Ok(() => _serviceTest.ResetTestProcessAsync(id));
         }
     }
 }

@@ -196,7 +196,7 @@ namespace EducationSystem.Implementations.Services
             await _repositoryTestTheme.AddAsync(model.TestThemes, true);
         }
 
-        public async Task DeleteTestProcessAsync(int id)
+        public async Task ResetTestProcessAsync(int id)
         {
             var user = await Context.GetCurrentUserAsync();
 

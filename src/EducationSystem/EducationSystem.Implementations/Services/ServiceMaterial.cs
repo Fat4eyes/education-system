@@ -186,7 +186,7 @@ namespace EducationSystem.Implementations.Services
                 .Where(x => !ids.Contains(x.Id))
                 .ToArray();
 
-            if (anchors.Any())
+            if (anchors.IsNotEmpty())
                 await _repositoryMaterialAnchor.RemoveAsync(anchors, true);
         }
 
