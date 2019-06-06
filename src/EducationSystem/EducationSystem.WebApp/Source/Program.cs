@@ -16,14 +16,10 @@ namespace EducationSystem.WebApp.Source
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddCommandLine(args)
-                .Build();
-
-            return WebHost.CreateDefaultBuilder(args)
+            return WebHost
+                .CreateDefaultBuilder(args)
                 .UseKestrel()
                 .UseIISIntegration()
-                .UseConfiguration(configuration)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Configurator>();
         }
