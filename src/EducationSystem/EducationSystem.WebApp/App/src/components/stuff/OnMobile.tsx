@@ -13,6 +13,6 @@ export const IsNotMobile = withWidth()(({width, children}: TProps) => {
 }) as FunctionComponent<PropsWithChildren<{}>>
 
 export const IsMobileAsFuncChild = withWidth()(
-  ({width, children}: WithWidth & {children: (isMobile: boolean) => any}) => 
+  ({width, children}: WithWidth & {children: (isMobile: boolean) => any} | any) => 
     children(isWidthDown('sm', width))
-) as FunctionComponent<PropsWithChildren<{}>>
+) as any
