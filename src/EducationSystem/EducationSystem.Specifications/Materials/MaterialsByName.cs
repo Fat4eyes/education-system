@@ -19,7 +19,7 @@ namespace EducationSystem.Specifications.Materials
             if (string.IsNullOrWhiteSpace(_name))
                 return x => true;
 
-            return x => x.Name.Contains(_name, StringComparison.InvariantCultureIgnoreCase);
+            return x => x.Name.ToUpper().Contains(_name.ToUpper());
         }
     }
 }
