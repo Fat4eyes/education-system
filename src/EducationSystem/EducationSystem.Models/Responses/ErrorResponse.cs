@@ -6,9 +6,9 @@
 
         public string Error { get; }
 
-        public ErrorResponse(string erorr)
+        public ErrorResponse(string error)
         {
-            Error = erorr;
+            Error = error;
         }
     }
 }
