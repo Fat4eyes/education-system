@@ -8,6 +8,7 @@ using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications;
+using EducationSystem.Tests.Helpers;
 using Moq;
 using Xunit;
 
@@ -39,11 +40,11 @@ namespace EducationSystem.Tests.Services
         {
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 2));
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseMaterial(ownerId: 2));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             var material = await ServiceMaterial.GetMaterialAsync(999);
 
@@ -51,7 +52,7 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             material = await ServiceMaterial.GetMaterialAsync(999);
 
@@ -59,7 +60,7 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             material = await ServiceMaterial.GetMaterialAsync(999);
 
@@ -71,11 +72,11 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 1));
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseMaterial(ownerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.GetMaterialAsync(999));
@@ -86,7 +87,7 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.DeleteMaterialAsync(999));
@@ -97,11 +98,11 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 1));
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseMaterial(ownerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.DeleteMaterialAsync(999));
@@ -110,12 +111,12 @@ namespace EducationSystem.Tests.Services
         [Fact]
         public async Task DeleteMaterial_Lecturer()
         {
-            var material = Creator.CreateDatabaseMaterial(ownerId: 2);
+            var material = ModelsCreationHelper.CreateDatabaseMaterial(ownerId: 2);
             var materials = new List<DatabaseMaterial> { material };
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
@@ -134,12 +135,12 @@ namespace EducationSystem.Tests.Services
         [Fact]
         public async Task DeleteMaterial_Admin()
         {
-            var material = Creator.CreateDatabaseMaterial(ownerId: 2);
+            var material = ModelsCreationHelper.CreateDatabaseMaterial(ownerId: 2);
             var materials = new List<DatabaseMaterial> { material };
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
@@ -164,14 +165,14 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceMaterial.DeleteMaterialAsync(999));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceMaterial.DeleteMaterialAsync(999));
@@ -182,25 +183,25 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
-                .ReturnsAsync(Creator.CreateDatabaseMaterial(ownerId: 1));
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseMaterial(ownerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.UpdateMaterialAsync(999, new Material()));
@@ -211,7 +212,7 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryMaterial
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseMaterial>>()))
@@ -226,14 +227,14 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.CreateMaterialAsync(new Material()));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceMaterial.CreateMaterialAsync(new Material()));
@@ -244,7 +245,7 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryMaterial
                 .Setup(x => x.AddAsync(It.Is<DatabaseMaterial>(y => y.OwnerId == 2), true))

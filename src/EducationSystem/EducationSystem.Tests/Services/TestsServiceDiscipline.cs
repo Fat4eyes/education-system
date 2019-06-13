@@ -5,6 +5,7 @@ using EducationSystem.Implementations.Services;
 using EducationSystem.Interfaces.Repositories;
 using EducationSystem.Interfaces.Services;
 using EducationSystem.Specifications;
+using EducationSystem.Tests.Helpers;
 using Moq;
 using Xunit;
 
@@ -32,23 +33,23 @@ namespace EducationSystem.Tests.Services
         {
             RepositoryDiscipline
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseDiscipline>>()))
-                .ReturnsAsync(Creator.CreateDatabaseDiscipline());
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseDiscipline());
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             await ServiceDiscipline.GetDisciplineAsync(999);
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             await ServiceDiscipline.GetDisciplineAsync(999);
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await ServiceDiscipline.GetDisciplineAsync(999);
         }
@@ -62,21 +63,21 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceDiscipline.GetDisciplineAsync(999));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceDiscipline.GetDisciplineAsync(999));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceDiscipline.GetDisciplineAsync(999));

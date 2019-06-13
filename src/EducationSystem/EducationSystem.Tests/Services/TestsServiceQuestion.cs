@@ -8,6 +8,7 @@ using EducationSystem.Interfaces.Services;
 using EducationSystem.Interfaces.Validators;
 using EducationSystem.Models.Rest;
 using EducationSystem.Specifications;
+using EducationSystem.Tests.Helpers;
 using Moq;
 using Xunit;
 
@@ -50,7 +51,7 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.GetQuestionAsync(999));
@@ -61,11 +62,11 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             RepositoryQuestion
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
-                .ReturnsAsync(Creator.CreateDatabaseQuestion(lecturerId: 1));
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseQuestion(lecturerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.GetQuestionAsync(999));
@@ -76,21 +77,21 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             RepositoryQuestion
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
-                .ReturnsAsync(Creator.CreateDatabaseQuestion());
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseQuestion());
 
             await ServiceQuestion.DeleteQuestionAsync(999);
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryQuestion
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
-                .ReturnsAsync(Creator.CreateDatabaseQuestion());
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseQuestion());
 
             await ServiceQuestion.DeleteQuestionAsync(999);
         }
@@ -100,11 +101,11 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryQuestion
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
-                .ReturnsAsync(Creator.CreateDatabaseQuestion(lecturerId: 1));
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseQuestion(lecturerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.DeleteQuestionAsync(999));
@@ -115,7 +116,7 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.DeleteQuestionAsync(999));
@@ -130,14 +131,14 @@ namespace EducationSystem.Tests.Services
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceQuestion.DeleteQuestionAsync(999));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             await Assert.ThrowsAsync<EducationSystemNotFoundException>
                 (() => ServiceQuestion.DeleteQuestionAsync(999));
@@ -148,7 +149,7 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryQuestion
                 .Setup(x => x.AddAsync(It.Is<DatabaseQuestion>(y => y.Order == int.MaxValue), true))
@@ -162,14 +163,14 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.CreateQuestionAsync(new Question()));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.CreateQuestionAsync(new Question()));
@@ -180,11 +181,11 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryQuestion
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
-                .ReturnsAsync(Creator.CreateDatabaseQuestion());
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseQuestion());
 
             await ServiceQuestion.UpdateQuestionAsync(999, new Question());
         }
@@ -194,25 +195,25 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateAdmin);
+                .ReturnsAsync(ModelsCreationHelper.CreateAdmin);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.UpdateQuestionAsync(999, new Question()));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateStudent);
+                .ReturnsAsync(ModelsCreationHelper.CreateStudent);
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.UpdateQuestionAsync(999, new Question()));
 
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryQuestion
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
-                .ReturnsAsync(Creator.CreateDatabaseQuestion(lecturerId: 1));
+                .ReturnsAsync(ModelsCreationHelper.CreateDatabaseQuestion(lecturerId: 1));
 
             await Assert.ThrowsAsync<EducationSystemPublicException>
                 (() => ServiceQuestion.UpdateQuestionAsync(999, new Question()));
@@ -223,7 +224,7 @@ namespace EducationSystem.Tests.Services
         {
             Context
                 .Setup(x => x.GetCurrentUserAsync())
-                .ReturnsAsync(Creator.CreateLecturer);
+                .ReturnsAsync(ModelsCreationHelper.CreateLecturer);
 
             RepositoryQuestion
                 .Setup(x => x.FindFirstAsync(It.IsAny<ISpecification<DatabaseQuestion>>()))
