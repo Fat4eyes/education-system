@@ -7,24 +7,28 @@ using EducationSystem.Specifications.Themes;
 
 namespace EducationSystem.Resolvers
 {
-    public sealed class ResolverTestPassedThemesCount : Resolver, IValueResolver<DatabaseTest, Test, int?>
+    public sealed class ResolverTestPassedThemesCount : IValueResolver<DatabaseTest, Test, int?>
     {
+        private readonly IContext _context;
         private readonly IRepository<DatabaseTheme> _repositoryTheme;
 
-        public ResolverTestPassedThemesCount(IContext context, IRepository<DatabaseTheme> repositoryTheme) : base(context)
+        public ResolverTestPassedThemesCount(IContext context, IRepository<DatabaseTheme> repositoryTheme)
         {
+            _context = context;
             _repositoryTheme = repositoryTheme;
         }
 
         public int? Resolve(DatabaseTest source, Test destination, int? member, ResolutionContext context)
         {
-            if (CurrentUser.IsNotStudent())
+            var user = _context.GetCurrentUser();
+
+            if (user.IsNotStudent())
                 return null;
 
             var specification =
                 new ThemesByTestId(source.Id) &
                 new ThemesForStudents() &
-                new ThemesByStudentId(CurrentUser.Id, true);
+                new ThemesByStudentId(user.Id, true);
 
             return _repositoryTheme.GetCount(specification);
         }

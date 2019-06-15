@@ -36,7 +36,8 @@ namespace EducationSystem.Specifications.Questions
 
                 case false:
 
-                    return x => x.QuestionStudents.All(y => y.StudentId != _studentId || y.Passed == false) &&
+                    return x => (x.QuestionStudents.Any() == false ||
+                                 x.QuestionStudents.All(y => y.StudentId != _studentId || y.Passed == false)) &&
                                 x.Theme.Discipline.StudyProfiles
                                     .Any(a => a.StudyProfile.StudyPlans
                                     .Any(b => b.Groups

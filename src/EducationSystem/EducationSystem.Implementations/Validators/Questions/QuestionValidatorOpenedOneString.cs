@@ -14,7 +14,9 @@ namespace EducationSystem.Implementations.Validators.Questions
 {
     public sealed class QuestionValidatorOpenedOneString : QuestionValidator, IQuestionValidatorOpenedOneString
     {
-        private const string Pattern = "[\\,.?'@#%^&_№~><`)(}{][|;:\"!-+-*/]";
+        private const string Space = " ";
+
+        private const string Pattern = "[^0-9a-zA-Zа-яА-Я]+";
 
         public QuestionValidatorOpenedOneString(
             IMapper mapper,
@@ -40,19 +42,24 @@ namespace EducationSystem.Implementations.Validators.Questions
             if (string.IsNullOrWhiteSpace(answer.Text))
                 throw ExceptionHelper.CreatePublicException("Не указан текст ответа на вопрос.");
 
-            var text = Regex
-                .Replace(answer.Text, Pattern, string.Empty)
-                .ToLowerInvariant();
-
             var model = await GetQuestionModelAsync(question.Id);
 
             var texts = model.Answers
-                .Select(x => Regex
-                    .Replace(x.Text, Pattern, string.Empty)
-                    .ToLowerInvariant())
+                .Select(x => ProcessText(x.Text))
                 .ToList();
 
-            return result.SetRight(texts.Contains(text));
+            return result.SetRight(texts.Contains(ProcessText(answer.Text)));
+        }
+
+        private static string ProcessText(string text)
+        {
+            // Убираем все символы, кроме букв и цифр.
+            var result = Regex
+                .Replace(text, Pattern, Space)
+                .ToLowerInvariant();
+
+            // Убираем дублирующиеся пробелы.
+            return Regex.Replace(result, @"\s+", " ");
         }
     }
 }

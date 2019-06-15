@@ -6,18 +6,22 @@ using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Resolvers
 {
-    public sealed class ResolverQuestionHash : Resolver, IValueResolver<DatabaseQuestion, Question, string>
+    public sealed class ResolverQuestionHash : IValueResolver<DatabaseQuestion, Question, string>
     {
+        private readonly IContext _context;
         private readonly IHashComputer _hashComputer;
 
-        public ResolverQuestionHash(IContext context, IHashComputer hashComputer) : base(context)
+        public ResolverQuestionHash(IContext context, IHashComputer hashComputer)
         {
+            _context = context;
             _hashComputer = hashComputer;
         }
 
         public string Resolve(DatabaseQuestion source, Question destination, string member, ResolutionContext context)
         {
-            if (CurrentUser.IsNotStudent())
+            var user = _context.GetCurrentUser();
+
+            if (user.IsNotStudent())
                 return null;
 
             return _hashComputer

@@ -30,7 +30,7 @@ namespace EducationSystem.WebApp.Source.Helpers
                 .ToList();
 
             assemblies.Add(typeof(MappingConfigurator).Assembly);
-            assemblies.Add(typeof(Resolver).Assembly);
+            assemblies.Add(typeof(ResolverQuestionAnswers).Assembly);
 
             return assemblies
                 .Distinct()

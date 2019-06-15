@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using EducationSystem.Database.Models;
+using EducationSystem.Extensions;
 using EducationSystem.Helpers;
 using EducationSystem.Interfaces;
 using EducationSystem.Interfaces.Repositories;
@@ -31,6 +32,11 @@ namespace EducationSystem.Implementations
             _repositoryUser = repositoryUser;
 
             Lazy = new Lazy<Task<User>>(GetCurrentUserInternalAsync);
+        }
+
+        public User GetCurrentUser()
+        {
+            return GetCurrentUserAsync().WaitTask();
         }
 
         public async Task<User> GetCurrentUserAsync()

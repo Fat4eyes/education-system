@@ -5,6 +5,7 @@ namespace EducationSystem.Interfaces
 {
     public interface IContext
     {
+        User GetCurrentUser();
         Task<User> GetCurrentUserAsync();
     }
 }

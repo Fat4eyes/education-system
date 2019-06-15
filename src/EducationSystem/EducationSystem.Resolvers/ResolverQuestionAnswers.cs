@@ -8,18 +8,25 @@ using EducationSystem.Models.Rest;
 
 namespace EducationSystem.Resolvers
 {
-    public sealed class ResolverQuestionAnswers : Resolver, IValueResolver<DatabaseQuestion, Question, List<Answer>>
+    public sealed class ResolverQuestionAnswers : IValueResolver<DatabaseQuestion, Question, List<Answer>>
     {
-        public ResolverQuestionAnswers(IContext context) : base(context) { }
+        private readonly IContext _context;
+
+        public ResolverQuestionAnswers(IContext context)
+        {
+            _context = context;
+        }
 
         public List<Answer> Resolve(DatabaseQuestion source, Question destination, List<Answer> member, ResolutionContext context)
         {
             var mapper = context.Mapper;
 
-            if (CurrentUser.IsAdmin() || CurrentUser.IsLecturer())
+            var user = _context.GetCurrentUser();
+
+            if (user.IsAdmin() || user.IsLecturer())
                 return mapper.Map<List<Answer>>(source.Answers);
 
-            if (CurrentUser.IsNotStudent())
+            if (user.IsNotStudent())
                 return null;
 
             // Ответы на этот тип вопроса представляют собой строки.
