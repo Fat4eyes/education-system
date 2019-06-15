@@ -28,7 +28,7 @@ namespace EducationSystem.Tests
         private readonly IQuestionValidatorWithProgram _questionValidatorWithProgram;
 
         private readonly Mock<IContext> _context = new Mock<IContext>();
-        private readonly Mock<IHashComputer> _hashCompucter = new Mock<IHashComputer>();
+        private readonly Mock<IHashComputer> _hashComputer = new Mock<IHashComputer>();
         private readonly Mock<IRepository<DatabaseQuestion>> _repositoryQuestion = new Mock<IRepository<DatabaseQuestion>>();
         private readonly Mock<ICodeRunner> _codeRunner = new Mock<ICodeRunner>();
 
@@ -38,7 +38,7 @@ namespace EducationSystem.Tests
         {
             expression.CreateMap<DatabaseQuestion, Question>()
                 .ForMember(d => d.Answers, o => o.MapFrom(new ResolverQuestionAnswers(_context.Object)))
-                .ForMember(d => d.Hash, o => o.MapFrom(new ResolverQuestionHash(_context.Object, _hashCompucter.Object)))
+                .ForMember(d => d.Hash, o => o.MapFrom(new ResolverQuestionHash(_context.Object, _hashComputer.Object)))
                 .ForMember(d => d.MaterialAnchors, o => o.MapFrom(s => s.MaterialAnchors.Select(x => x.MaterialAnchor)))
                 .ForMember(d => d.TestId, o => o.Ignore())
                 .ForMember(d => d.Right, o => o.Ignore());
@@ -55,25 +55,25 @@ namespace EducationSystem.Tests
             _questionValidatorClosedOneAnswer = new QuestionValidatorClosedOneAnswer(
                 mapper,
                 _context.Object,
-                _hashCompucter.Object,
+                _hashComputer.Object,
                 _repositoryQuestion.Object);
 
             _questionValidatorClosedManyAnswers = new QuestionValidatorClosedManyAnswers(
                 mapper,
                 _context.Object,
-                _hashCompucter.Object,
+                _hashComputer.Object,
                 _repositoryQuestion.Object);
 
             _questionValidatorOpenedOneString = new QuestionValidatorOpenedOneString(
                 mapper,
                 _context.Object,
-                _hashCompucter.Object,
+                _hashComputer.Object,
                 _repositoryQuestion.Object);
 
             _questionValidatorWithProgram = new QuestionValidatorWithProgram(
                 mapper,
                 _context.Object,
-                _hashCompucter.Object,
+                _hashComputer.Object,
                 _repositoryQuestion.Object,
                 _codeRunner.Object);
 
@@ -85,7 +85,7 @@ namespace EducationSystem.Tests
                 .Setup(x => x.GetCurrentUser())
                 .Returns(ModelsCreationHelper.CreateStudent);
 
-            _hashCompucter
+            _hashComputer
                 .Setup(x => x.ComputeForQuestionAsync(It.IsAny<DatabaseQuestion>()))
                 .ReturnsAsync("hash");
 
