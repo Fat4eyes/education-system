@@ -21,7 +21,7 @@ namespace EducationSystem.WebApp.Source.Tamers.Rest
             _serviceQuestion = serviceQuestion;
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet]
         [Roles(UserRoles.Admin, UserRoles.Lecturer)]
         public async Task<IActionResult> GetThemes([FromQuery] FilterTheme filter)
         {
