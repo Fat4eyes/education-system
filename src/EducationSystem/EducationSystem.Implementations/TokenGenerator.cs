@@ -67,6 +67,9 @@ namespace EducationSystem.Implementations
                 throw ExceptionHelper.CreatePublicException(PublicExceptionMessage);
             }
 
+            if (user.Active == false)
+                throw ExceptionHelper.CreatePublicException("Аккаунт не подтверждён администратором.");
+
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
