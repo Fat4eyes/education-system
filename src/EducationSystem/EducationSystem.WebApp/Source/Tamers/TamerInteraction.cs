@@ -11,7 +11,7 @@ namespace EducationSystem.WebApp.Source.Tamers
     {
         private readonly ITokenGenerator _tokenGenerator;
 
-        private static string TestingSystemAddress = "http://www.web-test.ru";
+        private readonly string _testingSystemAddress;
 
         private const string TokenCookieName = "Token";
 
@@ -19,7 +19,7 @@ namespace EducationSystem.WebApp.Source.Tamers
         {
             _tokenGenerator = tokenGenerator;
 
-            TestingSystemAddress = configuration[nameof(TestingSystemAddress)];
+            _testingSystemAddress = configuration["TestingSystemAddress"];
         }
 
         [Route("login")]
@@ -30,7 +30,7 @@ namespace EducationSystem.WebApp.Source.Tamers
             Response.Cookies.Append(TokenCookieName, response.Token);
 
             var url = string.IsNullOrWhiteSpace(request.Address)
-                ? TestingSystemAddress
+                ? _testingSystemAddress
                 : request.Address;
 
             return Redirect(url);
@@ -41,7 +41,7 @@ namespace EducationSystem.WebApp.Source.Tamers
         {
             Response.Cookies.Delete(TokenCookieName);
 
-            return Redirect(TestingSystemAddress + "/logout");
+            return Redirect(_testingSystemAddress + "/logout");
         }
     }
 }
