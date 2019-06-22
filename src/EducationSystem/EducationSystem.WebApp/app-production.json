@@ -18,6 +18,7 @@
     "Audience": "Audience-AkuLmN5TOqvZJsh",
     "SecretKey": "qafPfEBOXMohsHtp4wXYmW0VZGKBgPhKx0B810uYw8db7CXkCq2Wa37woLFe"
   },
+  "TestingSystemAddress": "http://www.web-test.ru",
   "CodeTesterApiPath": "_",
   "CodeExecutionApiPath": "_",
   "CodeAnalysisApiPath": "_"

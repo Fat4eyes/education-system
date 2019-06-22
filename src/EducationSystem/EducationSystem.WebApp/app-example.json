@@ -18,6 +18,7 @@
     "Audience": "Education-System-Audience",
     "SecretKey": "Education-System-Secret-Key"
   },
+  "TestingSystemAddress": "http://www.web-test.ru",
   "CodeTesterApiPath": "_",
   "CodeExecutionApiPath": "_",
   "CodeAnalysisApiPath": "_"
