@@ -9,15 +9,15 @@ import Question from '../../../../models/Question'
 import Program from '../../../../models/Program'
 import Answer from '../../../../models/Answer'
 
-describe('getHandleQuestionStrategy', () => {
+describe('GetHandleQuestionStrategy', () => {
   it('should get with program strategy', () => {
     const element = getHandleQuestionStrategy(QuestionType.WithProgram)
     expect(element).toEqual(WithProgramStrategy)
   })
 })
 
-describe('getHandleQuestionStrategy', () => {
-  it('should get with program strategy', () => {
+describe('GetHandleQuestionStrategy', () => {
+  it('should get with program strategy by type', () => {
     const element = getHandleQuestionStrategy(QuestionType.WithProgram)
     expect(element).toEqual(WithProgramStrategy)
   })

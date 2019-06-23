@@ -126,13 +126,8 @@ class Test extends Component<TProps, IState> {
         Test: data
       }, this.getQuestion)
     }
-
-    this._rootRef.current && this._rootRef.current.focus()
   }
-
-  componentDidUpdate(): void {
-    this._rootRef.current && this._rootRef.current.focus()
-  }
+  
 
   handleAnswer = (value: boolean | string, id?: number) => {
     if (!this.state.Question || this.state.IsFinish) return
@@ -140,17 +135,11 @@ class Test extends Component<TProps, IState> {
   }
 
   handleMaterial = () => this.setState(state => ({ShowMaterial: !state.ShowMaterial}))
-
-  handleKeyPress = (event: any) => {
-    if (event.key === 'Enter') return this.state.Mode === true
-      ? this.checkQuestion()
-      : this.getQuestion()
-  }
-
+  
   render(): React.ReactNode {
     let {classes} = this.props
     
-    return <div className={classes.root} onKeyPress={this.handleKeyPress} tabIndex={0} ref={this._rootRef}>
+    return <div className={classes.root} tabIndex={0} ref={this._rootRef}>
       <Grid container justify='center'>
         <Grid item xs={12}>
           <Block partial>

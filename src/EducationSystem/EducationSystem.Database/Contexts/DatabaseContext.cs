@@ -1,4 +1,5 @@
-﻿using EducationSystem.Database.Models;
+﻿using System;
+using EducationSystem.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EducationSystem.Database.Contexts
@@ -58,7 +59,7 @@ namespace EducationSystem.Database.Contexts
             builder
                 .Entity<DatabaseTest>()
                 .Property(x => x.IsActive)
-                .HasConversion<int>();
+                .HasConversion<Int16>();
 
             builder
                 .Entity<DatabaseQuestionStudent>()

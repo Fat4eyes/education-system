@@ -2,10 +2,12 @@ import * as React from 'react'
 import {Fragment, FunctionComponent, ReactNode} from 'react'
 import {
   Checkbox,
-  createStyles, FormControl,
-  Grid, InputLabel,
+  createStyles,
+  Divider,
+  FormControl,
+  Grid,
+  InputLabel,
   Radio,
-  TextField,
   Theme,
   Typography,
   withStyles,
@@ -20,7 +22,7 @@ import classNames from 'classnames'
 import MonacoEditor from 'react-monaco-editor'
 import {MtBlock} from '../../../stuff/Margin'
 import {GridSize} from '@material-ui/core/Grid'
-import {ICodeRunResult} from '../../../../models/Program'
+import {ICodeAnalysisMessage, ICodeRunningResult, ICodeRunResult} from '../../../../models/Program'
 import Input from '../../../stuff/Input'
 
 const styles = (theme: Theme) => createStyles({
@@ -50,8 +52,9 @@ interface IProps {
 
 type TProps = IProps & WithStyles<typeof styles>
 
-const AnswerTextBlock = ({text, xs, ...props}: { text: string | number, xs?: GridSize, [propName: string]: any }) =>
-  <Grid item xs={xs} container zeroMinWidth wrap='nowrap'>
+const AnswerTextBlock = (
+  {text, xs, end = false, ...props}: { text: string | number, xs?: GridSize, end?: boolean, [propName: string]: any }) =>
+  <Grid item xs={xs} container zeroMinWidth wrap='nowrap' justify={end ? 'flex-end' : 'flex-start'}>
     <Typography align='left' color='inherit' {...props}>
       {text}
     </Typography>
@@ -177,71 +180,120 @@ const OpenedOneString = withStyles(styles)((
   }
 ) as FunctionComponent<TProps>)
 
+const DividerInternal = withStyles({
+  root: {
+    width: '100%'
+  }
+})(Divider)
+
+const CodeRunningResult = withStyles(styles)((
+  ({classes, ...props}: ICodeRunningResult & WithStyles<typeof styles>) => {
+    const analysis = props.CodeAnalysisResult
+    const execution = props.CodeExecutionResult
+
+    if (!analysis || !execution) return <></>
+
+    return <>
+      <AnswerTextBlock text='Анализ кода:' xs={6}/>
+      <AnswerTextBlock text={analysis.Success ? 'Успешно' : 'Ошибка'} end={true} xs={6} className={classNames({
+        [classes.isRight]: analysis.Success,
+        [classes.isWrong]: !analysis.Success
+      })}/>
+      <MtBlock/>
+      <DividerInternal/>
+      {
+        analysis.Messages && <Grid xs={12} container item>
+          {analysis.Messages.map((message: ICodeAnalysisMessage, index: number) =>
+            <Fragment key={index}>
+              <MtBlock/>
+              <Grid item xs={1}>{index + 1}</Grid>
+              <AnswerTextBlock text={message.Text} xs={10} className={classNames({
+                [classes.isWrong]: message.IsError,
+                [classes.isIgnored]: message.IsWarning
+              })}/>
+              <AnswerTextBlock end={true} text={`(${message.Line}:${message.Column})`} xs={1}/>
+            </Fragment>
+          )}
+        </Grid>
+      }
+      <MtBlock value={2}/>
+      <AnswerTextBlock text='Выполение:' xs={6}/>
+      <AnswerTextBlock text={execution.Success ? 'Успешно' : 'Ошибка'} end={true} xs={6} className={classNames({
+        [classes.isRight]: execution.Success,
+        [classes.isWrong]: !execution.Success
+      })}/>
+      <MtBlock/>
+      <DividerInternal/>
+      {
+        execution.Errors && <Grid xs={12} container item>
+          {execution.Errors.map((error: string, index: number) =>
+            <Fragment key={index}>
+              <MtBlock/>
+              <AnswerTextBlock text={index + 1} xs={1}/>
+              <AnswerTextBlock text={error} xs={11} className={classes.isWrong}/>
+            </Fragment>
+          )}
+        </Grid>
+      }
+      {
+        execution.Results && <>
+          <MtBlock value={2}/>
+          <AnswerTextBlock text='Тестовые кейсы:' xs={12}/>
+          <MtBlock/>
+          <DividerInternal/>
+          <MtBlock/>
+          <Grid item xs={12} container>
+            <Grid item xs={1}/>
+            <AnswerTextBlock text='Пользовательские данные' xs={5}/>
+            <AnswerTextBlock text='Ожидаемые данные' xs={6}/>
+            <MtBlock/>
+            {execution.Results.map((runResult: ICodeRunResult, index: number) =>
+              <Fragment key={index}>
+                <Grid item xs={12} container>
+                  <AnswerTextBlock text={index + 1} xs={1}/>
+                  <AnswerTextBlock text={runResult.UserOutput} xs={5} className={classNames({
+                    [classes.isRight]: runResult.Success,
+                    [classes.isWrong]: !runResult.Success
+                  })}/>
+                  <AnswerTextBlock text={runResult.ExpectedOutput} xs={6} className={classNames({
+                    [classes.isRight]: runResult.Success,
+                    [classes.isWrong]: !runResult.Success
+                  })}/>
+                </Grid>
+                {
+                  runResult.Status === CodeRunStatus.MemoryExcess && <>
+                    <Grid item xs={1}/>
+                    <AnswerTextBlock text='Превышен лимит по памяти' xs={6} className={classes.isWrong}/>
+                  </>
+                }
+                {
+                  runResult.Status === CodeRunStatus.TimeExcess && <>
+                    <Grid item xs={1}/>
+                    <AnswerTextBlock text='Превышен лимит по памяти' xs={6} className={classes.isWrong}/>
+                  </>
+                }
+                <MtBlock value={2}/>
+              </Fragment>
+            )}
+          </Grid>
+        </>
+      }
+    </>
+  }
+) as FunctionComponent<ICodeRunningResult>)
+
+
 const WithProgram = withStyles(styles)((
   ({model, setAnswer, mode, classes}: TProps) => {
     const {Program: program} = model
     if (!program) return <></>
 
-    let codeExecutionResult = program.CodeRunningResult ? program.CodeRunningResult.CodeExecutionResult : false
 
     return <Grid item xs={12} container>
       {
-        !mode && codeExecutionResult && <>
-          <MtBlock value={2}/>
-          <AnswerTextBlock text={codeExecutionResult.Success ? 'Правильно' : 'Неправильно'} xs={12}/>
-          {
-            !!codeExecutionResult.Errors.length && <>
-              <MtBlock value={2}/>
-              <AnswerTextBlock text='Ошибки:' xs={12}/>
-              <MtBlock value={1}/>
-              {codeExecutionResult.Errors.map((error: string, index: number) =>
-                <Grid item xs={12} container key={index}>
-                  <AnswerTextBlock text={index + 1} xs={1}/>
-                  <AnswerTextBlock text={error} xs={11} key={index} className={classes.isWrong}/>
-                </Grid>
-              )}
-            </>
-          }
-          <MtBlock value={2}/>
-          {
-            codeExecutionResult.Results.length && <>
-              <AnswerTextBlock text='Тестовые кейсы:' xs={12}/>
-              <MtBlock/>
-              <Grid item xs={12} container>
-                <AnswerTextBlock text='Пользовательские данные' xs={6}/>
-                <AnswerTextBlock text='Ожидаемые данные' xs={6}/>
-                <MtBlock/>
-                {codeExecutionResult.Results.map((runResult: ICodeRunResult, index: number) =>
-                  <Fragment key={index}>
-                    <Grid item xs={12} container>
-                      <AnswerTextBlock text={index + 1} xs={1}/>
-                      <AnswerTextBlock text={runResult.UserOutput} xs={5} className={classNames({
-                        [classes.isRight]: runResult.Success,
-                        [classes.isWrong]: !runResult.Success
-                      })}/>
-                      <AnswerTextBlock text={runResult.ExpectedOutput} xs={6} className={classNames({
-                        [classes.isRight]: runResult.Success,
-                        [classes.isWrong]: !runResult.Success
-                      })}/>
-                    </Grid>
-                    {
-                      runResult.Status === CodeRunStatus.MemoryExcess && <>
-                        <Grid item xs={1}/>
-                        <AnswerTextBlock text='Превышен лимит по памяти' xs={6} className={classes.isWrong}/>
-                      </>
-                    }
-                    {
-                      runResult.Status === CodeRunStatus.TimeExcess && <>
-                        <Grid item xs={1}/>
-                        <AnswerTextBlock text='Превышен лимит по памяти' xs={6} className={classes.isWrong}/>
-                      </>
-                    }
-                    <MtBlock value={2}/>
-                  </Fragment>
-                )}
-              </Grid>
-            </>
-          }
+        !mode && <>
+          <MtBlock value={4}/>
+          <CodeRunningResult {...program.CodeRunningResult!}/>
         </>
       }
       <MtBlock value={2}/>
