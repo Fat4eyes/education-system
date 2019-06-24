@@ -161,43 +161,6 @@ class QuestionHandling extends Component<TProps, IState> {
   render(): React.ReactNode {
     let {classes} = this.props
 
-    /*let imageSrc = ((): string | false => {
-     const {Image} = this.state.Model
-
-     if (Image && Image.Path)
-     return `${window.location.origin}/${Image.Path}`
-
-     return false
-     })()
-
-     let getFileHandler = () => imageSrc !== false
-     ? (handleAdd: ChangeEventHandler, extensions: string[]) => {
-     if (!extensions) return <></>
-     const id = Guid.create()
-     return <>
-     <FileInput extensions={extensions} id={id} onChange={handleAdd}/>
-     <label htmlFor={id} style={{width: '100%'}}>
-     <Button mainColor='blue' className={classes.addPhotoButton}>
-     <PhotoCameraIcon/>
-     </Button>
-     </label>
-     </>
-     }
-     : (handleAdd: ChangeEventHandler, extensions: string[]) => {
-     if (!extensions) return <></>
-     return <>
-     <FileInput extensions={extensions} id={Guid.create()} onChange={handleAdd}/>
-     <FormControl fullWidth>
-     <InputLabel shrink htmlFor='Text'>
-     Изображение:
-     </InputLabel>
-     <Button mainColor='blue' className={classes.addPhotoButton}>
-     <PhotoCameraIcon/>
-     </Button>
-     </FormControl>
-     </>
-     }*/
-
     let HandledInputs = () => <>
       <Grid item xs={3} md={2}>
         <TotalTimeInput name='Time' label='Длительность:'

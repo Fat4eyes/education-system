@@ -60,6 +60,10 @@ export class TestProcessService implements ITestProcessService {
                 Errors: [],
                 Results: [],
                 ...data.Program.CodeRunningResult.CodeExecutionResult,
+              },
+              CodeAnalysisResult: {
+                Messages: [],
+                ...data.Program.CodeRunningResult.CodeAnalysisResult
               }
             }
           }
