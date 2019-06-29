@@ -19,7 +19,9 @@ namespace EducationSystem.Specifications.Tests
             if (string.IsNullOrWhiteSpace(_name))
                 return x => true;
 
-            return x => x.Subject.ToUpper().Contains(_name.ToUpper());
+            var upper = _name.ToUpper();
+
+            return x => x.Subject.ToUpper().Contains(upper);
         }
     }
 }

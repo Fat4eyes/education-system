@@ -11,14 +11,14 @@ namespace EducationSystem.Specifications.Disciplines
     {
         public override Expression<Func<DatabaseDiscipline, bool>> ToExpression()
         {
+            var types = QuestionTypeHelper.GetSupportedTypes();
+
             return x => x.Tests
                 .Where(y => y.IsActive)
                 .SelectMany(y => y.TestThemes)
                 .Select(y => y.Theme)
                 .SelectMany(y => y.Questions)
-                .Any(y => QuestionTypeHelper
-                    .GetSupportedTypes()
-                    .Contains(y.Type));
+                .Any(y => types.Contains(y.Type));
         }
     }
 }

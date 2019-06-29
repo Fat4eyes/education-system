@@ -19,7 +19,9 @@ namespace EducationSystem.Specifications.Disciplines
             if (string.IsNullOrWhiteSpace(_name))
                 return x => true;
 
-            return x => x.Name.ToUpper().Contains(_name.ToUpper());
+            var upper = _name.ToUpper();
+
+            return x => x.Name.ToUpper().Contains(upper);
         }
     }
 }
