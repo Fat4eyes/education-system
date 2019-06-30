@@ -16,9 +16,7 @@ namespace EducationSystem.Specifications.Users
 
         public override Expression<Func<DatabaseUser, bool>> ToExpression()
         {
-            var upper = _email.ToUpper();
-
-            return x => x.Email.ToUpper() == upper;
+            return x => x.Email.ToUpper() == _email.ToUpper();
         }
     }
 }

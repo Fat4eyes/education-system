@@ -11,13 +11,13 @@ namespace EducationSystem.Specifications.Tests
     {
         public override Expression<Func<DatabaseTest, bool>> ToExpression()
         {
-            var types = QuestionTypeHelper.GetSupportedTypes();
-
             return x => x.IsActive &&
                         x.TestThemes
                             .Select(y => y.Theme)
                             .SelectMany(y => y.Questions)
-                            .Any(z => types.Contains(z.Type));
+                            .Any(z => QuestionTypeHelper
+                                .GetSupportedTypes()
+                                .Contains(z.Type));
         }
     }
 }

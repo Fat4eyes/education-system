@@ -11,10 +11,12 @@ namespace EducationSystem.Specifications.Themes
     {
         public override Expression<Func<DatabaseTheme, bool>> ToExpression()
         {
-            var types = QuestionTypeHelper.GetSupportedTypes();
-
-            return x => x.Questions.Any(y => types.Contains(y.Type)) &&
-                        x.ThemeTests.Any(y => y.Test.IsActive);
+            return x => x.Questions.Any(y => QuestionTypeHelper
+                            .GetSupportedTypes()
+                            .Contains(y.Type)) &&
+                        x.ThemeTests
+                            .Select(y => y.Test)
+                            .Any(y => y.IsActive);
         }
     }
 }

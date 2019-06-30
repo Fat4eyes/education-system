@@ -19,9 +19,7 @@ namespace EducationSystem.Specifications.Materials
             if (string.IsNullOrWhiteSpace(_name))
                 return x => true;
 
-            var upper = _name.ToUpper();
-
-            return x => x.Name.ToUpper().Contains(upper);
+            return x => x.Name.ToUpper().Contains(_name.ToUpper());
         }
     }
 }
