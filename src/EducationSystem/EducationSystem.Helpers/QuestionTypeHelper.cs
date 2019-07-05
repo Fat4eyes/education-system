@@ -10,7 +10,8 @@ namespace EducationSystem.Helpers
             {
                 QuestionType.ClosedOneAnswer,
                 QuestionType.ClosedManyAnswers,
-                QuestionType.OpenedOneString
+                QuestionType.OpenedOneString,
+                QuestionType.WithProgram
             };
         }
     }
