@@ -23,35 +23,21 @@ namespace EducationSystem.Specifications.Questions
 
         public override Expression<Func<DatabaseQuestion, bool>> ToExpression()
         {
-            switch (_passed)
+            if (_passed.HasValue)
             {
-                case true:
-
-                    return x => x.QuestionStudents.Any(y => y.StudentId == _studentId && y.Passed) &&
-                                x.Theme.Discipline.StudyProfiles
-                                    .Any(a => a.StudyProfile.StudyPlans
-                                    .Any(b => b.Groups
-                                    .Any(c => c.GroupStudents
-                                    .Any(d => d.StudentId == _studentId))));
-
-                case false:
-
-                    return x => (x.QuestionStudents.Any() == false ||
-                                 x.QuestionStudents.All(y => y.StudentId != _studentId || y.Passed == false)) &&
-                                x.Theme.Discipline.StudyProfiles
-                                    .Any(a => a.StudyProfile.StudyPlans
-                                    .Any(b => b.Groups
-                                    .Any(c => c.GroupStudents
-                                    .Any(d => d.StudentId == _studentId))));
-
-                default:
-
-                    return x => x.Theme.Discipline.StudyProfiles
-                                    .Any(a => a.StudyProfile.StudyPlans
-                                    .Any(b => b.Groups
-                                    .Any(c => c.GroupStudents
-                                    .Any(d => d.StudentId == _studentId))));
+                return x => x.QuestionStudents.Any(y => y.StudentId == _studentId && y.Passed) == _passed &&
+                            x.Theme.Discipline.StudyProfiles
+                                .Any(a => a.StudyProfile.StudyPlans
+                                .Any(b => b.Groups
+                                .Any(c => c.GroupStudents
+                                .Any(d => d.StudentId == _studentId))));
             }
+
+            return x => x.Theme.Discipline.StudyProfiles
+                .Any(a => a.StudyProfile.StudyPlans
+                .Any(b => b.Groups
+                .Any(c => c.GroupStudents
+                .Any(d => d.StudentId == _studentId))));
         }
     }
 }
