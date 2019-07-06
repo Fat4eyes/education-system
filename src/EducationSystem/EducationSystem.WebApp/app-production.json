@@ -19,7 +19,7 @@
     "SecretKey": "qafPfEBOXMohsHtp4wXYmW0VZGKBgPhKx0B810uYw8db7CXkCq2Wa37woLFe"
   },
   "TestingSystemAddress": "http://is-tests.sevsu.ru",
-  "CodeTesterApiPath": "https://localhost:5003/api/CodeQuality",
-  "CodeExecutionApiPath": "https://localhost:5003/api/CodeExecution",
-  "CodeAnalysisApiPath": "https://localhost:5003/api/CodeAnalysis"
+  "CodeTesterApiPath": "https://localhost:5000/api/CodeQuality",
+  "CodeExecutionApiPath": "https://localhost:5000/api/CodeExecution",
+  "CodeAnalysisApiPath": "https://localhost:5000/api/CodeAnalysis"
 }
