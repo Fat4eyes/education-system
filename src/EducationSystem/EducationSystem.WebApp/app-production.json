@@ -1,10 +1,10 @@
 ﻿{
   "DatabaseParameters": {
-    "Name": "db_a474a6_web",
-    "Host": "mysql6001.site4now.net",
+    "Name": "esdb",
+    "Host": "localhost",
     "Port": "3306",
-    "UserName": "a474a6_web",
-    "UserPassword": "qwerty123"
+    "UserName": "root",
+    "UserPassword": "Q1w2e3r4"
   },
   "LoggingParameters": {
     "PathFormat": "Logs/Log-{Date}.log",
@@ -18,8 +18,8 @@
     "Audience": "Audience-AkuLmN5TOqvZJsh",
     "SecretKey": "qafPfEBOXMohsHtp4wXYmW0VZGKBgPhKx0B810uYw8db7CXkCq2Wa37woLFe"
   },
-  "TestingSystemAddress": "http://www.web-test.ru",
-  "CodeTesterApiPath": "_",
-  "CodeExecutionApiPath": "_",
-  "CodeAnalysisApiPath": "_"
+  "TestingSystemAddress": "http://is-tests.sevsu.ru",
+  "CodeTesterApiPath": "https://localhost:5003/api/CodeQuality",
+  "CodeExecutionApiPath": "https://localhost:5003/api/CodeExecution",
+  "CodeAnalysisApiPath": "https://localhost:5003/api/CodeAnalysis"
 }
