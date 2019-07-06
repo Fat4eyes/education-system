@@ -162,6 +162,8 @@ const OpenedOneString = withStyles(styles)((
       <FormControl fullWidth>
         <InputLabel shrink htmlFor='Text'>
           Ответ:
+          {!mode && answer.Status === AnswerStatus.Right && 'Верно'}
+          {!mode && answer.Status === AnswerStatus.Wrong && 'Ошибка'}
         </InputLabel>
         <Input
           autoFocus={true}
