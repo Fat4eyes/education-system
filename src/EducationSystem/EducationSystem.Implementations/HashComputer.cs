@@ -33,7 +33,7 @@ namespace EducationSystem.Implementations
         {
             var user = await _context.GetCurrentUserAsync();
 
-            var ojbect = new
+            var @object = new
             {
                 question.Id,
                 question.ThemeId,
@@ -44,7 +44,7 @@ namespace EducationSystem.Implementations
                 UserId = user.Id
             };
 
-            return Compute(ojbect);
+            return Compute(@object);
         }
     }
 }
