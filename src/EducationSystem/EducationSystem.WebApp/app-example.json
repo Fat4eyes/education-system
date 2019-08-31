@@ -4,7 +4,8 @@
     "Host": "127.0.0.1",
     "Port": "3306",
     "UserName": "victor",
-    "UserPassword": "qwerty123"
+    "UserPassword": "qwerty123",
+    "Version": "8.0.17"
   },
   "LoggingParameters": {
     "PathFormat": "Logs/Log-{Date}.log",

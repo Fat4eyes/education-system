@@ -4,7 +4,8 @@
     "Host": "localhost",
     "Port": "3306",
     "UserName": "root",
-    "UserPassword": "Q1w2e3r4"
+    "UserPassword": "Q1w2e3r4",
+    "Version": "8.0.17"
   },
   "LoggingParameters": {
     "PathFormat": "Logs/Log-{Date}.log",

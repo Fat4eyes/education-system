@@ -4,6 +4,9 @@ using EducationSystem.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace EducationSystem.Database
 {
@@ -11,20 +14,34 @@ namespace EducationSystem.Database
     {
         public static void Register(IServiceCollection collection, IConfiguration configuration)
         {
-            var database = configuration
+            var parameters = configuration
                 .GetSection(nameof(DatabaseParameters))
                 .Get<DatabaseParameters>();
 
-            var builder = new StringBuilder()
-                .Append($" DATABASE = {database.Name}; ")
-                .Append($" SERVER   = {database.Host}; ")
-                .Append($" PORT     = {database.Port}; ")
-                .Append($" USER ID  = {database.UserName}; ")
-                .Append($" PASSWORD = {database.UserPassword}; ");
+            collection.AddDbContextPool<DatabaseContext>(x => Configure(parameters, x));
+        }
 
-            collection.AddDbContext<DatabaseContext>(x => x
+        private static void Configure(DatabaseParameters parameters, DbContextOptionsBuilder builder)
+        {
+            var connection = new StringBuilder()
+                .Append($" DATABASE = {parameters.Name}; ")
+                .Append($" SERVER   = {parameters.Host}; ")
+                .Append($" PORT     = {parameters.Port}; ")
+                .Append($" USER ID  = {parameters.UserName}; ")
+                .Append($" PASSWORD = {parameters.UserPassword}; ")
+                .ToString();
+
+            builder
                 .UseLazyLoadingProxies()
-                .UseMySQL(builder.ToString()));
+                .ConfigureWarnings(x => x.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                .UseMySql(connection, x => Configure(parameters, x));
+        }
+
+        private static void Configure(DatabaseParameters parameters, MySqlDbContextOptionsBuilder builder)
+        {
+            builder
+                .UnicodeCharSet(CharSet.Utf8mb4)
+                .ServerVersion(parameters.Version);
         }
     }
 }
