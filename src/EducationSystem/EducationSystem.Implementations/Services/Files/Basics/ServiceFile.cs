@@ -150,7 +150,7 @@ namespace EducationSystem.Implementations.Services.Files.Basics
 
             var model = Mapper.Map<DatabaseFile>(file);
 
-            model.Guid = guid.ToString();
+            model.Guid = guid;
             model.OwnerId = user.Id;
 
             await RepositoryFile.AddAsync(model, true);

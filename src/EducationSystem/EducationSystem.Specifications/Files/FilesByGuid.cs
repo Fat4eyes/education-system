@@ -16,7 +16,7 @@ namespace EducationSystem.Specifications.Files
 
         public override Expression<Func<DatabaseFile, bool>> ToExpression()
         {
-            return x => string.Equals(x.Guid, _guid.ToString(), StringComparison.InvariantCultureIgnoreCase);
+            return x => x.Guid == _guid;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace EducationSystem.Implementations.Helpers
 
         public string GetRelativeFilePath(DatabaseFile file)
         {
-            return GetRelativeFilePath(file.Type, new Guid(file.Guid), file.Name);
+            return GetRelativeFilePath(file.Type, file.Guid, file.Name);
         }
 
         string IHelperPath.GetRelativeFilePath(FileType type, Guid guid, string name)
