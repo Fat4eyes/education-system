@@ -22,6 +22,8 @@ import Button from '../../stuff/Button'
 
 // @ts-ignore
 import decode from 'decode-html'
+import FileUpload from '../../stuff/FileUpload'
+import ImageFile from '../../../models/ImageFile'
 
 interface IProps {
   match: {
@@ -157,6 +159,8 @@ class QuestionHandling extends Component<TProps, IState> {
       SelectedAnchors: [...value]
     }))
   }
+  
+  handleLoadImage = (image: ImageFile) => this.setState(state => ({Model: {...state.Model, Image: image}}))
 
   render(): React.ReactNode {
     let {classes} = this.props
@@ -223,6 +227,10 @@ class QuestionHandling extends Component<TProps, IState> {
           <MtBlock value={2}/>
           <Grid item xs={12} container className={classes.inputsBlock} spacing={8}>
             <HandledInputs/>
+          </Grid>
+          <Grid item xs={12}>
+            {!this.state.Model.Image && <FileUpload type={FileType.Image} onLoad={this.handleLoadImage}/>}
+            {this.state.Model.Image && <a href={this.state.Model.Image!.Path}>see</a>}
           </Grid>
           <Grid item xs={12} container>
             <AnswersHandling type={this.state.Model.Type}

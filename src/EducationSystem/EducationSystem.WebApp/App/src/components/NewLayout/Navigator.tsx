@@ -123,9 +123,13 @@ const Navigator: FunctionComponent<TProps> = ({classes, auth, ...props}: TProps)
         const isAdminOrLecturer = Admin || Lecturer
         return <>
           <Item title='Профиль' to={routes.account} Icon={AccountIcon}/>
-          {isAdminOrLecturer && <Item title='Тесты' to={routes.tests} Icon={QuestionIcon}/>}
-          {isAdminOrLecturer && <Item title='Темы' to={routes.themes} Icon={PlaylistAddIcon}/>}
-          {isAdminOrLecturer && <Item title='Материалы' to={routes.materials} Icon={NoteAddIcon}/>}
+          {
+            isAdminOrLecturer && <>
+              <Item title='Тесты' to={routes.tests} Icon={QuestionIcon}/>
+              <Item title='Темы' to={routes.themes} Icon={PlaylistAddIcon}/>
+              <Item title='Материалы' to={routes.materials} Icon={NoteAddIcon}/>
+            </>
+          }
           {Student && <Item title='Тесты' to={routes.studentTests} Icon={QuestionIcon}/>}
         </>
       })(auth.User!.Roles)}

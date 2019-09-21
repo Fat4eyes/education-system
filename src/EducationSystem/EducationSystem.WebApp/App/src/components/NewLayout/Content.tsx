@@ -19,8 +19,7 @@ const styles = (theme: Theme) => createStyles({
   }
 })
 
-interface IProps {
-}
+interface IProps {}
 
 type TProps = IProps & WithStyles<typeof styles>
 
